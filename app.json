@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Chattoku",
+    "slug": "Chattoku",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
