@@ -10,6 +10,34 @@ import ProfileScreen from "./ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
+const screenLists = [
+    {
+        name: "Home",
+        component: HomeScreen,
+        icon: "home",
+    },
+    {
+        name: "Anime",
+        component: AnimeScreen,
+        icon: "ios-library",
+    },
+    {
+        name: "Chat",
+        component: ChatScreen,
+        icon: "ios-chatbox-ellipses",
+    },
+    {
+        name: "Friends",
+        component: FriendScreen,
+        icon: "ios-people",
+    },
+    {
+        name: "Profile",
+        component: ProfileScreen,
+        icon: "ios-person-circle",
+    },
+];
+
 const DashboardScreen = () => {
     return (
         <Tab.Navigator
@@ -19,69 +47,24 @@ const DashboardScreen = () => {
                 headerTitleStyle: { color: "teal" },
             }}
         >
-            <Tab.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{
-                    title: "Home",
-                    tabBarLabelPosition: "below-icon",
-                    tabBarIcon: ({ tintColor }) => (
-                        <Icon name="home" color="aquamarine" size={30} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Anime"
-                component={AnimeScreen}
-                options={{
-                    title: "Anime",
-                    tabBarLabelPosition: "below-icon",
-                    tabBarIcon: ({ tintColor }) => (
-                        <Icon name="ios-library" color="aquamarine" size={30} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Chat"
-                component={ChatScreen}
-                options={{
-                    title: "Chat",
-                    tabBarLabelPosition: "below-icon",
-                    tabBarIcon: ({ tintColor }) => (
-                        <Icon
-                            name="ios-chatbox-ellipses"
-                            color="aquamarine"
-                            size={30}
-                        />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Friend"
-                component={FriendScreen}
-                options={{
-                    title: "Friends",
-                    tabBarLabelPosition: "below-icon",
-                    tabBarIcon: ({ tintColor }) => (
-                        <Icon name="ios-people" color="aquamarine" size={30} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Profile"
-                component={ProfileScreen}
-                options={{
-                    title: "Profile",
-                    tabBarLabelPosition: "below-icon",
-                    tabBarIcon: ({ tintColor }) => (
-                        <Icon
-                            name="ios-person-circle"
-                            color="aquamarine"
-                            size={30}
-                        />
-                    ),
-                }}
-            />
+            {screenLists.map((item) => (
+                <Tab.Screen
+                    name={item.name}
+                    component={item.component}
+                    key={item.name}
+                    options={{
+                        title: item.title,
+                        tabBarLabelPosition: "below-icon",
+                        tabBarIcon: ({ tintColor }) => (
+                            <Icon
+                                name={item.icon}
+                                color="aquamarine"
+                                size={30}
+                            />
+                        ),
+                    }}
+                />
+            ))}
         </Tab.Navigator>
     );
 };
