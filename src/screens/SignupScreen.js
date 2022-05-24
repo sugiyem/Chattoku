@@ -41,7 +41,7 @@ const SignupScreen = ({ navigation }) => {
     } else if (isUsernameNotAvailable) {
       Alert.alert("username is not available");
     } else if (!isValidEmail(credentials.email)) {
-      Alert.alert("invalid!");
+      Alert.alert("email is not valid!");
     } else if (credentials.password !== credentials.confirmPass) {
       Alert.alert("password doesn't match");
     } else if (isPasswordTooShort(credentials.password)) {
