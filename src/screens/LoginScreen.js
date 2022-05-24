@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   Container: {
     display: "flex",
     rowGap: "15px",
-    height: "100vh",
+    // height: "600px",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "cyan"
