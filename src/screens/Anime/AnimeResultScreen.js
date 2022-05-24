@@ -4,62 +4,75 @@ import { StyleSheet, View } from "react-native";
 import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch from "../../components/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
+import FetchFavoriteAnime from "../../components/Anime/FetchFavoriteAnime";
 
 const AnimeSearchResultScreen = ({ navigation, route }) => {
-    const [search, setSearch] = useState(route.params.search);
-    const [animeData, setAnimeData] = useState([]);
-    const [resultExpanded, setResultExpanded] = useState(null);
-    const [resultPage, setResultPage] = useState(1);
+  const [search, setSearch] = useState(route.params.search);
+  const [animeData, setAnimeData] = useState([]);
+  const [resultExpanded, setResultExpanded] = useState(null);
+  const [resultPage, setResultPage] = useState(1);
+  const [favoriteList, setFavoriteList] = useState([]);
 
-    const animeCollectionItems = [
-        {
-            title: "Search Result",
-            data: animeData,
-            expand: resultExpanded,
-            changeExpand: setResultExpanded,
-            page: resultPage,
-            changePage: setResultPage,
-        },
-    ];
+  const animeCollectionItems = [
+    {
+      title: "Search Result",
+      data: animeData,
+      expand: resultExpanded,
+      changeExpand: setResultExpanded,
+      page: resultPage,
+      changePage: setResultPage,
+    },
+  ];
 
-    useEffect(() => {
-        if (resultPage == 1) {
-            setAnimeData(route.params.data);
-        } else {
-            const abortController = new AbortController();
+  useEffect(() => {
+    return FetchFavoriteAnime({
+      onSuccesfulFetch: (favorite) => {
+        setFavoriteList(favorite.map((item) => item.id));
+      },
+      onFailure: (error) => {
+        Alert.alert(error.message);
+      },
+    });
+  }, []);
 
-            AnimeFetch({
-                type: "Search",
-                page: resultPage,
-                search: search,
-                onSuccesfulFetch: (data) => setAnimeData(data),
-                abortController: abortController,
-            });
+  useEffect(() => {
+    if (resultPage == 1) {
+      setAnimeData(route.params.data);
+    } else {
+      const abortController = new AbortController();
 
-            return () => abortController.abort();
-        }
-    }, [resultPage]);
+      AnimeFetch({
+        type: "Search",
+        page: resultPage,
+        search: search,
+        onSuccesfulFetch: (data) => setAnimeData(data),
+        abortController: abortController,
+      });
 
-    return (
-        <View style={styles.container}>
-            <AnimeSearchBar
-                value={search}
-                onChangeText={(text) => setSearch(text)}
-                navigation={navigation}
-            />
+      return () => abortController.abort();
+    }
+  }, [resultPage]);
 
-            <AnimeCollection items={animeCollectionItems} />
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <AnimeSearchBar
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+        navigation={navigation}
+      />
+
+      <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
+    </View>
+  );
 };
 
 export default AnimeSearchResultScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "darkcyan",
-        alignItems: "center",
-        padding: 5,
-        flex: 1,
-    },
+  container: {
+    backgroundColor: "darkcyan",
+    alignItems: "center",
+    padding: 5,
+    flex: 1,
+  },
 });
