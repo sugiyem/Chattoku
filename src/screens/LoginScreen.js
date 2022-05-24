@@ -17,10 +17,10 @@ const initialState = {
 const LoginScreen = ({ navigation }) => {
   const [credentials, setCredentials] = useState(initialState);
 
-  function handleChange(event, name) {
+  function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: event.target.value
+      [name]: text
     });
   }
 
@@ -31,7 +31,8 @@ const LoginScreen = ({ navigation }) => {
       .auth()
       .signInWithEmailAndPassword(credentials.email, credentials.password)
       .catch((e) => {
-        console.error(e);
+        console.log("Incorrect Credentials");
+        Alert.alert("Incorrect Email / Password");
       });
 
     const currentUser = await firebase.auth().currentUser;
@@ -39,13 +40,16 @@ const LoginScreen = ({ navigation }) => {
     console.log(currentUser);
 
     if (currentUser === null) {
-      Alert.alert("Incorrect Email / Password");
-      await firebase.auth().signOut();
+      return;
+      // console.log("Incorrect Credentials");
+      // Alert.alert("Incorrect Email / Password");
+      // await firebase.auth().signOut();
     } else if (!currentUser.emailVerified) {
+      console.log("email not verified");
       Alert.alert("Please Verify Your Email Before Logging In");
       await firebase.auth().signOut();
     } else {
-      navigation.navigate("Dashboard");
+      navigation.replace("Dashboard");
     }
   }
 
@@ -56,14 +60,14 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         placeholder="email"
         value={credentials.email}
-        onChange={(e) => handleChange(e, "email")}
+        onChangeText={(text) => handleChangeText(text, "email")}
       />
       <Text> password </Text>
       <TextInput
         placeholder="password"
         secureTextEntry={true}
         value={credentials.password}
-        onChange={(e) => handleChange(e, "password")}
+        onChangeText={(text) => handleChangeText(text, "password")}
       />
       <Button onPress={handleSubmit} title="Log In" />
       <Button
@@ -80,7 +84,7 @@ const LoginScreen = ({ navigation }) => {
 export default LoginScreen;
 
 function redirectToSignupScreen(navigation) {
-  navigation.navigate("Signup");
+  navigation.replace("Signup");
 }
 
 const styles = StyleSheet.create({
@@ -88,6 +92,8 @@ const styles = StyleSheet.create({
     display: "flex",
     rowGap: "15px",
     height: "100vh",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "cyan"
   },
   Login: {

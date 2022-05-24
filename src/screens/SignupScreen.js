@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import React from "react";
 import { firebase } from "../firebase/Config";
+import { View } from "react-native-web";
 
 const initialState = {
   username: "",
@@ -20,12 +21,14 @@ const initialState = {
 const SignupScreen = ({ navigation }) => {
   const [credentials, setCredentials] = useState(initialState);
 
-  function handleChange(event, name) {
+  function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: event.target.value
+      [name]: text
     });
   }
+
+  console.log(credentials);
 
   async function handleSubmit() {
     console.log("clicked");
@@ -77,27 +80,27 @@ const SignupScreen = ({ navigation }) => {
       <TextInput
         placeholder="username"
         value={credentials.username}
-        onChange={(e) => handleChange(e, "username")}
+        onChangeText={(text) => handleChangeText(text, "username")}
       />
       <Text> email </Text>
       <TextInput
         placeholder="email"
         value={credentials.email}
-        onChange={(e) => handleChange(e, "email")}
+        onChangeText={(text) => handleChangeText(text, "email")}
       />
       <Text> password </Text>
       <TextInput
         placeholder="password"
         secureTextEntry={true}
         value={credentials.password}
-        onChange={(e) => handleChange(e, "password")}
+        onChangeText={(text) => handleChangeText(text, "password")}
       />
       <Text> confirm password</Text>
       <TextInput
         placeholder="confirm password"
         secureTextEntry={true}
         value={credentials.confirmPass}
-        onChange={(e) => handleChange(e, "confirmPass")}
+        onChangeText={(text) => handleChangeText(text, "confirmPass")}
       />
       <Button onPress={handleSubmit} title="Sign Up" />
       <Button
@@ -144,7 +147,7 @@ async function isUsernameTaken(username) {
 }
 
 function redirectToLoginScreen(navigation) {
-  navigation.navigate("Login");
+  navigation.replace("Login");
 }
 
 export default SignupScreen;
@@ -154,6 +157,8 @@ const styles = StyleSheet.create({
     display: "flex",
     rowGap: "15px",
     height: "100vh",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "cyan"
   },
   Login: {
