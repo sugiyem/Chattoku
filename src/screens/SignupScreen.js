@@ -69,7 +69,10 @@ const SignupScreen = ({ navigation }) => {
         .then(() => {
           redirectToLoginScreen(navigation);
         })
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          Alert.alert("email is already taken");
+          console.log("email already taken");
+        });
     }
   }
 
