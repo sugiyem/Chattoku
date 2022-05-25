@@ -1,0 +1,315 @@
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+
+import { firebase } from "../../firebase/Config";
+
+const initialState = {
+  username: "",
+  bio: "",
+  img: "",
+};
+
+const EditProfileScreen = () => {
+  const [initialUsername, setInitialUsername] = useState("");
+  const [userInfo, setUserInfo] = useState(initialState);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const uploadImage = async (imgUrl) => {
+    if (imgUrl == null || imgUrl.length == 0) {
+      return;
+    }
+
+    const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+    const blob = await fetch(imgUrl).then((response) => response.blob());
+
+    const storageRef = firebase.storage().ref(fileName);
+    await storageRef
+      .put(blob, {
+        contentType: "image/png",
+      })
+      .catch((error) => Alert.alert(error.message));
+
+    await storageRef
+      .getDownloadURL()
+      .then((newImgUrl) => {
+        setUserInfo({
+          ...userInfo,
+          img: newImgUrl,
+        });
+      })
+      .then(() => Alert.alert("Profile picture has been updated"))
+      .catch((error) => Alert.alert(error.message));
+  };
+
+  const pickImageFromCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      uploadImage(result.uri);
+      setModalVisible(false);
+    }
+  };
+
+  const pickImageFromLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      uploadImage(result.uri);
+      setModalVisible(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (userInfo.username !== initialUsername) {
+      const isUsernameNotAvailable = await isUsernameTaken(userInfo.username);
+      if (!isValidUsername(userInfo.username)) {
+        Alert.alert(
+          "username must only contains alphanumeric characters and must at least be 1 character long"
+        );
+        return;
+      } else if (isUsernameNotAvailable) {
+        Alert.alert("username is not available");
+        return;
+      }
+    }
+
+    const userID = firebase.auth().currentUser.uid;
+
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(userID)
+      .update({
+        username: userInfo.username,
+        bio: userInfo.bio,
+        img: userInfo.img,
+      })
+      .then(() => {
+        Alert.alert("Your profile has succesfully edited!");
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  useEffect(() => {
+    const userID = firebase.auth().currentUser.uid;
+
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(userID)
+      .onSnapshot(
+        (documentSnapshot) => {
+          const doc = documentSnapshot.data();
+
+          setInitialUsername(doc.username);
+
+          setUserInfo({
+            username: doc.username,
+            bio: doc.bio,
+            img: doc.img,
+          });
+        },
+        (error) => {
+          Alert.alert(error.message);
+        }
+      );
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Modal
+        animationType="fade"
+        visible={modalVisible}
+        presentationStyle="pageSheet"
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => pickImageFromCamera()}
+          >
+            <Text style={styles.buttonText}>Take Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => pickImageFromLibrary()}
+          >
+            <Text style={styles.buttonText}>Choose From Library</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <View style={styles.imageContainer}>
+        {userInfo.img.length > 0 ? (
+          <Image style={styles.img} source={{ uri: userInfo.img }} />
+        ) : (
+          <Image style={styles.img} source={require("../../assets/logo.png")} />
+        )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setModalVisible(!modalVisible)}
+        >
+          <Text style={styles.buttonText}>Change profile photo</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.textInputContainer}>
+        <Text style={styles.textInputTitle}>Username</Text>
+        <TextInput
+          placeholder="username"
+          value={userInfo.username}
+          style={styles.textInput}
+          onChangeText={(text) => {
+            setUserInfo({
+              ...userInfo,
+              username: text,
+            });
+          }}
+        />
+        <Text style={styles.textInputTitle}>Bio</Text>
+        <TextInput
+          placeholder="bio"
+          value={userInfo.bio}
+          style={styles.textInput}
+          onChangeText={(text) => {
+            setUserInfo({
+              ...userInfo,
+              bio: text,
+            });
+          }}
+        />
+      </View>
+      <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+        <Text style={styles.buttonText}>Submit Change</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default EditProfileScreen;
+
+function isValidUsername(username) {
+  const regex = /^\s*([0-9a-zA-Z]+)\s*$/;
+  return regex.test(username);
+}
+
+async function isUsernameTaken(username) {
+  const listOfUsernames = [];
+  await firebase
+    .firestore()
+    .collection("users")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        listOfUsernames.push(documentSnapshot.data().username);
+      });
+    })
+    .catch((error) => Alert.alert(error.message));
+  return listOfUsernames.includes(username);
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "darkcyan",
+    alignItems: "center",
+    padding: 5,
+    flex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    margin: 20,
+  },
+  modalButton: {
+    alignSelf: "stretch",
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: "cornflowerblue",
+    marginTop: 10,
+  },
+  imageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  img: {
+    marginTop: 30,
+    alignSelf: "center",
+    height: 125,
+    width: 125,
+    borderRadius: 75,
+  },
+  button: {
+    alignSelf: "stretch",
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: "navy",
+    marginTop: 10,
+  },
+  buttonText: {
+    justifyContent: "center",
+    alignSelf: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "white",
+  },
+  textInputContainer: {
+    marginTop: 30,
+    alignItems: "stretch",
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderColor: "navy",
+    width: "100%",
+    height: undefined,
+    aspectRatio: 3 / 1,
+  },
+  textInputTitle: {
+    fontFamily: "serif",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    margin: 5,
+  },
+  textInput: {
+    flexDirection: "row",
+    flex: 1,
+    paddingLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "navy",
+    paddingBottom: 5,
+  },
+});
