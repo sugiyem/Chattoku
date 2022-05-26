@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 const ProfileScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="EditGenre"
+      initialRouteName="ProfileHome"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="ProfileHome" component={ProfileHomeScreen} />

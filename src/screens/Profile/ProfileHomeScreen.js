@@ -20,14 +20,10 @@ const initialState = {
   genres: [],
 };
 
-const defaultImg =
-  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png";
-
-/*
 const RenderFavoriteAnime = ({ items, navigation }) => {
-  const removeButton = (item) => (
+  const RemoveButton = ({ item }) => (
     <Button
-      title="Remove from favorite"
+      title="Remove"
       icon={{ name: "delete", color: "white" }}
       buttonStyle={styles.removeButton}
       onPress={() => {
@@ -37,11 +33,36 @@ const RenderFavoriteAnime = ({ items, navigation }) => {
   );
 
   return (
-    <FlatList
-      style={styles.animeContainer}
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Anime");
+        }}
+        style={styles.favoriteButton}
+      >
+        <Text style={styles.buttonText}>Add more favorite anime</Text>
+      </TouchableOpacity>
+      {items.map((item, index) => (
+        <ListItem.Swipeable
+          key={index}
+          rightContent={<RemoveButton item={item} />}
+        >
+          <Avatar source={{ uri: item.image }} />
+          <ListItem.Content>
+            <ListItem.Title>{item.title}</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem.Swipeable>
+      ))}
+    </View>
+  );
+  {
+    /*<FlatList
+      persistentScrollbar
       data={items}
+      contentContainerStyle={{ flexGrow: 1 }}
       renderItem={({ item, index }) => (
-        <ListItem.Swipeable key={index} rightContent={removeButton(item)}>
+        <ListItem.Swipeable key={index} rightContent={<RemoveButton item />}>
           <Avatar source={{ uri: item.image }} />
           <ListItem.Content>
             <ListItem.Title>{item.title}</ListItem.Title>
@@ -54,18 +75,19 @@ const RenderFavoriteAnime = ({ items, navigation }) => {
           onPress={() => {
             navigation.navigate("Anime");
           }}
+          style={styles.favoriteButton}
         >
-          <Text>Add more favorite anime</Text>
+          <Text style={styles.buttonText}>Add more favorite anime</Text>
         </TouchableOpacity>
       }
-    />
-  );
+    />*/
+  }
 };
 
 const RenderFavoriteGenre = ({ items, navigation }) => {
-  const removeButton = (item) => (
+  const RemoveButton = ({ item }) => (
     <Button
-      title="Remove from favorite"
+      title="Remove"
       icon={{ name: "delete", color: "white" }}
       buttonStyle={styles.removeButton}
       onPress={() => {
@@ -75,11 +97,37 @@ const RenderFavoriteGenre = ({ items, navigation }) => {
   );
 
   return (
-    <FlatList
-      style={styles.animeContainer}
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("EditGenre");
+        }}
+        style={styles.favoriteButton}
+      >
+        <Text style={styles.buttonText}>Add more favorite genre</Text>
+      </TouchableOpacity>
+      {items.map((item, index) => (
+        <ListItem.Swipeable
+          key={index}
+          bottomDivider
+          rightContent={<RemoveButton item={item} />}
+        >
+          <ListItem.Content>
+            <ListItem.Title>{item}</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem.Swipeable>
+      ))}
+    </View>
+  );
+
+  {
+    /*<FlatList
+      persistentScrollbar
       data={items}
+      contentContainerStyle={{ flexGrow: 1 }}
       renderItem={({ item, index }) => (
-        <ListItem.Swipeable key={index} rightContent={removeButton(item)}>
+        <ListItem.Swipeable key={index} rightContent={<RemoveButton item />}>
           <ListItem.Content>
             <ListItem.Title>{item}</ListItem.Title>
           </ListItem.Content>
@@ -91,20 +139,37 @@ const RenderFavoriteGenre = ({ items, navigation }) => {
           onPress={() => {
             navigation.navigate("EditGenre");
           }}
+          style={styles.favoriteButton}
         >
-          <Text>Add more favorite genre</Text>
+          <Text style={styles.buttonText}>Add more favorite genre</Text>
         </TouchableOpacity>
       }
-    />
-  );
+    />*/
+  }
 };
-*/
 
 const ProfileHomeScreen = () => {
   const [userInfo, setUserInfo] = useState(initialState);
   const [favoriteAnime, setFavoriteAnime] = useState([]);
   const [animeExpanded, setAnimeExpanded] = useState(false);
   const [genreExpanded, setGenreExpanded] = useState(false);
+
+  const datas = [
+    {
+      title: "Favorite Genre",
+      render: RenderFavoriteGenre,
+      data: userInfo.genres,
+      isExpanded: genreExpanded,
+      changeExpanded: setGenreExpanded,
+    },
+    {
+      title: "Favorite Anime",
+      render: RenderFavoriteAnime,
+      data: favoriteAnime,
+      isExpanded: animeExpanded,
+      changeExpanded: setAnimeExpanded,
+    },
+  ];
 
   const navigation = useNavigation();
 
@@ -126,14 +191,13 @@ const ProfileHomeScreen = () => {
       .doc(userID)
       .onSnapshot(
         (documentSnapshot) => {
+          const doc = documentSnapshot.data();
+
           setUserInfo({
-            username: documentSnapshot.data().username,
-            bio: documentSnapshot.data().bio,
-            img:
-              documentSnapshot.data().img.length > 0
-                ? documentSnapshot.data().img
-                : defaultImg,
-            genres: documentSnapshot.data().genres,
+            username: doc.username,
+            bio: doc.bio,
+            img: doc.img,
+            genres: doc.genres,
           });
         },
         (error) => {
@@ -165,26 +229,118 @@ const ProfileHomeScreen = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      {userInfo.img.length > 0 ? (
-        <Image style={styles.img} source={{ uri: userInfo.img }} />
-      ) : (
-        <Image style={styles.img} source={require("../../assets/logo.png")} />
-      )}
-      <Text style={styles.username}>{userInfo.username}</Text>
-      <Text style={styles.bio}>{userInfo.bio}</Text>
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate("EditProfile", { data: userInfo });
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ alignItems: "center" }}
+    >
+      <View style={styles.contentContainer}>
+        {userInfo.img.length > 0 ? (
+          <Image style={styles.img} source={{ uri: userInfo.img }} />
+        ) : (
+          <Image
+            style={styles.img}
+            source={require("../../assets/default-profile.png")}
+          />
+        )}
+
+        <Text style={styles.username}>{userInfo.username}</Text>
+        <Text style={styles.bio}>{userInfo.bio}</Text>
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("EditProfile", { userInfo: userInfo });
+            }}
+          >
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => logOut()}>
+            <Text style={styles.buttonText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.favoriteStuffContainer}>
+        {datas.map((item, index) => (
+          <ListItem.Accordion
+            bottomDivider
+            key={index}
+            content={
+              <ListItem.Content>
+                <ListItem.Title>
+                  <Text style={styles.titleText}>{item.title}</Text>
+                </ListItem.Title>
+              </ListItem.Content>
+            }
+            isExpanded={item.isExpanded}
+            onPress={() => item.changeExpanded(!item.isExpanded)}
+          >
+            {item.isExpanded && (
+              <item.render items={item.data} navigation={navigation} />
+            )}
+          </ListItem.Accordion>
+        ))}
+        {/*<FlatList
+          persistentScrollbar
+          data={datas}
+          renderItem={({ item, index }) => (
+            <ListItem.Accordion
+              bottomDivider
+              key={index}
+              content={
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <Text>{item.title}</Text>
+                  </ListItem.Title>
+                </ListItem.Content>
+              }
+              isExpanded={item.isExpanded}
+              onPress={() => item.changeExpanded(!item.isExpanded)}
+            >
+              {item.isExpanded && (
+                <item.render items={item.data} navigation={navigation} />
+              )}
+            </ListItem.Accordion>
+          )}
+              />*/}
+
+        {/*<FlatList
+          data={userInfo.genres}
+          renderItem={({ item, index }) => {
+            const RemoveButton = ({ item }) => (
+              <Button
+                title="Remove"
+                icon={{ name: "delete", color: "white" }}
+                buttonStyle={styles.removeButton}
+                onPress={() => {
+                  removeGenreFromFavorite(item);
+                }}
+              />
+            );
+
+            return (
+              <ListItem.Swipeable
+                key={index}
+                rightContent={<RemoveButton item />}
+                bottomDivider
+              >
+                <ListItem.Content>
+                  <ListItem.Title>{item}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem.Swipeable>
+            );
           }}
-        >
-          <Text style={styles.buttonText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => logOut()}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
+          ListHeaderComponent={
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("EditGenre");
+              }}
+            >
+              <Text>Add more favorite genre</Text>
+            </TouchableOpacity>
+          }
+        />
       </View>
 
       <ListItem.Accordion
@@ -196,7 +352,7 @@ const ProfileHomeScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate("EditGenre")}>
             <Text>Add more genre to favorites</Text>
           </TouchableOpacity>
-          {/*userInfo.genres.map((item, i) => {
+          userInfo.genres.map((item, i) => {
             const removeButton = (item) => (
               <Button
                 title="Remove from favorite"
@@ -216,11 +372,11 @@ const ProfileHomeScreen = () => {
                 <ListItem.Chevron />
               </ListItem.Swipeable>
             );
-          })*/}
+          })
         </View>
-      </ListItem.Accordion>
+        </ListItem.Accordion>*/}
 
-      {/*favorites.map((item, i) => (
+        {/*favorites.map((item, i) => (
         <ListItem.Accordion
           key={i}
           content={<Text>{item.title}</Text>}
@@ -230,6 +386,7 @@ const ProfileHomeScreen = () => {
           <item.render items={item.data} navigation={navigation} />
         </ListItem.Accordion>
       ))*/}
+      </View>
     </ScrollView>
   );
 };
@@ -273,6 +430,14 @@ const styles = StyleSheet.create({
   contentContainer: {
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 10,
+  },
+  favoriteStuffContainer: {
+    alignSelf: "stretch",
+    borderTopWidth: 1,
+    borderTopColor: "black",
+    margin: 10,
+    padding: 5,
   },
   img: {
     height: 150,
@@ -280,27 +445,30 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   username: {
-    fontSize: 18,
+    fontFamily: "serif",
+    fontSize: 20,
     fontWeight: "bold",
+    textAlign: "center",
     marginVertical: 10,
   },
   bio: {
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: "600",
-    color: "#666",
+    color: "aquamarine",
     textAlign: "center",
     marginBottom: 10,
   },
   buttonGroup: {
     flexDirection: "row",
     justifyContent: "center",
-    width: "100%",
+    alignItems: "stretch",
     marginBottom: 10,
   },
   button: {
-    borderColor: "cyan",
+    borderColor: "navy",
     borderWidth: 2,
     borderRadius: 3,
+    backgroundColor: "white",
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginHorizontal: 5,
@@ -308,14 +476,22 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#2e64e5",
   },
-  animeContainer: {
-    alignSelf: "stretch",
-    marginVertical: 15,
-    borderTopWidth: 5,
-    borderTopColor: "navy",
+  favoriteButton: {
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 3,
+    backgroundColor: "aquamarine",
+    margin: 5,
+    padding: 5,
   },
   removeButton: {
     backgroundColor: "red",
     minHeight: "100%",
+  },
+  titleText: {
+    fontFamily: "serif",
+    fontSize: 20,
+    fontWeight: "600",
+    textDecorationLine: "underline",
   },
 });
