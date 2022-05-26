@@ -13,41 +13,18 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
 import { firebase } from "../../firebase/Config";
+import { isUsernameTaken, isValidUsername } from "../../firebase/CheckUsername";
 
 const EditProfileScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(route.params.userInfo);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const uploadImage = async (imgUrl) => {
-    if (imgUrl == null || imgUrl.length == 0) {
-      return;
-    }
-
-    const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-    const blob = await axios
-      .get(imgUrl, { responseType: "blob" })
-      .then((response) => response.data);
-
-    // await fetch(imgUrl).then((response) => response.blob());
-
-    const storageRef = firebase.storage().ref(fileName);
-    await storageRef
-      .put(blob, {
-        contentType: "image/png",
-      })
-      .catch((error) => Alert.alert(error.message));
-
-    await storageRef
-      .getDownloadURL()
-      .then((newImgUrl) => {
-        setUserInfo({
-          ...userInfo,
-          img: newImgUrl,
-        });
-      })
-      .then(() => Alert.alert("Profile picture has been updated"))
-      .catch((error) => Alert.alert(error.message));
-  };
+  function handleChangeText(text, name) {
+    setUserInfo({
+      ...userInfo,
+      [name]: text,
+    });
+  }
 
   const pickImageFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -86,6 +63,38 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  const uploadImage = async (imgUrl) => {
+    if (imgUrl == null || imgUrl.length == 0) {
+      return;
+    }
+
+    const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+    const blob = await axios
+      .get(imgUrl, { responseType: "blob" })
+      .then((response) => response.data);
+
+    const storageRef = firebase.storage().ref(fileName);
+    await storageRef
+      .put(blob, {
+        contentType: "image/png",
+      })
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
+
+    await storageRef
+      .getDownloadURL()
+      .then((newImgUrl) => {
+        handleChangeText(newImgUrl, "img");
+      })
+      .then(() => {
+        Alert.alert("Profile picture has been updated");
+      })
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
+  };
+
   const handleSubmit = async () => {
     if (userInfo.username !== route.params.userInfo.username) {
       const isUsernameNotAvailable = await isUsernameTaken(userInfo.username);
@@ -116,31 +125,6 @@ const EditProfileScreen = ({ navigation, route }) => {
       })
       .catch((error) => alert(error.message));
   };
-
-  /*useEffect(() => {
-    const userID = firebase.auth().currentUser.uid;
-
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(userID)
-      .onSnapshot(
-        (documentSnapshot) => {
-          const doc = documentSnapshot.data();
-
-          setInitialUsername(doc.username);
-
-          setUserInfo({
-            username: doc.username,
-            bio: doc.bio,
-            img: doc.img,
-          });
-        },
-        (error) => {
-          Alert.alert(error.message);
-        }
-      );
-  }, []);*/
 
   return (
     <View style={styles.container}>
@@ -175,7 +159,10 @@ const EditProfileScreen = ({ navigation, route }) => {
         {userInfo.img.length > 0 ? (
           <Image style={styles.img} source={{ uri: userInfo.img }} />
         ) : (
-          <Image style={styles.img} source={require("../../assets/logo.png")} />
+          <Image
+            style={styles.img}
+            source={require("../../assets/default-profile.png")}
+          />
         )}
         <TouchableOpacity
           style={styles.button}
@@ -191,24 +178,14 @@ const EditProfileScreen = ({ navigation, route }) => {
           placeholder="username"
           value={userInfo.username}
           style={styles.textInput}
-          onChangeText={(text) => {
-            setUserInfo({
-              ...userInfo,
-              username: text,
-            });
-          }}
+          onChangeText={(text) => handleChangeText(text, "username")}
         />
         <Text style={styles.textInputTitle}>Bio</Text>
         <TextInput
           placeholder="bio"
           value={userInfo.bio}
           style={styles.textInput}
-          onChangeText={(text) => {
-            setUserInfo({
-              ...userInfo,
-              bio: text,
-            });
-          }}
+          onChangeText={(text) => handleChangeText(text, "bio")}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
@@ -219,26 +196,6 @@ const EditProfileScreen = ({ navigation, route }) => {
 };
 
 export default EditProfileScreen;
-
-function isValidUsername(username) {
-  const regex = /^\s*([0-9a-zA-Z]+)\s*$/;
-  return regex.test(username);
-}
-
-async function isUsernameTaken(username) {
-  const listOfUsernames = [];
-  await firebase
-    .firestore()
-    .collection("users")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        listOfUsernames.push(documentSnapshot.data().username);
-      });
-    })
-    .catch((error) => Alert.alert(error.message));
-  return listOfUsernames.includes(username);
-}
 
 const styles = StyleSheet.create({
   container: {

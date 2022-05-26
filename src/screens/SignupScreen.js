@@ -4,18 +4,18 @@ import {
   TextInput,
   Button,
   Text,
-  Alert
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import React from "react";
 import { firebase } from "../firebase/Config";
-import { View } from "react-native-web";
+import { isUsernameTaken, isValidUsername } from "../firebase/CheckUsername";
 
 const initialState = {
   username: "",
   email: "",
   password: "",
-  confirmPass: ""
+  confirmPass: "",
 };
 
 const SignupScreen = ({ navigation }) => {
@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }) => {
   function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: text
+      [name]: text,
     });
   }
 
@@ -56,7 +56,10 @@ const SignupScreen = ({ navigation }) => {
           const currentUID = firebase.auth().currentUser.uid;
 
           await firebase.firestore().collection("users").doc(currentUID).set({
-            username: credentials.username
+            username: credentials.username,
+            bio: "",
+            img: "",
+            genres: [],
           });
 
           Alert.alert(
@@ -128,27 +131,6 @@ function isPasswordTooShort(password) {
   return password.length < 6;
 }
 
-//check is a username is alphanumeric and contains at
-//least one char
-function isValidUsername(username) {
-  const regex = /^\s*([0-9a-zA-Z]+)\s*$/;
-  return regex.test(username);
-}
-
-async function isUsernameTaken(username) {
-  const listOfUsernames = [];
-  await firebase
-    .firestore()
-    .collection("users")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        listOfUsernames.push(documentSnapshot.data().username);
-      });
-    });
-  return listOfUsernames.includes(username);
-}
-
 function redirectToLoginScreen(navigation) {
   navigation.replace("Login");
 }
@@ -162,10 +144,10 @@ const styles = StyleSheet.create({
     // height: "600px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "cyan"
+    backgroundColor: "cyan",
   },
   Login: {
     marginTop: "20px",
-    alignSelf: "center"
-  }
+    alignSelf: "center",
+  },
 });
