@@ -10,18 +10,12 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 
 import { firebase } from "../../firebase/Config";
 
-const initialState = {
-  username: "",
-  bio: "",
-  img: "",
-};
-
-const EditProfileScreen = () => {
-  const [initialUsername, setInitialUsername] = useState("");
-  const [userInfo, setUserInfo] = useState(initialState);
+const EditProfileScreen = ({ navigation, route }) => {
+  const [userInfo, setUserInfo] = useState(route.params.userInfo);
   const [modalVisible, setModalVisible] = useState(false);
 
   const uploadImage = async (imgUrl) => {
@@ -30,7 +24,11 @@ const EditProfileScreen = () => {
     }
 
     const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-    const blob = await fetch(imgUrl).then((response) => response.blob());
+    const blob = await axios
+      .get(imgUrl, { responseType: "blob" })
+      .then((response) => response.data);
+
+    // await fetch(imgUrl).then((response) => response.blob());
 
     const storageRef = firebase.storage().ref(fileName);
     await storageRef
@@ -89,7 +87,7 @@ const EditProfileScreen = () => {
   };
 
   const handleSubmit = async () => {
-    if (userInfo.username !== initialUsername) {
+    if (userInfo.username !== route.params.userInfo.username) {
       const isUsernameNotAvailable = await isUsernameTaken(userInfo.username);
       if (!isValidUsername(userInfo.username)) {
         Alert.alert(
@@ -114,12 +112,12 @@ const EditProfileScreen = () => {
         img: userInfo.img,
       })
       .then(() => {
-        Alert.alert("Your profile has succesfully edited!");
+        navigation.navigate("ProfileHome");
       })
       .catch((error) => alert(error.message));
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const userID = firebase.auth().currentUser.uid;
 
     return firebase
@@ -142,7 +140,7 @@ const EditProfileScreen = () => {
           Alert.alert(error.message);
         }
       );
-  }, []);
+  }, []);*/
 
   return (
     <View style={styles.container}>
