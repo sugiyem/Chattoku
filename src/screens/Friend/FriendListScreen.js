@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline",
