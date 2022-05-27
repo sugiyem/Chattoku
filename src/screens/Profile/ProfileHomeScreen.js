@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
-  FlatList,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   username: {
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     color: "#2e64e5",
   },
   titleText: {
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 20,
     fontWeight: "600",
     textDecorationLine: "underline",

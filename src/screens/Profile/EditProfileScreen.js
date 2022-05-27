@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     aspectRatio: 3 / 1,
   },
   textInputTitle: {
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontWeight: "bold",
     textDecorationLine: "underline",
     margin: 5,
