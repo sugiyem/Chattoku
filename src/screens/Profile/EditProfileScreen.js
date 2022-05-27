@@ -158,6 +158,13 @@ const EditProfileScreen = ({ navigation, route }) => {
         </View>
       </Modal>
 
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}> Go back</Text>
+      </TouchableOpacity>
+
       <View style={styles.imageContainer}>
         {userInfo.img.length > 0 ? (
           <Image style={styles.img} source={{ uri: userInfo.img }} />
@@ -220,6 +227,18 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "cornflowerblue",
     marginTop: 10,
+  },
+  backButton: {
+    alignSelf: "stretch",
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "aquamarine",
+    padding: 5,
+    marginTop: 10,
+  },
+  backButtonText: {
+    textAlign: "center",
+    color: "blue",
   },
   imageContainer: {
     alignItems: "center",

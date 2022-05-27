@@ -5,34 +5,29 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
-import { firebase } from "../../firebase/Config";
 import { GENRES } from "../../constants/MyAnimeList";
+import FetchUserInfo from "../../firebase/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
 
-const EditGenreScreen = () => {
+const EditGenreScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [includeFav, setIncludeFav] = useState(true);
   const [includeNonFav, setIncludeNonFav] = useState(true);
 
   useEffect(() => {
-    const userID = firebase.auth().currentUser.uid;
-
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(userID)
-      .onSnapshot(
-        (documentSnapshot) => {
-          setFavorites(documentSnapshot.data().genres);
-        },
-        (error) => {
-          Alert.alert(error.message);
-        }
-      );
+    return FetchUserInfo({
+      onSuccesfulFetch: (data) => {
+        setFavorites(data.genres);
+      },
+      onFailure: (error) => {
+        Alert.alert(error.message);
+      },
+    });
   }, []);
 
   return (
@@ -43,6 +38,7 @@ const EditGenreScreen = () => {
         placeholder="search"
         style={styles.textInput}
       />
+
       <CheckBox
         title="Include favorite"
         checked={includeFav}
@@ -50,6 +46,7 @@ const EditGenreScreen = () => {
           setIncludeFav(!includeFav);
         }}
       />
+
       <CheckBox
         title="Include non-favorite"
         checked={includeNonFav}
@@ -57,6 +54,14 @@ const EditGenreScreen = () => {
           setIncludeNonFav(!includeNonFav);
         }}
       />
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>Go back</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Genre lists</Text>
       <View>
         <RenderFavorites
@@ -95,5 +100,16 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontSize: 30,
     fontWeight: "bold",
+  },
+  button: {
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 5,
+    marginVertical: 5,
+    backgroundColor: "aquamarine",
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "blue",
   },
 });
