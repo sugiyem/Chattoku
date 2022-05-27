@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch from "../../components/Anime/AnimeFetch";
@@ -61,6 +61,13 @@ const AnimeSearchResultScreen = ({ navigation, route }) => {
         navigation={navigation}
       />
 
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>Go back</Text>
+      </TouchableOpacity>
+
       <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
     </View>
   );
@@ -74,5 +81,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     flex: 1,
+  },
+  button: {
+    alignSelf: "stretch",
+    marginVertical: 5,
+    padding: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "aquamarine",
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "blue",
   },
 });
