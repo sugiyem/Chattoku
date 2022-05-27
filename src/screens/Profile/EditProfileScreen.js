@@ -3,6 +3,7 @@ import {
   Alert,
   Image,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -69,6 +70,8 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
 
     const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+    const uploadUri =
+      Platform.OS === "ios" ? imgUrl.replace("file://", "") : imgUrl;
     const blob = await axios
       .get(imgUrl, { responseType: "blob" })
       .then((response) => response.data);
