@@ -1,4 +1,4 @@
-import { SectionList, StyleSheet, Text, View } from "react-native";
+import { Platform, SectionList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: "bold",
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     textDecorationLine: "underline",
     fontSize: 30,
     alignSelf: "flex-start",

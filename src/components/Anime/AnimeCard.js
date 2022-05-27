@@ -1,5 +1,12 @@
 import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Card } from "react-native-elements";
 import * as Linking from "expo-linking";
 import { firebase } from "../../firebase/Config";
@@ -108,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
   },
   topicText: {
-    fontFamily: "serif",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 20,
     fontWeight: "bold",
   },
