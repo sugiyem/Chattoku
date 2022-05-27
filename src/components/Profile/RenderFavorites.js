@@ -45,7 +45,9 @@ const RenderFavorites = ({
             />
           }
         >
-          {type === "Anime" && <Avatar source={{ uri: item.image }} />}
+          {type === "Anime" && (
+            <Avatar size="medium" source={{ uri: item.image }} />
+          )}
           <ListItem.Content>
             <ListItem.Title>
               {type === "Genre" ? item : item.title}
