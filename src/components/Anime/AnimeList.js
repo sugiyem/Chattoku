@@ -9,7 +9,7 @@ const AnimeList = ({ item, isFavorite }) => {
         <Text style={styles.titleText}>{item.title}</Text>
       </ListItem.Title>
       <ListItem.Subtitle>
-        <View>
+        <View style={styles.detailContainer}>
           <Text>MyAnimeList score: {item.score ? item.score : "?"}</Text>
           {item.airing ? (
             <Text>Started airing from: {item.aired.string.slice(0, -5)}</Text>
@@ -31,5 +31,8 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: "serif",
     fontWeight: "bold",
+  },
+  detailContainer: {
+    paddingTop: 10,
   },
 });
