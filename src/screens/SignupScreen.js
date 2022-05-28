@@ -60,6 +60,7 @@ const SignupScreen = ({ navigation }) => {
             bio: "",
             img: "",
             genres: [],
+            id: currentUID,
           });
 
           Alert.alert(
