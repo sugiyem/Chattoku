@@ -5,6 +5,8 @@ export const SEARCH_URL =
 
 export const TOP_URL = "https://api.jikan.moe/v4/top/anime";
 
+export const ANIME_SHOWN_PER_PAGE = 25;
+
 export const GENRES = [
   "Action",
   "Adventure",
