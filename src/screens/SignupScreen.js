@@ -4,7 +4,7 @@ import {
   TextInput,
   Button,
   Text,
-  Alert,
+  Alert
 } from "react-native";
 import { useState } from "react";
 import React from "react";
@@ -15,7 +15,7 @@ const initialState = {
   username: "",
   email: "",
   password: "",
-  confirmPass: "",
+  confirmPass: ""
 };
 
 const SignupScreen = ({ navigation }) => {
@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }) => {
   function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: text,
+      [name]: text
     });
   }
 
@@ -60,7 +60,7 @@ const SignupScreen = ({ navigation }) => {
             bio: "",
             img: "",
             genres: [],
-            id: currentUID,
+            id: currentUID
           });
 
           Alert.alert(
@@ -141,14 +141,15 @@ export default SignupScreen;
 const styles = StyleSheet.create({
   Container: {
     display: "flex",
+    fontSize: "12px",
     rowGap: "15px",
-    // height: "600px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "cyan",
+    backgroundColor: "aquamarine",
+    flex: 1
   },
   Login: {
     marginTop: "20px",
-    alignSelf: "center",
-  },
+    alignSelf: "center"
+  }
 });

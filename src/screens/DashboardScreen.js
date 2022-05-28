@@ -14,28 +14,28 @@ const screenLists = [
   {
     name: "Home",
     component: HomeScreen,
-    icon: "home",
+    icon: "home"
   },
   {
     name: "Anime",
     component: AnimeScreen,
-    icon: "ios-library",
+    icon: "ios-library"
   },
   {
     name: "Chat",
     component: ChatScreen,
-    icon: "ios-chatbox-ellipses",
+    icon: "ios-chatbox-ellipses"
   },
   {
     name: "Friends",
     component: FriendScreen,
-    icon: "ios-people",
+    icon: "ios-people"
   },
   {
     name: "Profile",
     component: ProfileScreen,
-    icon: "ios-person-circle",
-  },
+    icon: "ios-person-circle"
+  }
 ];
 
 const DashboardScreen = () => {
@@ -44,7 +44,7 @@ const DashboardScreen = () => {
       screenOptions={{
         tabBarStyle: { backgroundColor: "navy" },
         headerStyle: { backgroundColor: "darkslateblue" },
-        headerTitleStyle: { color: "teal" },
+        headerTitleStyle: { color: "teal" }
       }}
     >
       {screenLists.map((item) => (
@@ -57,7 +57,7 @@ const DashboardScreen = () => {
             tabBarLabelPosition: "below-icon",
             tabBarIcon: ({ tintColor }) => (
               <Icon name={item.icon} color="aquamarine" size={30} />
-            ),
+            )
           }}
         />
       ))}

@@ -1,12 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import ForumScreen from "./Forum/ForumScreen";
 
 const HomeScreen = () => {
-    return (
-        <View>
-            <Text>HomeScreen</Text>
-        </View>
-    );
+  return <ForumScreen />;
 };
 
 export default HomeScreen;
