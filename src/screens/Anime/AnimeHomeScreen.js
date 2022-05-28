@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch from "../../components/Anime/AnimeFetch";
+import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../components/Anime/FetchFavoriteAnime";
 
@@ -53,7 +53,7 @@ const AnimeHomeScreen = () => {
     const abortController = new AbortController();
 
     AnimeFetch({
-      type: "Airing",
+      type: fetchType.AIRING,
       page: airingPage,
       onSuccesfulFetch: (data) => {
         setAiringAnimeData(
@@ -73,7 +73,7 @@ const AnimeHomeScreen = () => {
     const abortController = new AbortController();
 
     AnimeFetch({
-      type: "Top",
+      type: fetchType.TOP,
       page: topPage,
       onSuccesfulFetch: (data) => {
         setTopAnimeData(
@@ -93,7 +93,7 @@ const AnimeHomeScreen = () => {
     <View style={styles.container}>
       <AnimeSearchBar
         value={search}
-        onChangeText={(text) => setSearch(text)}
+        onChangeText={setSearch}
         navigation={navigation}
       />
 

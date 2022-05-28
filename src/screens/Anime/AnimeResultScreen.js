@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch from "../../components/Anime/AnimeFetch";
+import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../components/Anime/FetchFavoriteAnime";
 
-const AnimeSearchResultScreen = ({ navigation, route }) => {
+const AnimeResultScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState(route.params.search);
   const [animeData, setAnimeData] = useState([]);
   const [resultExpanded, setResultExpanded] = useState(null);
@@ -42,7 +42,7 @@ const AnimeSearchResultScreen = ({ navigation, route }) => {
       const abortController = new AbortController();
 
       AnimeFetch({
-        type: "Search",
+        type: fetchType.SEARCH,
         page: resultPage,
         search: search,
         onSuccesfulFetch: (data) => setAnimeData(data),
@@ -57,7 +57,7 @@ const AnimeSearchResultScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <AnimeSearchBar
         value={search}
-        onChangeText={(text) => setSearch(text)}
+        onChangeText={setSearch}
         navigation={navigation}
       />
 
@@ -73,7 +73,7 @@ const AnimeSearchResultScreen = ({ navigation, route }) => {
   );
 };
 
-export default AnimeSearchResultScreen;
+export default AnimeResultScreen;
 
 const styles = StyleSheet.create({
   container: {

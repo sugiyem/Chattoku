@@ -4,6 +4,7 @@ import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import AnimeList from "./AnimeList";
 import AnimeCard from "./AnimeCard";
+import { ANIME_SHOWN_PER_PAGE } from "../../constants/MyAnimeList";
 
 const AnimeCollection = ({ items, favorite }) => {
   const renderItem = ({ section, item }) => {
@@ -45,7 +46,7 @@ const AnimeCollection = ({ items, favorite }) => {
       </View>
 
       <View>
-        {section.data.length == 25 && (
+        {section.data.length == ANIME_SHOWN_PER_PAGE && (
           <Icon
             name="arrow-redo"
             color="midnightblue"

@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import AnimeFetch from "./AnimeFetch";
+import AnimeFetch, { fetchType } from "./AnimeFetch";
 
 const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
   const onFinishedFetch = (data) => {
@@ -17,7 +17,7 @@ const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
   };
 
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={styles.searchBarContainer}>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -27,7 +27,7 @@ const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
       <TouchableOpacity
         onPress={() =>
           AnimeFetch({
-            type: "Search",
+            type: fetchType.SEARCH,
             page: 1,
             search: value,
             onSuccesfulFetch: onFinishedFetch,
@@ -44,6 +44,9 @@ const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
 export default AnimeSearchBar;
 
 const styles = StyleSheet.create({
+  searchBarContainer: {
+    flexDirection: "row",
+  },
   textInput: {
     borderColor: "black",
     borderWidth: 1,
