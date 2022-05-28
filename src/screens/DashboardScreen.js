@@ -2,7 +2,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import AnimeScreen from "./AnimeScreen";
+import AnimeScreen from "./Anime/AnimeScreen";
 import ChatScreen from "./ChatScreen";
 import FriendScreen from "./FriendScreen";
 import HomeScreen from "./HomeScreen";
