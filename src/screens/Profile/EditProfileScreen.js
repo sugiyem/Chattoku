@@ -30,6 +30,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const pickImageFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
+      Alert.alert("Chattoku doesn't have access to your camera");
       return;
     }
 
@@ -48,6 +49,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const pickImageFromLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
+      Alert.alert("Chattoku doesn't have access to your image gallery");
       return;
     }
 
@@ -70,10 +72,12 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
 
     const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+
     const uploadUri =
       Platform.OS === "ios" ? imgUrl.replace("file://", "") : imgUrl;
+
     const blob = await axios
-      .get(imgUrl, { responseType: "blob" })
+      .get(uploadUri, { responseType: "blob" })
       .then((response) => response.data);
 
     const storageRef = firebase.storage().ref(fileName);
