@@ -107,14 +107,14 @@ const FriendListScreen = () => {
         style={styles.textInput}
       />
 
+      <Text style={styles.title}>Friends List</Text>
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("AddFriend")}
       >
         <Text>Add more friends</Text>
       </TouchableOpacity>
-
-      <Text style={styles.title}>Friends List</Text>
 
       <View style={styles.friendContainer}>
         <RenderFriends
