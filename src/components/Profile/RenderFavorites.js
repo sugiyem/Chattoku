@@ -3,6 +3,11 @@ import React from "react";
 import { Avatar, ListItem } from "react-native-elements";
 import HandleFavoriteButton from "./HandleFavoriteButton";
 
+export const renderType = {
+  GENRE: 0,
+  ANIME: 1,
+};
+
 const RenderFavorites = ({
   type,
   isEditPage = false,
@@ -15,7 +20,7 @@ const RenderFavorites = ({
       {!isEditPage && (
         <TouchableOpacity
           onPress={() => {
-            if (type === "Genre") {
+            if (type === renderType.GENRE) {
               navigation.navigate("EditGenre");
             } else {
               navigation.navigate("Anime");
@@ -24,7 +29,7 @@ const RenderFavorites = ({
           style={styles.favoriteButton}
         >
           <Text style={styles.buttonText}>
-            {type === "Genre"
+            {type === renderType.GENRE
               ? "Add more genres to favorite"
               : "Add more anime to favorite"}
           </Text>
@@ -39,20 +44,22 @@ const RenderFavorites = ({
             <HandleFavoriteButton
               type={type}
               isFavorite={
-                type === "Genre" && isEditPage ? favorites.includes(item) : true
+                type === renderType.GENRE && isEditPage
+                  ? favorites.includes(item)
+                  : true
               }
-              data={type === "Genre" ? item : item.id.toString()}
+              data={type === renderType.GENRE ? item : item.id.toString()}
             />
           }
         >
-          {type === "Anime" && (
+          {type === renderType.ANIME && (
             <Avatar size="medium" source={{ uri: item.image }} />
           )}
           <ListItem.Content>
             <ListItem.Title>
-              {type === "Genre" ? item : item.title}
+              {type === renderType.GENRE ? item : item.title}
             </ListItem.Title>
-            {type === "Genre" && isEditPage && (
+            {type === renderType.GENRE && isEditPage && (
               <ListItem.Subtitle>
                 {favorites.includes(item) ? "Favorite" : ""}
               </ListItem.Subtitle>

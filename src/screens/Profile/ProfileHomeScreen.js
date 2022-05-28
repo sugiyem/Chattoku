@@ -14,7 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../../firebase/Config";
 import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
-import RenderFavorites from "../../components/Profile/RenderFavorites";
+import RenderFavorites, {
+  renderType,
+} from "../../components/Profile/RenderFavorites";
 
 const initialState = {
   username: "",
@@ -35,7 +37,11 @@ const ProfileHomeScreen = () => {
     {
       title: "Favorite Genre",
       render: ({ items }) => (
-        <RenderFavorites type="Genre" items={items} navigation={navigation} />
+        <RenderFavorites
+          type={renderType.GENRE}
+          items={items}
+          navigation={navigation}
+        />
       ),
       data: userInfo.genres,
       isExpanded: genreExpanded,
@@ -44,7 +50,11 @@ const ProfileHomeScreen = () => {
     {
       title: "Favorite Anime",
       render: ({ items }) => (
-        <RenderFavorites type="Anime" items={items} navigation={navigation} />
+        <RenderFavorites
+          type={renderType.ANIME}
+          items={items}
+          navigation={navigation}
+        />
       ),
       data: favoriteAnime,
       isExpanded: animeExpanded,

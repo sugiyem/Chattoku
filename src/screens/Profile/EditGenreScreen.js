@@ -12,7 +12,9 @@ import {
 import { CheckBox } from "react-native-elements";
 import { GENRES } from "../../constants/MyAnimeList";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
-import RenderFavorites from "../../components/Profile/RenderFavorites";
+import RenderFavorites, {
+  renderType,
+} from "../../components/Profile/RenderFavorites";
 
 const EditGenreScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -66,7 +68,7 @@ const EditGenreScreen = ({ navigation }) => {
       <Text style={styles.title}>Genre lists</Text>
       <View>
         <RenderFavorites
-          type="Genre"
+          type={renderType.GENRE}
           isEditPage={true}
           items={GENRES.filter((value) =>
             value.toLowerCase().startsWith(search.toLowerCase())

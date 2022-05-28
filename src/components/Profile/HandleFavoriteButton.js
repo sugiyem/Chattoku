@@ -8,6 +8,11 @@ import {
   removeAnimeFromFavorite,
 } from "../../firebase/HandleFavorite";
 
+const buttonType = {
+  GENRE: 0,
+  ANIME: 1,
+};
+
 const HandleFavoriteButton = ({ type, isFavorite = true, data }) => {
   return (
     <Button
@@ -15,7 +20,7 @@ const HandleFavoriteButton = ({ type, isFavorite = true, data }) => {
       buttonStyle={isFavorite ? styles.removeButton : styles.addButton}
       icon={{ name: isFavorite ? "delete" : "add", color: "white" }}
       onPress={() => {
-        if (type === "Genre") {
+        if (type === buttonType.GENRE) {
           if (isFavorite) {
             removeGenreFromFavorite(data);
           } else {
