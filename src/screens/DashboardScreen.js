@@ -6,7 +6,7 @@ import AnimeScreen from "./Anime/AnimeScreen";
 import ChatScreen from "./ChatScreen";
 import FriendScreen from "./Friend/FriendScreen";
 import HomeScreen from "./HomeScreen";
-import ProfileScreen from "./ProfileScreen";
+import ProfileScreen from "./Profile/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
