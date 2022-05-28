@@ -8,7 +8,7 @@ import {
   removeAnimeFromFavorite,
 } from "../../firebase/HandleFavorite";
 
-const buttonType = {
+export const buttonType = {
   GENRE: 0,
   ANIME: 1,
 };

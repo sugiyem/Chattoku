@@ -1,12 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Avatar, ListItem } from "react-native-elements";
-import HandleFavoriteButton from "./HandleFavoriteButton";
+import HandleFavoriteButton, { buttonType } from "./HandleFavoriteButton";
 
-export const renderType = {
-  GENRE: 0,
-  ANIME: 1,
-};
+export const renderType = buttonType;
 
 const RenderFavorites = ({
   type,
