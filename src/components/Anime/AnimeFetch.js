@@ -17,13 +17,13 @@ export default AnimeFetch = async ({
   let url;
 
   switch (type) {
-    case 0:
+    case fetchType.SEARCH:
       url = SEARCH_URL + "&page=" + page + "&q=" + search;
       break;
-    case 1:
+    case fetchType.AIRING:
       url = AIRING_URL + "&page=" + page;
       break;
-    case 2:
+    case fetchType.TOP:
       url = TOP_URL + "?page=" + page;
       break;
   }
