@@ -1,13 +1,11 @@
-import { StyleSheet, Text } from "react-native";
+import { Alert, StyleSheet, Text } from "react-native";
 import ForumCard from "../../components/Forum/ForumCard";
-
-const testData = {
-  img: "https://wallpaperaccess.com/full/8031977.png",
-  title: "Kitagawa Marin Simp"
-};
+import FetchForumData from "../../components/Forum/FetchForumData";
+import ForumList from "../../components/Forum/ForumList";
+import { useEffect } from "react";
 
 const ForumScreen = () => {
-  return <ForumCard {...testData} />;
+  return <ForumList />;
 };
 
 export default ForumScreen;

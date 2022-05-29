@@ -1,15 +1,22 @@
 import { firebase } from "../../firebase/Config";
 
 const FetchForumData = (onSuccesfulFetch, onFailure) => {
+  const forums = [];
+
   firebase
     .firestore()
     .collection("forums")
-    .onSnapshot((querySnapshot) => {
-      const forums = [];
+    .get()
+    .then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        forums.push(documentSnapshot.data());
+        console.log(documentSnapshot);
+        forums.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
       });
-
+      console.log(forums);
+      console.log(onSuccesfulFetch);
       onSuccesfulFetch(forums);
-    }, onFailure);
+    })
+    .catch((e) => console.error(e));
 };
+
+export default FetchForumData;
