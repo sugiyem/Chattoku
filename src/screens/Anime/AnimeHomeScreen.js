@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/core";
 import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
-import FetchFavoriteAnime from "../../components/Anime/FetchFavoriteAnime";
+import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
 
 const AnimeHomeScreen = () => {
   const [search, setSearch] = useState("");
