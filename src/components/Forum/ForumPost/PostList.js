@@ -19,7 +19,7 @@ const PostList = ({ forumId }) => {
   console.log(posts);
 
   const renderItem = ({ section, item }) => {
-    return <PostCard {...item} forumId={forumId} />;
+    return <PostCard {...item} forumId={forumId} setPosts={setPosts} />;
   };
 
   const renderHeader = () => <></>;

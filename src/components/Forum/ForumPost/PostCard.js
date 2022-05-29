@@ -1,12 +1,16 @@
 import { Card, Icon } from "react-native-elements";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { deletePost } from "./HandleForumPost";
 
-const PostCard = ({ title, content, id, uid, forumId }) => {
+const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
+  const currentUID = firebase.auth().currentUser.uid;
+
+  console.log(currentUID);
 
   useEffect(() => {
     firebase
@@ -40,6 +44,24 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
           <Icon name="comment" type="material" />
           <Text> comment</Text>
         </TouchableOpacity>
+        {currentUID === uid && (
+          <TouchableOpacity
+            style={styles.action}
+            onPress={() =>
+              deletePost(
+                forumId,
+                id,
+                () => {
+                  setPosts((data) => data.filter((post) => post.id !== id));
+                },
+                () => {}
+              )
+            }
+          >
+            <Icon name="delete" type="material" color="red" />
+            <Text style={styles.delete}> Delete </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </Card>
   );
@@ -59,10 +81,14 @@ const styles = StyleSheet.create({
   actionBar: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 10
+    marginTop: 10,
+    justifyContent: "space-evenly"
   },
   action: {
     display: "flex",
     flexDirection: "row"
+  },
+  delete: {
+    color: "red"
   }
 });
