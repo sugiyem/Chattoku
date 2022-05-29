@@ -1,17 +1,19 @@
 import {
+  Alert,
+  Image,
+  SafeAreaView,
   StyleSheet,
   Text,
-  SafeAreaView,
-  Button,
   TextInput,
-  Alert
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { firebase } from "../firebase/Config";
 import { useState } from "react";
 
 const initialState = {
   email: "",
-  password: ""
+  password: "",
 };
 
 const LoginScreen = ({ navigation }) => {
@@ -20,7 +22,7 @@ const LoginScreen = ({ navigation }) => {
   function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: text
+      [name]: text,
     });
   }
 
@@ -54,29 +56,39 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.Container}>
-      <Text> Log In </Text>
-      <Text> email </Text>
-      <TextInput
-        placeholder="email"
-        value={credentials.email}
-        onChangeText={(text) => handleChangeText(text, "email")}
-      />
-      <Text> password </Text>
-      <TextInput
-        placeholder="password"
-        secureTextEntry={true}
-        value={credentials.password}
-        onChangeText={(text) => handleChangeText(text, "password")}
-      />
-      <Button onPress={handleSubmit} title="Log In" />
-      <Button
-        onPress={() => {
-          redirectToSignupScreen(navigation);
-        }}
-        style={styles.Login}
-        title="Don't Have an Account? Sign Up Here"
-      />
+    <SafeAreaView style={styles.container}>
+      <Image style={styles.logoImage} source={require("../assets/logo.png")} />
+      <View style={styles.systemContainer}>
+        <Text style={styles.title}> Log In </Text>
+        <Text> Email </Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="email"
+          value={credentials.email}
+          onChangeText={(text) => handleChangeText(text, "email")}
+        />
+        <Text> Password </Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="password"
+          secureTextEntry={true}
+          value={credentials.password}
+          onChangeText={(text) => handleChangeText(text, "password")}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            redirectToSignupScreen(navigation);
+          }}
+        >
+          <Text style={styles.buttonText}>
+            Don't Have an Account? Sign Up Here
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -88,16 +100,55 @@ function redirectToSignupScreen(navigation) {
 }
 
 const styles = StyleSheet.create({
-  Container: {
-    display: "flex",
+  container: {
+    flex: 1,
+    padding: 5,
     rowGap: "15px",
-    // height: "600px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "cyan"
+    backgroundColor: "darkcyan",
   },
-  Login: {
-    marginTop: "20px",
-    alignSelf: "center"
-  }
+  logoImage: {
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+    borderWidth: 1,
+    backgroundColor: "white",
+    marginBottom: 10,
+  },
+  systemContainer: {
+    margin: 10,
+    backgroundColor: "cyan",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    alignSelf: "stretch",
+  },
+  title: {
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 25,
+    color: "darkslateblue",
+  },
+  textInputContainer: {
+    borderRadius: 10,
+    borderWidth: 1,
+    alignSelf: "stretch",
+    backgroundColor: "white",
+    padding: 5,
+    marginVertical: 10,
+  },
+  button: {
+    alignSelf: "stretch",
+    textAlign: "center",
+    backgroundColor: "blue",
+    borderRadius: 5,
+    borderWidth: 1,
+    marginVertical: 5,
+    padding: 5,
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+  },
 });

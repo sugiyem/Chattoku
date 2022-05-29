@@ -1,10 +1,12 @@
 import {
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  Button,
-  Text,
   Alert,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useState } from "react";
 import React from "react";
@@ -36,6 +38,7 @@ const SignupScreen = ({ navigation }) => {
 
     if (!isValidUsername(credentials.username)) {
       Alert.alert(
+        "invalid username",
         "username must only contains alphanumeric characters and must at least be 1 character long"
       );
     } else if (isUsernameNotAvailable) {
@@ -60,6 +63,7 @@ const SignupScreen = ({ navigation }) => {
             bio: "",
             img: "",
             genres: [],
+            friends: [],
             id: currentUID,
           });
 
@@ -81,42 +85,53 @@ const SignupScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.Container}>
-      <Text> Sign Up </Text>
-      <Text> username </Text>
-      <TextInput
-        placeholder="username"
-        value={credentials.username}
-        onChangeText={(text) => handleChangeText(text, "username")}
-      />
-      <Text> email </Text>
-      <TextInput
-        placeholder="email"
-        value={credentials.email}
-        onChangeText={(text) => handleChangeText(text, "email")}
-      />
-      <Text> password </Text>
-      <TextInput
-        placeholder="password"
-        secureTextEntry={true}
-        value={credentials.password}
-        onChangeText={(text) => handleChangeText(text, "password")}
-      />
-      <Text> confirm password</Text>
-      <TextInput
-        placeholder="confirm password"
-        secureTextEntry={true}
-        value={credentials.confirmPass}
-        onChangeText={(text) => handleChangeText(text, "confirmPass")}
-      />
-      <Button onPress={handleSubmit} title="Sign Up" />
-      <Button
-        onPress={() => {
-          redirectToLoginScreen(navigation);
-        }}
-        style={styles.Login}
-        title="Have an account? Login Now"
-      />
+    <SafeAreaView style={styles.container}>
+      <Image style={styles.logoImage} source={require("../assets/logo.png")} />
+
+      <View style={styles.systemContainer}>
+        <Text style={styles.title}> Sign Up </Text>
+        <Text> Username </Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="username"
+          value={credentials.username}
+          onChangeText={(text) => handleChangeText(text, "username")}
+        />
+        <Text> Email </Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="email"
+          value={credentials.email}
+          onChangeText={(text) => handleChangeText(text, "email")}
+        />
+        <Text> Password </Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="password"
+          secureTextEntry={true}
+          value={credentials.password}
+          onChangeText={(text) => handleChangeText(text, "password")}
+        />
+        <Text> Confirm password</Text>
+        <TextInput
+          style={styles.textInputContainer}
+          placeholder="confirm password"
+          secureTextEntry={true}
+          value={credentials.confirmPass}
+          onChangeText={(text) => handleChangeText(text, "confirmPass")}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            redirectToLoginScreen(navigation);
+          }}
+        >
+          <Text style={styles.buttonText}>Have an account? Login Now</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -139,16 +154,55 @@ function redirectToLoginScreen(navigation) {
 export default SignupScreen;
 
 const styles = StyleSheet.create({
-  Container: {
-    display: "flex",
+  container: {
+    flex: 1,
+    padding: 5,
     rowGap: "15px",
-    // height: "600px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "cyan",
+    backgroundColor: "darkcyan",
   },
-  Login: {
-    marginTop: "20px",
-    alignSelf: "center",
+  logoImage: {
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+    borderWidth: 1,
+    backgroundColor: "white",
+    marginBottom: 10,
+  },
+  systemContainer: {
+    margin: 10,
+    backgroundColor: "cyan",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    alignSelf: "stretch",
+  },
+  title: {
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 25,
+    color: "darkslateblue",
+  },
+  textInputContainer: {
+    borderRadius: 10,
+    borderWidth: 1,
+    alignSelf: "stretch",
+    backgroundColor: "white",
+    padding: 5,
+    marginVertical: 10,
+  },
+  button: {
+    alignSelf: "stretch",
+    textAlign: "center",
+    backgroundColor: "blue",
+    borderRadius: 5,
+    borderWidth: 1,
+    marginVertical: 5,
+    padding: 5,
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
   },
 });
