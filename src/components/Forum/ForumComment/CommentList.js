@@ -16,7 +16,15 @@ const CommentList = ({ forumId, postId }) => {
   }, []);
 
   const renderItem = ({ section, item }) => {
-    return <CommentCard {...item} />;
+    console.log(item);
+    return (
+      <CommentCard
+        {...item}
+        forumId={forumId}
+        postId={postId}
+        setComments={setComments}
+      />
+    );
   };
 
   const renderHeader = () => <></>;
