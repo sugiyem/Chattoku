@@ -4,6 +4,8 @@ import ForumHomeScreen from "./Forum/ForumHomeScreen";
 import ForumScreen from "./Forum/ForumScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddPostScreen from "./Forum/AddPostScreen";
+import ForumPostScreen from "./Forum/ForumPostScreen";
+import AddCommentScreen from "./Forum/AddCommentScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +18,8 @@ const HomeScreen = () => {
       <Stack.Screen name="ForumHome" component={ForumHomeScreen} />
       <Stack.Screen name="Forum" component={ForumScreen} />
       <Stack.Screen name="AddPost" component={AddPostScreen} />
+      <Stack.Screen name="Post" component={ForumPostScreen} />
+      <Stack.Screen name="AddComment" component={AddCommentScreen} />
     </Stack.Navigator>
   );
 };

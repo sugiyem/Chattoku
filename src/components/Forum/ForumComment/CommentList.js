@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
 import { SectionList } from "react-native";
-import FetchPost from "./FetchPost";
-import PostCard from "./PostCard";
+import FetchComment from "./FetchComment";
+import CommentCard from "./CommentCard";
 
-const PostList = ({ forumId }) => {
-  const [posts, setPosts] = useState([]);
+const CommentList = ({ forumId, postId }) => {
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    FetchPost(
+    FetchComment(
       forumId,
-      (data) => setPosts(data),
+      postId,
+      (data) => setComments(data),
       () => {}
     );
   }, []);
 
-  //
-  console.log("POST LIST");
-  console.log(posts);
-
   const renderItem = ({ section, item }) => {
-    return <PostCard {...item} forumId={forumId} />;
+    return <CommentCard {...item} />;
   };
 
   const renderHeader = () => <></>;
@@ -30,7 +27,7 @@ const PostList = ({ forumId }) => {
     <>
       <SectionList
         removeClippedSubviews={true}
-        sections={[{ data: posts }]}
+        sections={[{ data: comments }]}
         renderItem={renderItem}
         renderHeader={renderHeader}
         renderFooter={renderFooter}
@@ -39,4 +36,4 @@ const PostList = ({ forumId }) => {
   );
 };
 
-export default PostList;
+export default CommentList;

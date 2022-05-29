@@ -2,9 +2,11 @@ import { Card, Icon } from "react-native-elements";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
-const PostCard = ({ title, content, uid }) => {
-  const [username, setUsername] = useState("");
+const PostCard = ({ title, content, id, uid, forumId }) => {
+  const navigation = useNavigation();
+  const [username, setUsername] = useState("fetching username...");
 
   useEffect(() => {
     firebase
@@ -15,6 +17,18 @@ const PostCard = ({ title, content, uid }) => {
       .then((snapshot) => setUsername(snapshot.data().username));
   }, []);
 
+  function handleCommentPress() {
+    navigation.navigate("Post", {
+      data: {
+        title: title,
+        content: content,
+        postId: id,
+        forumId: forumId,
+        uid: uid
+      }
+    });
+  }
+
   return (
     <Card style={styles.container}>
       <Text> User: {username}</Text>
@@ -22,7 +36,7 @@ const PostCard = ({ title, content, uid }) => {
       <Text> {content} </Text>
       <Card.Divider />
       <View style={styles.actionBar}>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
           <Icon name="comment" type="material" />
           <Text> comment</Text>
         </TouchableOpacity>
