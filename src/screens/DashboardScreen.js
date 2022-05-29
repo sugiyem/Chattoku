@@ -3,7 +3,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import AnimeScreen from "./Anime/AnimeScreen";
-import ChatScreen from "./ChatScreen";
+import ChatScreen from "./Chat/ChatScreen";
 import FriendScreen from "./Friend/FriendScreen";
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./Profile/ProfileScreen";
@@ -58,6 +58,7 @@ const DashboardScreen = () => {
             tabBarIcon: ({ tintColor }) => (
               <Icon name={item.icon} color="aquamarine" size={30} />
             ),
+            unmountOnBlur: item.name === "Chat",
           }}
         />
       ))}
