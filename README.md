@@ -31,18 +31,48 @@ We aim to create a cross-platform mobile application for anime lovers that will
 provide them with anime databases, and a recommendation system based on their
 favorite genre and anime series, as well as a platform to discuss various topics with
 other users via forum and direct messages.
-# Key Features
+# Target Key Features
 - Anime database 
 - Anime recommendation system
 - Forum
 - Friend system
 - Messaging (Direct & Group messaging)
+# Current Progress
+- Authentication
+  - Login page
+  - Register page
+  - Logout functionality
+- Forum prototype system
+  - Dummy subforums where user can create and delete posts or comments
+- Anime database
+  - Search a specific anime by its title
+  - Add and remove anime from user’s favorite list
+  - Get currently airing and top anime
+- Friend prototype system
+  - Add other user as a friend
+  - Unfriend a specific user
+  - Search friend by username
+- Basic chat functionality (1 on 1 messaging)
+- Profile page
+  - Allow user to customize its username, bio, and profile picture
+  - Fetch user’s favorite anime and genre
+  - Stack navigation to “edit favorite genre” section
+
 # Milestones
 **Milestone 1:** [Link](https://docs.google.com/document/d/1D8-vLoXohN733jaWMTrmSIA6-HuqPS0upaHn05JqmIY/edit?usp=sharing)
-# Deployment
-Chattoku will be deployed soon. <br />
 
-# Sample Screenshots
-Some sample screenshot of the app will be added soon.
+# Documentation
+**User's guide:** [Link](https://docs.google.com/document/d/1vRrCSPBEcgSpYMyXMdp4F-L_7FXV8Iy6uVZLQcCYXu4/edit?usp=sharing)
+
+# Deployment
+As of milestone 1, Chattoku has been deployed for users to take a look at what this app can do. <br />
+
+Download Expo Go on your mobile phones and scan the QR code below to try using Chattoku. <br />
+
+<div align="center">
+  <img src="https://qr.expo.dev/expo-go?owner=team-w&slug=Chattoku&releaseChannel=default&host=exp.host"/>
+</div>
+
+Link to our deployed app: [Link](https://expo.dev/@team-w/Chattoku)
 
 
