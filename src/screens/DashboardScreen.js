@@ -42,6 +42,7 @@ const DashboardScreen = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarStyle: { backgroundColor: "navy" },
         headerStyle: { backgroundColor: "darkslateblue" },
         headerTitleStyle: { color: "teal" }
@@ -58,7 +59,7 @@ const DashboardScreen = () => {
             tabBarIcon: ({ tintColor }) => (
               <Icon name={item.icon} color="aquamarine" size={30} />
             ),
-            unmountOnBlur: item.name === "Chat",
+            unmountOnBlur: item.name === "Chat"
           }}
         />
       ))}
