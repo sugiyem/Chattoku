@@ -17,7 +17,7 @@ const initialState = {
   username: "",
   email: "",
   password: "",
-  confirmPass: "",
+  confirmPass: ""
 };
 
 const SignupScreen = ({ navigation }) => {
@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }) => {
   function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: text,
+      [name]: text
     });
   }
 
