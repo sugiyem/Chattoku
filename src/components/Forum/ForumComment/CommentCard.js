@@ -61,7 +61,9 @@ const styles = StyleSheet.create({
   },
   action: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    alignSelf: "center",
+    margin: 10
   },
   delete: {
     color: "red"

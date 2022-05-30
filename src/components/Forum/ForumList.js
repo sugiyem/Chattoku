@@ -1,8 +1,14 @@
-import { Alert, SectionList, Text } from "react-native";
+import {
+  Alert,
+  Platform,
+  SectionList,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import FetchForumData from "./FetchForumData";
 import ForumCard from "./ForumCard";
 import { useState, useEffect } from "react";
-import { Header } from "react-native-elements";
 
 const initialData = [
   {
@@ -37,7 +43,7 @@ const ForumList = () => {
 
   return (
     <>
-      <Header centerComponent={<Text>List Of Forums</Text>} />
+      <Text style={styles.text}>List of forums</Text>
       <SectionList
         removeClippedSubviews={true}
         sections={data}
@@ -50,3 +56,22 @@ const ForumList = () => {
 };
 
 export default ForumList;
+
+const styles = StyleSheet.create({
+  textContainer: {
+    alignItems: "stretch",
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "lightblue",
+    margin: 5,
+    padding: 5
+  },
+  text: {
+    fontSize: 25,
+    fontWeight: "bold",
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
+    textAlign: "center",
+    margin: 10,
+    textDecorationLine: "underline"
+  }
+});

@@ -41,7 +41,7 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
       <Card.Divider />
       <View style={styles.actionBar}>
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
-          <Icon name="comment" type="material" />
+          <Icon name="comment" type="material" color="blue" />
           <Text> comment</Text>
         </TouchableOpacity>
         {currentUID === uid && (
@@ -74,7 +74,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   title: {
-    fontSize: 16
+    fontSize: 16,
+    marginTop: 10
   },
   actionBar: {
     display: "flex",
