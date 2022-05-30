@@ -1,10 +1,10 @@
 import { Card, Icon } from "react-native-elements";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
 import { DeleteComment } from "./HandleComment";
 
-const CommentCard = ({ content, uid, forumId, postId, id, setComments }) => {
+const CommentCard = ({ content, uid, forumId, postId, id }) => {
   const currentUID = firebase.auth().currentUser.uid;
   const [username, setUsername] = useState("fetching username...");
 
@@ -35,11 +35,8 @@ const CommentCard = ({ content, uid, forumId, postId, id, setComments }) => {
               forumId,
               postId,
               id,
-              () =>
-                setComments((data) =>
-                  data.filter((comment) => comment.id !== id)
-                ),
-              () => {}
+              () => {},
+              (e) => Alert.alert(e)
             )
           }
         >

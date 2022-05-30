@@ -1,19 +1,19 @@
 import { firebase } from "../../../firebase/Config";
 
 export default function FetchPost(forumId, onSuccessfulFetch, onError) {
-  const posts = [];
-
-  firebase
+  return firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("posts")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        posts.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
-      });
-      onSuccessfulFetch(posts);
-    })
-    .catch((e) => onError(e));
+    .onSnapshot(
+      (querySnapshot) => {
+        const posts = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          posts.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+        });
+        onSuccessfulFetch(posts);
+      },
+      (error) => onError(error)
+    );
 }

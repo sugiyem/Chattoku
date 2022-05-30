@@ -1,16 +1,16 @@
 import { Card, Icon } from "react-native-elements";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "./HandleForumPost";
 
-const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
+const PostCard = ({ title, content, id, uid, forumId }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
 
-  console.log(currentUID);
+  // console.log(currentUID);
 
   useEffect(() => {
     firebase
@@ -51,10 +51,8 @@ const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
               deletePost(
                 forumId,
                 id,
-                () => {
-                  setPosts((data) => data.filter((post) => post.id !== id));
-                },
-                () => {}
+                () => {},
+                (e) => Alert.alert(e)
               )
             }
           >

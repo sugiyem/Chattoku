@@ -49,7 +49,7 @@ const AddPostScreen = () => {
             data.id,
             post,
             () => navigation.navigate("Forum", { data: data }),
-            () => {}
+            (e) => Alert.alert(e)
           );
         }}
       />

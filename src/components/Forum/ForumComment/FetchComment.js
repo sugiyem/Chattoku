@@ -6,21 +6,24 @@ export default function FetchComment(
   onSuccessfulFetch,
   onError
 ) {
-  const comments = [];
-
-  firebase
+  return firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("posts")
     .doc(postId)
     .collection("comments")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        comments.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
-      });
-      onSuccessfulFetch(comments);
-    })
-    .catch((e) => onError(e));
+    .onSnapshot(
+      async (querySnapshot) => {
+        const comments = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          comments.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id
+          });
+        });
+        onSuccessfulFetch(comments);
+      },
+      (e) => onError(e)
+    );
 }

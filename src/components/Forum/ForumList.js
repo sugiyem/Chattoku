@@ -1,6 +1,5 @@
 import { Alert, SectionList, Text } from "react-native";
 import FetchForumData from "./FetchForumData";
-import { firebase } from "../../firebase/Config";
 import ForumCard from "./ForumCard";
 import { useState, useEffect } from "react";
 import { Header } from "react-native-elements";
@@ -14,13 +13,13 @@ const initialData = [
 const ForumList = () => {
   const [data, setData] = useState(initialData);
 
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
-    console.log("useEffect triggered");
+    // console.log("useEffect triggered");
     return FetchForumData(
       (documents) => setData([{ data: documents }]),
-      (e) => console.error(e)
+      (e) => Alert.alert(e)
     );
   }, []);
 

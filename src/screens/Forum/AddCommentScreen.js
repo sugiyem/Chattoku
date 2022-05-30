@@ -48,7 +48,7 @@ const AddCommentScreen = () => {
             data.postId,
             comment,
             () => navigation.navigate("Post", { data: data }),
-            () => {}
+            (e) => Alert.alert(e)
           )
         }
       />
