@@ -90,11 +90,11 @@ function redirectToSignupScreen(navigation) {
 const styles = StyleSheet.create({
   Container: {
     display: "flex",
-    rowGap: "15px",
-    // height: "600px",
+    fontSize: "12px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "cyan"
+    backgroundColor: "aquamarine",
+    flex: 1
   },
   Login: {
     marginTop: "20px",
