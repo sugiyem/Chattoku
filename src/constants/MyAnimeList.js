@@ -19,7 +19,6 @@ export const GENRES = [
   "Ecchi",
   "Fantasy",
   "Game",
-  "Hentai",
   "Historical",
   "Horror",
   "Kids",

@@ -1,10 +1,10 @@
 import { firebase } from "../../../firebase/Config";
 import Warning from "../Warning";
 
-export function AddComment(forumId, postId, comment, onSuccess, onError) {
+export async function AddComment(forumId, postId, comment, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
 
-  firebase
+  await firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -13,21 +13,28 @@ export function AddComment(forumId, postId, comment, onSuccess, onError) {
     .collection("comments")
     .add({ content: comment, uid: currentUID })
     .then(() => onSuccess())
-    .catch((e) => onError());
+    .catch((e) => onError(e));
 }
 
-export function DeleteComment(forumId, postId, commentId, onSuccess, onError) {
-  Warning(() =>
-    firebase
-      .firestore()
-      .collection("forums")
-      .doc(forumId)
-      .collection("posts")
-      .doc(postId)
-      .collection("comments")
-      .doc(commentId)
-      .delete()
-      .then(() => onSuccess())
-      .catch((e) => onError())
+export async function DeleteComment(
+  forumId,
+  postId,
+  commentId,
+  onSuccess,
+  onError
+) {
+  Warning(
+    async () =>
+      await firebase
+        .firestore()
+        .collection("forums")
+        .doc(forumId)
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .delete()
+        .then(() => onSuccess())
+        .catch((e) => onError(e))
   );
 }

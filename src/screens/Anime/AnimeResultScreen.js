@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
-import FetchFavoriteAnime from "../../components/Anime/FetchFavoriteAnime";
+import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
 
 const AnimeResultScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState(route.params.search);

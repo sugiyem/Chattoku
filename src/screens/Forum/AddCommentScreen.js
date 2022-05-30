@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { TextInput, StyleSheet, Text, View, Alert } from "react-native";
-import { Button, Card } from "react-native-elements";
+import {
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
+  Alert
+} from "react-native";
+import { Card } from "react-native-elements";
 import { firebase } from "../../firebase/Config";
 import { AddComment } from "../../components/Forum/ForumComment/HandleComment";
 
@@ -33,25 +40,37 @@ const AddCommentScreen = () => {
 
   return (
     <View style={styles.container}>
-      <MainPost {...data} />
-      <TextInput
-        multiline={true}
-        style={styles.input}
-        placeholder="write your comment..."
-        onChangeText={(t) => setComment(t)}
-      />
-      <Button
-        title="Post Comment"
-        onPress={() =>
-          AddComment(
-            data.forumId,
-            data.postId,
-            comment,
-            () => navigation.navigate("Post", { data: data }),
-            () => {}
-          )
-        }
-      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>Go Back</Text>
+      </TouchableOpacity>
+
+      <View style={styles.detailContainer}>
+        <MainPost {...data} />
+        <TextInput
+          multiline={true}
+          style={styles.input}
+          placeholder="write your comment..."
+          onChangeText={(t) => setComment(t)}
+        />
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            AddComment(
+              data.forumId,
+              data.postId,
+              comment,
+              () => navigation.navigate("Post", { data: data }),
+              (e) => Alert.alert(e)
+            )
+          }
+        >
+          <Text style={styles.buttonText}>Post Comment</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -70,9 +89,18 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   container: {
-    backgroundColor: "aquamarine",
+    backgroundColor: "darkcyan",
     flex: 1,
-    padding: 20
+    padding: 5,
+    borderColor: "black"
+  },
+  detailContainer: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "cyan",
+    padding: 20,
+    margin: 5
   },
   input: {
     height: 200,
@@ -82,5 +110,17 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlignVertical: "top",
     margin: 20
+  },
+  button: {
+    padding: 5,
+    margin: 5,
+    alignSelf: "stretch",
+    borderRadius: 5,
+    backgroundColor: "blue"
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontSize: 18
   }
 });

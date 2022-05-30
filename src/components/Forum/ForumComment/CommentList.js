@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SectionList } from "react-native";
+import { Alert, SectionList } from "react-native";
 import FetchComment from "./FetchComment";
 import CommentCard from "./CommentCard";
 
@@ -7,24 +7,17 @@ const CommentList = ({ forumId, postId }) => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    FetchComment(
+    return FetchComment(
       forumId,
       postId,
       (data) => setComments(data),
-      () => {}
+      (error) => Alert.alert(error)
     );
   }, []);
 
   const renderItem = ({ section, item }) => {
     console.log(item);
-    return (
-      <CommentCard
-        {...item}
-        forumId={forumId}
-        postId={postId}
-        setComments={setComments}
-      />
-    );
+    return <CommentCard {...item} forumId={forumId} postId={postId} />;
   };
 
   const renderHeader = () => <></>;

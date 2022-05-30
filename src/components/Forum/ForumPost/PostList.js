@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SectionList } from "react-native";
+import { Alert, SectionList } from "react-native";
 import FetchPost from "./FetchPost";
 import PostCard from "./PostCard";
 
@@ -7,19 +7,18 @@ const PostList = ({ forumId }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    FetchPost(
+    return FetchPost(
       forumId,
       (data) => setPosts(data),
-      () => {}
+      (error) => Alert.alert(error)
     );
   }, []);
 
-  //
-  console.log("POST LIST");
-  console.log(posts);
+  // console.log("POST LIST");
+  // console.log(posts);
 
   const renderItem = ({ section, item }) => {
-    return <PostCard {...item} forumId={forumId} setPosts={setPosts} />;
+    return <PostCard {...item} forumId={forumId} />;
   };
 
   const renderHeader = () => <></>;

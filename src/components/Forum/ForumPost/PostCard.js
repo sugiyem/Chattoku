@@ -1,16 +1,16 @@
 import { Card, Icon } from "react-native-elements";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "./HandleForumPost";
 
-const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
+const PostCard = ({ title, content, id, uid, forumId }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
 
-  console.log(currentUID);
+  // console.log(currentUID);
 
   useEffect(() => {
     firebase
@@ -41,7 +41,7 @@ const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
       <Card.Divider />
       <View style={styles.actionBar}>
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
-          <Icon name="comment" type="material" />
+          <Icon name="comment" type="material" color="blue" />
           <Text> comment</Text>
         </TouchableOpacity>
         {currentUID === uid && (
@@ -51,10 +51,8 @@ const PostCard = ({ title, content, id, uid, forumId, setPosts }) => {
               deletePost(
                 forumId,
                 id,
-                () => {
-                  setPosts((data) => data.filter((post) => post.id !== id));
-                },
-                () => {}
+                () => {},
+                (e) => Alert.alert(e)
               )
             }
           >
@@ -76,7 +74,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   title: {
-    fontSize: 16
+    fontSize: 16,
+    marginTop: 10
   },
   actionBar: {
     display: "flex",

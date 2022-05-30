@@ -66,6 +66,14 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  const removeImage = () => {
+    setUserInfo({
+      ...userInfo,
+      img: "",
+    });
+    setModalVisible(false);
+  };
+
   const uploadImage = async (imgUrl) => {
     if (imgUrl == null || imgUrl.length == 0) {
       return;
@@ -152,6 +160,12 @@ const EditProfileScreen = ({ navigation, route }) => {
             onPress={() => pickImageFromLibrary()}
           >
             <Text style={styles.buttonText}>Choose From Library</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => removeImage()}
+          >
+            <Text style={styles.buttonText}>Remove Image</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.modalButton}

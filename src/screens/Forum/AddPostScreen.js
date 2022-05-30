@@ -1,6 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Alert
+} from "react-native";
 import { addPost } from "../../components/Forum/ForumPost/HandleForumPost";
 
 const initialState = {
@@ -24,6 +31,12 @@ const AddPostScreen = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>Go Back</Text>
+      </TouchableOpacity>
       <Text style={styles.title}> Post to {data.title} </Text>
       <View style={styles.inputContainer}>
         <Text> Title </Text>
@@ -42,17 +55,19 @@ const AddPostScreen = () => {
           onChangeText={(t) => handleChange(t, "content")}
         />
       </View>
-      <Button
-        title="Post To Forum"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => {
           addPost(
             data.id,
             post,
             () => navigation.navigate("Forum", { data: data }),
-            () => {}
+            (e) => Alert.alert(e)
           );
         }}
-      />
+      >
+        <Text style={styles.buttonText}>Post To Forum</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -62,14 +77,15 @@ export default AddPostScreen;
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    backgroundColor: "aquamarine",
+    backgroundColor: "darkcyan",
     flex: 1,
     padding: 15
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     textAlign: "center",
-    margin: 10
+    margin: 10,
+    textDecorationLine: "underline"
   },
   inputContainer: {
     margin: 10
@@ -88,5 +104,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     backgroundColor: "whitesmoke",
     textAlignVertical: "top"
+  },
+  button: {
+    alignSelf: "stretch",
+    margin: 5,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: "blue"
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontSize: 18
   }
 });

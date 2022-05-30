@@ -9,7 +9,10 @@ import {
 } from "react-native";
 import { Card } from "react-native-elements";
 import * as Linking from "expo-linking";
-import { firebase } from "../../firebase/Config";
+import {
+  addAnimeToFavorite,
+  removeAnimeFromFavorite,
+} from "../../firebase/HandleFavorite";
 
 const AnimeCard = ({ item, isFavorite }) => {
   return (
@@ -26,9 +29,9 @@ const AnimeCard = ({ item, isFavorite }) => {
           style={styles.button}
           onPress={() => {
             if (isFavorite) {
-              removeFromFavorite(item);
+              removeAnimeFromFavorite(item.mal_id.toString());
             } else {
-              addToFavorite(item);
+              addAnimeToFavorite(item);
             }
           }}
         >
@@ -58,48 +61,6 @@ const AnimeCard = ({ item, isFavorite }) => {
 };
 
 export default AnimeCard;
-
-async function addToFavorite(item) {
-  const userID = await firebase.auth().currentUser.uid;
-
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("anime")
-    .doc(item.mal_id.toString())
-    .set({
-      id: item.mal_id,
-      title: item.title,
-      image: item.images.jpg.image_url,
-      url: item.url,
-      genres: item.genres
-    })
-    .then(() => {
-      Alert.alert("Anime succesfully added to favorite");
-    })
-    .catch((error) => {
-      Alert.alert(error.message);
-    });
-}
-
-async function removeFromFavorite(item) {
-  const userID = await firebase.auth().currentUser.uid;
-
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("anime")
-    .doc(item.mal_id.toString())
-    .delete()
-    .then(() => {
-      Alert.alert("Anime succesfully removed from favorite");
-    })
-    .catch((error) => {
-      Alert.alert(error.message);
-    });
-}
 
 const styles = StyleSheet.create({
   image: {

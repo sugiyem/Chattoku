@@ -1,5 +1,5 @@
 import { Card } from "react-native-elements";
-import { Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const ForumCard = ({ img, title, id }) => {
@@ -12,7 +12,11 @@ const ForumCard = ({ img, title, id }) => {
 
   return (
     <Card style={styles.container}>
-      <Card.Image source={{ uri: img }} style={styles.image} />
+      <Card.Image
+        source={{ uri: img }}
+        style={styles.image}
+        containerStyle={styles.imageContainer}
+      />
       <Card.Divider />
       <Card.Title style={styles.title}>{title}</Card.Title>
       <TouchableOpacity onPress={goToForum} style={styles.button}>
@@ -37,6 +41,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "black",
+    margin: 10
+  },
+  imageContainer: {
     alignSelf: "center",
     justifyContent: "center"
   },

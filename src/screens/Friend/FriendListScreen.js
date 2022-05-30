@@ -25,18 +25,22 @@ const FriendListScreen = () => {
     {
       title: "Message",
       icon: "message",
-      onPress: (item) => navigation.navigate("Chat"),
+      onPress: (item) =>
+        navigation.navigate("Chat", {
+          screen: "ChatDetail",
+          params: { recipientID: item.id, recipientUsername: item.username },
+        }),
     },
     {
       title: "Unfriend",
       icon: "person-remove",
-      onPress: (item) => removeFriend(item),
+      onPress: (item) => removeFriend(item.id),
     },
   ];
 
   const RenderAccordion = ({ item }) =>
     datas.map((data, id) => (
-      <ListItem key={id} bottomDivider onPress={() => data.onPress(item.id)}>
+      <ListItem key={id} bottomDivider onPress={() => data.onPress(item)}>
         <Icon name={data.icon} size={30} color="blue" />
         <ListItem.Content>
           <ListItem.Title>{data.title}</ListItem.Title>

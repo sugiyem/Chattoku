@@ -1,23 +1,23 @@
-import { firebase } from "../../../firebase/Config";
 import { Alert } from "react-native";
+import { firebase } from "../../../firebase/Config";
 import Warning from "../Warning";
 
-export function addPost(forumId, post, onSuccess, onError) {
+export async function addPost(forumId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
 
-  firebase
+  await firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("posts")
     .add({ ...post, uid: currentUID })
     .then(() => onSuccess())
-    .catch((e) => onError());
+    .catch((e) => onError(e));
 }
 
-export function deletePost(forumId, postId, onSuccess, onError) {
-  Warning(() => {
-    firebase
+export async function deletePost(forumId, postId, onSuccess, onError) {
+  Warning(async () => {
+    await firebase
       .firestore()
       .collection("forums")
       .doc(forumId)
@@ -25,6 +25,6 @@ export function deletePost(forumId, postId, onSuccess, onError) {
       .doc(postId)
       .delete()
       .then(() => onSuccess())
-      .catch((e) => onError());
+      .catch((e) => onError(e));
   });
 }
