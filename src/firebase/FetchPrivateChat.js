@@ -3,7 +3,7 @@ import { firebase } from "./Config";
 export default FetchPrivateChat = ({
   recipientID,
   onSuccesfulFetch,
-  onFailure,
+  onFailure
 }) => {
   const userID = firebase.auth().currentUser.uid;
   const chatID =
@@ -18,20 +18,37 @@ export default FetchPrivateChat = ({
     .collection("messages")
     .orderBy("createdAt", "desc")
     .onSnapshot(
-      (querySnapshot) => {
+      async (querySnapshot) => {
         const messageLists = [];
+
+        if (userID > recipientID) {
+          await firebase.firestore().collection("chatrooms").doc(chatID).set(
+            {
+              showNotifToSecondUser: false
+            },
+            { merge: true }
+          );
+        } else {
+          await firebase.firestore().collection("chatrooms").doc(chatID).set(
+            {
+              showNotifToFirstUser: false
+            },
+            { merge: true }
+          );
+        }
+
         querySnapshot.forEach((documentSnapshot) => {
           const doc = documentSnapshot.data();
 
           if (doc.createdAt) {
             messageLists.push({
               ...doc,
-              createdAt: doc.createdAt.toDate(),
+              createdAt: doc.createdAt.toDate()
             });
           } else {
             messageLists.push({
               ...doc,
-              createdAt: new Date(),
+              createdAt: new Date()
             });
           }
         });

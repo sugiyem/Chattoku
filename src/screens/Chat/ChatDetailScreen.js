@@ -8,7 +8,7 @@ import FetchPrivateChat from "../../firebase/FetchPrivateChat";
 
 const initialState = {
   username: "",
-  img: "",
+  img: ""
 };
 
 const defaultAvatarUrl =
@@ -30,7 +30,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -42,7 +42,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -52,7 +52,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       ...msg,
       sentBy: userID,
       sentTo: recipientID,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
 
     setMessages((previousMessages) =>
@@ -81,7 +81,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         user={{
           _id: userID,
           name: userInfo.username,
-          avatar: userInfo.img.length > 0 ? userInfo.img : defaultAvatarUrl,
+          avatar: userInfo.img.length > 0 ? userInfo.img : defaultAvatarUrl
         }}
         renderUsernameOnMessage
         isLoadingEarlier
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "darkcyan",
-    padding: 5,
+    padding: 5
   },
   button: {
     borderRadius: 10,
@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
     backgroundColor: "aquamarine",
     padding: 5,
     margin: 5,
-    alignSelf: "stretch",
+    alignSelf: "stretch"
   },
   text: {
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });
