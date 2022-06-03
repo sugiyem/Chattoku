@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Alert,
   Image,
@@ -9,49 +10,27 @@ import {
   View
 } from "react-native";
 import { firebase } from "../firebase/Config";
-import { useState } from "react";
 
-const initialState = {
-  email: "",
-  password: ""
-};
-
-const LoginScreen = ({ navigation }) => {
-  const [credentials, setCredentials] = useState(initialState);
-
-  function handleChangeText(text, name) {
-    setCredentials({
-      ...credentials,
-      [name]: text
-    });
-  }
-
-  // console.log(credentials);
+const ForgotPasswordScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
 
   async function handleSubmit() {
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(credentials.email, credentials.password)
-      .catch((e) => {
-        console.log("Incorrect Credentials");
-        Alert.alert("Incorrect Email / Password");
-      });
-
-    const currentUser = await firebase.auth().currentUser;
-
-    console.log(currentUser);
-
-    if (currentUser === null) {
-      return;
-      // console.log("Incorrect Credentials");
-      // Alert.alert("Incorrect Email / Password");
-      // await firebase.auth().signOut();
-    } else if (!currentUser.emailVerified) {
-      console.log("email not verified");
-      Alert.alert("Please Verify Your Email Before Logging In");
-      await firebase.auth().signOut();
+    if (!isValidEmail(email)) {
+      Alert.alert("Email is not valid");
     } else {
-      navigation.replace("Dashboard");
+      await firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(() => {
+          Alert.alert(
+            "Email successfully sent",
+            "An email to reset your password has been sent." +
+              " Do check your spam folder"
+          );
+        })
+        .catch((error) => {
+          Alert.alert("Email is not registered");
+        });
     }
   }
 
@@ -59,24 +38,16 @@ const LoginScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Image style={styles.logoImage} source={require("../assets/logo.png")} />
       <View style={styles.systemContainer}>
-        <Text style={styles.title}> Log In </Text>
+        <Text style={styles.title}> Forgot Password </Text>
         <Text> Email </Text>
         <TextInput
           style={styles.textInputContainer}
           placeholder="email"
-          value={credentials.email}
-          onChangeText={(text) => handleChangeText(text, "email")}
-        />
-        <Text> Password </Text>
-        <TextInput
-          style={styles.textInputContainer}
-          placeholder="password"
-          secureTextEntry={true}
-          value={credentials.password}
-          onChangeText={(text) => handleChangeText(text, "password")}
+          value={email}
+          onChangeText={setEmail}
         />
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Log In</Text>
+          <Text style={styles.buttonText}>Send Password Reset Email</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -91,27 +62,30 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            redirectToForgotPasswordScreen(navigation);
+            redirectToLoginScreen(navigation);
           }}
         >
-          <Text style={styles.buttonText}>
-            Forgot Your Password? Click Here
-          </Text>
+          <Text style={styles.buttonText}>Have an account? Login Now</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
-export default LoginScreen;
-
 function redirectToSignupScreen(navigation) {
   navigation.replace("Signup");
 }
 
-function redirectToForgotPasswordScreen(navigation) {
-  navigation.replace("ForgotPassword");
+function redirectToLoginScreen(navigation) {
+  navigation.replace("Login");
 }
+
+function isValidEmail(str) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(str);
+}
+
+export default ForgotPasswordScreen;
 
 const styles = StyleSheet.create({
   container: {

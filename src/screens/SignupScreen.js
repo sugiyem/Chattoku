@@ -6,7 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { useState } from "react";
 import React from "react";
@@ -64,7 +64,7 @@ const SignupScreen = ({ navigation }) => {
             img: "",
             genres: [],
             friends: [],
-            id: currentUID,
+            id: currentUID
           });
 
           Alert.alert(
@@ -131,6 +131,16 @@ const SignupScreen = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Have an account? Login Now</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            redirectToForgotPasswordScreen(navigation);
+          }}
+        >
+          <Text style={styles.buttonText}>
+            Forgot Your Password? Click Here
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -151,6 +161,10 @@ function redirectToLoginScreen(navigation) {
   navigation.replace("Login");
 }
 
+function redirectToForgotPasswordScreen(navigation) {
+  navigation.replace("ForgotPassword");
+}
+
 export default SignupScreen;
 
 const styles = StyleSheet.create({
@@ -160,7 +174,7 @@ const styles = StyleSheet.create({
     rowGap: "15px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "darkcyan",
+    backgroundColor: "darkcyan"
   },
   logoImage: {
     height: 150,
@@ -168,7 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     borderWidth: 1,
     backgroundColor: "white",
-    marginBottom: 10,
+    marginBottom: 10
   },
   systemContainer: {
     margin: 10,
@@ -176,13 +190,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-    alignSelf: "stretch",
+    alignSelf: "stretch"
   },
   title: {
     textAlign: "center",
     fontWeight: "600",
     fontSize: 25,
-    color: "darkslateblue",
+    color: "darkslateblue"
   },
   textInputContainer: {
     borderRadius: 10,
@@ -190,7 +204,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     backgroundColor: "white",
     padding: 5,
-    marginVertical: 10,
+    marginVertical: 10
   },
   button: {
     alignSelf: "stretch",
@@ -199,10 +213,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginVertical: 5,
-    padding: 5,
+    padding: 5
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
-  },
+    color: "white"
+  }
 });
