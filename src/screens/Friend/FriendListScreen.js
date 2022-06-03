@@ -7,100 +7,54 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { Avatar, Icon, ListItem } from "react-native-elements";
+import { Badge } from "react-native-elements";
+import { firebase } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
-import FetchFriend from "../../firebase/FetchFriend";
-import { removeFriend } from "../../firebase/HandleFriend";
+import { fetchFriend } from "../../firebase/FetchFriendStatus";
+import RenderUserLists, {
+  renderType
+} from "../../components/Friend/RenderUserLists";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
   const [search, setSearch] = useState("");
   const [expand, setExpand] = useState(null);
+  const [isRequestExist, setIsRequestExist] = useState(false);
 
   const navigation = useNavigation();
 
-  const datas = [
-    {
-      title: "Message",
-      icon: "message",
-      onPress: (item) =>
-        navigation.navigate("Chat", {
-          screen: "ChatDetail",
-          params: { recipientID: item.id, recipientUsername: item.username },
-        }),
-    },
-    {
-      title: "Unfriend",
-      icon: "person-remove",
-      onPress: (item) => removeFriend(item.id),
-    },
-  ];
-
-  const RenderAccordion = ({ item }) =>
-    datas.map((data, id) => (
-      <ListItem key={id} bottomDivider onPress={() => data.onPress(item)}>
-        <Icon name={data.icon} size={30} color="blue" />
-        <ListItem.Content>
-          <ListItem.Title>{data.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-    ));
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.friendImage}
-      />
-    );
-  };
-
-  const RenderFriends = ({ items }) =>
-    items.map((item, index) => (
-      <ListItem.Accordion
-        key={index}
-        bottomDivider
-        content={
-          <>
-            <RenderImage item={item} />
-            <ListItem.Content>
-              <ListItem.Title>{item.username}</ListItem.Title>
-              <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expand === index}
-        onPress={() => {
-          if (expand === index) {
-            setExpand(null);
-          } else {
-            setExpand(index);
-          }
-        }}
-      >
-        {expand === index && <RenderAccordion item={item} />}
-      </ListItem.Accordion>
-    ));
-
   useEffect(() => {
-    return FetchFriend({
-      onSuccesfulFetch: (data) => {
+    return fetchFriend({
+      onSuccess: (data) => {
         setFriends(data);
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
+
+  useEffect(() => {
+    const userID = firebase.auth().currentUser.uid;
+
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(userID)
+      .collection("friendRequestsReceived")
+      .onSnapshot(
+        (querySnapshot) => {
+          if (querySnapshot.size !== 0) {
+            setIsRequestExist(true);
+          } else {
+            setIsRequestExist(false);
+          }
+        },
+        (error) => Alert.alert(error)
+      );
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -120,13 +74,36 @@ const FriendListScreen = () => {
         <Text>Add more friends</Text>
       </TouchableOpacity>
 
-      <View style={styles.friendContainer}>
-        <RenderFriends
-          items={friends.filter((data) =>
-            data.username.toLowerCase().startsWith(search.toLowerCase())
-          )}
-        />
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          style={styles.requestButton}
+          onPress={() => navigation.navigate("FriendRequestsSent")}
+        >
+          <Text style={styles.requestText}>Outgoing Friend Requests</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.requestButton}
+          onPress={() => navigation.navigate("FriendRequestsReceived")}
+        >
+          <>
+            <Text style={styles.requestText}>Incoming Friend Requests</Text>
+            {isRequestExist && (
+              <Badge status="primary" value="Request exists" />
+            )}
+          </>
+        </TouchableOpacity>
       </View>
+
+      <RenderUserLists
+        type={renderType.FRIEND}
+        items={friends.filter((data) =>
+          data.username.toLowerCase().startsWith(search.toLowerCase())
+        )}
+        navigation={navigation}
+        expandStatus={(index) => expand === index}
+        changeExpand={setExpand}
+      />
     </ScrollView>
   );
 };
@@ -137,7 +114,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "darkcyan",
     padding: 5,
-    flex: 1,
+    flex: 1
   },
   textInput: {
     borderColor: "black",
@@ -146,29 +123,36 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     color: "black",
     borderRadius: 10,
-    padding: 2,
+    padding: 2
   },
   button: {
     margin: 5,
     padding: 5,
     backgroundColor: "aquamarine",
-    borderRadius: 10,
+    borderRadius: 10
+  },
+  buttonGroup: {
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    flexDirection: "row"
+  },
+  requestButton: {
+    marginHorizontal: 10,
+    padding: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "cyan",
+    flex: 1
+  },
+  requestText: {
+    textAlign: "center",
+    fontSize: 12
   },
   title: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 30,
     fontWeight: "bold",
-    textDecorationLine: "underline",
-  },
-  friendContainer: {
-    flex: 1,
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5,
-  },
-  friendImage: {
-    marginRight: 10,
-    borderColor: "black",
-    borderWidth: 1,
-  },
+    textDecorationLine: "underline"
+  }
 });

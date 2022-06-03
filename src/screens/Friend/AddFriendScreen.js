@@ -6,19 +6,78 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
-import FetchFriend from "../../firebase/FetchFriend";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
 import GetUserWithUsername from "../../firebase/GetUserWithUsername";
-import { addFriend, removeFriend } from "../../firebase/HandleFriend";
+import {
+  fetchFriend,
+  fetchFriendRequestsReceived,
+  fetchFriendRequestsSent
+} from "../../firebase/FetchFriendStatus";
+import {
+  addFriend,
+  acceptFriendRequest,
+  cancelFriendRequest,
+  removeFriend
+} from "../../firebase/HandleFriend";
+import {
+  friendshipType,
+  getFriendshipStatus
+} from "../../components/Friend/FriendshipStatus";
 
 const AddFriendScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [ownUserName, setOwnUserName] = useState("");
-  const [friendsID, setFriendsID] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [friendRequestsSent, setFriendRequestsSent] = useState([]);
+  const [friendRequestsReceived, setFriendRequestsReceived] = useState([]);
   const [userFound, setUserFound] = useState(null);
+
+  useEffect(() => {
+    return FetchUserInfo({
+      onSuccesfulFetch: (data) => {
+        setOwnUserName(data.username);
+      },
+      onFailure: (error) => {
+        Alert.alert(error.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    return fetchFriend({
+      onSuccess: (data) => {
+        setFriends(data.map((item) => item.id));
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    return fetchFriendRequestsSent({
+      onSuccess: (data) => {
+        setFriendRequestsSent(data.map((item) => item.id));
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    return fetchFriendRequestsReceived({
+      onSuccess: (data) => {
+        setFriendRequestsReceived(data.map((item) => item.id));
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
+  });
 
   const handleClickOnSearch = () => {
     if (search === ownUserName) {
@@ -32,16 +91,68 @@ const AddFriendScreen = ({ navigation }) => {
     GetUserWithUsername({
       specifiedUsername: search,
       onFound: (data) => setUserFound(data),
-      onNotFound: () => setUserFound(null),
+      onNotFound: () => setUserFound(null)
     });
   };
 
-  const handleClickOnUser = ({ isFriend, id }) => {
-    if (isFriend) {
-      removeFriend(id);
-    } else {
+  const handleClickOnUser = ({ friendshipStatus, id }) => {
+    console.log("clicked");
+    if (friendshipStatus === friendshipType.FRIEND) {
+      Alert.alert(
+        "This user will be removed from your friend's list",
+        "This action is irreversible. Do you want to continue?",
+        [
+          {
+            text: "Cancel"
+          },
+          {
+            text: "Continue",
+            onPress: () => removeFriend(id)
+          }
+        ]
+      );
+    } else if (friendshipStatus === friendshipType.WAITING_RESPONSE) {
+      Alert.alert(
+        "This friend request will be removed",
+        "This action is irreversible. Do you want to continue?",
+        [
+          {
+            text: "Cancel"
+          },
+          {
+            text: "Continue",
+            onPress: () => cancelFriendRequest(id)
+          }
+        ]
+      );
+    } else if (friendshipStatus === friendshipType.RECEIVING_REQUEST) {
+      acceptFriendRequest(id);
+    } else if (friendshipStatus === friendshipType.NON_FRIEND) {
       addFriend(id);
+    } else {
+      return;
     }
+  };
+
+  const getTextByStatus = (friendshipStatus) => {
+    let ans = "";
+
+    switch (friendshipStatus) {
+      case friendshipType.FRIEND:
+        ans = "Unfriend";
+        break;
+      case friendshipType.WAITING_RESPONSE:
+        ans = "Cancel request";
+        break;
+      case friendshipType.RECEIVING_REQUEST:
+        ans = "Accept request";
+        break;
+      case friendshipType.NON_FRIEND:
+        ans = "Add friend";
+        break;
+    }
+
+    return ans;
   };
 
   const RenderImage = ({ item }) => {
@@ -58,7 +169,12 @@ const AddFriendScreen = ({ navigation }) => {
       return <Text> There is no user with such username</Text>;
     }
 
-    const isUserFriend = friendsID.includes(item.id);
+    const friendshipStatus = getFriendshipStatus(
+      item.id,
+      friends,
+      friendRequestsSent,
+      friendRequestsReceived
+    );
 
     return (
       <View style={styles.userContainer}>
@@ -69,38 +185,19 @@ const AddFriendScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => {
-            handleClickOnUser({ isFriend: isUserFriend, id: userFound.id });
+            handleClickOnUser({
+              friendshipStatus: friendshipStatus,
+              id: userFound.id
+            });
           }}
         >
           <Text style={styles.editText}>
-            {isUserFriend ? "Remove friend" : "Add friend"}
+            {getTextByStatus(friendshipStatus)}
           </Text>
         </TouchableOpacity>
       </View>
     );
   };
-
-  useEffect(() => {
-    return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setOwnUserName(data.username);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    return FetchFriend({
-      onSuccesfulFetch: (data) => {
-        setFriendsID(data.map((item) => item.id));
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      },
-    });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -142,10 +239,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "darkcyan",
     padding: 5,
-    flex: 1,
+    flex: 1
   },
   searchBar: {
-    flexDirection: "row",
+    flexDirection: "row"
   },
   textInput: {
     borderColor: "black",
@@ -155,33 +252,33 @@ const styles = StyleSheet.create({
     color: "black",
     borderRadius: 10,
     padding: 2,
-    flex: 3,
+    flex: 3
   },
   searchButton: {
     borderRadius: 10,
     padding: 5,
     margin: 5,
     flex: 1,
-    backgroundColor: "darkslateblue",
+    backgroundColor: "darkslateblue"
   },
   backButton: {
     margin: 5,
     padding: 5,
     backgroundColor: "aquamarine",
-    borderRadius: 10,
+    borderRadius: 10
   },
   editText: {
     textAlign: "center",
-    color: "#2e64e5",
+    color: "#2e64e5"
   },
   whiteText: {
     textAlign: "center",
-    color: "white",
+    color: "white"
   },
   resultContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   userContainer: {
     borderRadius: 5,
@@ -189,7 +286,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     backgroundColor: "navy",
     margin: 5,
-    padding: 5,
+    padding: 5
   },
   image: {
     margin: 10,
@@ -198,6 +295,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 75,
     borderWidth: 2,
-    borderColor: "black",
-  },
+    borderColor: "black"
+  }
 });
