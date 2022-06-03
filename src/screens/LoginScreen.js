@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
         Alert.alert("Incorrect Email / Password");
       });
 
-    const currentUser = await firebase.auth().currentUser;
+    const currentUser = firebase.auth().currentUser;
 
     console.log(currentUser);
 
@@ -48,7 +48,15 @@ const LoginScreen = ({ navigation }) => {
       // await firebase.auth().signOut();
     } else if (!currentUser.emailVerified) {
       console.log("email not verified");
-      Alert.alert("Please Verify Your Email Before Logging In");
+      Alert.alert("Please Verify Your Email Before Logging In", "", [
+        {
+          text: "Resend verification email",
+          onPress: () => currentUser.sendEmailVerification()
+        },
+        {
+          text: "Cancel"
+        }
+      ]);
       await firebase.auth().signOut();
     } else {
       navigation.replace("Dashboard");
