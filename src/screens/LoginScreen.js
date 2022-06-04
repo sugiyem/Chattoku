@@ -10,6 +10,10 @@ import {
 } from "react-native";
 import { firebase } from "../firebase/Config";
 import { useState } from "react";
+import {
+  redirectToForgotPasswordScreen,
+  redirectToSignupScreen
+} from "../components/Authentication/HandleAuthentication";
 
 const initialState = {
   email: "",
@@ -112,14 +116,6 @@ const LoginScreen = ({ navigation }) => {
 };
 
 export default LoginScreen;
-
-function redirectToSignupScreen(navigation) {
-  navigation.replace("Signup");
-}
-
-function redirectToForgotPasswordScreen(navigation) {
-  navigation.replace("ForgotPassword");
-}
 
 const styles = StyleSheet.create({
   container: {

@@ -10,6 +10,11 @@ import {
   View
 } from "react-native";
 import { firebase } from "../firebase/Config";
+import {
+  isValidEmail,
+  redirectToLoginScreen,
+  redirectToSignupScreen
+} from "../components/Authentication/HandleAuthentication";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -71,19 +76,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-function redirectToSignupScreen(navigation) {
-  navigation.replace("Signup");
-}
-
-function redirectToLoginScreen(navigation) {
-  navigation.replace("Login");
-}
-
-function isValidEmail(str) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(str);
-}
 
 export default ForgotPasswordScreen;
 

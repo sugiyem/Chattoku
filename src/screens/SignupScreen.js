@@ -12,6 +12,12 @@ import { useState } from "react";
 import React from "react";
 import { firebase } from "../firebase/Config";
 import { isUsernameTaken, isValidUsername } from "../firebase/CheckUsername";
+import {
+  isValidEmail,
+  isPasswordTooShort,
+  redirectToForgotPasswordScreen,
+  redirectToLoginScreen
+} from "../components/Authentication/HandleAuthentication";
 
 const initialState = {
   username: "",
@@ -145,25 +151,6 @@ const SignupScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-// A str is considered a valid email if it is in the form of
-// anystring@anystring.anystring
-function isValidEmail(str) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(str);
-}
-
-function isPasswordTooShort(password) {
-  return password.length < 6;
-}
-
-function redirectToLoginScreen(navigation) {
-  navigation.replace("Login");
-}
-
-function redirectToForgotPasswordScreen(navigation) {
-  navigation.replace("ForgotPassword");
-}
 
 export default SignupScreen;
 
