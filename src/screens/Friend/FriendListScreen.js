@@ -79,19 +79,23 @@ const FriendListScreen = () => {
           style={styles.requestButton}
           onPress={() => navigation.navigate("FriendRequestsSent")}
         >
-          <Text style={styles.requestText}>Outgoing Friend Requests</Text>
+          <Text style={styles.requestText}>Outgoing Requests</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.requestButton}
           onPress={() => navigation.navigate("FriendRequestsReceived")}
         >
-          <>
-            <Text style={styles.requestText}>Incoming Friend Requests</Text>
+          <View style={styles.requestReceivedContainer}>
+            <Text style={styles.requestReceivedTest}>Incoming Requests</Text>
             {isRequestExist && (
-              <Badge status="primary" value="Request exists" />
+              <Badge
+                status="primary"
+                value="!"
+                containerStyle={styles.requestReceivedBadge}
+              />
             )}
-          </>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -145,9 +149,21 @@ const styles = StyleSheet.create({
     backgroundColor: "cyan",
     flex: 1
   },
+  requestReceivedContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
   requestText: {
     textAlign: "center",
     fontSize: 12
+  },
+  requestReceivedTest: {
+    textAlign: "center",
+    fontSize: 12,
+    flex: 4
+  },
+  requestReceivedBadge: {
+    flex: 1
   },
   title: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",

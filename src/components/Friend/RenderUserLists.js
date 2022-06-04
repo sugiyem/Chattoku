@@ -82,7 +82,7 @@ export default RenderUserLists = ({
       datas.push(
         {
           title: "Accept request",
-          icon: "checkmark",
+          icon: "check",
           onPress: (item) => acceptFriendRequest(item.id)
         },
         {

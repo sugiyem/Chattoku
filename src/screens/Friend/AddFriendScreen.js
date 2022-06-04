@@ -77,7 +77,7 @@ const AddFriendScreen = ({ navigation }) => {
         Alert.alert("Error", error.message);
       }
     });
-  });
+  }, []);
 
   const handleClickOnSearch = () => {
     if (search === ownUserName) {
