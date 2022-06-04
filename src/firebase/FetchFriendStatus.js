@@ -110,3 +110,29 @@ export const fetchFriendRequestsReceived = ({ onSuccess, onFailure }) => {
       }
     );
 };
+
+export const checkFriendRequestsReceived = ({
+  onFound,
+  onNotFound,
+  onFailure
+}) => {
+  const userID = firebase.auth().currentUser.uid;
+
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(userID)
+    .collection("friendRequestsReceived")
+    .onSnapshot(
+      (querySnapshot) => {
+        if (querySnapshot.size !== 0) {
+          onFound();
+        } else {
+          onNotFound();
+        }
+      },
+      (error) => {
+        onFailure(error);
+      }
+    );
+};

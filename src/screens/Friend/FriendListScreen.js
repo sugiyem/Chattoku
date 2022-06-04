@@ -10,9 +10,11 @@ import {
   View
 } from "react-native";
 import { Badge } from "react-native-elements";
-import { firebase } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
-import { fetchFriend } from "../../firebase/FetchFriendStatus";
+import {
+  fetchFriend,
+  checkFriendRequestsReceived
+} from "../../firebase/FetchFriendStatus";
 import RenderUserLists, {
   renderType
 } from "../../components/Friend/RenderUserLists";
@@ -37,23 +39,17 @@ const FriendListScreen = () => {
   }, []);
 
   useEffect(() => {
-    const userID = firebase.auth().currentUser.uid;
-
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(userID)
-      .collection("friendRequestsReceived")
-      .onSnapshot(
-        (querySnapshot) => {
-          if (querySnapshot.size !== 0) {
-            setIsRequestExist(true);
-          } else {
-            setIsRequestExist(false);
-          }
-        },
-        (error) => Alert.alert(error)
-      );
+    return checkFriendRequestsReceived({
+      onFound: () => {
+        setIsRequestExist(true);
+      },
+      onNotFound: () => {
+        setIsRequestExist(false);
+      },
+      onFailure: (error) => {
+        Alert.alert(error.message);
+      }
+    });
   });
 
   return (
