@@ -71,7 +71,7 @@ To test this app, first you need to download Expo Go on your mobile phones. <br 
 
 Then, for iOS users only, there is one additional step that you need to do. Simply do any one of two choices given below. <br />
 - Create an Expo Go account using your email and send your registered email to our telegram account (@sugiyemm or @elben85).
-- Login to Exgo Go using our test account (username: chattoku-testing, password: chattokucp2106)
+- Login to Exgo Go using our test account (username: chattoku-test, password: chattokucp2106)
 
 After that, you simply need to scan the QR code below to try using Chattoku. Alternatively, you can also click on the link below.<br />
 
