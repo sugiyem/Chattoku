@@ -16,16 +16,40 @@ export async function addPost(forumId, post, onSuccess, onError) {
 }
 
 export async function deletePost(forumId, postId, onSuccess, onError) {
+  console.log("run");
   Warning(async () => {
-    await firebase
+    const batch = firebase.firestore().batch();
+    const mainPost = await firebase
       .firestore()
       .collection("forums")
       .doc(forumId)
       .collection("posts")
       .doc(postId)
-      .delete()
-      .then(() => onSuccess())
-      .catch((e) => onError(e));
+      .get();
+
+    const snapshots = await firebase
+      .firestore()
+      .collection("forums")
+      .doc(forumId)
+      .collection("posts")
+      .doc(postId)
+      .collection("comments")
+      .get();
+
+    batch.delete(mainPost.ref);
+
+    snapshots.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    batch.commit();
+    onSuccess();
+    // )
+    //   .then(() => {
+    //     batch.commit().catch((e) => console.error(e));
+    //     onSuccess();
+    //   })
+    //   .catch((e) => console.error(e)); //onError(e));
   });
 }
 
@@ -38,7 +62,7 @@ export async function editPost(forumId, postId, post, onSuccess, onError) {
     .doc(forumId)
     .collection("posts")
     .doc(postId)
-    .set({ ...post, uid: currentUID })
+    .update(post)
     .then(onSuccess)
     .catch((e) => onError(e));
 }

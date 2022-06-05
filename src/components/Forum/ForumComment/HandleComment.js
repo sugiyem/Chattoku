@@ -57,7 +57,7 @@ export async function EditComment(
     .doc(postId)
     .collection("comments")
     .doc(commentId)
-    .set({ content: comment, uid: currentUID })
+    .update({ content: comment })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }
