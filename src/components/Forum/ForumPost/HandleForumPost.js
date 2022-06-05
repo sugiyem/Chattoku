@@ -28,3 +28,17 @@ export async function deletePost(forumId, postId, onSuccess, onError) {
       .catch((e) => onError(e));
   });
 }
+
+export async function editPost(forumId, postId, post, onSuccess, onError) {
+  const currentUID = firebase.auth().currentUser.uid;
+
+  await firebase
+    .firestore()
+    .collection("forums")
+    .doc(forumId)
+    .collection("posts")
+    .doc(postId)
+    .set({ ...post, uid: currentUID })
+    .then(onSuccess)
+    .catch((e) => onError(e));
+}

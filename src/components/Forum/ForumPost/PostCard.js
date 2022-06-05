@@ -11,6 +11,13 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
   const currentUID = firebase.auth().currentUser.uid;
 
   // console.log(currentUID);
+  const postData = {
+    title: title,
+    content: content,
+    postId: id,
+    forumId: forumId,
+    uid: uid
+  };
 
   useEffect(() => {
     firebase
@@ -23,13 +30,13 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: {
-        title: title,
-        content: content,
-        postId: id,
-        forumId: forumId,
-        uid: uid
-      }
+      data: postData
+    });
+  }
+
+  function handleEditPress() {
+    navigation.navigate("EditPost", {
+      data: postData
     });
   }
 
@@ -45,20 +52,26 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
           <Text> comment</Text>
         </TouchableOpacity>
         {currentUID === uid && (
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() =>
-              deletePost(
-                forumId,
-                id,
-                () => {},
-                (e) => Alert.alert(e)
-              )
-            }
-          >
-            <Icon name="delete" type="material" color="red" />
-            <Text style={styles.delete}> Delete </Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              style={styles.action}
+              onPress={() =>
+                deletePost(
+                  forumId,
+                  id,
+                  () => {},
+                  (e) => Alert.alert(e)
+                )
+              }
+            >
+              <Icon name="delete" type="material" color="red" />
+              <Text style={styles.delete}> Delete </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.action} onPress={handleEditPress}>
+              <Icon name="edit" type="material" />
+              <Text> Edit </Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </Card>
