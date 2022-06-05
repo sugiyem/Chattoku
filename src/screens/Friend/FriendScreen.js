@@ -5,6 +5,7 @@ import AddFriendScreen from "./AddFriendScreen";
 import FriendListScreen from "./FriendListScreen";
 import FriendRequestsSentScreen from "./FriendRequestsSentScreen";
 import FriendRequestsReceivedScreen from "./FriendRequestsReceivedScreen";
+import FriendInfoScreen from "./FriendInfoScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const FriendScreen = () => {
         component={FriendRequestsReceivedScreen}
       />
       <Stack.Screen name="AddFriend" component={AddFriendScreen} />
+      <Stack.Screen name="FriendInfo" component={FriendInfoScreen} />
     </Stack.Navigator>
   );
 };

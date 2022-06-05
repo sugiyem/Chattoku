@@ -35,25 +35,33 @@ export default RenderUserLists = ({
 
   switch (type) {
     case renderType.FRIEND:
-      datas.push({
-        title: "Unfriend",
-        icon: "person-remove",
-        onPress: (item) => {
-          Alert.alert(
-            "This user will be removed from your friend's list",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => removeFriend(item.id)
-              }
-            ]
-          );
+      datas.push(
+        {
+          title: "View details",
+          icon: "folder-open",
+          onPress: (item) =>
+            navigation.navigate("FriendInfo", { friendData: item })
+        },
+        {
+          title: "Unfriend",
+          icon: "person-remove",
+          onPress: (item) => {
+            Alert.alert(
+              "This user will be removed from your friend's list",
+              "This action is irreversible. Do you want to continue?",
+              [
+                {
+                  text: "Cancel"
+                },
+                {
+                  text: "Continue",
+                  onPress: () => removeFriend(item.id)
+                }
+              ]
+            );
+          }
         }
-      });
+      );
       break;
 
     case renderType.REQUEST_SENT:
