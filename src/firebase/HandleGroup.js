@@ -1,7 +1,12 @@
 import { Alert } from "react-native";
 import { firebase } from "./Config";
 
-export async function createGroup(groupName, groupDescription, groupImg) {
+export async function createGroup(
+  groupName,
+  groupDescription,
+  groupImg,
+  navigation
+) {
   const userID = firebase.auth().currentUser.uid;
   const userRef = firebase.firestore().collection("users").doc(userID);
   let groupID = "";
@@ -35,7 +40,7 @@ export async function createGroup(groupName, groupDescription, groupImg) {
         .set({});
     })
     .then(() => {
-      Alert.alert("Group successfully created.");
+      navigation.replace("GroupList");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -46,7 +51,8 @@ export async function editGroupDetails(
   groupID,
   newName,
   newDescription,
-  newImg
+  newImg,
+  navigation
 ) {
   await firebase
     .firestore()
@@ -58,7 +64,14 @@ export async function editGroupDetails(
       img: newImg
     })
     .then(() => {
-      Alert.alert("Group details has successfully edited.");
+      navigation.replace("GroupInfo", {
+        groupData: {
+          id: groupID,
+          name: newName,
+          description: newDescription,
+          img: newImg
+        }
+      });
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -83,7 +96,7 @@ export async function addUserToGroup(groupID, userID) {
         .set({});
     })
     .then(() => {
-      Alert.alert("This new user has been invited to the group.");
+      Alert.alert("This user has been invited to the group.");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -224,14 +237,14 @@ export async function leaveGroup(groupID) {
     });
 }
 
-export async function deleteGroup(groupID) {
+export async function deleteGroup(groupID, navigation) {
   await firebase
     .firestore()
     .collection("groups")
     .doc(groupID)
     .delete()
     .then(() => {
-      Alert.alert("This group has successfully deleted");
+      navigation.replace("GroupList");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);

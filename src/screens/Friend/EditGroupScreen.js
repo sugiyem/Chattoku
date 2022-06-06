@@ -118,7 +118,8 @@ const EditGroupScreen = ({ navigation, route }) => {
         groupInfo.id,
         groupInfo.name,
         groupInfo.description,
-        groupInfo.img
+        groupInfo.img,
+        navigation
       );
     }
   };

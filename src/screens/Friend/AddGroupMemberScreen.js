@@ -89,42 +89,55 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
         .filter((data) =>
           data.username.toLowerCase().startsWith(search.toLowerCase())
         )
-        .map((item, index) => (
-          <ListItem.Swipeable
-            key={index}
-            bottomDivider
-            rightContent={
-              <Button
-                title="Edit"
-                icon="Remove"
-                onPress={() => {
-                  if (membersID.includes(item.id)) {
-                    removeUserFromGroup(groupID, item.id);
-                  } else if (pendingMembersID.includes(item.id)) {
-                    cancelGroupInvitation(groupID, item.id);
-                  } else {
-                    addUserToGroup(groupID, item.id);
-                  }
-                }}
-              />
-            }
-          >
-            <>
-              <RenderImage item={item} />
-              <ListItem.Content>
-                <ListItem.Title>{item.username}</ListItem.Title>
-                <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-                <ListItem.Subtitle>
-                  {membersID.includes(item.id)
-                    ? "Member"
-                    : pendingMembersID.includes(item.id)
-                    ? "Pending Member"
-                    : "Not A Member"}
-                </ListItem.Subtitle>
-              </ListItem.Content>
-            </>
-          </ListItem.Swipeable>
-        ))}
+        .map((item, index) => {
+          const type = membersID.includes(item.id)
+            ? 0
+            : pendingMembersID.includes(item.id)
+            ? 1
+            : 2;
+
+          return (
+            <ListItem.Swipeable
+              key={index}
+              bottomDivider
+              rightContent={
+                <Button
+                  title={type === 0 ? "Remove" : type === 1 ? "Cancel" : "Add"}
+                  icon={{ name: type === 2 ? "add" : "delete", color: "white" }}
+                  buttonStyle={{
+                    minHeight: "100%",
+                    backgroundColor: type === 2 ? "green" : "red"
+                  }}
+                  onPress={() => {
+                    if (type === 0) {
+                      removeUserFromGroup(groupID, item.id);
+                    } else if (type === 1) {
+                      cancelGroupInvitation(groupID, item.id);
+                    } else {
+                      addUserToGroup(groupID, item.id);
+                    }
+                  }}
+                />
+              }
+            >
+              <>
+                <RenderImage item={item} />
+                <ListItem.Content>
+                  <ListItem.Title>{item.username}</ListItem.Title>
+                  <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
+                  <ListItem.Subtitle>
+                    {membersID.includes(item.id)
+                      ? "Member"
+                      : pendingMembersID.includes(item.id)
+                      ? "Pending Member"
+                      : "Not A Member"}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </>
+            </ListItem.Swipeable>
+          );
+        })}
     </ScrollView>
   );
 };
@@ -157,5 +170,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline"
+  },
+  userImage: {
+    marginRight: 10,
+    borderColor: "black",
+    borderWidth: 1
   }
 });

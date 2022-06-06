@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -8,7 +9,10 @@ import {
   View
 } from "react-native";
 import { Avatar, Button, ListItem } from "react-native-elements";
+
+import { firebase } from "../../firebase/Config";
 import {
+  deleteGroup,
   removeUserFromGroup,
   cancelGroupInvitation
 } from "../../firebase/HandleGroup";
@@ -27,6 +31,7 @@ const RenderGroupDetail = ({
   navigation
 }) => {
   const datas = [];
+  const userID = firebase.auth().currentUser.uid;
 
   const RenderImage = ({ item }) => {
     console.log(item);
@@ -68,14 +73,33 @@ const RenderGroupDetail = ({
                 key={idx}
                 bottomDivider
                 rightContent={
-                  <Button
-                    title="Remove member"
-                    icon="Remove"
-                    onPress={() => removeUserFromGroup(groupInfo.id, item.id)}
-                  />
+                  item.id !== userID && (
+                    <Button
+                      title="Remove"
+                      buttonStyle={styles.removeButton}
+                      icon={{ name: "delete", color: "white" }}
+                      onPress={() =>
+                        Alert.alert(
+                          "This user will be removed from the group",
+                          "This action is irreversible. Do you want to continue?",
+                          [
+                            {
+                              text: "Cancel"
+                            },
+                            {
+                              text: "Continue",
+                              onPress: () =>
+                                removeUserFromGroup(groupInfo.id, item.id)
+                            }
+                          ]
+                        )
+                      }
+                    />
+                  )
                 }
               >
                 <Bar item={item} />
+                <ListItem.Chevron />
               </ListItem.Swipeable>
             ))
         },
@@ -89,9 +113,25 @@ const RenderGroupDetail = ({
                 bottomDivider
                 rightContent={
                   <Button
-                    title="Cancel invitation"
-                    icon="Remove"
-                    onPress={() => cancelGroupInvitation(groupInfo.id, item.id)}
+                    title="Remove"
+                    buttonStyle={styles.removeButton}
+                    icon={{ name: "delete", color: "white" }}
+                    onPress={() =>
+                      Alert.alert(
+                        "This invitation will be removed",
+                        "This action is irreversible. Do you want to continue?",
+                        [
+                          {
+                            text: "Cancel"
+                          },
+                          {
+                            text: "Continue",
+                            onPress: () =>
+                              cancelGroupInvitation(groupInfo.id, item.id)
+                          }
+                        ]
+                      )
+                    }
                   />
                 }
               >
@@ -144,6 +184,12 @@ const RenderGroupDetail = ({
       style={styles.container}
       contentContainerStyle={{ alignItems: "center" }}
     >
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.replace("GroupList")}
+      >
+        <Text style={styles.backButtonText}>Go Back</Text>
+      </TouchableOpacity>
       <View style={styles.contentContainer}>
         {groupInfo.img.length > 0 ? (
           <Image style={styles.img} source={{ uri: groupInfo.img }} />
@@ -175,6 +221,26 @@ const RenderGroupDetail = ({
               }}
             >
               <Text style={styles.buttonText}>Add Members</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                Alert.alert(
+                  "This group will be deleted",
+                  "This action is irreversible. Do you want to continue?",
+                  [
+                    {
+                      text: "Cancel"
+                    },
+                    {
+                      text: "Continue",
+                      onPress: () => deleteGroup(groupInfo.id, navigation)
+                    }
+                  ]
+                );
+              }}
+            >
+              <Text style={styles.buttonText}>Delete Group</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -258,7 +324,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 5
   },
   buttonText: {
-    color: "#2e64e5"
+    color: "#2e64e5",
+    fontSize: 13
+  },
+  backButton: {
+    alignSelf: "stretch",
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "aquamarine",
+    margin: 5,
+    padding: 5
+  },
+  backButtonText: {
+    textAlign: "center"
+  },
+  removeButton: {
+    minHeight: "100%",
+    backgroundColor: "red"
   },
   titleText: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",

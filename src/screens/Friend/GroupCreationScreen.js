@@ -120,7 +120,12 @@ const GroupCreationScreen = ({ navigation }) => {
     if (!isGroupNameValid(groupInfo.name)) {
       Alert.alert("Invalid name");
     } else {
-      createGroup(groupInfo.name, groupInfo.description, groupInfo.img);
+      createGroup(
+        groupInfo.name,
+        groupInfo.description,
+        groupInfo.img,
+        navigation
+      );
     }
   };
 
