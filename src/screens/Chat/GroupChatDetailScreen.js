@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import { firebase } from "../../firebase/Config";
-import { sendPrivateChat } from "../../firebase/HandleChat";
+import { sendGroupChat } from "../../firebase/HandleChat";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
-import FetchPrivateChat from "../../firebase/FetchPrivateChat";
+import FetchGroupChat from "../../firebase/FetchGroupChat";
 
 const initialState = {
   username: "",
@@ -15,13 +15,13 @@ const defaultAvatarUrl =
   "https://firebasestorage.googleapis.com/v0/b/chattoku-e2672.appspot.com/" +
   "o/default-profile.png?alt=media&token=e05118be-75e9-42ed-8568-c42a3d34d6f1";
 
-const ChatDetailScreen = ({ navigation, route }) => {
+const GroupChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
   const [messages, setMessages] = useState([]);
 
   const userID = firebase.auth().currentUser.uid;
-  const recipientID = route.params.recipientID;
-  const recipientUsername = route.params.recipientUsername;
+  const groupID = route.params.groupID;
+  const groupName = route.params.groupName;
 
   useEffect(() => {
     return FetchUserInfo({
@@ -35,9 +35,9 @@ const ChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    return FetchPrivateChat({
-      recipientID: recipientID,
-      onSuccesfulFetch: (data) => {
+    return FetchGroupChat({
+      groupID: groupID,
+      onSuccess: (data) => {
         setMessages(data);
       },
       onFailure: (error) => {
@@ -51,7 +51,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
     const newMsg = {
       ...msg,
       sentBy: userID,
-      sentTo: recipientID,
+      sentTo: groupID,
       createdAt: new Date()
     };
 
@@ -59,7 +59,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       GiftedChat.append(previousMessages, newMsg)
     );
 
-    await sendPrivateChat(newMsg, recipientID);
+    await sendGroupChat(newMsg, groupID);
   };
 
   return (
@@ -69,8 +69,8 @@ const ChatDetailScreen = ({ navigation, route }) => {
         onPress={() => navigation.replace("ChatList")}
       >
         <Text style={styles.text}>
-          {"Currently chatting with " +
-            recipientUsername +
+          {"Currently in a group chat with " +
+            groupName +
             ".\n Click here to go to the chat list"}
         </Text>
       </TouchableOpacity>
@@ -91,7 +91,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
   );
 };
 
-export default ChatDetailScreen;
+export default GroupChatDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
