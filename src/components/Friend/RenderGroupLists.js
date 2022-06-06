@@ -1,11 +1,13 @@
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Avatar, Icon, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import {
   leaveGroup,
   acceptGroupInvitation,
   declineGroupInvitation
 } from "../../firebase/HandleGroup";
+import ContactBar, { contactType } from "./ContactBar";
+import ContactButtonGroup from "./ContactButtonGroup";
 
 export const renderType = {
   GROUP: 0,
@@ -19,11 +21,11 @@ export default RenderGroupLists = ({
   expandStatus,
   changeExpand
 }) => {
-  const datas = [];
+  const buttonDetails = [];
 
   switch (type) {
     case renderType.GROUP:
-      datas.push(
+      buttonDetails.push(
         {
           title: "Detail",
           icon: "folder-open",
@@ -62,7 +64,7 @@ export default RenderGroupLists = ({
       break;
 
     case renderType.GROUP_INVITATION:
-      datas.push(
+      buttonDetails.push(
         {
           title: "Detail",
           icon: "folder-open",
@@ -83,32 +85,6 @@ export default RenderGroupLists = ({
       break;
   }
 
-  const RenderAccordion = ({ item }) =>
-    datas.map((data, id) => (
-      <ListItem key={id} bottomDivider onPress={() => data.onPress(item)}>
-        <Icon name={data.icon} size={30} color="blue" />
-        <ListItem.Content>
-          <ListItem.Title>{data.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-    ));
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.groupImage}
-      />
-    );
-  };
-
   const onRightClick = (index) => {
     if (expandStatus(index)) {
       changeExpand(null);
@@ -123,19 +99,13 @@ export default RenderGroupLists = ({
         <ListItem.Accordion
           key={index}
           bottomDivider
-          content={
-            <>
-              <RenderImage item={item} />
-              <ListItem.Content>
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
-              </ListItem.Content>
-            </>
-          }
+          content={<ContactBar type={contactType.GROUP} item={item} />}
           isExpanded={expandStatus(index)}
           onPress={() => onRightClick(index)}
         >
-          {expandStatus(index) && <RenderAccordion item={item} />}
+          {expandStatus(index) && (
+            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+          )}
         </ListItem.Accordion>
       ))}
     </View>
@@ -148,10 +118,5 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     margin: 10,
     padding: 5
-  },
-  groupImage: {
-    marginRight: 10,
-    borderColor: "black",
-    borderWidth: 1
   }
 });

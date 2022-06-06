@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+import { Alert } from "react-native";
 
 import { fetchGroupMembers } from "../../firebase/FetchGroup";
 import RenderGroupDetail, {

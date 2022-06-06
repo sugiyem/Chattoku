@@ -1,12 +1,7 @@
 import { Alert } from "react-native";
 import { firebase } from "./Config";
 
-export async function createGroup(
-  groupName,
-  groupDescription,
-  groupImg,
-  navigation
-) {
+export async function createGroup(groupName, groupDescription, groupImg) {
   const userID = firebase.auth().currentUser.uid;
   const userRef = firebase.firestore().collection("users").doc(userID);
   let groupID = "";
@@ -40,7 +35,7 @@ export async function createGroup(
         .set({});
     })
     .then(() => {
-      navigation.replace("GroupList");
+      Alert.alert("Group has successfully created");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -51,8 +46,7 @@ export async function editGroupDetails(
   groupID,
   newName,
   newDescription,
-  newImg,
-  navigation
+  newImg
 ) {
   await firebase
     .firestore()
@@ -64,14 +58,7 @@ export async function editGroupDetails(
       img: newImg
     })
     .then(() => {
-      navigation.replace("GroupInfo", {
-        groupData: {
-          id: groupID,
-          name: newName,
-          description: newDescription,
-          img: newImg
-        }
-      });
+      Alert.alert("Group has successfully edited");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);

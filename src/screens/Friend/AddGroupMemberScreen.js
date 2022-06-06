@@ -6,20 +6,17 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  View
+  TouchableOpacity
 } from "react-native";
-import { Avatar, Button, ListItem } from "react-native-elements";
+
 import { fetchFriend } from "../../firebase/FetchFriendStatus";
 import {
   fetchGroupMembers,
   fetchPendingGroupMembers
 } from "../../firebase/FetchGroup";
-import {
-  addUserToGroup,
-  removeUserFromGroup,
-  cancelGroupInvitation
-} from "../../firebase/HandleGroup";
+import AddMemberComponent, {
+  userType
+} from "../../components/Friend/AddMemberComponent";
 
 const AddGroupMemberScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState("");
@@ -27,22 +24,6 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
   const [membersID, setMembersID] = useState([]);
   const [pendingMembersID, setPendingMembersID] = useState([]);
   const groupID = route.params.groupID;
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.userImage}
-      />
-    );
-  };
 
   useEffect(() => {
     return fetchFriend({
@@ -89,55 +70,20 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
         .filter((data) =>
           data.username.toLowerCase().startsWith(search.toLowerCase())
         )
-        .map((item, index) => {
-          const type = membersID.includes(item.id)
-            ? 0
-            : pendingMembersID.includes(item.id)
-            ? 1
-            : 2;
-
-          return (
-            <ListItem.Swipeable
-              key={index}
-              bottomDivider
-              rightContent={
-                <Button
-                  title={type === 0 ? "Remove" : type === 1 ? "Cancel" : "Add"}
-                  icon={{ name: type === 2 ? "add" : "delete", color: "white" }}
-                  buttonStyle={{
-                    minHeight: "100%",
-                    backgroundColor: type === 2 ? "green" : "red"
-                  }}
-                  onPress={() => {
-                    if (type === 0) {
-                      removeUserFromGroup(groupID, item.id);
-                    } else if (type === 1) {
-                      cancelGroupInvitation(groupID, item.id);
-                    } else {
-                      addUserToGroup(groupID, item.id);
-                    }
-                  }}
-                />
-              }
-            >
-              <>
-                <RenderImage item={item} />
-                <ListItem.Content>
-                  <ListItem.Title>{item.username}</ListItem.Title>
-                  <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-                  <ListItem.Subtitle>
-                    {membersID.includes(item.id)
-                      ? "Member"
-                      : pendingMembersID.includes(item.id)
-                      ? "Pending Member"
-                      : "Not A Member"}
-                  </ListItem.Subtitle>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </>
-            </ListItem.Swipeable>
-          );
-        })}
+        .map((item, idx) => (
+          <AddMemberComponent
+            type={
+              membersID.includes(item.id)
+                ? userType.MEMBER
+                : pendingMembersID.includes(item.id)
+                ? userType.PENDING_MEMBER
+                : userType.NON_MEMBER
+            }
+            key={idx}
+            item={item}
+            groupID={groupID}
+          />
+        ))}
     </ScrollView>
   );
 };
@@ -170,10 +116,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline"
-  },
-  userImage: {
-    marginRight: 10,
-    borderColor: "black",
-    borderWidth: 1
   }
 });

@@ -1,12 +1,14 @@
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Avatar, Icon, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import {
   acceptFriendRequest,
   cancelFriendRequest,
   declineFriendRequest,
   removeFriend
 } from "../../firebase/HandleFriend";
+import ContactBar, { contactType } from "./ContactBar";
+import ContactButtonGroup from "./ContactButtonGroup";
 
 export const renderType = {
   FRIEND: 0,
@@ -21,7 +23,7 @@ export default RenderUserLists = ({
   expandStatus,
   changeExpand
 }) => {
-  const datas = [
+  const buttonDetails = [
     {
       title: "Message",
       icon: "message",
@@ -35,7 +37,7 @@ export default RenderUserLists = ({
 
   switch (type) {
     case renderType.FRIEND:
-      datas.push({
+      buttonDetails.push({
         title: "Unfriend",
         icon: "person-remove",
         onPress: (item) => {
@@ -57,7 +59,7 @@ export default RenderUserLists = ({
       break;
 
     case renderType.REQUEST_SENT:
-      datas.push({
+      buttonDetails.push({
         title: "Cancel request",
         icon: "close",
         onPress: (item) => {
@@ -79,7 +81,7 @@ export default RenderUserLists = ({
       break;
 
     case renderType.REQUEST_RECEIVED:
-      datas.push(
+      buttonDetails.push(
         {
           title: "Accept request",
           icon: "check",
@@ -93,32 +95,6 @@ export default RenderUserLists = ({
       );
       break;
   }
-
-  const RenderAccordion = ({ item }) =>
-    datas.map((data, id) => (
-      <ListItem key={id} bottomDivider onPress={() => data.onPress(item)}>
-        <Icon name={data.icon} size={30} color="blue" />
-        <ListItem.Content>
-          <ListItem.Title>{data.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-    ));
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.userImage}
-      />
-    );
-  };
 
   const onRightClick = (index) => {
     if (expandStatus(index)) {
@@ -134,19 +110,13 @@ export default RenderUserLists = ({
         <ListItem.Accordion
           key={index}
           bottomDivider
-          content={
-            <>
-              <RenderImage item={item} />
-              <ListItem.Content>
-                <ListItem.Title>{item.username}</ListItem.Title>
-                <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-              </ListItem.Content>
-            </>
-          }
+          content={<ContactBar type={contactType.USER} item={item} />}
           isExpanded={expandStatus(index)}
           onPress={() => onRightClick(index)}
         >
-          {expandStatus(index) && <RenderAccordion item={item} />}
+          {expandStatus(index) && (
+            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+          )}
         </ListItem.Accordion>
       ))}
     </View>
@@ -159,10 +129,5 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     margin: 10,
     padding: 5
-  },
-  userImage: {
-    marginRight: 10,
-    borderColor: "black",
-    borderWidth: 1
   }
 });

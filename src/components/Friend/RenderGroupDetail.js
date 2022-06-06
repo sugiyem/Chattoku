@@ -8,14 +8,10 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { Avatar, Button, ListItem } from "react-native-elements";
-
-import { firebase } from "../../firebase/Config";
-import {
-  deleteGroup,
-  removeUserFromGroup,
-  cancelGroupInvitation
-} from "../../firebase/HandleGroup";
+import { Button, ListItem } from "react-native-elements";
+import ContactBar, { contactType } from "./ContactBar";
+import GroupOwnerButtons from "./GroupOwnerButtons";
+import EditMemberComponent from "./EditMemberComponent";
 
 export const memberType = {
   OWNER: 0,
@@ -30,152 +26,58 @@ const RenderGroupDetail = ({
   pendingMemberDetails = {},
   navigation
 }) => {
-  const datas = [];
-  const userID = firebase.auth().currentUser.uid;
+  let sectionDetails;
 
-  const RenderImage = ({ item }) => {
-    console.log(item);
-
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.userImage}
-      />
-    );
-  };
-
-  const Bar = ({ item }) => (
-    <>
-      <RenderImage item={item} />
-      <ListItem.Content>
-        <ListItem.Title>{item.username}</ListItem.Title>
-        <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-      </ListItem.Content>
-    </>
-  );
+  const RenderTabs = ({ items }) =>
+    items.map((item, idx) => (
+      <ListItem key={idx} bottomDivider>
+        <ContactBar type={contactType.USER} item={item} />
+      </ListItem>
+    ));
 
   switch (type) {
     case memberType.OWNER:
-      datas.push(
+      sectionDetails = [
         {
           ...memberDetails,
           title: "Members",
-          render: ({ items }) =>
-            items.map((item, idx) => (
-              <ListItem.Swipeable
-                key={idx}
-                bottomDivider
-                rightContent={
-                  item.id !== userID && (
-                    <Button
-                      title="Remove"
-                      buttonStyle={styles.removeButton}
-                      icon={{ name: "delete", color: "white" }}
-                      onPress={() =>
-                        Alert.alert(
-                          "This user will be removed from the group",
-                          "This action is irreversible. Do you want to continue?",
-                          [
-                            {
-                              text: "Cancel"
-                            },
-                            {
-                              text: "Continue",
-                              onPress: () =>
-                                removeUserFromGroup(groupInfo.id, item.id)
-                            }
-                          ]
-                        )
-                      }
-                    />
-                  )
-                }
-              >
-                <Bar item={item} />
-                <ListItem.Chevron />
-              </ListItem.Swipeable>
-            ))
+          render: ({ items }) => (
+            <EditMemberComponent items={items} isMember={true} />
+          )
         },
         {
           ...pendingMemberDetails,
           title: "Pending Members",
-          render: ({ items }) =>
-            items.map((item, idx) => (
-              <ListItem.Swipeable
-                key={idx}
-                bottomDivider
-                rightContent={
-                  <Button
-                    title="Remove"
-                    buttonStyle={styles.removeButton}
-                    icon={{ name: "delete", color: "white" }}
-                    onPress={() =>
-                      Alert.alert(
-                        "This invitation will be removed",
-                        "This action is irreversible. Do you want to continue?",
-                        [
-                          {
-                            text: "Cancel"
-                          },
-                          {
-                            text: "Continue",
-                            onPress: () =>
-                              cancelGroupInvitation(groupInfo.id, item.id)
-                          }
-                        ]
-                      )
-                    }
-                  />
-                }
-              >
-                <Bar item={item} />
-              </ListItem.Swipeable>
-            ))
+          render: ({ items }) => (
+            <EditMemberComponent items={items} isMember={false} />
+          )
         }
-      );
+      ];
       break;
+
     case memberType.MEMBER:
-      datas.push(
+      sectionDetails = [
         {
           ...memberDetails,
           title: "Members",
-          render: ({ items }) =>
-            items.map((item, idx) => (
-              <ListItem key={idx} bottomDivider>
-                <Bar item={item} />
-              </ListItem>
-            ))
+          render: ({ items }) => <RenderTabs items={items} />
         },
         {
           ...pendingMemberDetails,
           title: "Pending Members",
-          render: ({ items }) =>
-            items.map((item, idx) => (
-              <ListItem key={idx} bottomDivider>
-                <Bar item={item} />
-              </ListItem>
-            ))
+          render: ({ items }) => <RenderTabs items={items} />
         }
-      );
+      ];
       break;
+
     case memberType.PENDING_MEMBER:
-      datas.push({
-        ...memberDetails,
-        title: "Members",
-        render: ({ items }) =>
-          items.map((item, idx) => (
-            <ListItem key={idx} bottomDivider>
-              <Bar item={item} />
-            </ListItem>
-          ))
-      });
+      sectionDetails = [
+        {
+          ...memberDetails,
+          title: "Members",
+          render: ({ items }) => <RenderTabs items={items} />
+        }
+      ];
       break;
   }
 
@@ -190,6 +92,7 @@ const RenderGroupDetail = ({
       >
         <Text style={styles.backButtonText}>Go Back</Text>
       </TouchableOpacity>
+
       <View style={styles.contentContainer}>
         {groupInfo.img.length > 0 ? (
           <Image style={styles.img} source={{ uri: groupInfo.img }} />
@@ -203,51 +106,12 @@ const RenderGroupDetail = ({
         <Text style={styles.name}>{groupInfo.name}</Text>
         <Text style={styles.description}>{groupInfo.description}</Text>
         {type === memberType.OWNER && (
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate("EditGroup", { groupInfo: groupInfo });
-              }}
-            >
-              <Text style={styles.buttonText}>Edit Group Details</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate("AddGroupMember", {
-                  groupID: groupInfo.id
-                });
-              }}
-            >
-              <Text style={styles.buttonText}>Add Members</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                Alert.alert(
-                  "This group will be deleted",
-                  "This action is irreversible. Do you want to continue?",
-                  [
-                    {
-                      text: "Cancel"
-                    },
-                    {
-                      text: "Continue",
-                      onPress: () => deleteGroup(groupInfo.id, navigation)
-                    }
-                  ]
-                );
-              }}
-            >
-              <Text style={styles.buttonText}>Delete Group</Text>
-            </TouchableOpacity>
-          </View>
+          <GroupOwnerButtons groupInfo={groupInfo} navigation={navigation} />
         )}
       </View>
 
       <View style={styles.memberContainer}>
-        {datas.map((item, index) => (
+        {sectionDetails.map((item, index) => (
           <ListItem.Accordion
             bottomDivider
             key={index}
@@ -337,10 +201,6 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     textAlign: "center"
-  },
-  removeButton: {
-    minHeight: "100%",
-    backgroundColor: "red"
   },
   titleText: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
