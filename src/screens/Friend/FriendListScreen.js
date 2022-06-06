@@ -70,13 +70,6 @@ const FriendListScreen = () => {
         <Text>Add more friends</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("GroupList")}
-      >
-        <Text>View groups</Text>
-      </TouchableOpacity>
-
       <View style={styles.buttonGroup}>
         <TouchableOpacity
           style={styles.requestButton}

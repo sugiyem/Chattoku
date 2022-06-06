@@ -5,13 +5,6 @@ import AddFriendScreen from "./AddFriendScreen";
 import FriendListScreen from "./FriendListScreen";
 import FriendRequestsSentScreen from "./FriendRequestsSentScreen";
 import FriendRequestsReceivedScreen from "./FriendRequestsReceivedScreen";
-import GroupCreationScreen from "./GroupCreationScreen";
-import GroupInfoScreen from "./GroupInfoScreen";
-import GroupRequestInfoScreen from "./GroupRequestInfoScreen";
-import GroupListScreen from "./GroupListScreen";
-import GroupRequestsScreen from "./GroupRequestsScreen";
-import EditGroupScreen from "./EditGroupScreen";
-import AddGroupMemberScreen from "./AddGroupMemberScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,16 +24,6 @@ const FriendScreen = () => {
         component={FriendRequestsReceivedScreen}
       />
       <Stack.Screen name="AddFriend" component={AddFriendScreen} />
-      <Stack.Screen name="GroupList" component={GroupListScreen} />
-      <Stack.Screen name="GroupRequests" component={GroupRequestsScreen} />
-      <Stack.Screen name="GroupCreation" component={GroupCreationScreen} />
-      <Stack.Screen name="GroupInfo" component={GroupInfoScreen} />
-      <Stack.Screen
-        name="GroupRequestInfo"
-        component={GroupRequestInfoScreen}
-      />
-      <Stack.Screen name="EditGroup" component={EditGroupScreen} />
-      <Stack.Screen name="AddGroupMember" component={AddGroupMemberScreen} />
     </Stack.Navigator>
   );
 };
