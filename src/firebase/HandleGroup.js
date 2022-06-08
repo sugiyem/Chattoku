@@ -3,37 +3,24 @@ import { firebase } from "./Config";
 
 export async function createGroup(groupName, groupDescription, groupImg) {
   const userID = firebase.auth().currentUser.uid;
+  const groupID = firebase.firestore().collection("groups").doc().id;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
-  let groupID = "";
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
 
-  await firebase
-    .firestore()
-    .collection("groups")
-    .add({
-      name: groupName,
-      description: groupDescription,
-      img: groupImg,
-      lastMessageText: "",
-      lastMessageAt: null
-    })
-    .then((docRef) => {
-      groupID = docRef.id;
-    })
-    .then(async () => {
-      await userRef.collection("groupCreated").doc(groupID).set({});
-    })
-    .then(async () => {
-      await userRef.collection("groupJoined").doc(groupID).set({});
-    })
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("members")
-        .doc(userID)
-        .set({});
-    })
+  batch.set(groupRef, {
+    name: groupName,
+    description: groupDescription,
+    img: groupImg,
+    lastMessageText: "",
+    lastMessageAt: null
+  });
+  batch.set(groupRef.collection("members").doc(userID), {});
+  batch.set(userRef.collection("groupCreated").doc(groupID), {});
+  batch.set(userRef.collection("groupJoined").doc(groupID), {});
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("Group has successfully created");
     })
@@ -66,22 +53,15 @@ export async function editGroupDetails(
 }
 
 export async function addUserToGroup(groupID, userID) {
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("groupInvited")
-    .doc(groupID)
-    .set({})
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("pendingMembers")
-        .doc(userID)
-        .set({});
-    })
+  const batch = firebase.firestore().batch();
+  const userRef = firebase.firestore().collection("users").doc(userID);
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+
+  batch.set(userRef.collection("groupInvited").doc(groupID), {});
+  batch.set(groupRef.collection("pendingMembers").doc(userID), {});
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("This user has been invited to the group.");
     })
@@ -91,22 +71,15 @@ export async function addUserToGroup(groupID, userID) {
 }
 
 export async function removeUserFromGroup(groupID, userID) {
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("groupJoined")
-    .doc(groupID)
-    .delete()
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("members")
-        .doc(userID)
-        .delete();
-    })
+  const batch = firebase.firestore().batch();
+  const userRef = firebase.firestore().collection("users").doc(userID);
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+
+  batch.delete(userRef.collection("groupJoined").doc(groupID));
+  batch.delete(groupRef.collection("members").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("This user has been removed from the group.");
     })
@@ -116,22 +89,15 @@ export async function removeUserFromGroup(groupID, userID) {
 }
 
 export async function cancelGroupInvitation(groupID, userID) {
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("groupInvited")
-    .doc(groupID)
-    .delete()
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("pendingMembers")
-        .doc(userID)
-        .delete();
-    })
+  const batch = firebase.firestore().batch();
+  const userRef = firebase.firestore().collection("users").doc(userID);
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+
+  batch.delete(userRef.collection("groupInvited").doc(groupID));
+  batch.delete(groupRef.collection("pendingMembers").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("This invitation has been removed.");
     })
@@ -142,25 +108,20 @@ export async function cancelGroupInvitation(groupID, userID) {
 
 export async function acceptGroupInvitation(groupID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const groupRef = firebase.firestore().collection("groups").doc(groupID);
 
-  await userRef
-    .collection("groupInvited")
-    .doc(groupID)
-    .delete()
-    .then(async () => {
-      await userRef.collection("groupJoined").doc(groupID).set({});
-    })
-    .then(async () => {
-      await groupRef.collection("pendingMembers").doc(userID).delete();
-    })
-    .then(async () => {
-      await groupRef.collection("members").doc(userID).set({
-        showMessage: false,
-        showNotif: false
-      });
-    })
+  batch.delete(userRef.collection("groupInvited").doc(groupID));
+  batch.delete(groupRef.collection("pendingMembers").doc(userID));
+  batch.set(userRef.collection("groupJoined").doc(groupID), {});
+  batch.set(groupRef.collection("members").doc(userID), {
+    showMessage: false,
+    showNotif: false
+  });
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("You have successfully joined this group");
     })
@@ -171,23 +132,15 @@ export async function acceptGroupInvitation(groupID) {
 
 export async function declineGroupInvitation(groupID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
+  const userRef = firebase.firestore().collection("users").doc(userID);
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
 
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("groupInvited")
-    .doc(groupID)
-    .delete()
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("pendingMembers")
-        .doc(userID)
-        .delete({});
-    })
+  batch.delete(userRef.collection("groupInvited").doc(groupID));
+  batch.delete(groupRef.collection("pendingMembers").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("You have successfully declined this invitation");
     })
@@ -198,24 +151,15 @@ export async function declineGroupInvitation(groupID) {
 
 export async function leaveGroup(groupID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
 
-  await userRef
-    .collection("groupCreated")
-    .doc(groupID)
-    .delete()
-    .then(async () => {
-      await userRef.collection("groupJoined").doc(groupID).delete();
-    })
-    .then(async () => {
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("members")
-        .doc(userID)
-        .delete();
-    })
+  batch.delete(userRef.collection("groupJoined").doc(groupID));
+  batch.delete(groupRef.collection("members").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("You have successfully left this group.");
     })
@@ -225,11 +169,30 @@ export async function leaveGroup(groupID) {
 }
 
 export async function deleteGroup(groupID, navigation) {
-  await firebase
-    .firestore()
-    .collection("groups")
-    .doc(groupID)
-    .delete()
+  const batch = firebase.firestore().batch();
+  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+  const messagesSnapshot = await groupRef.collection("messages").get();
+  const membersSnapshot = await groupRef.collection("members").get();
+  const pendingMembersSnapshot = await groupRef
+    .collection("pendingMembers")
+    .get();
+
+  messagesSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  membersSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  pendingMembersSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  batch.delete(groupRef);
+
+  await batch
+    .commit()
     .then(() => {
       navigation.replace("GroupList");
     })
