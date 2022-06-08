@@ -3,16 +3,15 @@ import { firebase } from "./Config";
 
 export async function addFriend(friendID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const friendRef = firebase.firestore().collection("users").doc(friendID);
 
-  await userRef
-    .collection("friendRequestsSent")
-    .doc(friendID)
-    .set({})
-    .then(async () => {
-      await friendRef.collection("friendRequestsReceived").doc(userID).set({});
-    })
+  batch.set(userRef.collection("friendRequestsSent").doc(friendID), {});
+  batch.set(friendRef.collection("friendRequestsReceived").doc(userID), {});
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("Friend request sent");
     })
@@ -23,22 +22,17 @@ export async function addFriend(friendID) {
 
 export async function acceptFriendRequest(friendID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const friendRef = firebase.firestore().collection("users").doc(friendID);
 
-  await userRef
-    .collection("friendRequestsReceived")
-    .doc(friendID)
-    .delete()
-    .then(async () => {
-      await userRef.collection("friends").doc(friendID).set({});
-    })
-    .then(async () => {
-      await friendRef.collection("friendRequestsSent").doc(userID).delete();
-    })
-    .then(async () => {
-      await friendRef.collection("friends").doc(userID).set({});
-    })
+  batch.delete(userRef.collection("friendRequestsReceived").doc(friendID));
+  batch.delete(friendRef.collection("friendRequestsSent").doc(userID));
+  batch.set(userRef.collection("friends").doc(friendID), {});
+  batch.set(friendRef.collection("friends").doc(userID), {});
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("Friend request accepted");
     })
@@ -49,16 +43,15 @@ export async function acceptFriendRequest(friendID) {
 
 export async function cancelFriendRequest(friendID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const friendRef = firebase.firestore().collection("users").doc(friendID);
 
-  await userRef
-    .collection("friendRequestsSent")
-    .doc(friendID)
-    .delete()
-    .then(async () => {
-      await friendRef.collection("friendRequestsReceived").doc(userID).delete();
-    })
+  batch.delete(userRef.collection("friendRequestsSent").doc(friendID));
+  batch.delete(friendRef.collection("friendRequestsReceived").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("Friend request cancelled");
     })
@@ -69,16 +62,15 @@ export async function cancelFriendRequest(friendID) {
 
 export async function declineFriendRequest(friendID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const friendRef = firebase.firestore().collection("users").doc(friendID);
 
-  await userRef
-    .collection("friendRequestsReceived")
-    .doc(friendID)
-    .delete()
-    .then(async () => {
-      await friendRef.collection("friendRequestsSent").doc(userID).delete();
-    })
+  batch.delete(userRef.collection("friendRequestsReceived").doc(friendID));
+  batch.delete(friendRef.collection("friendRequestsSent").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("Friend request declined");
     })
@@ -89,16 +81,15 @@ export async function declineFriendRequest(friendID) {
 
 export async function removeFriend(friendID) {
   const userID = firebase.auth().currentUser.uid;
+  const batch = firebase.firestore().batch();
   const userRef = firebase.firestore().collection("users").doc(userID);
   const friendRef = firebase.firestore().collection("users").doc(friendID);
 
-  await userRef
-    .collection("friends")
-    .doc(friendID)
-    .delete()
-    .then(async () => {
-      await friendRef.collection("friends").doc(userID).delete();
-    })
+  batch.delete(userRef.collection("friends").doc(friendID));
+  batch.delete(friendRef.collection("friends").doc(userID));
+
+  await batch
+    .commit()
     .then(() => {
       Alert.alert("This user has been removed from your friend");
     })
