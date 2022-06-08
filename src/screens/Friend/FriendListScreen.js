@@ -15,9 +15,8 @@ import {
   fetchFriend,
   checkFriendRequestsReceived
 } from "../../firebase/FetchFriendStatus";
-import RenderUserLists, {
-  renderType
-} from "../../components/Friend/RenderUserLists";
+import { friendshipType } from "../../constants/Friend";
+import RenderUserLists from "../../components/Friend/RenderUserLists";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
@@ -96,7 +95,7 @@ const FriendListScreen = () => {
       </View>
 
       <RenderUserLists
-        type={renderType.FRIEND}
+        type={friendshipType.FRIEND}
         items={friends.filter((data) =>
           data.username.toLowerCase().startsWith(search.toLowerCase())
         )}

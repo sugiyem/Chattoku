@@ -1,20 +1,16 @@
 import React from "react";
 import { Avatar, ListItem } from "react-native-elements";
-
-export const renderType = {
-  ANIME: 0,
-  GENRE: 1
-};
+import { favoriteType } from "../../constants/Favorite";
 
 const RenderFriendFavorites = ({ type, items }) => {
   return items.map((item, i) => (
     <ListItem key={i} bottomDivider>
-      {type === renderType.ANIME && (
+      {type === favoriteType.ANIME && (
         <Avatar size="medium" source={{ uri: item.image }} />
       )}
       <ListItem.Content>
         <ListItem.Title>
-          {type === renderType.GENRE ? item : item.title}
+          {type === favoriteType.GENRE ? item : item.title}
         </ListItem.Title>
       </ListItem.Content>
     </ListItem>

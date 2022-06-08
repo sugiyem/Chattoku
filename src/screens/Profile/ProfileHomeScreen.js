@@ -7,22 +7,21 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../../firebase/Config";
+import { favoriteType } from "../../constants/Favorite";
 import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
-import RenderFavorites, {
-  renderType,
-} from "../../components/Profile/RenderFavorites";
+import RenderFavorites from "../../components/Profile/RenderFavorites";
 
 const initialState = {
   username: "",
   bio: "",
   img: "",
-  genres: [],
+  genres: []
 };
 
 const ProfileHomeScreen = () => {
@@ -38,28 +37,28 @@ const ProfileHomeScreen = () => {
       title: "Favorite Genre",
       render: ({ items }) => (
         <RenderFavorites
-          type={renderType.GENRE}
+          type={favoriteType.GENRE}
           items={items}
           navigation={navigation}
         />
       ),
       data: userInfo.genres,
       isExpanded: genreExpanded,
-      changeExpanded: setGenreExpanded,
+      changeExpanded: setGenreExpanded
     },
     {
       title: "Favorite Anime",
       render: ({ items }) => (
         <RenderFavorites
-          type={renderType.ANIME}
+          type={favoriteType.ANIME}
           items={items}
           navigation={navigation}
         />
       ),
       data: favoriteAnime,
       isExpanded: animeExpanded,
-      changeExpanded: setAnimeExpanded,
-    },
+      changeExpanded: setAnimeExpanded
+    }
   ];
 
   async function logOut() {
@@ -78,7 +77,7 @@ const ProfileHomeScreen = () => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -89,7 +88,7 @@ const ProfileHomeScreen = () => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -154,44 +153,44 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "darkcyan",
     padding: 5,
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 10
   },
   favoriteStuffContainer: {
     alignSelf: "stretch",
     borderTopWidth: 1,
     borderTopColor: "black",
     margin: 10,
-    padding: 5,
+    padding: 5
   },
   img: {
     height: 150,
     width: 150,
-    borderRadius: 75,
+    borderRadius: 75
   },
   username: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    marginVertical: 10,
+    marginVertical: 10
   },
   bio: {
     fontSize: 15,
     fontWeight: "600",
     color: "aquamarine",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 10
   },
   buttonGroup: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "stretch",
-    marginBottom: 10,
+    marginBottom: 10
   },
   button: {
     borderColor: "navy",
@@ -200,15 +199,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    marginHorizontal: 5,
+    marginHorizontal: 5
   },
   buttonText: {
-    color: "#2e64e5",
+    color: "#2e64e5"
   },
   titleText: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 20,
     fontWeight: "600",
-    textDecorationLine: "underline",
-  },
+    textDecorationLine: "underline"
+  }
 });

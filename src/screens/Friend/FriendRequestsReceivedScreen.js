@@ -10,9 +10,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { fetchFriendRequestsReceived } from "../../firebase/FetchFriendStatus";
-import RenderUserLists, {
-  renderType
-} from "../../components/Friend/RenderUserLists";
+import { friendshipType } from "../../constants/Friend";
+import RenderUserLists from "../../components/Friend/RenderUserLists";
 
 const FriendRequestsSentScreen = () => {
   const [pendingFriends, setPendingFriends] = useState([]);
@@ -51,7 +50,7 @@ const FriendRequestsSentScreen = () => {
       </TouchableOpacity>
 
       <RenderUserLists
-        type={renderType.REQUEST_RECEIVED}
+        type={friendshipType.RECEIVING_REQUEST}
         items={pendingFriends.filter((data) =>
           data.username.toLowerCase().startsWith(search.toLowerCase())
         )}

@@ -7,12 +7,7 @@ import {
   declineFriendRequest,
   removeFriend
 } from "../../firebase/HandleFriend";
-
-export const renderType = {
-  FRIEND: 0,
-  REQUEST_SENT: 1,
-  REQUEST_RECEIVED: 2
-};
+import { friendshipType } from "../../constants/Friend";
 
 export default RenderUserLists = ({
   type,
@@ -34,7 +29,7 @@ export default RenderUserLists = ({
   ];
 
   switch (type) {
-    case renderType.FRIEND:
+    case friendshipType.FRIEND:
       datas.push(
         {
           title: "View details",
@@ -64,7 +59,7 @@ export default RenderUserLists = ({
       );
       break;
 
-    case renderType.REQUEST_SENT:
+    case friendshipType.WAITING_RESPONSE:
       datas.push({
         title: "Cancel request",
         icon: "close",
@@ -86,7 +81,7 @@ export default RenderUserLists = ({
       });
       break;
 
-    case renderType.REQUEST_RECEIVED:
+    case friendshipType.RECEIVING_REQUEST:
       datas.push(
         {
           title: "Accept request",

@@ -6,16 +6,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from "react-native";
 import { ListItem } from "react-native-elements";
 
 import { firebase } from "../../firebase/Config";
-import RenderFriendFavorites, {
-  renderType
-} from "../../components/Friend/RenderFriendFavorites";
+import { favoriteType } from "../../constants/Favorite";
+import RenderFriendFavorites from "../../components/Friend/RenderFriendFavorites";
 
 const FriendInfoScreen = ({ navigation, route }) => {
   const [favoriteAnime, setFavoriteAnime] = useState([]);
@@ -26,7 +24,7 @@ const FriendInfoScreen = ({ navigation, route }) => {
     {
       title: "Favorite Genre",
       render: ({ items }) => (
-        <RenderFriendFavorites type={renderType.GENRE} items={items} />
+        <RenderFriendFavorites type={favoriteType.GENRE} items={items} />
       ),
       data: route.params.friendData.genres,
       isExpanded: genreExpanded,
@@ -35,7 +33,7 @@ const FriendInfoScreen = ({ navigation, route }) => {
     {
       title: "Favorite Anime",
       render: ({ items }) => (
-        <RenderFriendFavorites type={renderType.ANIME} items={items} />
+        <RenderFriendFavorites type={favoriteType.ANIME} items={items} />
       ),
       data: favoriteAnime,
       isExpanded: animeExpanded,
