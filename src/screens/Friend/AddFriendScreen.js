@@ -22,10 +22,8 @@ import {
   cancelFriendRequest,
   removeFriend
 } from "../../firebase/HandleFriend";
-import {
-  friendshipType,
-  getFriendshipStatus
-} from "../../components/Friend/FriendshipStatus";
+import { getFriendshipStatus } from "../../components/Friend/FriendshipStatus";
+import { friendshipType } from "../../constants/Friend";
 
 const AddFriendScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");

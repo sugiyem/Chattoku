@@ -1,23 +1,24 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Avatar, ListItem } from "react-native-elements";
-import HandleFavoriteButton, { buttonType } from "./HandleFavoriteButton";
-
-export const renderType = buttonType;
+import { favoriteType } from "../../constants/Favorite";
+import HandleFavoriteButton from "./HandleFavoriteButton";
 
 const RenderFavorites = ({
   type,
   isEditPage = false,
   items,
   favorites = [],
-  navigation = null,
+  navigation = null
 }) => {
+  const isGenre = type === favoriteType.GENRE;
+
   return (
     <View>
       {!isEditPage && (
         <TouchableOpacity
           onPress={() => {
-            if (type === renderType.GENRE) {
+            if (isGenre) {
               navigation.navigate("EditGenre");
             } else {
               navigation.navigate("Anime");
@@ -26,7 +27,7 @@ const RenderFavorites = ({
           style={styles.favoriteButton}
         >
           <Text style={styles.buttonText}>
-            {type === renderType.GENRE
+            {isGenre
               ? "Add more genres to favorite"
               : "Add more anime to favorite"}
           </Text>
@@ -41,22 +42,16 @@ const RenderFavorites = ({
             <HandleFavoriteButton
               type={type}
               isFavorite={
-                type === renderType.GENRE && isEditPage
-                  ? favorites.includes(item)
-                  : true
+                isGenre && isEditPage ? favorites.includes(item) : true
               }
-              data={type === renderType.GENRE ? item : item.id.toString()}
+              data={isGenre ? item : item.id.toString()}
             />
           }
         >
-          {type === renderType.ANIME && (
-            <Avatar size="medium" source={{ uri: item.image }} />
-          )}
+          {!isGenre && <Avatar size="medium" source={{ uri: item.image }} />}
           <ListItem.Content>
-            <ListItem.Title>
-              {type === renderType.GENRE ? item : item.title}
-            </ListItem.Title>
-            {type === renderType.GENRE && isEditPage && (
+            <ListItem.Title>{isGenre ? item : item.title}</ListItem.Title>
+            {isGenre && isEditPage && (
               <ListItem.Subtitle>
                 {favorites.includes(item) ? "Favorite" : ""}
               </ListItem.Subtitle>
@@ -78,9 +73,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: "aquamarine",
     margin: 5,
-    padding: 5,
+    padding: 5
   },
   buttonText: {
-    color: "#2e64e5",
-  },
+    color: "#2e64e5"
+  }
 });

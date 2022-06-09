@@ -7,14 +7,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { GENRES } from "../../constants/MyAnimeList";
+import { favoriteType } from "../../constants/Favorite";
 import FetchUserInfo from "../../firebase/FetchUserInfo";
-import RenderFavorites, {
-  renderType,
-} from "../../components/Profile/RenderFavorites";
+import RenderFavorites from "../../components/Profile/RenderFavorites";
 
 const EditGenreScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -29,7 +28,7 @@ const EditGenreScreen = ({ navigation }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -68,7 +67,7 @@ const EditGenreScreen = ({ navigation }) => {
       <Text style={styles.title}>Genre lists</Text>
       <View>
         <RenderFavorites
-          type={renderType.GENRE}
+          type={favoriteType.GENRE}
           isEditPage={true}
           items={GENRES.filter((value) =>
             value.toLowerCase().startsWith(search.toLowerCase())
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "darkcyan",
     padding: 5,
-    flex: 1,
+    flex: 1
   },
   textInput: {
     borderColor: "black",
@@ -97,22 +96,22 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     color: "black",
     borderRadius: 10,
-    padding: 2,
+    padding: 2
   },
   title: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   button: {
     borderRadius: 10,
     borderWidth: 1,
     padding: 5,
     marginVertical: 5,
-    backgroundColor: "aquamarine",
+    backgroundColor: "aquamarine"
   },
   buttonText: {
     textAlign: "center",
-    color: "blue",
-  },
+    color: "blue"
+  }
 });

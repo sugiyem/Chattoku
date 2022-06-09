@@ -5,13 +5,9 @@ import { Button } from "react-native-elements";
 import {
   addGenreToFavorite,
   removeGenreFromFavorite,
-  removeAnimeFromFavorite,
+  removeAnimeFromFavorite
 } from "../../firebase/HandleFavorite";
-
-export const buttonType = {
-  GENRE: 0,
-  ANIME: 1,
-};
+import { favoriteType } from "../../constants/Favorite";
 
 const HandleFavoriteButton = ({ type, isFavorite = true, data }) => {
   return (
@@ -20,7 +16,7 @@ const HandleFavoriteButton = ({ type, isFavorite = true, data }) => {
       buttonStyle={isFavorite ? styles.removeButton : styles.addButton}
       icon={{ name: isFavorite ? "delete" : "add", color: "white" }}
       onPress={() => {
-        if (type === buttonType.GENRE) {
+        if (type === favoriteType.GENRE) {
           if (isFavorite) {
             removeGenreFromFavorite(data);
           } else {
@@ -39,10 +35,10 @@ export default HandleFavoriteButton;
 const styles = StyleSheet.create({
   addButton: {
     minHeight: "100%",
-    backgroundColor: "green",
+    backgroundColor: "green"
   },
   removeButton: {
     minHeight: "100%",
-    backgroundColor: "red",
-  },
+    backgroundColor: "red"
+  }
 });

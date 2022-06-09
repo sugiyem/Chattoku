@@ -10,50 +10,30 @@ import {
   View
 } from "react-native";
 import { ListItem } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
+
 import { firebase } from "../../firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
-import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
-import FetchUserInfo from "../../firebase/FetchUserInfo";
-import RenderFavorites from "../../components/Profile/RenderFavorites";
+import RenderFriendFavorites from "../../components/Friend/RenderFriendFavorites";
 
-const initialState = {
-  username: "",
-  bio: "",
-  img: "",
-  genres: []
-};
-
-const ProfileHomeScreen = () => {
-  const [userInfo, setUserInfo] = useState(initialState);
+const FriendInfoScreen = ({ navigation, route }) => {
   const [favoriteAnime, setFavoriteAnime] = useState([]);
   const [animeExpanded, setAnimeExpanded] = useState(false);
   const [genreExpanded, setGenreExpanded] = useState(false);
-
-  const navigation = useNavigation();
 
   const datas = [
     {
       title: "Favorite Genre",
       render: ({ items }) => (
-        <RenderFavorites
-          type={favoriteType.GENRE}
-          items={items}
-          navigation={navigation}
-        />
+        <RenderFriendFavorites type={favoriteType.GENRE} items={items} />
       ),
-      data: userInfo.genres,
+      data: route.params.friendData.genres,
       isExpanded: genreExpanded,
       changeExpanded: setGenreExpanded
     },
     {
       title: "Favorite Anime",
       render: ({ items }) => (
-        <RenderFavorites
-          type={favoriteType.ANIME}
-          items={items}
-          navigation={navigation}
-        />
+        <RenderFriendFavorites type={favoriteType.ANIME} items={items} />
       ),
       data: favoriteAnime,
       isExpanded: animeExpanded,
@@ -61,35 +41,26 @@ const ProfileHomeScreen = () => {
     }
   ];
 
-  async function logOut() {
-    try {
-      navigation.replace("Login");
-      firebase.auth().signOut();
-    } catch (error) {
-      Alert.alert(error.message);
-    }
-  }
-
   useEffect(() => {
-    return FetchUserInfo({
-      onSuccesfulFetch: (userInfo) => {
-        setUserInfo(userInfo);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
-    });
-  }, []);
+    const friendID = route.params.friendData.id;
 
-  useEffect(() => {
-    return FetchFavoriteAnime({
-      onSuccesfulFetch: (favorite) => {
-        setFavoriteAnime(favorite);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
-    });
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(friendID)
+      .collection("anime")
+      .onSnapshot(
+        (querySnapshot) => {
+          const favoriteAnimeData = [];
+
+          querySnapshot.forEach((documentSnapshot) => {
+            favoriteAnimeData.push(documentSnapshot.data());
+          });
+
+          setFavoriteAnime(favoriteAnimeData);
+        },
+        (error) => Alert.alert("Error", error.message)
+      );
   }, []);
 
   return (
@@ -97,9 +68,19 @@ const ProfileHomeScreen = () => {
       style={styles.container}
       contentContainerStyle={{ alignItems: "center" }}
     >
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>Go Back</Text>
+      </TouchableOpacity>
+
       <View style={styles.contentContainer}>
-        {userInfo.img.length > 0 ? (
-          <Image style={styles.img} source={{ uri: userInfo.img }} />
+        {route.params.friendData.img.length > 0 ? (
+          <Image
+            style={styles.img}
+            source={{ uri: route.params.friendData.img }}
+          />
         ) : (
           <Image
             style={styles.img}
@@ -107,21 +88,8 @@ const ProfileHomeScreen = () => {
           />
         )}
 
-        <Text style={styles.username}>{userInfo.username}</Text>
-        <Text style={styles.bio}>{userInfo.bio}</Text>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate("EditProfile", { userInfo: userInfo });
-            }}
-          >
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => logOut()}>
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.username}>{route.params.friendData.username}</Text>
+        <Text style={styles.bio}>{route.params.friendData.bio}</Text>
       </View>
 
       <View style={styles.favoriteStuffContainer}>
@@ -147,7 +115,7 @@ const ProfileHomeScreen = () => {
   );
 };
 
-export default ProfileHomeScreen;
+export default FriendInfoScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -186,23 +154,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10
   },
-  buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "stretch",
-    marginBottom: 10
-  },
   button: {
     borderColor: "navy",
-    borderWidth: 2,
-    borderRadius: 3,
-    backgroundColor: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginHorizontal: 5
+    borderWidth: 1,
+    borderRadius: 10,
+    alignSelf: "stretch",
+    backgroundColor: "aquamarine",
+    padding: 5,
+    margin: 5
   },
   buttonText: {
-    color: "#2e64e5"
+    color: "#2e64e5",
+    textAlign: "center"
   },
   titleText: {
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
