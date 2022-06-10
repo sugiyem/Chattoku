@@ -1,4 +1,5 @@
-import WriteGroup, { writeType } from "../../components/Friend/WriteGroup";
+import { writeGroupType } from "../../constants/Group";
+import WriteGroup from "../../components/Friend/WriteGroup";
 
 const initialState = {
   name: "",
@@ -9,7 +10,7 @@ const initialState = {
 const GroupCreationScreen = ({ navigation }) => {
   return (
     <WriteGroup
-      type={writeType.CREATE}
+      type={writeGroupType.CREATE}
       currentState={initialState}
       navigation={navigation}
     />

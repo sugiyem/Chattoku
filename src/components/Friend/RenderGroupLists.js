@@ -6,13 +6,10 @@ import {
   acceptGroupInvitation,
   declineGroupInvitation
 } from "../../firebase/HandleGroup";
-import ContactBar, { contactType } from "./ContactBar";
+import { contactType } from "../../constants/Contact";
+import { groupListType } from "../../constants/Group";
+import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
-
-export const renderType = {
-  GROUP: 0,
-  GROUP_INVITATION: 1
-};
 
 export default RenderGroupLists = ({
   type,
@@ -24,7 +21,7 @@ export default RenderGroupLists = ({
   const buttonDetails = [];
 
   switch (type) {
-    case renderType.GROUP:
+    case groupListType.GROUP:
       buttonDetails.push(
         {
           title: "Detail",
@@ -63,7 +60,7 @@ export default RenderGroupLists = ({
       );
       break;
 
-    case renderType.GROUP_INVITATION:
+    case groupListType.GROUP_INVITATION:
       buttonDetails.push(
         {
           title: "Detail",

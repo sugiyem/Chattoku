@@ -35,7 +35,10 @@ const GroupOwnerButtons = ({ groupInfo, navigation }) => {
               },
               {
                 text: "Continue",
-                onPress: () => deleteGroup(groupInfo.id, navigation)
+                onPress: async () =>
+                  await deleteGroup(groupInfo.id, navigation).finally(() =>
+                    navigation.replace("GroupList")
+                  )
               }
             ]
           );

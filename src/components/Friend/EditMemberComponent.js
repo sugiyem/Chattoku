@@ -6,7 +6,8 @@ import {
   cancelGroupInvitation,
   removeUserFromGroup
 } from "../../firebase/HandleGroup";
-import ContactBar, { contactType } from "./ContactBar";
+import { contactType } from "../../constants/Contact";
+import ContactBar from "./ContactBar";
 
 const EditMemberComponent = ({ items, isMember }) => {
   const userID = firebase.auth().currentUser.uid;

@@ -6,9 +6,8 @@ import {
   fetchGroupMembers,
   fetchPendingGroupMembers
 } from "../../firebase/FetchGroup";
-import RenderGroupDetail, {
-  memberType
-} from "../../components/Friend/RenderGroupDetail";
+import { groupMemberType } from "../../constants/Group";
+import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
@@ -73,7 +72,7 @@ const GroupInfoScreen = ({ navigation, route }) => {
 
   return (
     <RenderGroupDetail
-      type={isOwner ? memberType.OWNER : memberType.MEMBER}
+      type={isOwner ? groupMemberType.OWNER : groupMemberType.MEMBER}
       groupInfo={groupInfo}
       memberDetails={{
         data: members,

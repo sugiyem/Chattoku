@@ -14,9 +14,8 @@ import {
   fetchGroupMembers,
   fetchPendingGroupMembers
 } from "../../firebase/FetchGroup";
-import AddMemberComponent, {
-  userType
-} from "../../components/Friend/AddMemberComponent";
+import { groupMemberType } from "../../constants/Group";
+import AddMemberComponent from "../../components/Friend/AddMemberComponent";
 
 const AddGroupMemberScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState("");
@@ -74,10 +73,10 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
           <AddMemberComponent
             type={
               membersID.includes(item.id)
-                ? userType.MEMBER
+                ? groupMemberType.MEMBER
                 : pendingMembersID.includes(item.id)
-                ? userType.PENDING_MEMBER
-                : userType.NON_MEMBER
+                ? groupMemberType.PENDING_MEMBER
+                : groupMemberType.NON_MEMBER
             }
             key={idx}
             item={item}

@@ -168,7 +168,7 @@ export async function leaveGroup(groupID) {
     });
 }
 
-export async function deleteGroup(groupID, navigation) {
+export async function deleteGroup(groupID) {
   const batch = firebase.firestore().batch();
   const groupRef = firebase.firestore().collection("groups").doc(groupID);
   const messagesSnapshot = await groupRef.collection("messages").get();
@@ -194,7 +194,7 @@ export async function deleteGroup(groupID, navigation) {
   await batch
     .commit()
     .then(() => {
-      navigation.replace("GroupList");
+      Alert.alert("Group successfully deleted");
     })
     .catch((error) => {
       Alert.alert("Error", error.message);

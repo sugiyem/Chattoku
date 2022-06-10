@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
 import { fetchGroupMembers } from "../../firebase/FetchGroup";
-import RenderGroupDetail, {
-  memberType
-} from "../../components/Friend/RenderGroupDetail";
+import { groupMemberType } from "../../constants/Group";
+import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupRequestInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
@@ -25,7 +24,7 @@ const GroupRequestInfoScreen = ({ navigation, route }) => {
 
   return (
     <RenderGroupDetail
-      type={memberType.PENDING_MEMBER}
+      type={groupMemberType.PENDING_MEMBER}
       groupInfo={groupInfo}
       memberDetails={{
         data: members,

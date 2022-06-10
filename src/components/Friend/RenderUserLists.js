@@ -7,10 +7,10 @@ import {
   declineFriendRequest,
   removeFriend
 } from "../../firebase/HandleFriend";
-
-import ContactBar, { contactType } from "./ContactBar";
-import ContactButtonGroup from "./ContactButtonGroup";
+import { contactType } from "../../constants/Contact";
 import { friendshipType } from "../../constants/Friend";
+import ContactBar from "./ContactBar";
+import ContactButtonGroup from "./ContactButtonGroup";
 
 export default RenderUserLists = ({
   type,

@@ -10,11 +10,10 @@ import {
   View
 } from "react-native";
 import { fetchGroupInvitation } from "../../firebase/FetchGroup";
-import RenderGroupLists, {
-  renderType
-} from "../../components/Friend/RenderGroupLists";
+import { groupListType } from "../../constants/Group";
+import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 
-const GroupListScreen = ({ navigation }) => {
+const GroupRequestsScreen = ({ navigation }) => {
   const [groupRequests, setGroupRequests] = useState([]);
   const [search, setSearch] = useState("");
   const [expand, setExpand] = useState(null);
@@ -51,7 +50,7 @@ const GroupListScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       <RenderGroupLists
-        type={renderType.GROUP_INVITATION}
+        type={groupListType.GROUP_INVITATION}
         items={groupRequests.filter((item) =>
           item.name.toLowerCase().startsWith(search.toLowerCase())
         )}
@@ -63,7 +62,7 @@ const GroupListScreen = ({ navigation }) => {
   );
 };
 
-export default GroupListScreen;
+export default GroupRequestsScreen;
 
 const styles = StyleSheet.create({
   container: {

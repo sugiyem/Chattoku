@@ -15,15 +15,12 @@ import axios from "axios";
 
 import { firebase } from "../../firebase/Config";
 import { createGroup, editGroupDetails } from "../../firebase/HandleGroup";
-
-export const writeType = {
-  CREATE: 0,
-  EDIT: 1
-};
+import { writeGroupType } from "../../constants/Group";
 
 const WriteGroup = ({ type, currentState, navigation }) => {
   const [groupInfo, setGroupInfo] = useState(currentState);
   const [modalVisible, setModalVisible] = useState(false);
+  const isCreate = type === writeGroupType.CREATE;
 
   function handleChangeText(text, name) {
     setGroupInfo({
@@ -109,7 +106,7 @@ const WriteGroup = ({ type, currentState, navigation }) => {
       })
       .then(() => {
         Alert.alert(
-          type === writeType.CREATE
+          isCreate
             ? "Group picture has been added"
             : "Group picture has been updated"
         );
@@ -125,7 +122,7 @@ const WriteGroup = ({ type, currentState, navigation }) => {
       return;
     }
 
-    if (type === writeType.CREATE) {
+    if (isCreate) {
       await createGroup(
         groupInfo.name,
         groupInfo.description,
@@ -201,9 +198,7 @@ const WriteGroup = ({ type, currentState, navigation }) => {
           onPress={() => setModalVisible(!modalVisible)}
         >
           <Text style={styles.buttonText}>
-            {type === writeType.CREATE
-              ? "Add Group Photo"
-              : "Change Group Photo"}
+            {isCreate ? "Add Group Photo" : "Change Group Photo"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -226,7 +221,7 @@ const WriteGroup = ({ type, currentState, navigation }) => {
       </View>
       <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
         <Text style={styles.buttonText}>
-          {type === writeType.CREATE ? "Create Group" : "Update Group Details"}
+          {isCreate ? "Create Group" : "Update Group Details"}
         </Text>
       </TouchableOpacity>
     </View>

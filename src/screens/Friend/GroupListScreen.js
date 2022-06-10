@@ -11,9 +11,8 @@ import {
 } from "react-native";
 import { Badge } from "react-native-elements";
 import { fetchGroup, checkGroupInvitation } from "../../firebase/FetchGroup";
-import RenderGroupLists, {
-  renderType
-} from "../../components/Friend/RenderGroupLists";
+import { groupListType } from "../../constants/Group";
+import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 
 const GroupListScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -90,7 +89,7 @@ const GroupListScreen = ({ navigation }) => {
       </View>
 
       <RenderGroupLists
-        type={renderType.GROUP}
+        type={groupListType.GROUP}
         items={groups.filter((item) =>
           item.name.toLowerCase().startsWith(search.toLowerCase())
         )}

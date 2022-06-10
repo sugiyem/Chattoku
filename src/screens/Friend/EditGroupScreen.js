@@ -1,9 +1,10 @@
-import WriteGroup, { writeType } from "../../components/Friend/WriteGroup";
+import { writeGroupType } from "../../constants/Group";
+import WriteGroup from "../../components/Friend/WriteGroup";
 
 const EditGroupScreen = ({ navigation, route }) => {
   return (
     <WriteGroup
-      type={writeType.EDIT}
+      type={writeGroupType.EDIT}
       currentState={route.params.groupInfo}
       navigation={navigation}
     />

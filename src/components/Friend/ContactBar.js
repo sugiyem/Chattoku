@@ -1,11 +1,7 @@
 import React from "react";
 import { ListItem } from "react-native-elements";
+import { contactType } from "../../constants/Contact";
 import ContactImage from "./ContactImage";
-
-export const contactType = {
-  USER: 0,
-  GROUP: 1
-};
 
 const ContactBar = ({ type, item }) => {
   const isUser = type === contactType.USER;

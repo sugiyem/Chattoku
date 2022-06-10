@@ -1,23 +1,19 @@
 import React from "react";
 import {
-  Alert,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
-import { Button, ListItem } from "react-native-elements";
-import ContactBar, { contactType } from "./ContactBar";
+import { ListItem } from "react-native-elements";
+import { contactType } from "../../constants/Contact";
+import { groupMemberType } from "../../constants/Group";
+import ContactBar from "./ContactBar";
 import GroupOwnerButtons from "./GroupOwnerButtons";
 import EditMemberComponent from "./EditMemberComponent";
-
-export const memberType = {
-  OWNER: 0,
-  MEMBER: 1,
-  PENDING_MEMBER: 2
-};
 
 const RenderGroupDetail = ({
   type,
@@ -36,7 +32,7 @@ const RenderGroupDetail = ({
     ));
 
   switch (type) {
-    case memberType.OWNER:
+    case groupMemberType.OWNER:
       sectionDetails = [
         {
           ...memberDetails,
@@ -55,7 +51,7 @@ const RenderGroupDetail = ({
       ];
       break;
 
-    case memberType.MEMBER:
+    case groupMemberType.MEMBER:
       sectionDetails = [
         {
           ...memberDetails,
@@ -70,7 +66,7 @@ const RenderGroupDetail = ({
       ];
       break;
 
-    case memberType.PENDING_MEMBER:
+    case groupMemberType.PENDING_MEMBER:
       sectionDetails = [
         {
           ...memberDetails,
@@ -105,7 +101,7 @@ const RenderGroupDetail = ({
 
         <Text style={styles.name}>{groupInfo.name}</Text>
         <Text style={styles.description}>{groupInfo.description}</Text>
-        {type === memberType.OWNER && (
+        {type === groupMemberType.OWNER && (
           <GroupOwnerButtons groupInfo={groupInfo} navigation={navigation} />
         )}
       </View>

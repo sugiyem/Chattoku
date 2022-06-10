@@ -7,18 +7,13 @@ import {
   cancelGroupInvitation,
   removeUserFromGroup
 } from "../../firebase/HandleGroup";
-
-export const userType = {
-  MEMBER: 0,
-  PENDING_MEMBER: 1,
-  NON_MEMBER: 2
-};
+import { groupMemberType } from "../../constants/Group";
 
 const AddMemberComponent = ({ type, item, groupID }) => {
   let buttonDetails = null;
 
   switch (type) {
-    case userType.MEMBER:
+    case groupMemberType.MEMBER:
       buttonDetails = {
         text: "Remove",
         icon: "delete",
@@ -41,7 +36,7 @@ const AddMemberComponent = ({ type, item, groupID }) => {
       };
       break;
 
-    case userType.PENDING_MEMBER:
+    case groupMemberType.PENDING_MEMBER:
       buttonDetails = {
         text: "Cancel",
         icon: "delete",
@@ -64,7 +59,7 @@ const AddMemberComponent = ({ type, item, groupID }) => {
       };
       break;
 
-    case userType.NON_MEMBER:
+    case groupMemberType.NON_MEMBER:
       buttonDetails = {
         text: "Add",
         icon: "add",
