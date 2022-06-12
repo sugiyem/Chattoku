@@ -4,8 +4,9 @@ import { Card } from "react-native-elements";
 import { useState, useEffect } from "react";
 import { firebase } from "../../firebase/Config";
 import CommentList from "../../components/Forum/ForumComment/CommentList";
+import LikeBar from "../../components/Forum/ForumPost/LikeBar";
 
-const MainPost = ({ title, content, uid }) => {
+const MainPost = ({ title, content, uid, forumId, postId }) => {
   const [username, setUsername] = useState("fetching username...");
 
   useEffect(() => {
@@ -23,6 +24,7 @@ const MainPost = ({ title, content, uid }) => {
       <Card.Divider />
       <Card.Title style={styles.title}>{title}</Card.Title>
       <Text> {content} </Text>
+      <LikeBar postId={postId} forumId={forumId} />
     </Card>
   );
 };
@@ -30,8 +32,6 @@ const MainPost = ({ title, content, uid }) => {
 const ForumPostScreen = () => {
   const navigation = useNavigation();
   const [data, _] = useState(navigation.getState().routes[2].params.data);
-  console.log("Forum Post Data");
-  console.log(data);
 
   function handleAddButtonClick() {
     navigation.navigate("AddComment", { data: data });

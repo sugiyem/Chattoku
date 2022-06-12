@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { Icon, Text, View } from "react-native-elements";
+import { StyleSheet, View } from "react-native";
+import { Icon, Text } from "react-native-elements";
 import { likeStatus } from "../../../constants/Post";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
@@ -57,24 +57,37 @@ const LikeBar = ({ postId, forumId }) => {
   }
 
   return (
-    <>
+    <View style={styles.container}>
       <Icon
         name="thumb-up"
         type="material"
         color={thumbsUpColor}
         onPress={handleLikeButtonClick}
+        style={styles.child}
       />
-      <Text>{likeCount}</Text>
+      <Text style={styles.child}>{likeCount}</Text>
       <Icon
         name="thumb-down"
         type="material"
         color={thumbsDownColor}
         onPress={handleDislikeButtonClick}
+        style={styles.child}
       />
-    </>
+    </View>
   );
 };
 
 export default LikeBar;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  child: {
+    paddingLeft: 20,
+    paddingRight: 20
+  }
+});
