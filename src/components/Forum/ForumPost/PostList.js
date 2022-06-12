@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { Alert, SectionList } from "react-native";
+import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
 import FetchPost from "./FetchPost";
 import PostCard from "./PostCard";
 
 const PostList = ({ forumId }) => {
   const [posts, setPosts] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const filteredPost = posts.filter((post) =>
+    post.title.toLowerCase().startsWith(search.toLowerCase())
+  );
 
   useEffect(() => {
     return FetchPost(
@@ -21,15 +26,24 @@ const PostList = ({ forumId }) => {
     return <PostCard {...item} forumId={forumId} />;
   };
 
-  const renderHeader = () => <></>;
+  const renderHeader = () => {};
 
   const renderFooter = () => <></>;
 
   return (
     <>
+      <TextInput
+        onChangeText={(t) => setSearch(t)}
+        style={styles.textInput}
+        placeholder="Search By Title..."
+      />
       <SectionList
         removeClippedSubviews={true}
-        sections={[{ data: posts }]}
+        sections={[
+          {
+            data: filteredPost
+          }
+        ]}
         renderItem={renderItem}
         renderHeader={renderHeader}
         renderFooter={renderFooter}
@@ -39,3 +53,17 @@ const PostList = ({ forumId }) => {
 };
 
 export default PostList;
+
+const styles = StyleSheet.create({
+  textInput: {
+    flexGrow: 0,
+    flexShrink: 0,
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 10,
+    backgroundColor: "white",
+    color: "black",
+    padding: 5,
+    borderRadius: 10
+  }
+});
