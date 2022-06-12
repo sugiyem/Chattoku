@@ -4,29 +4,27 @@ import {
   SectionList,
   StyleSheet,
   Text,
-  View
+  TextInput
 } from "react-native";
 import FetchForumData from "./FetchForumData";
 import ForumCard from "./ForumCard";
 import { useState, useEffect } from "react";
 
-const initialData = [
-  {
-    data: []
-  }
-];
+const initialData = [];
 
 const ForumList = () => {
   const [data, setData] = useState(initialData);
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter((forum) =>
+    forum.title.toLowerCase().startsWith(search.toLowerCase())
+  );
 
   // console.log(data);
 
   useEffect(() => {
     // console.log("useEffect triggered");
-    return FetchForumData(
-      (documents) => setData([{ data: documents }]),
-      (e) => Alert.alert(e)
-    );
+    return FetchForumData(setData, (e) => Alert.alert(e));
   }, []);
 
   const renderItem = ({ section, item }) => {
@@ -44,9 +42,10 @@ const ForumList = () => {
   return (
     <>
       <Text style={styles.text}>List of forums</Text>
+      <TextInput onChangeText={(t) => setSearch(t)} style={styles.textInput} />
       <SectionList
         removeClippedSubviews={true}
-        sections={data}
+        sections={[{ data: filteredData }]}
         renderItem={renderItem}
         renderHeader={renderHeader}
         renderFooter={renderFooter}
@@ -73,5 +72,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     margin: 10,
     textDecorationLine: "underline"
+  },
+  textInput: {
+    flexGrow: 0,
+    flexShrink: 0,
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 10,
+    backgroundColor: "white",
+    color: "black",
+    padding: 5,
+    borderRadius: 10
   }
 });
