@@ -1,12 +1,18 @@
 import { Alert } from "react-native";
 import { firebase } from "./Config";
 
-export async function createGroup(groupName, groupDescription, groupImg) {
-  const userID = firebase.auth().currentUser.uid;
-  const groupID = firebase.firestore().collection("groups").doc().id;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function createGroup(
+  groupName,
+  groupDescription,
+  groupImg,
+  app = firebase
+) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const groupID = db.collection("groups").doc().id;
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.set(groupRef, {
     name: groupName,
@@ -15,7 +21,10 @@ export async function createGroup(groupName, groupDescription, groupImg) {
     lastMessageText: "",
     lastMessageAt: null
   });
-  batch.set(groupRef.collection("members").doc(userID), {});
+  batch.set(groupRef.collection("members").doc(userID), {
+    showMessage: false,
+    showNotif: false
+  });
   batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
@@ -27,15 +36,18 @@ export async function createGroup(groupName, groupDescription, groupImg) {
     .catch((error) => {
       Alert.alert("Error", error.message);
     });
+
+  return groupID;
 }
 
 export async function editGroupDetails(
   groupID,
   newName,
   newDescription,
-  newImg
+  newImg,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -52,10 +64,11 @@ export async function editGroupDetails(
     });
 }
 
-export async function addUserToGroup(groupID, userID) {
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function addUserToGroup(groupID, userID, app = firebase) {
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.set(userRef.collection("groupInvited").doc(groupID), {});
   batch.set(groupRef.collection("pendingMembers").doc(userID), {});
@@ -70,10 +83,11 @@ export async function addUserToGroup(groupID, userID) {
     });
 }
 
-export async function removeUserFromGroup(groupID, userID) {
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function removeUserFromGroup(groupID, userID, app = firebase) {
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
@@ -88,10 +102,11 @@ export async function removeUserFromGroup(groupID, userID) {
     });
 }
 
-export async function cancelGroupInvitation(groupID, userID) {
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function cancelGroupInvitation(groupID, userID, app = firebase) {
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.delete(userRef.collection("groupInvited").doc(groupID));
   batch.delete(groupRef.collection("pendingMembers").doc(userID));
@@ -106,11 +121,12 @@ export async function cancelGroupInvitation(groupID, userID) {
     });
 }
 
-export async function acceptGroupInvitation(groupID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function acceptGroupInvitation(groupID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.delete(userRef.collection("groupInvited").doc(groupID));
   batch.delete(groupRef.collection("pendingMembers").doc(userID));
@@ -130,11 +146,12 @@ export async function acceptGroupInvitation(groupID) {
     });
 }
 
-export async function declineGroupInvitation(groupID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function declineGroupInvitation(groupID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.delete(userRef.collection("groupInvited").doc(groupID));
   batch.delete(groupRef.collection("pendingMembers").doc(userID));
@@ -149,11 +166,13 @@ export async function declineGroupInvitation(groupID) {
     });
 }
 
-export async function leaveGroup(groupID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function leaveGroup(groupID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  console.log(userID);
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const groupRef = db.collection("groups").doc(groupID);
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
@@ -168,9 +187,10 @@ export async function leaveGroup(groupID) {
     });
 }
 
-export async function deleteGroup(groupID) {
-  const batch = firebase.firestore().batch();
-  const groupRef = firebase.firestore().collection("groups").doc(groupID);
+export async function deleteGroup(groupID, app = firebase) {
+  const db = app.firestore();
+  const batch = db.batch();
+  const groupRef = db.collection("groups").doc(groupID);
   const messagesSnapshot = await groupRef.collection("messages").get();
   const membersSnapshot = await groupRef.collection("members").get();
   const pendingMembersSnapshot = await groupRef

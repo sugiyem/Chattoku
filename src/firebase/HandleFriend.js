@@ -1,11 +1,12 @@
 import { Alert } from "react-native";
 import { firebase } from "./Config";
 
-export async function addFriend(friendID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const friendRef = firebase.firestore().collection("users").doc(friendID);
+export async function addFriend(friendID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const friendRef = db.collection("users").doc(friendID);
 
   batch.set(userRef.collection("friendRequestsSent").doc(friendID), {});
   batch.set(friendRef.collection("friendRequestsReceived").doc(userID), {});
@@ -20,11 +21,12 @@ export async function addFriend(friendID) {
     });
 }
 
-export async function acceptFriendRequest(friendID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const friendRef = firebase.firestore().collection("users").doc(friendID);
+export async function acceptFriendRequest(friendID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const friendRef = db.collection("users").doc(friendID);
 
   batch.delete(userRef.collection("friendRequestsReceived").doc(friendID));
   batch.delete(friendRef.collection("friendRequestsSent").doc(userID));
@@ -41,11 +43,12 @@ export async function acceptFriendRequest(friendID) {
     });
 }
 
-export async function cancelFriendRequest(friendID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const friendRef = firebase.firestore().collection("users").doc(friendID);
+export async function cancelFriendRequest(friendID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const friendRef = db.collection("users").doc(friendID);
 
   batch.delete(userRef.collection("friendRequestsSent").doc(friendID));
   batch.delete(friendRef.collection("friendRequestsReceived").doc(userID));
@@ -60,11 +63,12 @@ export async function cancelFriendRequest(friendID) {
     });
 }
 
-export async function declineFriendRequest(friendID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const friendRef = firebase.firestore().collection("users").doc(friendID);
+export async function declineFriendRequest(friendID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const friendRef = db.collection("users").doc(friendID);
 
   batch.delete(userRef.collection("friendRequestsReceived").doc(friendID));
   batch.delete(friendRef.collection("friendRequestsSent").doc(userID));
@@ -79,11 +83,12 @@ export async function declineFriendRequest(friendID) {
     });
 }
 
-export async function removeFriend(friendID) {
-  const userID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userRef = firebase.firestore().collection("users").doc(userID);
-  const friendRef = firebase.firestore().collection("users").doc(friendID);
+export async function removeFriend(friendID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userRef = db.collection("users").doc(userID);
+  const friendRef = db.collection("users").doc(friendID);
 
   batch.delete(userRef.collection("friends").doc(friendID));
   batch.delete(friendRef.collection("friends").doc(userID));

@@ -1,9 +1,9 @@
 import { firebase } from "./Config";
 
-export const fetchFriend = ({ onSuccess, onFailure }) => {
-  const userID = firebase.auth().currentUser.uid;
+export const fetchFriend = ({ onSuccess, onFailure, app = firebase }) => {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -17,9 +17,10 @@ export const fetchFriend = ({ onSuccess, onFailure }) => {
           friendIDLists.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -37,10 +38,14 @@ export const fetchFriend = ({ onSuccess, onFailure }) => {
     );
 };
 
-export const fetchFriendRequestsSent = ({ onSuccess, onFailure }) => {
-  const userID = firebase.auth().currentUser.uid;
+export const fetchFriendRequestsSent = ({
+  onSuccess,
+  onFailure,
+  app = firebase
+}) => {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -54,9 +59,10 @@ export const fetchFriendRequestsSent = ({ onSuccess, onFailure }) => {
           pendingFriendIDLists.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -74,10 +80,14 @@ export const fetchFriendRequestsSent = ({ onSuccess, onFailure }) => {
     );
 };
 
-export const fetchFriendRequestsReceived = ({ onSuccess, onFailure }) => {
-  const userID = firebase.auth().currentUser.uid;
+export const fetchFriendRequestsReceived = ({
+  onSuccess,
+  onFailure,
+  app = firebase
+}) => {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -91,9 +101,10 @@ export const fetchFriendRequestsReceived = ({ onSuccess, onFailure }) => {
           pendingFriendIDLists.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -114,11 +125,12 @@ export const fetchFriendRequestsReceived = ({ onSuccess, onFailure }) => {
 export const checkFriendRequestsReceived = ({
   onFound,
   onNotFound,
-  onFailure
+  onFailure,
+  app = firebase
 }) => {
-  const userID = firebase.auth().currentUser.uid;
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)

@@ -36,7 +36,7 @@ const GroupOwnerButtons = ({ groupInfo, navigation }) => {
               {
                 text: "Continue",
                 onPress: async () =>
-                  await deleteGroup(groupInfo.id, navigation).finally(() =>
+                  await deleteGroup(groupInfo.id).finally(() =>
                     navigation.replace("GroupList")
                   )
               }
