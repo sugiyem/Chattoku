@@ -4,11 +4,18 @@ import { firebase } from "../../../firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "./HandleForumPost";
+import LikeBar from "./LikeBar";
+import { likeStatus } from "../../../constants/Post";
 
 const PostCard = ({ title, content, id, uid, forumId }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
+
+  const likeBarState = {
+    forumId: forumId,
+    postId: id
+  };
 
   // console.log(currentUID);
   const postData = {
@@ -47,9 +54,9 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
       <Text> {content} </Text>
       <Card.Divider />
       <View style={styles.actionBar}>
+        <LikeBar {...likeBarState} />
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
-          <Text> comment</Text>
         </TouchableOpacity>
         {currentUID === uid && (
           <>
@@ -65,11 +72,9 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
               }
             >
               <Icon name="delete" type="material" color="red" />
-              <Text style={styles.delete}> Delete </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.action} onPress={handleEditPress}>
               <Icon name="edit" type="material" />
-              <Text> Edit </Text>
             </TouchableOpacity>
           </>
         )}
