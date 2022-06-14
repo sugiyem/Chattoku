@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Image,
   Modal,
@@ -10,138 +11,125 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
 
 import { firebase } from "../../firebase/Config";
+import { isUsernameTaken, isValidUsername } from "../../firebase/CheckUsername";
 import { createGroup, editGroupDetails } from "../../firebase/HandleGroup";
-import { writeGroupType } from "../../constants/Group";
+import { writeSectionType } from "../../constants/Miscellaneous";
+import {
+  pickImageFromCamera,
+  pickImageFromLibrary,
+  uploadImage
+} from "./HandleImage";
 
-const WriteGroup = ({ type, currentState, navigation }) => {
-  const [groupInfo, setGroupInfo] = useState(currentState);
+const EditSection = ({ type, currentState, navigation }) => {
+  const [info, setInfo] = useState(currentState);
   const [modalVisible, setModalVisible] = useState(false);
-  const isCreate = type === writeGroupType.CREATE;
+  const [isLoading, setIsLoading] = useState(false);
+  const initialUsername = currentState.username;
+
+  const isEditProfile = type === writeSectionType.EDIT_PROFILE;
+  const isEditGroup = type === writeSectionType.EDIT_GROUP;
 
   function handleChangeText(text, name) {
-    setGroupInfo({
-      ...groupInfo,
+    setInfo({
+      ...info,
       [name]: text
     });
   }
 
-  const pickImageFromCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Chattoku doesn't have access to your camera");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1
-    });
-
-    if (!result.cancelled) {
-      uploadImage(result.uri);
-      setModalVisible(false);
-    }
-  };
-
-  const pickImageFromLibrary = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Chattoku doesn't have access to your image gallery");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1
-    });
-
-    if (!result.cancelled) {
-      uploadImage(result.uri);
-      setModalVisible(false);
-    }
+  const handleUpload = async (imgUrl) => {
+    setModalVisible(false);
+    await uploadImage(
+      imgUrl,
+      () => setIsLoading(true),
+      () => setIsLoading(false),
+      (newImg) => handleChangeText(newImg, "img")
+    );
   };
 
   const removeImage = () => {
-    setGroupInfo({
-      ...groupInfo,
+    setInfo({
+      ...info,
       img: ""
     });
     setModalVisible(false);
   };
 
-  const uploadImage = async (imgUrl) => {
-    if (imgUrl == null || imgUrl.length == 0) {
-      return;
-    }
-
-    const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-
-    const uploadUri =
-      Platform.OS === "ios" ? imgUrl.replace("file://", "") : imgUrl;
-
-    const blob = await axios
-      .get(uploadUri, { responseType: "blob" })
-      .then((response) => response.data);
-
-    const storageRef = firebase.storage().ref(fileName);
-    await storageRef
-      .put(blob, {
-        contentType: "image/png"
-      })
-      .catch((error) => {
-        Alert.alert(error.message);
-      });
-
-    await storageRef
-      .getDownloadURL()
-      .then((newImgUrl) => {
-        handleChangeText(newImgUrl, "img");
-      })
-      .then(() => {
-        Alert.alert(
-          isCreate
-            ? "Group picture has been added"
-            : "Group picture has been updated"
-        );
-      })
-      .catch((error) => {
-        Alert.alert(error.message);
-      });
-  };
-
   const handleSubmit = async () => {
-    if (!isGroupNameValid(groupInfo.name)) {
-      Alert.alert("Invalid name");
-      return;
-    }
+    if (isEditProfile) {
+      setIsLoading(true);
+      if (info.username !== initialUsername) {
+        const isUsernameNotAvailable = await isUsernameTaken(initialUsername);
+        if (!isValidUsername(info.username)) {
+          setIsLoading(false);
+          Alert.alert(
+            "username must only contains alphanumeric characters" +
+              "and must at least be 1 character long"
+          );
+          return;
+        } else if (isUsernameNotAvailable) {
+          setIsLoading(false);
+          Alert.alert("username is not available");
+          return;
+        }
+      }
 
-    if (isCreate) {
-      await createGroup(
-        groupInfo.name,
-        groupInfo.description,
-        groupInfo.img
-      ).finally(() => navigation.replace("GroupList"));
-    } else {
-      await editGroupDetails(
-        groupInfo.id,
-        groupInfo.name,
-        groupInfo.description,
-        groupInfo.img
-      ).finally(() => {
-        navigation.replace("GroupInfo", {
-          groupData: groupInfo
+      const userID = firebase.auth().currentUser.uid;
+
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(userID)
+        .update({
+          username: info.username,
+          bio: info.bio,
+          img: info.img
+        })
+        .then(() => {
+          setIsLoading(false);
+          navigation.navigate("ProfileHome");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          Alert.alert("Error", error.message);
         });
-      });
+    } else {
+      if (!isGroupNameValid(info.name)) {
+        Alert.alert("Invalid group name");
+        return;
+      }
+
+      if (isEditGroup) {
+        setIsLoading(true);
+        await editGroupDetails(
+          info.id,
+          info.name,
+          info.description,
+          info.img
+        ).finally(() => {
+          setIsLoading(false);
+          navigation.replace("GroupInfo", {
+            groupData: info
+          });
+        });
+      } else {
+        setIsLoading(true);
+        await createGroup(info.name, info.description, info.img).finally(() => {
+          setIsLoading(false);
+          navigation.replace("GroupList");
+        });
+      }
     }
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Modal
@@ -152,13 +140,13 @@ const WriteGroup = ({ type, currentState, navigation }) => {
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.modalButton}
-            onPress={() => pickImageFromCamera()}
+            onPress={() => pickImageFromCamera(handleUpload)}
           >
             <Text style={styles.buttonText}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.modalButton}
-            onPress={() => pickImageFromLibrary()}
+            onPress={() => pickImageFromLibrary(handleUpload)}
           >
             <Text style={styles.buttonText}>Choose From Library</Text>
           </TouchableOpacity>
@@ -185,8 +173,8 @@ const WriteGroup = ({ type, currentState, navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.imageContainer}>
-        {groupInfo.img.length > 0 ? (
-          <Image style={styles.img} source={{ uri: groupInfo.img }} />
+        {info.img.length > 0 ? (
+          <Image style={styles.img} source={{ uri: info.img }} />
         ) : (
           <Image
             style={styles.img}
@@ -198,37 +186,53 @@ const WriteGroup = ({ type, currentState, navigation }) => {
           onPress={() => setModalVisible(!modalVisible)}
         >
           <Text style={styles.buttonText}>
-            {isCreate ? "Add Group Photo" : "Change Group Photo"}
+            {isEditProfile
+              ? "Change profile photo"
+              : isEditGroup
+              ? "Change group photo"
+              : "Add group photo"}
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.textInputContainer}>
-        <Text style={styles.textInputTitle}>Group Name</Text>
+        <Text style={styles.textInputTitle}>
+          {isEditProfile ? "Username" : "Group Name"}
+        </Text>
         <TextInput
-          placeholder="name"
-          value={groupInfo.name}
+          placeholder={isEditProfile ? "username" : "name"}
+          value={isEditProfile ? info.username : info.name}
           style={styles.textInput}
-          onChangeText={(text) => handleChangeText(text, "name")}
+          onChangeText={(text) =>
+            handleChangeText(text, isEditProfile ? "username" : "name")
+          }
         />
-        <Text style={styles.textInputTitle}>Group Description</Text>
+        <Text style={styles.textInputTitle}>
+          {isEditProfile ? "Bio" : "Group Description"}
+        </Text>
         <TextInput
-          placeholder="description"
-          value={groupInfo.description}
+          placeholder={isEditProfile ? "bio" : "description"}
+          value={isEditProfile ? info.bio : info.description}
           style={styles.textInput}
-          onChangeText={(text) => handleChangeText(text, "description")}
+          onChangeText={(text) =>
+            handleChangeText(text, isEditProfile ? "bio" : "description")
+          }
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
         <Text style={styles.buttonText}>
-          {isCreate ? "Create Group" : "Update Group Details"}
+          {isEditProfile
+            ? "Submit Change"
+            : isEditGroup
+            ? "Update Group Details"
+            : "Create Group"}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default WriteGroup;
+export default EditSection;
 
 function isGroupNameValid(name) {
   return name.length > 0;
@@ -239,6 +243,12 @@ const styles = StyleSheet.create({
     backgroundColor: "darkcyan",
     alignItems: "center",
     padding: 5,
+    flex: 1
+  },
+  loadingContainer: {
+    backgroundColor: "darkcyan",
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1
   },
   modalContainer: {

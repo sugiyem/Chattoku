@@ -1,5 +1,5 @@
-import { writeGroupType } from "../../constants/Group";
-import WriteGroup from "../../components/Friend/WriteGroup";
+import { writeSectionType } from "../../constants/Miscellaneous";
+import EditSection from "../../components/Miscellaneous/EditSection";
 
 const initialState = {
   name: "",
@@ -9,8 +9,8 @@ const initialState = {
 
 const GroupCreationScreen = ({ navigation }) => {
   return (
-    <WriteGroup
-      type={writeGroupType.CREATE}
+    <EditSection
+      type={writeSectionType.CREATE_GROUP}
       currentState={initialState}
       navigation={navigation}
     />
