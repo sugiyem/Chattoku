@@ -11,55 +11,39 @@ import ContactBar from "./ContactBar";
 
 const EditMemberComponent = ({ items, isMember }) => {
   const userID = firebase.auth().currentUser.uid;
-  let EditButton;
+  const alertTitle = isMember
+    ? "This user will be removed from the group"
+    : "This invitation will be removed";
+  const onEditButtonPress = (item) => {
+    Alert.alert(
+      alertTitle,
+      "This action is irreversible. Do you want to continue?",
+      [
+        {
+          text: "Cancel"
+        },
+        {
+          text: "Continue",
+          onPress: () => {
+            if (isMember) {
+              removeUserFromGroup(item.id);
+            } else {
+              cancelGroupInvitation(item.id);
+            }
+          }
+        }
+      ]
+    );
+  };
 
-  if (isMember) {
-    EditButton = ({ item }) => (
-      <Button
-        title="Remove"
-        buttonStyle={styles.removeButton}
-        icon={{ name: "delete", color: "white" }}
-        onPress={() =>
-          Alert.alert(
-            "This user will be removed from the group",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => removeUserFromGroup(groupInfo.id, item.id)
-              }
-            ]
-          )
-        }
-      />
-    );
-  } else {
-    EditButton = ({ item }) => (
-      <Button
-        title="Remove"
-        buttonStyle={styles.removeButton}
-        icon={{ name: "delete", color: "white" }}
-        onPress={() =>
-          Alert.alert(
-            "This invitation will be removed",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => cancelGroupInvitation(groupInfo.id, item.id)
-              }
-            ]
-          )
-        }
-      />
-    );
-  }
+  const EditButton = ({ item }) => (
+    <Button
+      title="Remove"
+      buttonStyle={styles.removeButton}
+      icon={{ name: "delete", color: "white" }}
+      onPress={() => onEditButtonPress(item)}
+    />
+  );
 
   return items.map((item, idx) => (
     <ListItem.Swipeable
