@@ -208,3 +208,35 @@ export function fetchPendingGroupMembers({ groupID, onSuccess, onFailure }) {
       }
     );
 }
+
+export function checkIfUserIsGroupOwner({
+  groupID,
+  onTrue,
+  onFalse,
+  onFailure
+}) {
+  const userID = firebase.auth().currentUser.uid;
+
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(userID)
+    .collection("groupCreated")
+    .onSnapshot(
+      (querySnapshot) => {
+        const groupCreated = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          groupCreated.push(documentSnapshot.id);
+        });
+
+        if (groupCreated.includes(groupID)) {
+          onTrue();
+        } else {
+          onFalse();
+        }
+      },
+      (error) => {
+        onFailure(error);
+      }
+    );
+}
