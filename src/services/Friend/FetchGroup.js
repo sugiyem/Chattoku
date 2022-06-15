@@ -109,7 +109,7 @@ export function checkGroupInvitation({
             groupIDLists.push(documentSnapshot.id);
           });
 
-          await firebase
+          await app
             .firestore()
             .collection("groups")
             .get()
