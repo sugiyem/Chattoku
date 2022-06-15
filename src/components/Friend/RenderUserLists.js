@@ -6,7 +6,7 @@ import {
   cancelFriendRequest,
   declineFriendRequest,
   removeFriend
-} from "../../firebase/HandleFriend";
+} from "../../services/Friend/HandleFriend";
 import { contactType } from "../../constants/Contact";
 import { friendshipType } from "../../constants/Friend";
 import ContactBar from "./ContactBar";

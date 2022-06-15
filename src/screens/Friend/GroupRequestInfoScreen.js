@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
-import { fetchGroupMembers } from "../../firebase/FetchGroup";
+import { fetchGroupMembers } from "../../services/Friend/FetchGroup";
 import { groupMemberType } from "../../constants/Group";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 

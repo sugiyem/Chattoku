@@ -1,7 +1,7 @@
 import { Alert, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../Firebase/Config";
 
 export async function pickImageFromCamera(upload) {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();

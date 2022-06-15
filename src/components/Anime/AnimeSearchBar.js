@@ -3,16 +3,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import React from "react";
-import AnimeFetch, { fetchType } from "./AnimeFetch";
+import AnimeFetch, { fetchType } from "../../services/Anime/AnimeFetch";
 
 const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
   const onFinishedFetch = (data) => {
     navigation.push("AnimeResult", {
       data: data,
-      search: value,
+      search: value
     });
   };
 
@@ -30,7 +30,7 @@ const AnimeSearchBar = ({ value, onChangeText, navigation }) => {
             type: fetchType.SEARCH,
             page: 1,
             search: value,
-            onSuccesfulFetch: onFinishedFetch,
+            onSuccesfulFetch: onFinishedFetch
           })
         }
         style={styles.button}
@@ -45,7 +45,7 @@ export default AnimeSearchBar;
 
 const styles = StyleSheet.create({
   searchBarContainer: {
-    flexDirection: "row",
+    flexDirection: "row"
   },
   textInput: {
     borderColor: "black",
@@ -54,17 +54,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     color: "black",
     borderRadius: 10,
-    flex: 3,
+    flex: 3
   },
   button: {
     borderRadius: 10,
     padding: 5,
     margin: 5,
     flex: 1,
-    backgroundColor: "darkslateblue",
+    backgroundColor: "darkslateblue"
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
-  },
+    color: "white"
+  }
 });

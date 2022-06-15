@@ -1,9 +1,9 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
-export function fetchGroup({ onSuccess, onFailure }) {
-  const userID = firebase.auth().currentUser.uid;
+export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -17,7 +17,7 @@ export function fetchGroup({ onSuccess, onFailure }) {
           groupIDLists.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("groups")
           .get()
@@ -42,10 +42,10 @@ export function fetchGroup({ onSuccess, onFailure }) {
     );
 }
 
-export function fetchGroupInvitation({ onSuccess, onFailure }) {
-  const userID = firebase.auth().currentUser.uid;
+export function fetchGroupInvitation({ onSuccess, onFailure, app = firebase }) {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -61,7 +61,7 @@ export function fetchGroupInvitation({ onSuccess, onFailure }) {
 
         console.log(groupIDLists);
 
-        await firebase
+        await app
           .firestore()
           .collection("groups")
           .get()
@@ -86,10 +86,15 @@ export function fetchGroupInvitation({ onSuccess, onFailure }) {
     );
 }
 
-export function checkGroupInvitation({ onFound, onNotFound, onFailure }) {
-  const userID = firebase.auth().currentUser.uid;
+export function checkGroupInvitation({
+  onFound,
+  onNotFound,
+  onFailure,
+  app = firebase
+}) {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -131,8 +136,13 @@ export function checkGroupInvitation({ onFound, onNotFound, onFailure }) {
     );
 }
 
-export function fetchGroupInfo({ groupID, onSuccess, onFailure }) {
-  return firebase
+export function fetchGroupInfo({
+  groupID,
+  onSuccess,
+  onFailure,
+  app = firebase
+}) {
+  return app
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -153,8 +163,13 @@ export function fetchGroupInfo({ groupID, onSuccess, onFailure }) {
     );
 }
 
-export function fetchGroupMembers({ groupID, onSuccess, onFailure }) {
-  return firebase
+export function fetchGroupMembers({
+  groupID,
+  onSuccess,
+  onFailure,
+  app = firebase
+}) {
+  return app
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -168,7 +183,7 @@ export function fetchGroupMembers({ groupID, onSuccess, onFailure }) {
           memberID.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("users")
           .get()
@@ -193,8 +208,13 @@ export function fetchGroupMembers({ groupID, onSuccess, onFailure }) {
     );
 }
 
-export function fetchPendingGroupMembers({ groupID, onSuccess, onFailure }) {
-  return firebase
+export function fetchPendingGroupMembers({
+  groupID,
+  onSuccess,
+  onFailure,
+  app = firebase
+}) {
+  return app
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -208,7 +228,7 @@ export function fetchPendingGroupMembers({ groupID, onSuccess, onFailure }) {
           pendingMemberID.push(documentSnapshot.id);
         });
 
-        await firebase
+        await app
           .firestore()
           .collection("users")
           .get()
@@ -236,11 +256,12 @@ export function checkIfUserIsGroupOwner({
   groupID,
   onTrue,
   onFalse,
-  onFailure
+  onFailure,
+  app = firebase
 }) {
-  const userID = firebase.auth().currentUser.uid;
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)

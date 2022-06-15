@@ -6,7 +6,7 @@ import {
   addGenreToFavorite,
   removeGenreFromFavorite,
   removeAnimeFromFavorite
-} from "../../firebase/HandleFavorite";
+} from "../../services/Anime/HandleFavorite";
 import { favoriteType } from "../../constants/Favorite";
 
 const HandleFavoriteButton = ({ type, isFavorite = true, data }) => {

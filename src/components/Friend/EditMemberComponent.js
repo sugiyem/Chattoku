@@ -1,11 +1,11 @@
 import React from "react";
 import { Alert, StyleSheet } from "react-native";
 import { Button, ListItem } from "react-native-elements";
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import {
   cancelGroupInvitation,
   removeUserFromGroup
-} from "../../firebase/HandleGroup";
+} from "../../services/Friend/HandleGroup";
 import { contactType } from "../../constants/Contact";
 import ContactBar from "./ContactBar";
 

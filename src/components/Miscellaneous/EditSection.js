@@ -12,15 +12,21 @@ import {
   View
 } from "react-native";
 
-import { firebase } from "../../firebase/Config";
-import { isUsernameTaken, isValidUsername } from "../../firebase/CheckUsername";
-import { createGroup, editGroupDetails } from "../../firebase/HandleGroup";
+import { firebase } from "../../services/Firebase/Config";
+import {
+  isUsernameTaken,
+  isValidUsername
+} from "../../services/Authentication/CheckUsername";
+import {
+  createGroup,
+  editGroupDetails
+} from "../../services/Friend/HandleGroup";
 import { writeSectionType } from "../../constants/Miscellaneous";
 import {
   pickImageFromCamera,
   pickImageFromLibrary,
   uploadImage
-} from "./HandleImage";
+} from "../../services/Miscellaneous/HandleImage";
 
 const EditSection = ({ type, currentState, navigation }) => {
   const [info, setInfo] = useState(currentState);
