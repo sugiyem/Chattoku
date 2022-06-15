@@ -2,50 +2,48 @@ import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
-  acceptFriendRequest,
-  cancelFriendRequest,
-  declineFriendRequest,
-  removeFriend
-} from "../../firebase/HandleFriend";
+  leaveGroup,
+  acceptGroupInvitation,
+  declineGroupInvitation
+} from "../../firebase/HandleGroup";
 import { contactType } from "../../constants/Contact";
-import { friendshipType } from "../../constants/Friend";
+import { groupListType } from "../../constants/Group";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
 
-export default RenderUserLists = ({
+export default RenderGroupLists = ({
   type,
   items,
   navigation,
   expandStatus,
   changeExpand
 }) => {
-  const buttonDetails = [
-    {
-      title: "Message",
-      icon: "message",
-      onPress: (item) =>
-        navigation.navigate("Chat", {
-          screen: "ChatDetail",
-          params: { recipientID: item.id, recipientUsername: item.username }
-        })
-    }
-  ];
+  const buttonDetails = [];
 
   switch (type) {
-    case friendshipType.FRIEND:
+    case groupListType.GROUP:
       buttonDetails.push(
         {
-          title: "View details",
+          title: "Detail",
           icon: "folder-open",
           onPress: (item) =>
-            navigation.navigate("FriendInfo", { friendData: item })
+            navigation.navigate("GroupInfo", { groupData: item })
         },
         {
-          title: "Unfriend",
-          icon: "person-remove",
+          title: "Message",
+          icon: "message",
+          onPress: (item) =>
+            navigation.navigate("Chat", {
+              screen: "GroupChatDetail",
+              params: { groupID: item.id, groupName: item.name }
+            })
+        },
+        {
+          title: "Leave Group",
+          icon: "close",
           onPress: (item) => {
             Alert.alert(
-              "This user will be removed from your friend's list",
+              "You will leave this group",
               "This action is irreversible. Do you want to continue?",
               [
                 {
@@ -53,7 +51,7 @@ export default RenderUserLists = ({
                 },
                 {
                   text: "Continue",
-                  onPress: () => removeFriend(item.id)
+                  onPress: () => leaveGroup(item.id)
                 }
               ]
             );
@@ -62,39 +60,23 @@ export default RenderUserLists = ({
       );
       break;
 
-    case friendshipType.WAITING_RESPONSE:
-      buttonDetails.push({
-        title: "Cancel request",
-        icon: "close",
-        onPress: (item) => {
-          Alert.alert(
-            "This friend request will be removed",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => cancelFriendRequest(item.id)
-              }
-            ]
-          );
-        }
-      });
-      break;
-
-    case friendshipType.RECEIVING_REQUEST:
+    case groupListType.GROUP_INVITATION:
       buttonDetails.push(
         {
-          title: "Accept request",
-          icon: "check",
-          onPress: (item) => acceptFriendRequest(item.id)
+          title: "Detail",
+          icon: "folder-open",
+          onPress: (item) =>
+            navigation.navigate("GroupRequestInfo", { groupData: item })
         },
         {
-          title: "Decline request",
+          title: "Accept Invitation",
+          icon: "check",
+          onPress: (item) => acceptGroupInvitation(item.id)
+        },
+        {
+          title: "Decline Invitation",
           icon: "close",
-          onPress: (item) => declineFriendRequest(item.id)
+          onPress: (item) => declineGroupInvitation(item.id)
         }
       );
       break;
@@ -114,7 +96,7 @@ export default RenderUserLists = ({
         <ListItem.Accordion
           key={index}
           bottomDivider
-          content={<ContactBar type={contactType.USER} item={item} />}
+          content={<ContactBar type={contactType.GROUP} item={item} />}
           isExpanded={expandStatus(index)}
           onPress={() => onRightClick(index)}
         >

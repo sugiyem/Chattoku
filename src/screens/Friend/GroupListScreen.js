@@ -10,101 +10,88 @@ import {
   View
 } from "react-native";
 import { Badge } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
-import {
-  fetchFriend,
-  checkFriendRequestsReceived
-} from "../../firebase/FetchFriendStatus";
-import { friendshipType } from "../../constants/Friend";
-import RenderUserLists from "../../components/Friend/RenderUserLists";
+import { fetchGroup, checkGroupInvitation } from "../../firebase/FetchGroup";
+import { groupListType } from "../../constants/Group";
+import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 
-const FriendListScreen = () => {
-  const [friends, setFriends] = useState([]);
+const GroupListScreen = ({ navigation }) => {
+  const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [expand, setExpand] = useState(null);
-  const [isRequestExist, setIsRequestExist] = useState(false);
-
-  const navigation = useNavigation();
+  const [isInvitationExist, setIsInvitationExist] = useState(false);
 
   useEffect(() => {
-    return fetchFriend({
+    return fetchGroup({
       onSuccess: (data) => {
-        setFriends(data);
+        setGroups(data);
       },
       onFailure: (error) => {
-        Alert.alert(error.message);
+        Alert.alert("Error", error.message);
       }
     });
   }, []);
 
   useEffect(() => {
-    return checkFriendRequestsReceived({
+    return checkGroupInvitation({
       onFound: () => {
-        setIsRequestExist(true);
+        setIsInvitationExist(true);
       },
       onNotFound: () => {
-        setIsRequestExist(false);
+        setIsInvitationExist(false);
       },
       onFailure: (error) => {
-        Alert.alert(error.message);
+        Alert.alert("Error", error.message);
       }
     });
-  });
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
       <TextInput
         value={search}
         onChangeText={(text) => setSearch(text)}
-        placeholder="Search friend by username"
+        placeholder="Search group by name"
         style={styles.textInput}
       />
 
-      <Text style={styles.title}>Friends List</Text>
+      <Text style={styles.title}>Groups List</Text>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("AddFriend")}
+        onPress={() => navigation.replace("FriendList")}
       >
-        <Text>Add more friends</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("GroupList")}
-      >
-        <Text>View groups</Text>
+        <Text>Back to friend's list</Text>
       </TouchableOpacity>
 
       <View style={styles.buttonGroup}>
         <TouchableOpacity
-          style={styles.requestButton}
-          onPress={() => navigation.navigate("FriendRequestsSent")}
+          style={styles.groupButton}
+          onPress={() => navigation.navigate("GroupCreation")}
         >
-          <Text style={styles.requestText}>Outgoing Requests</Text>
+          <Text style={styles.createGroupText}>Create Group</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.requestButton}
-          onPress={() => navigation.navigate("FriendRequestsReceived")}
+          style={styles.groupButton}
+          onPress={() => navigation.navigate("GroupRequests")}
         >
-          <View style={styles.requestReceivedContainer}>
-            <Text style={styles.requestReceivedTest}>Incoming Requests</Text>
-            {isRequestExist && (
+          <View style={styles.invitationContainer}>
+            <Text style={styles.invitationText}>Group Invitations</Text>
+            {isInvitationExist && (
               <Badge
                 status="primary"
                 value="!"
-                containerStyle={styles.requestReceivedBadge}
+                containerStyle={styles.invitationBadge}
               />
             )}
           </View>
         </TouchableOpacity>
       </View>
 
-      <RenderUserLists
-        type={friendshipType.FRIEND}
-        items={friends.filter((data) =>
-          data.username.toLowerCase().startsWith(search.toLowerCase())
+      <RenderGroupLists
+        type={groupListType.GROUP}
+        items={groups.filter((item) =>
+          item.name.toLowerCase().startsWith(search.toLowerCase())
         )}
         navigation={navigation}
         expandStatus={(index) => expand === index}
@@ -114,7 +101,7 @@ const FriendListScreen = () => {
   );
 };
 
-export default FriendListScreen;
+export default GroupListScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -142,7 +129,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: "row"
   },
-  requestButton: {
+  groupButton: {
     marginHorizontal: 10,
     padding: 5,
     borderRadius: 5,
@@ -151,20 +138,20 @@ const styles = StyleSheet.create({
     backgroundColor: "cyan",
     flex: 1
   },
-  requestReceivedContainer: {
+  invitationContainer: {
     flexDirection: "row",
     alignItems: "center"
   },
-  requestText: {
+  createGroupText: {
     textAlign: "center",
     fontSize: 12
   },
-  requestReceivedTest: {
+  invitationText: {
     textAlign: "center",
     fontSize: 12,
     flex: 4
   },
-  requestReceivedBadge: {
+  invitationBadge: {
     flex: 1
   },
   title: {
