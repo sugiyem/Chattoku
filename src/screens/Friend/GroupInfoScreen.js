@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
-
-import { firebase } from "../../firebase/Config";
 import {
+  checkIfUserIsGroupOwner,
   fetchGroupMembers,
   fetchPendingGroupMembers
-} from "../../firebase/FetchGroup";
+} from "../../services/Friend/FetchGroup";
 import { groupMemberType } from "../../constants/Group";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
@@ -44,30 +43,18 @@ const GroupInfoScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    const userID = firebase.auth().currentUser.uid;
-
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(userID)
-      .collection("groupCreated")
-      .onSnapshot(
-        (querySnapshot) => {
-          const groupCreated = [];
-          querySnapshot.forEach((documentSnapshot) => {
-            groupCreated.push(documentSnapshot.id);
-          });
-
-          if (groupCreated.includes(groupInfo.id)) {
-            setIsOwner(true);
-          } else {
-            setIsOwner(false);
-          }
-        },
-        (error) => {
-          Alert.alert("Error", error.message);
-        }
-      );
+    return checkIfUserIsGroupOwner({
+      groupID: groupInfo.id,
+      onTrue: () => {
+        setIsOwner(true);
+      },
+      onFalse: () => {
+        setIsOwner(false);
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
   }, []);
 
   return (

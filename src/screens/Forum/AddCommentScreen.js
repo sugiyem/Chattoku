@@ -9,7 +9,7 @@ import {
   Alert
 } from "react-native";
 import { Card } from "react-native-elements";
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import { AddComment } from "../../components/Forum/ForumComment/HandleComment";
 
 const MainPost = ({ title, content, uid }) => {

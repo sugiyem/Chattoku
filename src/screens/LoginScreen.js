@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { firebase } from "../firebase/Config";
+import { firebase } from "../services/Firebase/Config";
 import { useState } from "react";
 import {
   redirectToForgotPasswordScreen,
   redirectToSignupScreen
-} from "../components/Authentication/HandleAuthentication";
+} from "../services/Authentication/HandleAuthentication";
 
 const initialState = {
   email: "",

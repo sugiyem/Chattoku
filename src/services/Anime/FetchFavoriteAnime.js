@@ -1,4 +1,4 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export default FetchFavoriteAnime = ({
   onSuccesfulFetch,

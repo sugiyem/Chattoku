@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export async function addAnimeToFavorite(item, app = firebase) {
   const userID = app.auth().currentUser.uid;

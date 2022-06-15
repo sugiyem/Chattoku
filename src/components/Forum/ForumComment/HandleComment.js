@@ -1,4 +1,4 @@
-import { firebase } from "../../../firebase/Config";
+import { firebase } from "../../../services/Firebase/Config";
 import Warning from "../Warning";
 
 export async function AddComment(forumId, postId, comment, onSuccess, onError) {

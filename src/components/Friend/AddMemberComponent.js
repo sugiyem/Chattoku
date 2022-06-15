@@ -6,7 +6,7 @@ import {
   addUserToGroup,
   cancelGroupInvitation,
   removeUserFromGroup
-} from "../../firebase/HandleGroup";
+} from "../../services/Friend/HandleGroup";
 import { groupMemberType } from "../../constants/Group";
 
 const AddMemberComponent = ({ type, item, groupID }) => {

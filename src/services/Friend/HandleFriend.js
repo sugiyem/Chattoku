@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export async function addFriend(friendID, app = firebase) {
   const userID = app.auth().currentUser.uid;

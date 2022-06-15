@@ -1,4 +1,4 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
   const userID = app.auth().currentUser.uid;
@@ -102,9 +102,32 @@ export function checkGroupInvitation({
     .doc(userID)
     .collection("groupInvited")
     .onSnapshot(
-      (querySnapshot) => {
+      async (querySnapshot) => {
         if (querySnapshot.size !== 0) {
-          onFound();
+          const groupIDLists = [];
+          let isInvitationExist = false;
+
+          querySnapshot.forEach((documentSnapshot) => {
+            groupIDLists.push(documentSnapshot.id);
+          });
+
+          await firebase
+            .firestore()
+            .collection("groups")
+            .get()
+            .then((snaps) => {
+              snaps.forEach((snap) => {
+                if (groupIDLists.includes(snap.id)) {
+                  isInvitationExist = true;
+                }
+              });
+            });
+
+          if (isInvitationExist) {
+            onFound();
+          } else {
+            onNotFound();
+          }
         } else {
           onNotFound();
         }
@@ -226,6 +249,39 @@ export function fetchPendingGroupMembers({
           });
 
         onSuccess(pendingMemberInfo);
+      },
+      (error) => {
+        onFailure(error);
+      }
+    );
+}
+
+export function checkIfUserIsGroupOwner({
+  groupID,
+  onTrue,
+  onFalse,
+  onFailure,
+  app = firebase
+}) {
+  const userID = app.auth().currentUser.uid;
+
+  return app
+    .firestore()
+    .collection("users")
+    .doc(userID)
+    .collection("groupCreated")
+    .onSnapshot(
+      (querySnapshot) => {
+        const groupCreated = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          groupCreated.push(documentSnapshot.id);
+        });
+
+        if (groupCreated.includes(groupID)) {
+          onTrue();
+        } else {
+          onFalse();
+        }
       },
       (error) => {
         onFailure(error);

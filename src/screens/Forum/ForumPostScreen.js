@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Card } from "react-native-elements";
 import { useState, useEffect } from "react";
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import CommentList from "../../components/Forum/ForumComment/CommentList";
 
 const MainPost = ({ title, content, uid }) => {

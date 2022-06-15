@@ -10,7 +10,10 @@ import {
   View
 } from "react-native";
 import { Badge } from "react-native-elements";
-import { fetchGroup, checkGroupInvitation } from "../../firebase/FetchGroup";
+import {
+  fetchGroup,
+  checkGroupInvitation
+} from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 

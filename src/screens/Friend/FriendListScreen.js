@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import {
   fetchFriend,
   checkFriendRequestsReceived
-} from "../../firebase/FetchFriendStatus";
+} from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
 

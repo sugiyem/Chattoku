@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export async function createGroup(
   groupName,
@@ -168,7 +168,6 @@ export async function declineGroupInvitation(groupID, app = firebase) {
 
 export async function leaveGroup(groupID, app = firebase) {
   const userID = app.auth().currentUser.uid;
-  console.log(userID);
   const db = app.firestore();
   const batch = db.batch();
   const userRef = db.collection("users").doc(userID);

@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 //check is a username is alphanumeric and contains at
 //least one char

@@ -3,9 +3,9 @@ import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
+import AnimeFetch, { fetchType } from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
-import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
+import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 
 const AnimeHomeScreen = () => {
   const [search, setSearch] = useState("");
@@ -26,7 +26,7 @@ const AnimeHomeScreen = () => {
       expand: airingExpanded,
       changeExpand: setAiringExpanded,
       page: airingPage,
-      changePage: setAiringPage,
+      changePage: setAiringPage
     },
     {
       title: "Top Anime",
@@ -34,8 +34,8 @@ const AnimeHomeScreen = () => {
       expand: topExpanded,
       changeExpand: setTopExpanded,
       page: topPage,
-      changePage: setTopPage,
-    },
+      changePage: setTopPage
+    }
   ];
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const AnimeHomeScreen = () => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -63,7 +63,7 @@ const AnimeHomeScreen = () => {
           })
         );
       },
-      abortController: abortController,
+      abortController: abortController
     });
 
     return () => abortController.abort();
@@ -83,7 +83,7 @@ const AnimeHomeScreen = () => {
           })
         );
       },
-      abortController: abortController,
+      abortController: abortController
     });
 
     return () => abortController.abort();
@@ -109,6 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: "darkcyan",
     alignItems: "center",
     padding: 5,
-    flex: 1,
-  },
+    flex: 1
+  }
 });

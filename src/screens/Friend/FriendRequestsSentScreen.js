@@ -9,7 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { fetchFriendRequestsSent } from "../../firebase/FetchFriendStatus";
+import { fetchFriendRequestsSent } from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
 

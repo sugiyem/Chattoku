@@ -1,4 +1,4 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export const fetchFriend = ({ onSuccess, onFailure, app = firebase }) => {
   const userID = app.auth().currentUser.uid;

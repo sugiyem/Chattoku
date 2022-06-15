@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { firebase } from "../firebase/Config";
+import { firebase } from "../services/Firebase/Config";
 import {
   isValidEmail,
   redirectToLoginScreen,
   redirectToSignupScreen
-} from "../components/Authentication/HandleAuthentication";
+} from "../services/Authentication/HandleAuthentication";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

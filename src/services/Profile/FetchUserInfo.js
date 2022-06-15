@@ -1,9 +1,13 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
-export default FetchUserInfo = ({ onSuccesfulFetch, onFailure }) => {
-  const userID = firebase.auth().currentUser.uid;
+export default FetchUserInfo = ({
+  onSuccesfulFetch,
+  onFailure,
+  app = firebase
+}) => {
+  const userID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("users")
     .doc(userID)

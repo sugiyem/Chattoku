@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { deleteGroup } from "../../firebase/HandleGroup";
+import { deleteGroup } from "../../services/Friend/HandleGroup";
 
 const GroupOwnerButtons = ({ groupInfo, navigation }) => {
   return (

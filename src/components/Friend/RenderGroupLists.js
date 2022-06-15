@@ -5,7 +5,7 @@ import {
   leaveGroup,
   acceptGroupInvitation,
   declineGroupInvitation
-} from "../../firebase/HandleGroup";
+} from "../../services/Friend/HandleGroup";
 import { contactType } from "../../constants/Contact";
 import { groupListType } from "../../constants/Group";
 import ContactBar from "./ContactBar";

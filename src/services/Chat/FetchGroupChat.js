@@ -1,7 +1,12 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
-export default FetchGroupChat = ({ groupID, onSuccess, onFailure }) => {
-  return firebase
+export default FetchGroupChat = ({
+  groupID,
+  onSuccess,
+  onFailure,
+  app = firebase
+}) => {
+  return app
     .firestore()
     .collection("groups")
     .doc(groupID)
