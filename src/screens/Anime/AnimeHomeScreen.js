@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import { Button, ButtonText, Container } from "../../styles/GeneralStyles";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch, { fetchType } from "../../services/Anime/AnimeFetch";
+import AnimeFetch from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import { fetchType } from "../../constants/MyAnimeList";
+import { ActivityIndicator } from "react-native";
 
 const AnimeHomeScreen = () => {
   const [search, setSearch] = useState("");
@@ -16,6 +18,8 @@ const AnimeHomeScreen = () => {
   const [airingExpanded, setAiringExpanded] = useState(null);
   const [topExpanded, setTopExpanded] = useState(null);
   const [favoriteList, setFavoriteList] = useState([]);
+  const [isAiringLoaded, setIsAiringLoaded] = useState(false);
+  const [isTopLoaded, setIsTopLoaded] = useState(false);
 
   const navigation = useNavigation();
 
@@ -51,6 +55,7 @@ const AnimeHomeScreen = () => {
 
   useEffect(() => {
     const abortController = new AbortController();
+    setIsAiringLoaded(false);
 
     AnimeFetch({
       type: fetchType.AIRING,
@@ -62,6 +67,7 @@ const AnimeHomeScreen = () => {
             return item;
           })
         );
+        setIsAiringLoaded(true);
       },
       abortController: abortController
     });
@@ -71,6 +77,7 @@ const AnimeHomeScreen = () => {
 
   useEffect(() => {
     const abortController = new AbortController();
+    setIsTopLoaded(false);
 
     AnimeFetch({
       type: fetchType.TOP,
@@ -82,6 +89,7 @@ const AnimeHomeScreen = () => {
             return item;
           })
         );
+        setIsTopLoaded(true);
       },
       abortController: abortController
     });
@@ -89,26 +97,32 @@ const AnimeHomeScreen = () => {
     return () => abortController.abort();
   }, [topPage]);
 
+  if (!(isAiringLoaded && isTopLoaded)) {
+    return (
+      <Container>
+        <ActivityIndicator size="large" />
+      </Container>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <Container>
       <AnimeSearchBar
         value={search}
         onChangeText={setSearch}
         navigation={navigation}
       />
 
+      <Button
+        onPress={() => navigation.navigate("Recommendation")}
+        color="#00ffff"
+      >
+        <ButtonText>Find Recommendations</ButtonText>
+      </Button>
+
       <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
-    </View>
+    </Container>
   );
 };
 
 export default AnimeHomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    alignItems: "center",
-    padding: 5,
-    flex: 1
-  }
-});

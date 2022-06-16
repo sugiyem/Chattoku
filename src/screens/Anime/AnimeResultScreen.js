@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, ButtonText, Container } from "../../styles/GeneralStyles";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch, { fetchType } from "../../services/Anime/AnimeFetch";
+import AnimeFetch from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import { fetchType } from "../../constants/MyAnimeList";
+import { ActivityIndicator } from "react-native";
 
 const AnimeResultScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState(route.params.search);
@@ -12,6 +14,7 @@ const AnimeResultScreen = ({ navigation, route }) => {
   const [resultExpanded, setResultExpanded] = useState(null);
   const [resultPage, setResultPage] = useState(1);
   const [favoriteList, setFavoriteList] = useState([]);
+  const [isResultLoaded, setIsResultLoaded] = useState(false);
 
   const animeCollectionItems = [
     {
@@ -36,62 +39,46 @@ const AnimeResultScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    if (resultPage == 1) {
-      setAnimeData(route.params.data);
-    } else {
-      const abortController = new AbortController();
+    const abortController = new AbortController();
+    setIsResultLoaded(false);
 
-      AnimeFetch({
-        type: fetchType.SEARCH,
-        page: resultPage,
-        search: search,
-        onSuccesfulFetch: (data) => setAnimeData(data),
-        abortController: abortController
-      });
+    AnimeFetch({
+      type: fetchType.SEARCH,
+      page: resultPage,
+      search: search,
+      onSuccesfulFetch: (data) => {
+        setAnimeData(data);
+        setIsResultLoaded(true);
+      },
+      abortController: abortController
+    });
 
-      return () => abortController.abort();
-    }
+    return () => abortController.abort();
   }, [resultPage]);
 
+  if (!isResultLoaded) {
+    return (
+      <Container>
+        <ActivityIndicator size="large" />
+      </Container>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <Container>
       <AnimeSearchBar
         value={search}
         onChangeText={setSearch}
         navigation={navigation}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.buttonText}>Go back</Text>
-      </TouchableOpacity>
+      <Button onPress={() => navigation.goBack()}>
+        <ButtonText>Go back</ButtonText>
+      </Button>
 
       <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
-    </View>
+    </Container>
   );
 };
 
 export default AnimeResultScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    alignItems: "center",
-    padding: 5,
-    flex: 1
-  },
-  button: {
-    alignSelf: "stretch",
-    marginVertical: 5,
-    padding: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine"
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "blue"
-  }
-});

@@ -1,6 +1,7 @@
-import { Platform, SectionList, StyleSheet, Text, View } from "react-native";
+import { SectionList, StyleSheet, View } from "react-native";
 import React from "react";
 import { ListItem } from "react-native-elements";
+import { CenteredBoldText } from "../../styles/GeneralStyles";
 import Icon from "react-native-vector-icons/Ionicons";
 import AnimeList from "./AnimeList";
 import AnimeCard from "./AnimeCard";
@@ -29,7 +30,7 @@ const AnimeCollection = ({ items, favorite }) => {
   };
 
   const renderHeader = ({ section }) => (
-    <Text style={styles.headerText}>{section.title}</Text>
+    <CenteredBoldText underline>{section.title}</CenteredBoldText>
   );
 
   const renderFooter = ({ section }) => (
@@ -79,18 +80,11 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "stretch",
     paddingHorizontal: 5,
-    marginBottom: 10,
-  },
-  headerText: {
-    fontWeight: "bold",
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    textDecorationLine: "underline",
-    fontSize: 30,
-    alignSelf: "flex-start",
+    marginBottom: 10
   },
   footerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 5,
-  },
+    paddingHorizontal: 5
+  }
 });
