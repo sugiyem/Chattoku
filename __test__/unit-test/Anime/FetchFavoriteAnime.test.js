@@ -1,4 +1,4 @@
-import FetchFavoriteAnime from "../../../src/firebase/FetchFavoriteAnime";
+import FetchFavoriteAnime from "../../../src/services/Anime/FetchFavoriteAnime";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase, flushPromises, options } from "../../Helper";
 
@@ -21,6 +21,7 @@ describe("Test favorite anime fetching", () => {
 
     await flushPromises();
 
+    expect(result).toHaveLength(2);
     expect(result).toContainEqual({
       id: "50265",
       title: "Spy x Family",

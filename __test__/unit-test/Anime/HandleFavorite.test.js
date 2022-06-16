@@ -3,7 +3,7 @@ import {
   addGenreToFavorite,
   removeAnimeFromFavorite,
   removeGenreFromFavorite
-} from "../../../src/firebase/HandleFavorite";
+} from "../../../src/services/Anime/HandleFavorite";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase } from "../../Helper";
 

@@ -5,7 +5,7 @@ import {
   checkGroupInvitation,
   fetchGroupMembers,
   fetchPendingGroupMembers
-} from "../../../src/firebase/FetchGroup";
+} from "../../../src/services/Friend/FetchGroup";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase, flushPromises } from "../../Helper";
 
@@ -101,13 +101,14 @@ describe("Test group data fetching", () => {
 
     await flushPromises();
 
-    expect(result).toHaveLength(1);
-    expect(result).toContainEqual({
-      id: "group2",
-      name: "Second group",
-      description: "This is a group",
-      img: "second-image-link"
-    });
+    expect(result).toEqual([
+      {
+        id: "group2",
+        name: "Second group",
+        description: "This is a group",
+        img: "second-image-link"
+      }
+    ]);
   });
 
   test("Can fetch data of all members of specific group", async () => {
@@ -151,11 +152,8 @@ describe("Test group data fetching", () => {
 
     await flushPromises();
 
-    expect(result).toHaveLength(1);
-    expect(result).toContainEqual({
-      id: "yem123",
-      username: "Sugiyem",
-      img: "sugiyem-img"
-    });
+    expect(result).toEqual([
+      { id: "yem123", username: "Sugiyem", img: "sugiyem-img" }
+    ]);
   });
 });

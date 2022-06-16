@@ -1,7 +1,7 @@
 import {
   isValidUsername,
   isUsernameTaken
-} from "../../../src/firebase/CheckUsername";
+} from "../../../src/services/Authentication/CheckUsername";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase } from "../../Helper";
 

@@ -4,7 +4,7 @@ import {
   cancelFriendRequest,
   declineFriendRequest,
   removeFriend
-} from "../../../src/firebase/HandleFriend";
+} from "../../../src/services/Friend/HandleFriend";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase } from "../../Helper";
 

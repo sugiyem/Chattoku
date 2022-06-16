@@ -8,7 +8,7 @@ import {
   declineGroupInvitation,
   leaveGroup,
   deleteGroup
-} from "../../../src/firebase/HandleGroup";
+} from "../../../src/services/Friend/HandleGroup";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase } from "../../Helper";
 

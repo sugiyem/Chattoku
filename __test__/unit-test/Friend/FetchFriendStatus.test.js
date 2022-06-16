@@ -3,7 +3,7 @@ import {
   fetchFriendRequestsSent,
   fetchFriendRequestsReceived,
   checkFriendRequestsReceived
-} from "../../../src/firebase/FetchFriendStatus";
+} from "../../../src/services/Friend/FetchFriendStatus";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase, flushPromises, options } from "../../Helper";
 
@@ -30,12 +30,9 @@ describe("Test friend data fetching", () => {
 
     await flushPromises();
 
-    expect(result).toHaveLength(1);
-    expect(result).toContainEqual({
-      id: "yem456",
-      username: "Yemima",
-      img: "yemima-img"
-    });
+    expect(result).toEqual([
+      { id: "yem456", username: "Yemima", img: "yemima-img" }
+    ]);
   });
 
   test("Can fetch data of all users who sent friend request to a specific user", async () => {
@@ -51,12 +48,9 @@ describe("Test friend data fetching", () => {
 
     await flushPromises();
 
-    expect(result).toHaveLength(1);
-    expect(result).toContainEqual({
-      id: "cupu",
-      username: "Farrel",
-      img: "farrel-img"
-    });
+    expect(result).toEqual([
+      { id: "cupu", username: "Farrel", img: "farrel-img" }
+    ]);
   });
 
   test("Can fetch data of all users who got friend request to a specific user", async () => {
@@ -72,12 +66,9 @@ describe("Test friend data fetching", () => {
 
     await flushPromises();
 
-    expect(result).toHaveLength(1);
-    expect(result).toContainEqual({
-      id: "imba",
-      username: "Elbert",
-      img: "elbert-img"
-    });
+    expect(result).toEqual([
+      { id: "imba", username: "Elbert", img: "elbert-img" }
+    ]);
   });
 
   test("Can check if a specific user has pending friend request", async () => {

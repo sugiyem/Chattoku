@@ -1,4 +1,4 @@
-import { isValidEmail } from "../../../src/components/Authentication/HandleAuthentication";
+import { isValidEmail } from "../../../src/services/Authentication/HandleAuthentication";
 
 describe("Test Email", () => {
   test("Empty string is invalid email", () => {
