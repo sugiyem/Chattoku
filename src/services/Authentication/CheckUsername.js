@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 //check is a username is alphanumeric and contains at
 //least one char
@@ -8,9 +8,9 @@ export function isValidUsername(username) {
   return regex.test(username);
 }
 
-export async function isUsernameTaken(username) {
+export async function isUsernameTaken(username, app = firebase) {
   const listOfUsernames = [];
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .get()

@@ -1,10 +1,10 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
-export async function addAnimeToFavorite(item) {
-  const userID = firebase.auth().currentUser.uid;
+export async function addAnimeToFavorite(item, app = firebase) {
+  const userID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -14,7 +14,7 @@ export async function addAnimeToFavorite(item) {
       id: item.mal_id,
       title: item.title,
       image: item.images.jpg.image_url,
-      url: item.url,
+      url: item.url
     })
     .then(() => {
       Alert.alert("Anime succesfully added to favorite");
@@ -24,10 +24,10 @@ export async function addAnimeToFavorite(item) {
     });
 }
 
-export async function removeAnimeFromFavorite(itemID) {
-  const userID = firebase.auth().currentUser.uid;
+export async function removeAnimeFromFavorite(itemID, app = firebase) {
+  const userID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .doc(userID)
@@ -42,15 +42,15 @@ export async function removeAnimeFromFavorite(itemID) {
     });
 }
 
-export async function addGenreToFavorite(item) {
-  const userID = firebase.auth().currentUser.uid;
+export async function addGenreToFavorite(item, app = firebase) {
+  const userID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .doc(userID)
     .update({
-      genres: firebase.firestore.FieldValue.arrayUnion(item),
+      genres: app.firestore.FieldValue.arrayUnion(item)
     })
     .then(() => {
       Alert.alert("Genre succesfully added to favorite");
@@ -60,15 +60,15 @@ export async function addGenreToFavorite(item) {
     });
 }
 
-export async function removeGenreFromFavorite(item) {
-  const userID = firebase.auth().currentUser.uid;
+export async function removeGenreFromFavorite(item, app = firebase) {
+  const userID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .doc(userID)
     .update({
-      genres: firebase.firestore.FieldValue.arrayRemove(item),
+      genres: app.firestore.FieldValue.arrayRemove(item)
     })
     .then(() => {
       Alert.alert("Genre succesfully removed from favorite");

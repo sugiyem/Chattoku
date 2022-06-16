@@ -6,14 +6,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { firebase } from "../firebase/Config";
+import { firebase } from "../services/Firebase/Config";
 import { useState } from "react";
+import {
+  redirectToForgotPasswordScreen,
+  redirectToSignupScreen
+} from "../services/Authentication/HandleAuthentication";
 
 const initialState = {
   email: "",
-  password: "",
+  password: ""
 };
 
 const LoginScreen = ({ navigation }) => {
@@ -22,11 +26,11 @@ const LoginScreen = ({ navigation }) => {
   function handleChangeText(text, name) {
     setCredentials({
       ...credentials,
-      [name]: text,
+      [name]: text
     });
   }
 
-  console.log(credentials);
+  // console.log(credentials);
 
   async function handleSubmit() {
     await firebase
@@ -37,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
         Alert.alert("Incorrect Email / Password");
       });
 
-    const currentUser = await firebase.auth().currentUser;
+    const currentUser = firebase.auth().currentUser;
 
     console.log(currentUser);
 
@@ -48,7 +52,15 @@ const LoginScreen = ({ navigation }) => {
       // await firebase.auth().signOut();
     } else if (!currentUser.emailVerified) {
       console.log("email not verified");
-      Alert.alert("Please Verify Your Email Before Logging In");
+      Alert.alert("Please Verify Your Email Before Logging In", "", [
+        {
+          text: "Resend verification email",
+          onPress: () => currentUser.sendEmailVerification()
+        },
+        {
+          text: "Cancel"
+        }
+      ]);
       await firebase.auth().signOut();
     } else {
       navigation.replace("Dashboard");
@@ -88,16 +100,22 @@ const LoginScreen = ({ navigation }) => {
             Don't Have an Account? Sign Up Here
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            redirectToForgotPasswordScreen(navigation);
+          }}
+        >
+          <Text style={styles.buttonText}>
+            Forgot Your Password? Click Here
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 export default LoginScreen;
-
-function redirectToSignupScreen(navigation) {
-  navigation.replace("Signup");
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +124,7 @@ const styles = StyleSheet.create({
     rowGap: "15px",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "darkcyan",
+    backgroundColor: "darkcyan"
   },
   logoImage: {
     height: 150,
@@ -114,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     borderWidth: 1,
     backgroundColor: "white",
-    marginBottom: 10,
+    marginBottom: 10
   },
   systemContainer: {
     margin: 10,
@@ -122,13 +140,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-    alignSelf: "stretch",
+    alignSelf: "stretch"
   },
   title: {
     textAlign: "center",
     fontWeight: "600",
     fontSize: 25,
-    color: "darkslateblue",
+    color: "darkslateblue"
   },
   textInputContainer: {
     borderRadius: 10,
@@ -136,7 +154,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     backgroundColor: "white",
     padding: 5,
-    marginVertical: 10,
+    marginVertical: 10
   },
   button: {
     alignSelf: "stretch",
@@ -145,10 +163,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginVertical: 5,
-    padding: 5,
+    padding: 5
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
-  },
+    color: "white"
+  }
 });
