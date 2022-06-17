@@ -19,9 +19,13 @@ export async function createGroup(
     description: groupDescription,
     img: groupImg,
     lastMessageText: "",
-    lastMessageAt: null
+    lastMessageAt: null,
+    lastAccessedAt: null
   });
-  batch.set(groupRef.collection("members").doc(userID), {});
+  batch.set(groupRef.collection("members").doc(userID), {
+    showMessage: false,
+    showNotif: false
+  });
   batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
