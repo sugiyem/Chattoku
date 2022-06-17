@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
 import { firebase } from "../../services/Firebase/Config";
-import { sendPrivateChat } from "../../services/Chat/HandleChat";
-import { DEFAULT_AVATAR_URL } from "../../constants/Chat";
+import { chatType } from "../../constants/Chat";
+import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
-import FetchPrivateChat from "../../services/Chat/FetchPrivateChat";
+import ChatSections from "../../components/Chat/ChatSections";
 
 const initialState = {
   username: "",
@@ -32,7 +31,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    return FetchPrivateChat({
+    return fetchPrivateChatMessages({
       recipientID: recipientID,
       onSuccesfulFetch: (data) => {
         setMessages(data);
@@ -43,22 +42,6 @@ const ChatDetailScreen = ({ navigation, route }) => {
     });
   }, []);
 
-  const onSend = async (messageArray) => {
-    const msg = messageArray[0];
-    const newMsg = {
-      ...msg,
-      sentBy: userID,
-      sentTo: recipientID,
-      createdAt: new Date()
-    };
-
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMsg)
-    );
-
-    await sendPrivateChat(newMsg, recipientID);
-  };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -68,21 +51,16 @@ const ChatDetailScreen = ({ navigation, route }) => {
         <Text style={styles.text}>
           {"Currently chatting with " +
             recipientUsername +
-            ".\n Click here to go to the chat list"}
+            ".\n Click here to go to the private chat list"}
         </Text>
       </TouchableOpacity>
 
-      <GiftedChat
+      <ChatSections
+        type={chatType.PRIVATE_CHAT}
+        userData={{ ...userInfo, id: userID }}
+        receiverID={recipientID}
         messages={messages}
-        onSend={onSend}
-        user={{
-          _id: userID,
-          name: userInfo.username,
-          avatar: userInfo.img.length > 0 ? userInfo.img : DEFAULT_AVATAR_URL
-        }}
-        renderUsernameOnMessage
-        isLoadingEarlier
-        renderAvatarOnTop
+        updateMessages={setMessages}
       />
     </View>
   );

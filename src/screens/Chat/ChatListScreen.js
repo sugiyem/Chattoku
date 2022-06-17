@@ -9,113 +9,52 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { Avatar, Badge, Icon, ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { removeChat } from "../../firebase/HandlePrivateChat";
-import FetchActiveChats from "../../firebase/FetchActiveChats";
+import { chatType } from "../../constants/Chat";
+import {
+  fetchActivePrivateChats,
+  checkUnreadGroupMessages
+} from "../../services/Chat/FetchActiveChats";
+import ActiveChatLists from "../../components/Chat/ActiveChatLists";
+import NotificationText from "../../components/Miscellaneous/NotificationText";
 
 const ChatListScreen = () => {
   const [search, setSearch] = useState("");
   const [activeChats, setActiveChats] = useState([]);
+  const [isUnreadExists, setIsUnreadExists] = useState(false);
   const [expand, setExpand] = useState(null);
   const navigation = useNavigation();
 
-  const datas = [
-    {
-      title: "Open Message",
-      icon: "message",
-      color: "blue",
-      onPress: (item) =>
-        navigation.navigate("ChatDetail", {
-          recipientID: item.id,
-          recipientUsername: item.username
-        })
-    },
-    {
-      title: "Remove",
-      icon: "delete",
-      color: "red",
-      onPress: (item) => removeChat(item)
+  const expandStatus = (value) => expand === value;
+
+  const changeExpand = (value) => {
+    if (expandStatus(value)) {
+      setExpand(null);
+    } else {
+      setExpand(value);
     }
-  ];
+  };
 
   useEffect(() => {
-    return FetchActiveChats({
+    return fetchActivePrivateChats({
       onSuccess: (data) => setActiveChats(data),
       onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
 
-  const RenderAccordion = ({ item }) =>
-    datas.map((data, id) => (
-      <ListItem key={id} bottomDivider onPress={() => data.onPress(item)}>
-        <Icon name={data.icon} size={30} color={data.color} />
-        <ListItem.Content>
-          <ListItem.Title>{data.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-    ));
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return (
-      <Avatar
-        rounded
-        source={imageSource}
-        size="medium"
-        containerStyle={styles.chatImage}
-      />
-    );
-  };
-
-  const RenderChats = ({ items }) =>
-    items.map((item, index) => (
-      <ListItem.Accordion
-        key={index}
-        bottomDivider
-        content={
-          <>
-            <RenderImage item={item} />
-            <ListItem.Content>
-              <ListItem.Title style={styles.username}>
-                {item.username}
-              </ListItem.Title>
-              <ListItem.Subtitle>
-                <Text>Last message: {item.lastMessage}</Text>
-              </ListItem.Subtitle>
-              <ListItem.Subtitle>
-                <Text>
-                  {item.lastMessageTime.toDateString() +
-                    ", " +
-                    item.lastMessageTime.toLocaleTimeString()}
-                </Text>
-              </ListItem.Subtitle>
-              {item.showNotif && (
-                <Badge
-                  status="success"
-                  value="There are unread messages"
-                  containerStyle={styles.badgeContainer}
-                />
-              )}
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expand === index}
-        onPress={() => {
-          if (expand === index) {
-            setExpand(null);
-          } else {
-            setExpand(index);
-          }
-        }}
-      >
-        {expand === index && <RenderAccordion item={item} />}
-      </ListItem.Accordion>
-    ));
+  useEffect(() => {
+    return checkUnreadGroupMessages({
+      onFound: () => {
+        setIsUnreadExists(true);
+      },
+      onNotFound: () => {
+        setIsUnreadExists(false);
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
@@ -126,22 +65,33 @@ const ChatListScreen = () => {
         style={styles.textInput}
       />
 
-      <Text style={styles.title}>Active Chats List</Text>
+      <Text style={styles.title}>Private Chat List</Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Friends")}
-      >
-        <Text style={styles.buttonText}>Message other users</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Friends")}
+        >
+          <Text style={styles.buttonText}>Message other users</Text>
+        </TouchableOpacity>
 
-      <View style={styles.chatLists}>
-        <RenderChats
-          items={activeChats.filter((item) =>
-            item.username.toLowerCase().startsWith(search.toLowerCase())
-          )}
-        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("GroupChatList")}
+        >
+          <NotificationText text="Group Chat List" isShown={isUnreadExists} />
+        </TouchableOpacity>
       </View>
+
+      <ActiveChatLists
+        type={chatType.PRIVATE_CHAT}
+        items={activeChats.filter((item) =>
+          item.username.toLowerCase().startsWith(search.toLowerCase())
+        )}
+        expandStatus={expandStatus}
+        changeExpand={changeExpand}
+        navigation={navigation}
+      />
     </ScrollView>
   );
 };
@@ -163,13 +113,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 2
   },
+  buttonGroup: {
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    flexDirection: "row"
+  },
   button: {
     alignSelf: "stretch",
     borderRadius: 10,
     borderWidth: 1,
-    marginTop: 10,
+    margin: 10,
     padding: 5,
-    backgroundColor: "aquamarine"
+    backgroundColor: "aquamarine",
+    flex: 1
   },
   buttonText: {
     textAlign: "center"
@@ -179,24 +135,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline"
-  },
-  username: {
-    fontWeight: "600",
-    textDecorationLine: "underline",
-    color: "darkslateblue"
-  },
-  badgeContainer: {
-    margin: 5
-  },
-  chatLists: {
-    flex: 1,
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5
-  },
-  chatImage: {
-    marginRight: 10,
-    borderColor: "black",
-    borderWidth: 1
   }
 });
