@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { firebase } from "../../firebase/Config";
-import { sendGroupChat } from "../../firebase/HandleChat";
+import { firebase } from "../../services/Firebase/Config";
+import { sendGroupChat } from "../../services/Chat/HandleChat";
 import { DEFAULT_AVATAR_URL } from "../../constants/Chat";
-import FetchUserInfo from "../../firebase/FetchUserInfo";
-import FetchGroupChat from "../../firebase/FetchGroupChat";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import FetchGroupChat from "../../services/Chat/FetchGroupChat";
 
 const initialState = {
   username: "",

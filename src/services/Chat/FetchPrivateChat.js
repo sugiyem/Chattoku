@@ -1,17 +1,18 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export default FetchPrivateChat = ({
   recipientID,
   onSuccesfulFetch,
   onFailure,
+  app = firebase
 }) => {
-  const userID = firebase.auth().currentUser.uid;
+  const userID = app.auth().currentUser.uid;
   const chatID =
     userID > recipientID
       ? recipientID + "_" + userID
       : userID + "_" + recipientID;
 
-  return firebase
+  return app
     .firestore()
     .collection("chatrooms")
     .doc(chatID)
@@ -26,12 +27,12 @@ export default FetchPrivateChat = ({
           if (doc.createdAt) {
             messageLists.push({
               ...doc,
-              createdAt: doc.createdAt.toDate(),
+              createdAt: doc.createdAt.toDate()
             });
           } else {
             messageLists.push({
               ...doc,
-              createdAt: new Date(),
+              createdAt: new Date()
             });
           }
         });

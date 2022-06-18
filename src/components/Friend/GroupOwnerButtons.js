@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { deleteGroup } from "../../firebase/HandleGroup";
+import { deleteGroup } from "../../services/Friend/HandleGroup";
 
 const GroupOwnerButtons = ({ groupInfo, navigation }) => {
   return (
@@ -36,7 +36,7 @@ const GroupOwnerButtons = ({ groupInfo, navigation }) => {
               {
                 text: "Continue",
                 onPress: async () =>
-                  await deleteGroup(groupInfo.id, navigation).finally(() =>
+                  await deleteGroup(groupInfo.id).finally(() =>
                     navigation.replace("GroupList")
                   )
               }

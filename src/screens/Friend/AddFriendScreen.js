@@ -9,20 +9,20 @@ import {
   View
 } from "react-native";
 
-import FetchUserInfo from "../../firebase/FetchUserInfo";
-import GetUserWithUsername from "../../firebase/GetUserWithUsername";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import {
   fetchFriend,
   fetchFriendRequestsReceived,
   fetchFriendRequestsSent
-} from "../../firebase/FetchFriendStatus";
+} from "../../services/Friend/FetchFriendStatus";
 import {
   addFriend,
   acceptFriendRequest,
   cancelFriendRequest,
   removeFriend
-} from "../../firebase/HandleFriend";
-import { getFriendshipStatus } from "../../components/Friend/FriendshipStatus";
+} from "../../services/Friend/HandleFriend";
+import { getFriendshipStatus } from "../../services/Friend/FriendshipStatus";
 import { friendshipType } from "../../constants/Friend";
 
 const AddFriendScreen = ({ navigation }) => {

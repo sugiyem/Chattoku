@@ -9,11 +9,11 @@ import {
   TouchableOpacity
 } from "react-native";
 
-import { fetchFriend } from "../../firebase/FetchFriendStatus";
+import { fetchFriend } from "../../services/Friend/FetchFriendStatus";
 import {
   fetchGroupMembers,
   fetchPendingGroupMembers
-} from "../../firebase/FetchGroup";
+} from "../../services/Friend/FetchGroup";
 import { groupMemberType } from "../../constants/Group";
 import AddMemberComponent from "../../components/Friend/AddMemberComponent";
 

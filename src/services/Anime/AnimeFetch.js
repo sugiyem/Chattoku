@@ -4,7 +4,7 @@ import { AIRING_URL, SEARCH_URL, TOP_URL } from "../../constants/MyAnimeList";
 export const fetchType = {
   SEARCH: 0,
   AIRING: 1,
-  TOP: 2,
+  TOP: 2
 };
 
 export default AnimeFetch = async ({
@@ -13,6 +13,7 @@ export default AnimeFetch = async ({
   search,
   onSuccesfulFetch,
   abortController = new AbortController(),
+  fetcher = axios
 }) => {
   let url;
 
@@ -28,7 +29,7 @@ export default AnimeFetch = async ({
       break;
   }
 
-  await axios
+  await fetcher
     .get(url, { signal: abortController.signal })
     .then((response) => response.data.data)
     .then((data) => {

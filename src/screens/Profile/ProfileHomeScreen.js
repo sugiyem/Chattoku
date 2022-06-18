@@ -11,10 +11,10 @@ import {
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
-import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
-import FetchUserInfo from "../../firebase/FetchUserInfo";
+import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
 
 const initialState = {

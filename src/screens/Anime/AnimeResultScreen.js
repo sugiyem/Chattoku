@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimeCollection from "../../components/Anime/AnimeCollection";
-import AnimeFetch, { fetchType } from "../../components/Anime/AnimeFetch";
+import AnimeFetch, { fetchType } from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
-import FetchFavoriteAnime from "../../firebase/FetchFavoriteAnime";
+import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 
 const AnimeResultScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState(route.params.search);
@@ -20,8 +20,8 @@ const AnimeResultScreen = ({ navigation, route }) => {
       expand: resultExpanded,
       changeExpand: setResultExpanded,
       page: resultPage,
-      changePage: setResultPage,
-    },
+      changePage: setResultPage
+    }
   ];
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const AnimeResultScreen = ({ navigation, route }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -46,7 +46,7 @@ const AnimeResultScreen = ({ navigation, route }) => {
         page: resultPage,
         search: search,
         onSuccesfulFetch: (data) => setAnimeData(data),
-        abortController: abortController,
+        abortController: abortController
       });
 
       return () => abortController.abort();
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: "darkcyan",
     alignItems: "center",
     padding: 5,
-    flex: 1,
+    flex: 1
   },
   button: {
     alignSelf: "stretch",
@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: "aquamarine",
+    backgroundColor: "aquamarine"
   },
   buttonText: {
     textAlign: "center",
-    color: "blue",
-  },
+    color: "blue"
+  }
 });

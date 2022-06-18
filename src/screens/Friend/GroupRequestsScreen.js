@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { fetchGroupInvitation } from "../../firebase/FetchGroup";
+import { fetchGroupInvitation } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 

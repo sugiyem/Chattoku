@@ -4,7 +4,7 @@ import {
   checkIfUserIsGroupOwner,
   fetchGroupMembers,
   fetchPendingGroupMembers
-} from "../../firebase/FetchGroup";
+} from "../../services/Friend/FetchGroup";
 import { groupMemberType } from "../../constants/Group";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 

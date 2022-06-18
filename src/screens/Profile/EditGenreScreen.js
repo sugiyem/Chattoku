@@ -12,7 +12,7 @@ import {
 import { CheckBox } from "react-native-elements";
 import { GENRES } from "../../constants/MyAnimeList";
 import { favoriteType } from "../../constants/Favorite";
-import FetchUserInfo from "../../firebase/FetchUserInfo";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
 
 const EditGenreScreen = ({ navigation }) => {

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { ListItem } from "react-native-elements";
 
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
 import RenderFriendFavorites from "../../components/Friend/RenderFriendFavorites";
 
