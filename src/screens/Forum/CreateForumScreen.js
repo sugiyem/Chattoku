@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Image,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Alert, Modal, Platform, Dimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import styled from "styled-components/native";
 
 import { firebase } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
@@ -32,6 +23,8 @@ const CreateForumScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [uploadedImgType, setUploadedImgType] = useState(imageType.PROFILE);
   const navigation = useNavigation();
+  const isProfileUploaded = uploadedImgType === imageType.PROFILE;
+  const uploadedImageAspect = isProfileUploaded ? [1, 1] : [2.5, 1];
 
   console.log(forumInfo);
 
@@ -61,7 +54,7 @@ const CreateForumScreen = () => {
 
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: uploadedImageAspect,
       quality: 1
     });
 
@@ -81,7 +74,9 @@ const CreateForumScreen = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
+      width: "100%",
+      height: undefined,
+      aspect: uploadedImageAspect,
       quality: 1
     });
 
@@ -93,7 +88,7 @@ const CreateForumScreen = () => {
 
   const removeImage = () => {
     const removedField =
-      uploadedImgType === imageType.PROFILE ? "img" : "banner";
+      uploadedImgType === isProfileUploaded ? "img" : "banner";
     setForumInfo({
       ...forumInfo,
       [removedField]: ""
@@ -107,7 +102,6 @@ const CreateForumScreen = () => {
     }
 
     const fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-    const isProfileUploaded = uploadedImgType === imageType.PROFILE;
     const uploadedImage = isProfileUploaded ? "img" : "banner";
     const successMessage = isProfileUploaded
       ? "Profile Has Been Updated Successfully"
@@ -159,156 +153,169 @@ const CreateForumScreen = () => {
   };
 
   return (
-    <View>
+    <Container>
       <Modal
         animationType="fade"
         visible={modalVisible}
         presentationStyle="pageSheet"
       >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => pickImageFromCamera()}
-          >
-            <Text style={styles.buttonText}>Take Photo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => pickImageFromLibrary()}
-          >
-            <Text style={styles.buttonText}>Choose From Library</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => removeImage()}
-          >
-            <Text style={styles.buttonText}>Remove Image</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
+        <ModalContainer>
+          <ModalButton onPress={() => pickImageFromCamera()}>
+            <ButtonText>Take Photo</ButtonText>
+          </ModalButton>
+          <ModalButton onPress={() => pickImageFromLibrary()}>
+            <ButtonText>Choose From Library</ButtonText>
+          </ModalButton>
+          <ModalButton onPress={() => removeImage()}>
+            <ButtonText>Remove Image</ButtonText>
+          </ModalButton>
+          <ModalButton onPress={() => setModalVisible(false)}>
+            <ButtonText>Cancel</ButtonText>
+          </ModalButton>
+        </ModalContainer>
       </Modal>
 
-      <Text> Enter Forum Details </Text>
-      {forumInfo.img.length > 0 ? (
-        <Image style={styles.img} source={{ uri: forumInfo.img }} />
-      ) : (
-        <Image
-          style={styles.img}
-          source={require("../../assets/default-profile.png")}
-        />
-      )}
-      <TouchableOpacity onPress={handleUploadProfileClick}>
-        <Text> Upload Image </Text>
-      </TouchableOpacity>
-      {forumInfo.banner.length > 0 ? (
-        <Image style={styles.img} source={{ uri: forumInfo.banner }} />
-      ) : (
-        <Image
-          style={styles.img}
-          source={require("../../assets/default-profile.png")}
-        />
-      )}
-      <TouchableOpacity onPress={handleUploadBannerClick}>
-        <Text> Upload Banner </Text>
-      </TouchableOpacity>
-      <Text> Title </Text>
-      <TextInput onChangeText={(text) => handleChangeText(text, "title")} />
-      <Text> Description </Text>
-      <TextInput onChangeText={(text) => handleChangeText(text, "desc")} />
-      <TouchableOpacity onPress={handleSubmit}>
-        <Text> Create Forum </Text>
-      </TouchableOpacity>
-    </View>
+      <BackButton onPress={() => navigation.goBack()}>
+        <BackButtonText> Go Back </BackButtonText>
+      </BackButton>
+      <Title> Enter Forum Details </Title>
+      <ImageContainer>
+        {forumInfo.banner.length > 0 ? (
+          <Banner source={{ uri: forumInfo.banner }} />
+        ) : (
+          <Banner source={require("../../assets/default-profile.png")} />
+        )}
+      </ImageContainer>
+      <CustomButton onPress={handleUploadBannerClick}>
+        <ButtonText> Upload Banner </ButtonText>
+      </CustomButton>
+      <ImageContainer>
+        {forumInfo.img.length > 0 ? (
+          <ProfilePicture source={{ uri: forumInfo.img }} />
+        ) : (
+          <ProfilePicture
+            source={require("../../assets/default-profile.png")}
+          />
+        )}
+      </ImageContainer>
+      <CustomButton onPress={handleUploadProfileClick}>
+        <ButtonText> Upload Image </ButtonText>
+      </CustomButton>
+      <TextInputLabel> Title </TextInputLabel>
+      <StyledTextInput
+        onChangeText={(text) => handleChangeText(text, "title")}
+      />
+      <TextInputLabel> Description </TextInputLabel>
+      <StyledTextInput
+        onChangeText={(text) => handleChangeText(text, "desc")}
+      />
+      <CustomButton onPress={handleSubmit}>
+        <ButtonText>Create Forum </ButtonText>
+      </CustomButton>
+    </Container>
   );
 };
 
 export default CreateForumScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    alignItems: "center",
-    padding: 5,
-    flex: 1
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    margin: 20
-  },
-  modalButton: {
-    alignSelf: "stretch",
-    borderRadius: 10,
-    padding: 15,
-    backgroundColor: "cornflowerblue",
-    marginTop: 10
-  },
-  backButton: {
-    alignSelf: "stretch",
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    marginTop: 10
-  },
-  backButtonText: {
-    textAlign: "center",
-    color: "blue"
-  },
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  img: {
-    marginTop: 30,
-    alignSelf: "center",
-    height: 125,
-    width: 125,
-    borderRadius: 75
-  },
-  button: {
-    alignSelf: "stretch",
-    borderRadius: 10,
-    padding: 15,
-    backgroundColor: "navy",
-    marginTop: 10
-  },
-  buttonText: {
-    justifyContent: "center",
-    alignSelf: "center",
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "white"
-  },
-  textInputContainer: {
-    marginTop: 30,
-    alignItems: "stretch",
-    borderWidth: 1,
-    borderBottomWidth: 0,
-    borderColor: "navy",
-    width: "100%",
-    height: undefined,
-    aspectRatio: 3 / 1
-  },
-  textInputTitle: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontWeight: "bold",
-    textDecorationLine: "underline",
-    margin: 5
-  },
-  textInput: {
-    flexDirection: "row",
-    flex: 1,
-    paddingLeft: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "navy",
-    paddingBottom: 5
-  }
-});
+const width = Dimensions.get("screen").width;
+
+const Title = styled.Text`
+  font-size: 22px;
+  padding: 5px;
+  font-weight: 400;
+  align-self: center;
+  color: white;
+`;
+
+const Banner = styled.Image`
+  width: ${width - 20}px;
+  height: ${(width * 2) / 5 - 8}px;
+`;
+
+const Container = styled.ScrollView`
+  display: flex;
+  background-color: darkcyan;
+  padding: 5px;
+  flex: 1;
+`;
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 20px;
+`;
+
+const ModalButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: cornflowerblue;
+  margin-top: 10px;
+`;
+
+const ButtonText = styled.Text`
+  justify-content: center;
+  align-self: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+`;
+
+const ProfilePicture = styled.Image`
+  margin-top: 30px;
+  align-self: center;
+  height: 125px;
+  width: 125px;
+  border-radius: 75px;
+`;
+
+const ImageContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: navy;
+  margin: 20px;
+`;
+
+const TextInputLabel = styled.Text`
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  font-weight: bold;
+  text-decoration-line: underline;
+  margin: 5px;
+  align-self: center;
+`;
+
+const StyledTextInput = styled.TextInput`
+  flex-direction: row;
+  width: 90%;
+  margin: 5px;
+  padding-left: 10px;
+  border-radius: 5px;
+  background-color: white;
+  padding-bottom: 5px;
+  align-self: center;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+  padding: 5px;
+  margin-top: 10px;
+`;
+
+const BackButtonText = styled.Text`
+  text-align: center;
+  color: blue;
+`;
