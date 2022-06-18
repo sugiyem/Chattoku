@@ -3,7 +3,7 @@ import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
 import FetchPost from "./FetchPost";
 import PostCard from "./PostCard";
 
-const PostList = ({ forumId }) => {
+const PostList = ({ forumId, isOwner }) => {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -23,7 +23,7 @@ const PostList = ({ forumId }) => {
   // console.log(posts);
 
   const renderItem = ({ section, item }) => {
-    return <PostCard {...item} forumId={forumId} />;
+    return <PostCard {...item} isOwner={isOwner} forumId={forumId} />;
   };
 
   const renderHeader = () => {};

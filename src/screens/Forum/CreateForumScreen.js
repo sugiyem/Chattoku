@@ -74,8 +74,6 @@ const CreateForumScreen = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      width: "100%",
-      height: undefined,
       aspect: uploadedImageAspect,
       quality: 1
     });

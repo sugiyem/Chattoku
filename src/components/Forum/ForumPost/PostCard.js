@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "./HandleForumPost";
 import LikeBar from "./LikeBar";
-import { likeStatus } from "../../../constants/Post";
 
-const PostCard = ({ title, content, id, uid, forumId }) => {
+const PostCard = ({ title, content, id, uid, forumId, isOwner }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
@@ -37,13 +36,13 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: postData
+      data: { ...postData, isOwner: isOwner }
     });
   }
 
   function handleEditPress() {
     navigation.navigate("EditPost", {
-      data: postData
+      data: { ...postData, isOwner: isOwner }
     });
   }
 
@@ -58,25 +57,25 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </TouchableOpacity>
+        {(currentUID === uid || isOwner) && (
+          <TouchableOpacity
+            style={styles.action}
+            onPress={() =>
+              deletePost(
+                forumId,
+                id,
+                () => {},
+                (e) => Alert.alert(e)
+              )
+            }
+          >
+            <Icon name="delete" type="material" color="red" />
+          </TouchableOpacity>
+        )}
         {currentUID === uid && (
-          <>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() =>
-                deletePost(
-                  forumId,
-                  id,
-                  () => {},
-                  (e) => Alert.alert(e)
-                )
-              }
-            >
-              <Icon name="delete" type="material" color="red" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.action} onPress={handleEditPress}>
-              <Icon name="edit" type="material" />
-            </TouchableOpacity>
-          </>
+          <TouchableOpacity style={styles.action} onPress={handleEditPress}>
+            <Icon name="edit" type="material" />
+          </TouchableOpacity>
         )}
       </View>
     </Card>

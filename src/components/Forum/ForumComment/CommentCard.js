@@ -9,6 +9,8 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
   const currentUID = firebase.auth().currentUser.uid;
   const [username, setUsername] = useState("fetching username...");
   const navigation = useNavigation();
+  const data = navigation.getState().routes[2].params.data;
+  const isOwner = data.isOwner;
 
   console.log(uid);
 
@@ -41,28 +43,28 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
       <Card.Divider />
       <Text> {content} </Text>
       <View style={styles.actionBar}>
+        {(currentUID === uid || isOwner) && (
+          <TouchableOpacity
+            style={styles.action}
+            onPress={() =>
+              DeleteComment(
+                forumId,
+                postId,
+                id,
+                () => {},
+                (e) => Alert.alert(e)
+              )
+            }
+          >
+            <Icon name="delete" type="material" color="red" />
+            <Text style={styles.delete}> Delete </Text>
+          </TouchableOpacity>
+        )}
         {currentUID === uid && (
-          <>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() =>
-                DeleteComment(
-                  forumId,
-                  postId,
-                  id,
-                  () => {},
-                  (e) => Alert.alert(e)
-                )
-              }
-            >
-              <Icon name="delete" type="material" color="red" />
-              <Text style={styles.delete}> Delete </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.action} onPress={handleEditPress}>
-              <Icon name="edit" type="material" />
-              <Text> Edit </Text>
-            </TouchableOpacity>
-          </>
+          <TouchableOpacity style={styles.action} onPress={handleEditPress}>
+            <Icon name="edit" type="material" />
+            <Text> Edit </Text>
+          </TouchableOpacity>
         )}
       </View>
     </Card>
