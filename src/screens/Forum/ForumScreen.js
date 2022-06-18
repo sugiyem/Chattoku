@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
@@ -16,12 +16,16 @@ const Header = ({ img, title }) => {
 
 const ForumScreen = () => {
   const navigation = useNavigation();
-  const [data] = useState(navigation.getState().routes[1].params.data);
+  const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
   const isOwner = data.owner === currentUID;
 
   function handleAddButtonClick() {
     navigation.navigate("AddPost", { data: data });
+  }
+
+  function handleEditForumButton() {
+    navigation.navigate("EditForum", { data: data });
   }
 
   return (
@@ -32,6 +36,11 @@ const ForumScreen = () => {
       >
         <Text style={styles.buttonText}>Go Back</Text>
       </TouchableOpacity>
+      {isOwner && (
+        <TouchableOpacity style={styles.button} onPress={handleEditForumButton}>
+          <Text style={styles.buttonText}>Edit Forum</Text>
+        </TouchableOpacity>
+      )}
       <Header {...data} />
       <PostList forumId={data.id} isOwner={isOwner} />
       <Icon

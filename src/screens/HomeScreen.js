@@ -9,6 +9,7 @@ import AddCommentScreen from "./Forum/AddCommentScreen";
 import EditPostScreen from "./Forum/EditPostScreen";
 import EditCommentScreen from "./Forum/EditCommentScreen";
 import CreateForumScreen from "./Forum/CreateForumScreen";
+import ForumEditScreen from "./Forum/ForumEditScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const HomeScreen = () => {
       <Stack.Screen name="AddComment" component={AddCommentScreen} />
       <Stack.Screen name="EditComment" component={EditCommentScreen} />
       <Stack.Screen name="CreateForum" component={CreateForumScreen} />
+      <Stack.Screen name="EditForum" component={ForumEditScreen} />
     </Stack.Navigator>
   );
 };

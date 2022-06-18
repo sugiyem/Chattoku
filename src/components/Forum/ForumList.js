@@ -30,7 +30,7 @@ const ForumList = () => {
   const renderItem = ({ section, item }) => {
     return (
       <>
-        <ForumCard {...item} />
+        <ForumCard forumData={item} />
       </>
     );
   };

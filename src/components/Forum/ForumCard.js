@@ -2,11 +2,14 @@ import { Card } from "react-native-elements";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ForumCard = ({ img, title, id, owner }) => {
+const ForumCard = ({ forumData }) => {
   const navigation = useNavigation();
+  const img = forumData.img;
+  const title = forumData.title;
+
   function goToForum() {
     navigation.navigate("Forum", {
-      data: { img: img, title: title, id: id, owner: owner }
+      data: forumData
     });
   }
 

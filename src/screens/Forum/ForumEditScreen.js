@@ -6,24 +6,19 @@ import styled from "styled-components/native";
 
 import { firebase } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
-import { createForum } from "../../components/Forum/HandleForum";
+import { editForum } from "../../components/Forum/HandleForum";
 const imageType = {
   PROFILE: 0,
   BANNER: 1
 };
 
-const initialForumInfo = {
-  img: "",
-  banner: "",
-  title: "",
-  desc: ""
-};
-
-const CreateForumScreen = () => {
-  const [forumInfo, setForumInfo] = useState(initialForumInfo);
+const ForumEditScreen = () => {
+  const navigation = useNavigation();
+  const [forumInfo, setForumInfo] = useState(
+    navigation.getState().routes[1].params.data
+  );
   const [modalVisible, setModalVisible] = useState(false);
   const [uploadedImgType, setUploadedImgType] = useState(imageType.PROFILE);
-  const navigation = useNavigation();
   const isProfileUploaded = uploadedImgType === imageType.PROFILE;
   const uploadedImageAspect = isProfileUploaded ? [1, 1] : [2.5, 1];
 
@@ -136,7 +131,9 @@ const CreateForumScreen = () => {
   };
 
   const handleSubmit = () =>
-    createForum(forumInfo, navigation.navigate("ForumHome"));
+    editForum(forumInfo, () => {
+      navigation.navigate("Forum", { data: forumInfo });
+    });
 
   return (
     <Container>
@@ -190,19 +187,21 @@ const CreateForumScreen = () => {
       <TextInputLabel> Title </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "title")}
+        value={forumInfo.title}
       />
       <TextInputLabel> Description </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "desc")}
+        value={forumInfo.desc}
       />
       <CustomButton onPress={handleSubmit}>
-        <ButtonText>Create Forum </ButtonText>
+        <ButtonText>Update Forum Data </ButtonText>
       </CustomButton>
     </Container>
   );
 };
 
-export default CreateForumScreen;
+export default ForumEditScreen;
 
 const width = Dimensions.get("screen").width;
 
