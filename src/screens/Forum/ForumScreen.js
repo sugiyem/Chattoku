@@ -4,6 +4,8 @@ import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
 import { firebase } from "../../firebase/Config.js";
 import styled from "styled-components/native";
+import { useEffect, useState } from "react";
+import { isUserBanned } from "../../components/Forum/ForumManagement/HandleBannedUsers";
 
 const Header = ({ img, title, banner, desc }) => {
   return (
@@ -31,6 +33,7 @@ const Header = ({ img, title, banner, desc }) => {
 };
 
 const ForumScreen = () => {
+  const [isBanned, setIsBanned] = useState(false);
   const navigation = useNavigation();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
@@ -44,6 +47,10 @@ const ForumScreen = () => {
     navigation.navigate("ManageForum", { data: data });
   }
 
+  useEffect(() => {
+    isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
+  }, []);
+
   return (
     <Container>
       <CustomButton onPress={() => navigation.goBack()}>
@@ -55,14 +62,18 @@ const ForumScreen = () => {
         </CustomButton>
       )}
       <Header {...data} />
-      <PostList forumId={data.id} isOwner={isOwner} />
-      <Icon
-        name="add"
-        type="material"
-        style={styles.add}
-        size={50}
-        onPress={handleAddButtonClick}
-      />
+      <PostList forumId={data.id} isOwner={isOwner} isBanned={isBanned} />
+      {isBanned ? (
+        <BannedText>You have been banned</BannedText>
+      ) : (
+        <Icon
+          name="add"
+          type="material"
+          style={styles.add}
+          size={50}
+          onPress={handleAddButtonClick}
+        />
+      )}
     </Container>
   );
 };
@@ -133,6 +144,17 @@ const CustomButton = styled.TouchableOpacity`
 const ButtonText = styled.Text`
   text-align: center;
   color: blue;
+`;
+
+const BannedText = styled.Text`
+  border-radius: 10px;
+  padding: 10px;
+  background-color: navy;
+  margin: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
 `;
 
 const styles = StyleSheet.create({

@@ -10,6 +10,7 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
   const [username, setUsername] = useState("fetching username...");
   const navigation = useNavigation();
   const data = navigation.getState().routes[2].params.data;
+  const isBanned = data.isBanned;
   const isOwner = data.isOwner;
 
   console.log(uid);
@@ -43,7 +44,7 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
       <Card.Divider />
       <Text> {content} </Text>
       <View style={styles.actionBar}>
-        {(currentUID === uid || isOwner) && (
+        {((!isBanned && currentUID === uid) || isOwner) && (
           <TouchableOpacity
             style={styles.action}
             onPress={() =>
@@ -60,7 +61,7 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
             <Text style={styles.delete}> Delete </Text>
           </TouchableOpacity>
         )}
-        {currentUID === uid && (
+        {!isBanned && currentUID === uid && (
           <TouchableOpacity style={styles.action} onPress={handleEditPress}>
             <Icon name="edit" type="material" />
             <Text> Edit </Text>

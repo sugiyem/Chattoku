@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { firebase } from "../../firebase/Config";
 import CommentList from "../../components/Forum/ForumComment/CommentList";
 import LikeBar from "../../components/Forum/ForumPost/LikeBar";
+import styled from "styled-components/native";
 
 const MainPost = ({ title, content, uid, forumId, postId }) => {
   const [username, setUsername] = useState("fetching username...");
@@ -53,14 +54,29 @@ const ForumPostScreen = () => {
 
       <CommentList {...data} />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddButtonClick}>
-        <Text style={styles.buttonText}>Add Your Comment</Text>
-      </TouchableOpacity>
+      {data.isBanned ? (
+        <BannedText>You have been banned</BannedText>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={handleAddButtonClick}>
+          <Text style={styles.buttonText}>Add Your Comment</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 export default ForumPostScreen;
+
+const BannedText = styled.Text`
+  border-radius: 10px;
+  padding: 10px;
+  background-color: navy;
+  margin: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+`;
 
 const styles = StyleSheet.create({
   container: {

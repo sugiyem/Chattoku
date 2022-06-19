@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "./HandleForumPost";
 import LikeBar from "./LikeBar";
 
-const PostCard = ({ title, content, id, uid, forumId, isOwner }) => {
+const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
@@ -36,7 +36,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner }) => {
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: { ...postData, isOwner: isOwner }
+      data: { ...postData, isOwner: isOwner, isBanned: isBanned }
     });
   }
 
@@ -57,7 +57,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner }) => {
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </TouchableOpacity>
-        {(currentUID === uid || isOwner) && (
+        {((!isBanned && currentUID === uid) || isOwner) && (
           <TouchableOpacity
             style={styles.action}
             onPress={() =>
@@ -72,7 +72,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner }) => {
             <Icon name="delete" type="material" color="red" />
           </TouchableOpacity>
         )}
-        {currentUID === uid && (
+        {!isBanned && currentUID === uid && (
           <TouchableOpacity style={styles.action} onPress={handleEditPress}>
             <Icon name="edit" type="material" />
           </TouchableOpacity>
