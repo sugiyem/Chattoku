@@ -20,6 +20,7 @@ export const fetchFriend = ({ onSuccess, onFailure, app = firebase }) => {
         await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -61,6 +62,7 @@ export const fetchFriendRequestsSent = ({
         await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -102,6 +104,7 @@ export const fetchFriendRequestsReceived = ({
         await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {

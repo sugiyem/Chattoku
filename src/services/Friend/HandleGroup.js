@@ -21,7 +21,10 @@ export async function createGroup(
     lastMessageText: "",
     lastMessageAt: null
   });
-  batch.set(groupRef.collection("members").doc(userID), {});
+  batch.set(groupRef.collection("members").doc(userID), {
+    showMessage: false,
+    showNotif: false
+  });
   batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
