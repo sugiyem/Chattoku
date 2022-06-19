@@ -1,11 +1,4 @@
-import { Card } from "react-native-elements";
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  Image
-} from "react-native";
+import { Text, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 

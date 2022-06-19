@@ -17,3 +17,16 @@ export default FetchUserInfo = ({ onSuccesfulFetch, onFailure }) => {
       }
     );
 };
+
+export async function FetchInfoById(userID, callbackSuccess) {
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((documentSnapshot) => {
+      const doc = documentSnapshot.data();
+      callbackSuccess(doc);
+    })
+    .catch((e) => console.error(e));
+}

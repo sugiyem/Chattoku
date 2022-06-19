@@ -41,7 +41,7 @@ const ForumScreen = () => {
   }
 
   function handleEditForumButton() {
-    navigation.navigate("EditForum", { data: data });
+    navigation.navigate("ManageForum", { data: data });
   }
 
   return (
@@ -51,7 +51,7 @@ const ForumScreen = () => {
       </CustomButton>
       {isOwner && (
         <CustomButton onPress={handleEditForumButton}>
-          <ButtonText>Edit Forum</ButtonText>
+          <ButtonText>Manage Your Forum</ButtonText>
         </CustomButton>
       )}
       <Header {...data} />

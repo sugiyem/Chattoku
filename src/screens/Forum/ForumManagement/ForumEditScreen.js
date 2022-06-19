@@ -4,9 +4,9 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import styled from "styled-components/native";
 
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
-import { editForum } from "../../components/Forum/HandleForum";
+import { editForum } from "../../../components/Forum/HandleForum";
 const imageType = {
   PROFILE: 0,
   BANNER: 1
@@ -166,7 +166,7 @@ const ForumEditScreen = () => {
         {forumInfo.banner.length > 0 ? (
           <Banner source={{ uri: forumInfo.banner }} />
         ) : (
-          <Banner source={require("../../assets/default-profile.png")} />
+          <Banner source={require("../../../assets/default-profile.png")} />
         )}
       </ImageContainer>
       <CustomButton onPress={handleUploadBannerClick}>
@@ -177,7 +177,7 @@ const ForumEditScreen = () => {
           <ProfilePicture source={{ uri: forumInfo.img }} />
         ) : (
           <ProfilePicture
-            source={require("../../assets/default-profile.png")}
+            source={require("../../../assets/default-profile.png")}
           />
         )}
       </ImageContainer>
