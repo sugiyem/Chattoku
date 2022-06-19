@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ScrollView, SectionList, Text } from "react-native";
-import { View } from "react-native-web";
 import BannedUser from "./BannedUser";
 import { getBannedUsers } from "./HandleBannedUsers";
 
@@ -28,6 +27,7 @@ const BannedUsersList = ({ forumId }) => {
           data: users
         }
       ]}
+      keyExtractor={(item) => item.userId}
       renderItem={renderItem}
       renderHeader={renderHeader}
       renderFooter={renderFooter}

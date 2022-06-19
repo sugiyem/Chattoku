@@ -1,5 +1,6 @@
+import { Alert } from "react-native";
 import { firebase } from "../../../firebase/Config.js";
-import { FetchInfoById } from "../../../firebase/FetchUserInfo.js";
+import Warning from "../Warning.js";
 
 export async function getBannedUsers(forumId, callbackSuccess) {
   await firebase
@@ -22,22 +23,40 @@ export async function getBannedUsers(forumId, callbackSuccess) {
     );
 }
 
-export async function addBannedUsers(forumId, bannedUserId) {
+export async function addBannedUsers(forumId, bannedUserId, reason) {
   await firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("banned")
     .doc(bannedUserId)
-    .set({});
+    .set({ reason: reason });
 }
 
 export async function deleteBannedUsers(forumId, bannedUserId) {
+  Warning(() => {
+    firebase
+      .firestore()
+      .collection("forums")
+      .doc(forumId)
+      .collection("banned")
+      .doc(bannedUserId)
+      .delete()
+      .then(() => Alert.alert("Unban Success"));
+  });
+}
+
+export async function isUserBanned(forumId, userId, callbackSuccess) {
   await firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("banned")
-    .doc(bannedUserId)
-    .delete();
+    .doc(userId)
+    .get()
+    .then((doc) =>
+      doc.exists
+        ? callbackSuccess({ isFound: true, ...doc.data() })
+        : callbackSuccess({ isFound: false })
+    );
 }

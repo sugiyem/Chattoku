@@ -3,6 +3,8 @@ import { FetchInfoById } from "../../../firebase/FetchUserInfo";
 import styled from "styled-components/native";
 import { StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
+import { deleteBannedUsers } from "./HandleBannedUsers";
+import { useNavigation } from "@react-navigation/native";
 
 const initialUserData = {
   bio: "",
@@ -12,11 +14,19 @@ const initialUserData = {
 
 const BannedUser = ({ userId, reason }) => {
   const [userData, setUserData] = useState(initialUserData);
+  const navigation = useNavigation();
+  const forumId = navigation.getState().routes[1].params.data.id;
   console.log(userData);
+
+  console.log(forumId);
 
   useEffect(() => {
     FetchInfoById(userId, (data) => setUserData(data));
   }, []);
+
+  function handleDelete() {
+    deleteBannedUsers(forumId, userId);
+  }
 
   return (
     <Card>
@@ -31,7 +41,13 @@ const BannedUser = ({ userId, reason }) => {
         <Username> {userData.username} </Username>
         <Text> {reason}</Text>
       </InfoContainer>
-      <Icon name="delete" type="material" color="red" size={40} />
+      <Icon
+        name="delete"
+        type="material"
+        color="red"
+        size={40}
+        onPress={handleDelete}
+      />
     </Card>
   );
 };
@@ -45,6 +61,8 @@ const Card = styled.View`
   background-color: white;
   margin: 10px;
   border-radius: 10px;
+  border-width: 1px;
+  border-color: black;
   align-items: center;
 `;
 

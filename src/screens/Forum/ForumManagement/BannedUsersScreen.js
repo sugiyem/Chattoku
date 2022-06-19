@@ -8,9 +8,15 @@ const BannedUsersScreen = () => {
 
   console.log(forumData);
 
+  function handleAddBannedUsers() {
+    navigation.navigate("AddBanned");
+  }
+
   return (
     <Container>
-      <StyledTextInput placeholder="Ban Users By Username" />
+      <CustomButton onPress={handleAddBannedUsers}>
+        <ButtonText>Add Banned Users</ButtonText>
+      </CustomButton>
       <Title> Banned Users </Title>
       <BannedUsersList forumId={forumData.id} />
     </Container>
@@ -19,7 +25,7 @@ const BannedUsersScreen = () => {
 
 export default BannedUsersScreen;
 
-const Container = styled.ScrollView`
+const Container = styled.View`
   display: flex;
   background-color: darkcyan;
   padding: 5px;
@@ -27,21 +33,26 @@ const Container = styled.ScrollView`
   flex: 1;
 `;
 
-const StyledTextInput = styled.TextInput`
-  flex-direction: row;
-  width: 90%;
-  margin: 5px;
-  padding-left: 10px;
-  border-radius: 5px;
-  background-color: white;
-  padding-bottom: 5px;
-  align-self: center;
-`;
-
 const Title = styled.Text`
   font-size: 22px;
   padding: 5px;
   font-weight: 400;
   align-self: center;
+  color: white;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: navy;
+  margin: 20px;
+`;
+
+const ButtonText = styled.Text`
+  justify-content: center;
+  align-self: center;
+  font-size: 15px;
+  font-weight: bold;
   color: white;
 `;

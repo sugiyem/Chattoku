@@ -4,7 +4,7 @@ import { firebase } from "./Config";
 export default GetUserWithUsername = async ({
   specifiedUsername,
   onFound,
-  onNotFound,
+  onNotFound
 }) => {
   await firebase
     .firestore()
@@ -16,7 +16,7 @@ export default GetUserWithUsername = async ({
         onNotFound();
       } else {
         querySnapshot.forEach((documentSnapshot) => {
-          onFound(documentSnapshot.data());
+          onFound({ ...documentSnapshot.data(), id: documentSnapshot.id });
         });
       }
     })
