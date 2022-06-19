@@ -5,13 +5,27 @@ import { likeStatus } from "../../../constants/Post";
 export async function addPost(forumId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
 
+  //Create post
   await firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("posts")
     .add({ ...post, uid: currentUID })
-    .then(() => onSuccess())
+    .then((doc) => {
+      //Then add to user history
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUID)
+        .collection("posts")
+        .add({
+          postId: doc.id,
+          forumId: forumId,
+          timestamp: new Date()
+        });
+      onSuccess();
+    })
     .catch((e) => onError(e));
 }
 
