@@ -1,3 +1,5 @@
+import { Timestamp } from "firestore-jest-mock/mocks/timestamp";
+
 export const fakeFirebase = {
   database: {
     users: [
@@ -69,9 +71,15 @@ export const fakeFirebase = {
         name: "First group",
         description: "This is a group",
         img: "first-image-link",
+        lastMessageAt: new Timestamp(1, 1),
+        lastMessageText: "2nd-group-message",
         _collections: {
-          members: [{ id: "yem123" }],
-          pendingMembers: [{ id: "cupu" }]
+          members: [{ id: "yem123", showMessage: false, showNotif: false }],
+          pendingMembers: [{ id: "cupu" }],
+          messages: [
+            { createdAt: new Timestamp(0, 0), text: "1st-group-message" },
+            { createdAt: new Timestamp(1, 1), text: "2nd-group-message" }
+          ]
         }
       },
       {
@@ -89,8 +97,47 @@ export const fakeFirebase = {
         name: "Third group",
         description: "This is a group",
         img: "third-image-link",
+        lastMessageAt: new Timestamp(2, 2),
+        lastMessageText: "other-group-message",
         _collections: {
-          members: [{ id: "yem123" }, { id: "yem456" }]
+          members: [
+            { id: "yem123", showMessage: true, showNotif: true },
+            { id: "yem456" }
+          ],
+          messages: [
+            { createdAt: new Timestamp(2, 2), text: "other-group-message" }
+          ]
+        }
+      }
+    ],
+    chatrooms: [
+      {
+        id: "yem123_yem456",
+        lastMessageAt: new Timestamp(1, 1),
+        lastMessageText: "2nd-message",
+        showMessageToFirstUser: true,
+        showMessageToSecondUser: true,
+        showNotifToFirstUser: false,
+        showNotifToSecondUser: false,
+        _collections: {
+          messages: [
+            { createdAt: new Timestamp(0, 0), text: "1st-message" },
+            { createdAt: new Timestamp(1, 1), text: "2nd-message" }
+          ]
+        }
+      },
+      {
+        id: "imba_yem123",
+        lastMessageAt: new Timestamp(2, 2),
+        lastMessageText: "special-message",
+        showMessageToFirstUser: true,
+        showMessageToSecondUser: true,
+        showNotifToFirstUser: false,
+        showNotifToSecondUser: true,
+        _collections: {
+          messages: [
+            { createdAt: new Timestamp(2, 2), text: "special-message" }
+          ]
         }
       }
     ]
