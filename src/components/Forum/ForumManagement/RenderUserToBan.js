@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Text } from "react-native";
+import { Text, Platform } from "react-native";
 import styled from "styled-components/native";
 import { addBannedUsers } from "./HandleBannedUsers";
 import { firebase } from "../../../services/Firebase/Config";
