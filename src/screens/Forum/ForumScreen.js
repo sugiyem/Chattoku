@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Dimensions } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
-import { firebase } from "../../firebase/Config.js";
+import { firebase } from "../../services/Firebase/Config";
 import styled from "styled-components/native";
 import { useEffect, useState } from "react";
 import { isUserBanned } from "../../components/Forum/ForumManagement/HandleBannedUsers";

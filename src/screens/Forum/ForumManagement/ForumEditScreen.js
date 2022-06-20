@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import styled from "styled-components/native";
 
-import { firebase } from "../../../firebase/Config";
+import { firebase } from "../../../services/Firebase/Config";
 import { useNavigation } from "@react-navigation/native";
 import { editForum } from "../../../components/Forum/HandleForum";
 const imageType = {
