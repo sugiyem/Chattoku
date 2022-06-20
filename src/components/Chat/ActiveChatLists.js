@@ -36,9 +36,9 @@ const ActiveChatLists = ({
 
   const onRemoveMessage = (item) => {
     if (isPrivateChat) {
-      removePrivateChat(item);
+      removePrivateChat(item.id);
     } else {
-      removeGroupChat(item);
+      removeGroupChat(item.id);
     }
   };
 

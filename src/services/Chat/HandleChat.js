@@ -43,6 +43,8 @@ export async function sendPrivateChat(message, recipientID, app = firebase) {
   }
 
   await batch.commit();
+
+  return { messageID: newMessageID, time: sentTime };
 }
 
 export async function sendGroupChat(message, groupID, app = firebase) {
@@ -68,33 +70,34 @@ export async function sendGroupChat(message, groupID, app = firebase) {
     if (doc.id != userID) {
       batch.set(doc.ref, { showMessage: true, showNotif: true });
     } else {
-      batch.set(doc.ref, { showMessage: true }, { merge: true });
+      batch.update(doc.ref, { showMessage: true });
     }
   });
 
   await batch.commit();
+
+  return { messageID: newMessageID, time: sentTime };
 }
 
-export async function removePrivateChat(item, app = firebase) {
+export async function removePrivateChat(friendID, app = firebase) {
   const userID = app.auth().currentUser.uid;
   let chatID = "";
 
-  if (userID > item.id) {
-    chatID = item.id + "_" + userID;
+  if (userID > friendID) {
+    chatID = friendID + "_" + userID;
     await app.firestore().collection("chatrooms").doc(chatID).update({
       showMessageToSecondUser: false
     });
   } else {
-    chatID = userID + "_" + item.id;
+    chatID = userID + "_" + friendID;
     await app.firestore().collection("chatrooms").doc(chatID).update({
       showMessageToFirstUser: false
     });
   }
 }
 
-export async function removeGroupChat(item, app = firebase) {
+export async function removeGroupChat(groupID, app = firebase) {
   const userID = app.auth().currentUser.uid;
-  const groupID = item.id;
   const batch = app.firestore().batch();
   const groupRef = app.firestore().collection("groups").doc(groupID);
   const currentTime = app.firestore.FieldValue.serverTimestamp();
@@ -105,4 +108,6 @@ export async function removeGroupChat(item, app = firebase) {
   });
 
   await batch.commit();
+
+  return currentTime;
 }
