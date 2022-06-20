@@ -1,4 +1,4 @@
-import { firebase } from "../../firebase/Config";
+import { firebase } from "../../services/Firebase/Config";
 import { Alert } from "react-native";
 
 export async function createForum(forumInfo, callbackSuccess) {

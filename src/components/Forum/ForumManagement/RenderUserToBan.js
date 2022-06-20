@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Text } from "react-native";
 import styled from "styled-components/native";
 import { addBannedUsers } from "./HandleBannedUsers";
-import { firebase } from "../../../firebase/Config";
+import { firebase } from "../../../services/Firebase/Config";
 import { deleteBannedUsers } from "./HandleBannedUsers";
 
 const RenderUserToBan = ({

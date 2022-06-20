@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FetchInfoById } from "../../../firebase/FetchUserInfo";
+import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
