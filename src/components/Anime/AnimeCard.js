@@ -11,8 +11,8 @@ import { Card } from "react-native-elements";
 import * as Linking from "expo-linking";
 import {
   addAnimeToFavorite,
-  removeAnimeFromFavorite,
-} from "../../firebase/HandleFavorite";
+  removeAnimeFromFavorite
+} from "../../services/Anime/HandleFavorite";
 
 const AnimeCard = ({ item, isFavorite }) => {
   return (

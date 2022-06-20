@@ -1,20 +1,15 @@
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
-export default FetchPrivateChat = ({
-  recipientID,
-  onSuccesfulFetch,
+export default FetchGroupChat = ({
+  groupID,
+  onSuccess,
   onFailure,
+  app = firebase
 }) => {
-  const userID = firebase.auth().currentUser.uid;
-  const chatID =
-    userID > recipientID
-      ? recipientID + "_" + userID
-      : userID + "_" + recipientID;
-
-  return firebase
+  return app
     .firestore()
-    .collection("chatrooms")
-    .doc(chatID)
+    .collection("groups")
+    .doc(groupID)
     .collection("messages")
     .orderBy("createdAt", "desc")
     .onSnapshot(
@@ -26,17 +21,17 @@ export default FetchPrivateChat = ({
           if (doc.createdAt) {
             messageLists.push({
               ...doc,
-              createdAt: doc.createdAt.toDate(),
+              createdAt: doc.createdAt.toDate()
             });
           } else {
             messageLists.push({
               ...doc,
-              createdAt: new Date(),
+              createdAt: new Date()
             });
           }
         });
 
-        onSuccesfulFetch(messageLists);
+        onSuccess(messageLists);
       },
       (error) => {
         onFailure(error);

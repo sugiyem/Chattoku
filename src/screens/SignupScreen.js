@@ -10,14 +10,17 @@ import {
 } from "react-native";
 import { useState } from "react";
 import React from "react";
-import { firebase } from "../firebase/Config";
-import { isUsernameTaken, isValidUsername } from "../firebase/CheckUsername";
+import { firebase } from "../services/Firebase/Config";
+import {
+  isUsernameTaken,
+  isValidUsername
+} from "../services/Authentication/CheckUsername";
 import {
   isValidEmail,
   isPasswordTooShort,
   redirectToForgotPasswordScreen,
   redirectToLoginScreen
-} from "../components/Authentication/HandleAuthentication";
+} from "../services/Authentication/HandleAuthentication";
 
 const initialState = {
   username: "",

@@ -1,4 +1,5 @@
-import { firebase } from "../../../firebase/Config";
+import { Alert } from "react-native";
+import { firebase } from "../../../services/Firebase/Config";
 import Warning from "../Warning";
 import { likeStatus } from "../../../constants/Post";
 

@@ -1,12 +1,13 @@
 import { Alert } from "react-native";
-import { firebase } from "./Config";
+import { firebase } from "../Firebase/Config";
 
 export default GetUserWithUsername = async ({
   specifiedUsername,
   onFound,
-  onNotFound
+  onNotFound,
+  app = firebase
 }) => {
-  await firebase
+  await app
     .firestore()
     .collection("users")
     .where("username", "==", specifiedUsername)

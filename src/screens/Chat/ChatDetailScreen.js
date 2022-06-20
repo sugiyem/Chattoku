@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { firebase } from "../../firebase/Config";
-import { sendPrivateChat } from "../../firebase/HandlePrivateChat";
-import FetchUserInfo from "../../firebase/FetchUserInfo";
-import FetchPrivateChat from "../../firebase/FetchPrivateChat";
+import { firebase } from "../../services/Firebase/Config";
+import { sendPrivateChat } from "../../services/Chat/HandleChat";
+import { DEFAULT_AVATAR_URL } from "../../constants/Chat";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import FetchPrivateChat from "../../services/Chat/FetchPrivateChat";
 
 const initialState = {
   username: "",
-  img: "",
+  img: ""
 };
-
-const defaultAvatarUrl =
-  "https://firebasestorage.googleapis.com/v0/b/chattoku-e2672.appspot.com/" +
-  "o/default-profile.png?alt=media&token=e05118be-75e9-42ed-8568-c42a3d34d6f1";
 
 const ChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
@@ -30,7 +27,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -42,7 +39,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       },
       onFailure: (error) => {
         Alert.alert(error.message);
-      },
+      }
     });
   }, []);
 
@@ -52,7 +49,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
       ...msg,
       sentBy: userID,
       sentTo: recipientID,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
 
     setMessages((previousMessages) =>
@@ -81,7 +78,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         user={{
           _id: userID,
           name: userInfo.username,
-          avatar: userInfo.img.length > 0 ? userInfo.img : defaultAvatarUrl,
+          avatar: userInfo.img.length > 0 ? userInfo.img : DEFAULT_AVATAR_URL
         }}
         renderUsernameOnMessage
         isLoadingEarlier
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "darkcyan",
-    padding: 5,
+    padding: 5
   },
   button: {
     borderRadius: 10,
@@ -105,9 +102,9 @@ const styles = StyleSheet.create({
     backgroundColor: "aquamarine",
     padding: 5,
     margin: 5,
-    alignSelf: "stretch",
+    alignSelf: "stretch"
   },
   text: {
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });

@@ -1,4 +1,4 @@
-import { firebase } from "../../../firebase/Config";
+import { firebase } from "../../../services/Firebase/Config";
 
 export default function FetchPost(forumId, onSuccessfulFetch, onError) {
   return firebase
