@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
+import * as Notifications from "expo-notifications";
 import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -14,6 +15,14 @@ const Stack = createNativeStackNavigator();
 // Ignore the console warning from EventEmitter.removeListener
 // Warning most likely from using react-native-gifted-chat
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false
+  })
+});
 
 export default function App() {
   return (
