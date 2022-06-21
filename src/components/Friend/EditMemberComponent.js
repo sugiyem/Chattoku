@@ -9,7 +9,7 @@ import {
 import { contactType } from "../../constants/Contact";
 import ContactBar from "./ContactBar";
 
-const EditMemberComponent = ({ items, isMember }) => {
+const EditMemberComponent = ({ items, isMember, groupID }) => {
   const userID = firebase.auth().currentUser.uid;
   const alertTitle = isMember
     ? "This user will be removed from the group"
@@ -26,9 +26,9 @@ const EditMemberComponent = ({ items, isMember }) => {
           text: "Continue",
           onPress: () => {
             if (isMember) {
-              removeUserFromGroup(item.id);
+              removeUserFromGroup(groupID, item.id);
             } else {
-              cancelGroupInvitation(item.id);
+              cancelGroupInvitation(groupID, item.id);
             }
           }
         }
