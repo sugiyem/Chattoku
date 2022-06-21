@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useState } from "react";
 import React from "react";
-import { firebase } from "../services/Firebase/Config";
 import {
   isUsernameTaken,
   isValidUsername
@@ -19,7 +18,8 @@ import {
   isValidEmail,
   isPasswordTooShort,
   redirectToForgotPasswordScreen,
-  redirectToLoginScreen
+  redirectToLoginScreen,
+  signUp
 } from "../services/Authentication/HandleAuthentication";
 
 const initialState = {
@@ -59,37 +59,7 @@ const SignupScreen = ({ navigation }) => {
     } else if (isPasswordTooShort(credentials.password)) {
       Alert.alert("password must at least be 6 characters long");
     } else {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(credentials.email, credentials.password)
-        .then(async (response) => {
-          response.user.sendEmailVerification();
-
-          const currentUID = firebase.auth().currentUser.uid;
-
-          await firebase.firestore().collection("users").doc(currentUID).set({
-            username: credentials.username,
-            bio: "",
-            img: "",
-            genres: [],
-            friends: [],
-            id: currentUID
-          });
-
-          Alert.alert(
-            "Email sent.",
-            "Please verify your account before signing in."
-          );
-          firebase.auth().signOut();
-          console.log("finished");
-        })
-        .then(() => {
-          redirectToLoginScreen(navigation);
-        })
-        .catch((e) => {
-          Alert.alert("email is already taken");
-          console.log("email already taken");
-        });
+      signUp(credentials, navigation);
     }
   }
 
