@@ -42,9 +42,10 @@ const RenderUserToBan = ({
 
     if (isBanned) {
       //Unban Button
-      deleteBannedUsers(forumId, id);
-      setIsBanned(false);
-      setBanReason("");
+      deleteBannedUsers(forumId, id).then(() => {
+        setIsBanned(false);
+        setBanReason("");
+      });
     } else if (isExpanded) {
       //Cancel Button
       setIsExpanded(false);
@@ -158,8 +159,8 @@ const TextInputLabel = styled.Text`
 `;
 
 const StyledTextInput = styled.TextInput`
-  flex: 1;
   width: 90%;
+  height: 180px;
   margin: 5px;
   padding: 10px;
   border-radius: 5px;
