@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ScrollView, SectionList, Text } from "react-native";
 import BannedUser from "./BannedUser";
-import { getBannedUsers } from "./HandleBannedUsers";
+import { getBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 
 const BannedUsersList = ({ forumId }) => {
   const [users, setUsers] = useState([]);

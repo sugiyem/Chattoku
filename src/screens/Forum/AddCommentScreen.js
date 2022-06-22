@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Card } from "react-native-elements";
 import { firebase } from "../../services/Firebase/Config";
-import { AddComment } from "../../components/Forum/ForumComment/HandleComment";
+import { AddComment } from "../../services/Forum/HandleComment";
 
 const MainPost = ({ title, content, uid }) => {
   const [username, setUsername] = useState("fetching username...");

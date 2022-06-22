@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
-import { firebase } from "../../../services/Firebase/Config";
-import Warning from "../Warning";
-import { likeStatus } from "../../../constants/Post";
+import { firebase } from "../Firebase/Config";
+import Warning from "../../components/Forum/Warning";
+import { likeStatus } from "../../constants/Post";
 
 export async function addPost(forumId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;

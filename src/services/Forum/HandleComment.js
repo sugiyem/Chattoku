@@ -1,5 +1,5 @@
-import { firebase } from "../../../services/Firebase/Config";
-import Warning from "../Warning";
+import { firebase } from "../Firebase/Config";
+import Warning from "../../components/Forum/Warning";
 
 export async function AddComment(forumId, postId, comment, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;

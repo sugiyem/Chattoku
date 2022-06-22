@@ -6,7 +6,7 @@ import {
   Text,
   TextInput
 } from "react-native";
-import FetchForumData from "./FetchForumData";
+import FetchForumData from "../../services/Forum/FetchForumData";
 import ForumCard from "./ForumCard";
 import { useState, useEffect } from "react";
 

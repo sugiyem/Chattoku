@@ -7,7 +7,7 @@ import {
   updateLikes,
   getNumberOfLikes,
   getLikeStatus
-} from "./HandleForumPost";
+} from "../../../services/Forum/HandleForumPost";
 
 const LikeBar = ({ postId, forumId }) => {
   const [postLikeStatus, setPostLikeStatus] = useState(likeStatus.NEUTRAL);

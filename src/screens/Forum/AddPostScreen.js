@@ -8,7 +8,7 @@ import {
   View,
   Alert
 } from "react-native";
-import { addPost } from "../../components/Forum/ForumPost/HandleForumPost";
+import { addPost } from "../../services/Forum/HandleForumPost";
 
 const initialState = {
   title: "",

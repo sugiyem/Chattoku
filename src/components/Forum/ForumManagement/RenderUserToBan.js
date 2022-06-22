@@ -2,9 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Text, Platform } from "react-native";
 import styled from "styled-components/native";
-import { addBannedUsers } from "./HandleBannedUsers";
 import { firebase } from "../../../services/Firebase/Config";
-import { deleteBannedUsers } from "./HandleBannedUsers";
+import {
+  deleteBannedUsers,
+  addBannedUsers
+} from "../../../services/Forum/HandleBannedUsers";
 
 const RenderUserToBan = ({
   username,

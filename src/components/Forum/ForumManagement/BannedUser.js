@@ -3,7 +3,7 @@ import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
-import { deleteBannedUsers } from "./HandleBannedUsers";
+import { deleteBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 import { useNavigation } from "@react-navigation/native";
 
 const initialUserData = {

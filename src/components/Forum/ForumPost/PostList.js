@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
-import FetchPost from "./FetchPost";
+import FetchPost from "../../../services/Forum/FetchPost";
 import PostCard from "./PostCard";
 
 const PostList = ({ forumId, isOwner, isBanned }) => {

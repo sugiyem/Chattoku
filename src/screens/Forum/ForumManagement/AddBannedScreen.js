@@ -1,10 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import styled from "styled-components/native";
-import BannedUser from "../../../components/Forum/ForumManagement/BannedUser";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
-import { isUserBanned } from "../../../components/Forum/ForumManagement/HandleBannedUsers";
-import { Text } from "react-native";
+import { isUserBanned } from "../../../services/Forum/HandleBannedUsers";
 import RenderUserToBan from "../../../components/Forum/ForumManagement/RenderUserToBan";
 
 const AddBannedScreen = () => {

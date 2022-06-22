@@ -3,7 +3,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../services/Firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { deletePost } from "./HandleForumPost";
+import { deletePost } from "../../../services/Forum/HandleForumPost";
 import LikeBar from "./LikeBar";
 
 const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {

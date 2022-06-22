@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, SectionList } from "react-native";
-import FetchComment from "./FetchComment";
+import FetchComment from "../../../services/Forum/FetchComment";
 import CommentCard from "./CommentCard";
 
 const CommentList = ({ forumId, postId }) => {

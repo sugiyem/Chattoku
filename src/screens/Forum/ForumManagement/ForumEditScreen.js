@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 
 import { firebase } from "../../../services/Firebase/Config";
 import { useNavigation } from "@react-navigation/native";
-import { editForum } from "../../../components/Forum/HandleForum";
+import { editForum } from "../../../services/Forum/HandleForum";
 const imageType = {
   PROFILE: 0,
   BANNER: 1

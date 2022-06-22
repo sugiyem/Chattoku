@@ -5,7 +5,7 @@ import PostList from "../../components/Forum/ForumPost/PostList";
 import { firebase } from "../../services/Firebase/Config";
 import styled from "styled-components/native";
 import { useEffect, useState } from "react";
-import { isUserBanned } from "../../components/Forum/ForumManagement/HandleBannedUsers";
+import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 
 const Header = ({ img, title, banner, desc }) => {
   return (

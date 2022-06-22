@@ -8,7 +8,7 @@ import {
   View,
   Alert
 } from "react-native";
-import { editPost } from "../../components/Forum/ForumPost/HandleForumPost";
+import { editPost } from "../../services/Forum/HandleForumPost";
 
 const EditPostScreen = () => {
   const navigation = useNavigation();

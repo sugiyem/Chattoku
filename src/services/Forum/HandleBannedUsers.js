@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
-import { firebase } from "../../../services/Firebase/Config";
-import Warning from "../Warning.js";
+import { firebase } from "../Firebase/Config";
+import Warning from "../../components/Forum/Warning";
 
 export async function getBannedUsers(forumId, callbackSuccess) {
   await firebase

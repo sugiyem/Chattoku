@@ -2,7 +2,7 @@ import { Card, Icon } from "react-native-elements";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../services/Firebase/Config";
 import { useEffect, useState } from "react";
-import { DeleteComment } from "./HandleComment";
+import { DeleteComment } from "../../../services/Forum/HandleComment";
 import { useNavigation } from "@react-navigation/native";
 
 const CommentCard = ({ content, uid, forumId, postId, id }) => {
