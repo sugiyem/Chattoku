@@ -92,9 +92,10 @@ const ActiveChatLists = ({
                 </ListItem.Subtitle>
                 {item.showNotif && (
                   <Badge
-                    status="success"
+                    status="primary"
                     value="There are unread messages"
                     containerStyle={styles.badgeContainer}
+                    textStyle={styles.text}
                   />
                 )}
               </ListItem.Content>
@@ -119,7 +120,10 @@ const styles = StyleSheet.create({
     color: "darkslateblue"
   },
   badgeContainer: {
-    margin: 5
+    marginTop: 5
+  },
+  text: {
+    fontSize: 11
   },
   chatList: {
     flex: 1,
