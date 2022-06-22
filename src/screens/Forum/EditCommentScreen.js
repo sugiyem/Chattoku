@@ -9,19 +9,15 @@ import {
   Alert
 } from "react-native";
 import { Card } from "react-native-elements";
-import { firebase } from "../../services/Firebase/Config";
 import { EditComment } from "../../services/Forum/HandleComment";
+import { FetchInfoById } from "../../services/Profile/FetchUserInfo";
 
 const MainPost = ({ title, content, uid }) => {
   const [username, setUsername] = useState("fetching username...");
 
+  //Fetch username of poster
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((snapshot) => setUsername(snapshot.data().username));
+    FetchInfoById(uid, (userData) => setUsername(userData.username));
   }, []);
 
   return (

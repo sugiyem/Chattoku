@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "../../../services/Forum/HandleForumPost";
 import LikeBar from "./LikeBar";
+import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 
 const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
   const navigation = useNavigation();
@@ -25,13 +26,9 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
     uid: uid
   };
 
+  //Fetch username of poster
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((snapshot) => setUsername(snapshot.data().username));
+    FetchInfoById(uid, (userData) => setUsername(userData.username));
   }, []);
 
   function handleCommentPress() {

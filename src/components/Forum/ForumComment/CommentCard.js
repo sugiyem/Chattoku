@@ -4,6 +4,7 @@ import { firebase } from "../../../services/Firebase/Config";
 import { useEffect, useState } from "react";
 import { DeleteComment } from "../../../services/Forum/HandleComment";
 import { useNavigation } from "@react-navigation/native";
+import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 
 const CommentCard = ({ content, uid, forumId, postId, id }) => {
   const currentUID = firebase.auth().currentUser.uid;
@@ -15,16 +16,9 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
 
   console.log(uid);
 
+  //Fetch username of commenter
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((snapshot) => {
-        console.log(snapshot.data());
-        setUsername(snapshot.data().username);
-      });
+    FetchInfoById(uid, (userData) => setUsername(userData.username));
   }, []);
 
   function handleEditPress() {
