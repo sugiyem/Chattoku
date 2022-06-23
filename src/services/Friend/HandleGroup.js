@@ -115,14 +115,11 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
 
-  const username = await db
+  const { username, notificationToken } = await db
     .collection("users")
     .doc(userID)
     .get()
-    .then((doc) => {
-      console.log(doc.data());
-      return doc.data().username;
-    });
+    .then((doc) => doc.data());
 
   const groupName = await db
     .collection("groups")
@@ -136,11 +133,10 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
       Alert.alert("This user has been removed from the group.");
     })
     .then(() => {
-      sendNotificationToAllGroupMembers(
-        groupID,
-        userID,
-        "Chattoku's Group Member Removed",
-        `${username} has been removed from ${groupName} by the group admin.`
+      sendPushNotification(
+        notificationToken,
+        "Chattoku's Removal From Group",
+        `Hi ${username}, you have been kicked from ${groupName} by the group admin.`
       );
     })
     .catch((error) => {
@@ -239,18 +235,6 @@ export async function leaveGroup(groupID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const groupRef = db.collection("groups").doc(groupID);
 
-  const username = await db
-    .collection("users")
-    .doc(userID)
-    .get()
-    .then((doc) => doc.data().username);
-
-  const groupName = await db
-    .collection("groups")
-    .doc(groupID)
-    .get()
-    .then((doc) => doc.data().name);
-
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
 
@@ -258,14 +242,6 @@ export async function leaveGroup(groupID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("You have successfully left this group.");
-    })
-    .then(() => {
-      sendNotificationToAllGroupMembers(
-        groupID,
-        userID,
-        "Chattoku's Group Member Left",
-        `${username} has left ${groupName} group.`
-      );
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -282,6 +258,12 @@ export async function deleteGroup(groupID, app = firebase) {
     .collection("pendingMembers")
     .get();
 
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
+
   messagesSnapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
   });
@@ -295,6 +277,13 @@ export async function deleteGroup(groupID, app = firebase) {
   });
 
   batch.delete(groupRef);
+
+  await sendNotificationToAllGroupMembers(
+    groupID,
+    null,
+    "Chattoku's Group Deletion",
+    `${groupName} is going to be deleted.`
+  );
 
   await batch
     .commit()
