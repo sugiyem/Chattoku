@@ -7,6 +7,7 @@ import {
   deleteBannedUsers,
   addBannedUsers
 } from "../../../services/Forum/HandleBannedUsers";
+import Warning from "../../../components/Forum/Warning";
 
 const RenderUserToBan = ({
   username,
@@ -42,9 +43,11 @@ const RenderUserToBan = ({
 
     if (isBanned) {
       //Unban Button
-      deleteBannedUsers(forumId, id).then(() => {
-        setIsBanned(false);
-        setBanReason("");
+      Warning(async () => {
+        await deleteBannedUsers(forumId, id).then(() => {
+          setIsBanned(false);
+          setBanReason("");
+        });
       });
     } else if (isExpanded) {
       //Cancel Button
@@ -78,7 +81,7 @@ const RenderUserToBan = ({
           <Username>
             {username} {isBanned && "(BANNED)"}
           </Username>
-          <Text> {banReason}</Text>
+          <Text> {isBanned && banReason}</Text>
         </InfoContainer>
       </Card>
       <CustomButton onPress={handleButtonPress}>

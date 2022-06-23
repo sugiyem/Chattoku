@@ -5,6 +5,7 @@ import { StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import { deleteBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 import { useNavigation } from "@react-navigation/native";
+import Warning from "../Warning";
 
 const initialUserData = {
   bio: "",
@@ -25,7 +26,9 @@ const BannedUser = ({ userId, reason }) => {
   }, []);
 
   function handleDelete() {
-    deleteBannedUsers(forumId, userId);
+    Warning(async () => {
+      await deleteBannedUsers(forumId, userId);
+    });
   }
 
   return (

@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "../../../services/Forum/HandleForumPost";
 import LikeBar from "./LikeBar";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import Warning from "../Warning";
 
 const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
   const navigation = useNavigation();
@@ -43,6 +44,18 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
     });
   }
 
+  function handleDelete() {
+    Warning(async () => {
+      await deletePost(
+        forumId,
+        id,
+        uid,
+        () => {},
+        (e) => Alert.alert(e)
+      );
+    });
+  }
+
   return (
     <Card style={styles.container}>
       <Text> User: {username}</Text>
@@ -55,17 +68,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
           <Icon name="comment" type="material" color="blue" />
         </TouchableOpacity>
         {((!isBanned && currentUID === uid) || isOwner) && (
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() =>
-              deletePost(
-                forumId,
-                id,
-                () => {},
-                (e) => Alert.alert(e)
-              )
-            }
-          >
+          <TouchableOpacity style={styles.action} onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
           </TouchableOpacity>
         )}

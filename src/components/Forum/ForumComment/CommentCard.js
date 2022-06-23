@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DeleteComment } from "../../../services/Forum/HandleComment";
 import { useNavigation } from "@react-navigation/native";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import Warning from "../Warning";
 
 const CommentCard = ({ content, uid, forumId, postId, id }) => {
   const currentUID = firebase.auth().currentUser.uid;
@@ -32,6 +33,18 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
     });
   }
 
+  function handleDelete() {
+    Warning(async () => {
+      await DeleteComment(
+        forumId,
+        postId,
+        id,
+        () => {},
+        (e) => Alert.alert(e)
+      );
+    });
+  }
+
   return (
     <Card style={styles.container}>
       <Text> User: {username}</Text>
@@ -39,18 +52,7 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
       <Text> {content} </Text>
       <View style={styles.actionBar}>
         {((!isBanned && currentUID === uid) || isOwner) && (
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() =>
-              DeleteComment(
-                forumId,
-                postId,
-                id,
-                () => {},
-                (e) => Alert.alert(e)
-              )
-            }
-          >
+          <TouchableOpacity style={styles.action} onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
             <Text style={styles.delete}> Delete </Text>
           </TouchableOpacity>

@@ -121,7 +121,7 @@ const RenderManageForumDetails = ({ manageType }) => {
         {forumInfo.banner.length > 0 ? (
           <Banner source={{ uri: forumInfo.banner }} />
         ) : (
-          <Banner source={require("../../assets/default-profile.png")} />
+          <Banner source={require("../../assets/default-banner.png")} />
         )}
       </ImageContainer>
       <CustomButton onPress={handleUploadBannerClick}>
