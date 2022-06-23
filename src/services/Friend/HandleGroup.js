@@ -200,7 +200,8 @@ export async function acceptGroupInvitation(groupID, app = firebase) {
         groupID,
         userID,
         "Chattoku's New Group Member",
-        `Please welcome ${username}, the new member of ${groupName}.`
+        `Please welcome ${username}, the new member of ${groupName}.`,
+        db
       );
     })
     .catch((error) => {
@@ -282,7 +283,8 @@ export async function deleteGroup(groupID, app = firebase) {
     groupID,
     null,
     "Chattoku's Group Deletion",
-    `${groupName} is going to be deleted.`
+    `${groupName} is going to be deleted.`,
+    db
   );
 
   await batch

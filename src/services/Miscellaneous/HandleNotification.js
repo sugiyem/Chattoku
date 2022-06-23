@@ -66,14 +66,13 @@ export async function sendNotificationToAllGroupMembers(
   exceptionID = null,
   title,
   body,
-  app = firebase
+  db = firebase.firestore()
 ) {
   const groupMembers = [];
 
-  const userLists = await app.firestore().collection("users").get();
+  const userLists = await db.collection("users").get();
 
-  await app
-    .firestore()
+  await db
     .collection("groups")
     .doc(groupID)
     .collection("members")
