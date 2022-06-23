@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { firebase } from "../services/Firebase/Config";
 import { useState } from "react";
 import {
   redirectToForgotPasswordScreen,
-  redirectToSignupScreen
+  redirectToSignupScreen,
+  login
 } from "../services/Authentication/HandleAuthentication";
 
 const initialState = {
@@ -30,42 +30,11 @@ const LoginScreen = ({ navigation }) => {
     });
   }
 
-  // console.log(credentials);
-
   async function handleSubmit() {
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(credentials.email, credentials.password)
-      .catch((e) => {
-        console.log("Incorrect Credentials");
-        Alert.alert("Incorrect Email / Password");
-      });
-
-    const currentUser = firebase.auth().currentUser;
-
-    console.log(currentUser);
-
-    if (currentUser === null) {
-      return;
-      // console.log("Incorrect Credentials");
-      // Alert.alert("Incorrect Email / Password");
-      // await firebase.auth().signOut();
-    } else if (!currentUser.emailVerified) {
-      console.log("email not verified");
-      Alert.alert("Please Verify Your Email Before Logging In", "", [
-        {
-          text: "Resend verification email",
-          onPress: () => currentUser.sendEmailVerification()
-        },
-        {
-          text: "Cancel"
-        }
-      ]);
-      await firebase.auth().signOut();
-    } else {
-      navigation.replace("Dashboard");
-    }
+    await login(credentials, navigation);
   }
+
+  // console.log(credentials);
 
   return (
     <SafeAreaView style={styles.container}>
