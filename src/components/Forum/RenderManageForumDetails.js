@@ -10,7 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { createForum, editForum } from "../../services/Forum/HandleForum";
 import { imageType } from "../../constants/Image";
-import { manageForumDetailsType } from "../../constants/Forum";
+import { renderType } from "../../constants/Forum";
 
 const initialForumInfo = {
   img: "",
@@ -22,7 +22,7 @@ const initialForumInfo = {
 const RenderManageForumDetails = ({ manageType }) => {
   const navigation = useNavigation();
   const initialState =
-    manageType === manageForumDetailsType.CREATE
+    manageType === renderType.CREATE
       ? initialForumInfo
       : navigation.getState().routes[1].params.data;
   const [forumInfo, setForumInfo] = useState(initialState);
@@ -31,9 +31,7 @@ const RenderManageForumDetails = ({ manageType }) => {
   const isProfileUploaded = uploadedImgType === imageType.PROFILE;
   const uploadedImageAspect = isProfileUploaded ? [1, 1] : [2.5, 1];
   const submitButtonText =
-    manageType === manageForumDetailsType.CREATE
-      ? "Create Forum"
-      : "Update Forum Data";
+    manageType === renderType.CREATE ? "Create Forum" : "Update Forum Data";
 
   function handleChangeText(text, name) {
     setForumInfo({
@@ -86,7 +84,7 @@ const RenderManageForumDetails = ({ manageType }) => {
   };
 
   const handleSubmit = () => {
-    manageType === manageForumDetailsType.CREATE
+    manageType === renderType.CREATE
       ? createForum(forumInfo, () => navigation.navigate("ForumHome"))
       : editForum(forumInfo, () => {
           navigation.navigate("Forum", { data: forumInfo });

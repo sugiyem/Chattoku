@@ -1,8 +1,8 @@
 import RenderManageForumDetails from "../../../components/Forum/RenderManageForumDetails";
-import { manageForumDetailsType } from "../../../constants/Forum";
+import { renderType } from "../../../constants/Forum";
 
 const ForumEditScreen = () => {
-  return <RenderManageForumDetails manageType={manageForumDetailsType.EDIT} />;
+  return <RenderManageForumDetails manageType={renderType.EDIT} />;
 };
 
 export default ForumEditScreen;
