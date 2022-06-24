@@ -1,8 +1,8 @@
 import RenderPostScreen from "../../components/Forum/ForumPost/RenderPostScreen";
 import { renderType } from "../../constants/Forum";
 
-const AddPostScreen = () => {
-  return <RenderPostScreen renderScreenType={renderType.CREATE} />;
+const EditPostScreen = () => {
+  return <RenderPostScreen renderScreenType={renderType.EDIT} />;
 };
 
-export default AddPostScreen;
+export default EditPostScreen;

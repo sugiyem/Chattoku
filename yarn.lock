@@ -4648,10 +4648,10 @@
   "resolved" "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-0.6.0.tgz"
   "version" "0.6.0"
 
-"expo-updates@^0.13.1":
-  "integrity" "sha512-6GTqgAco3da/rk0/AvDRFmrWxEIxlmIs7vvoCWWxyvifLBlQAaU08+AdZH5RwdN3aUaIep70pnqlc67xe/y0og=="
-  "resolved" "https://registry.npmjs.org/expo-updates/-/expo-updates-0.13.1.tgz"
-  "version" "0.13.1"
+"expo-updates@~0.13.2":
+  "integrity" "sha512-2ZthmyxYuN/c71y2oLNz9fdVXLf7ggxAw3Tfy+kwtGOTKNyOf/YoG+SwX7a0v+jZTJnuorEj5FuNf3wrniQ7+w=="
+  "resolved" "https://registry.npmjs.org/expo-updates/-/expo-updates-0.13.2.tgz"
+  "version" "0.13.2"
   dependencies:
     "@expo/code-signing-certificates" "0.0.1"
     "@expo/config" "^6.0.14"

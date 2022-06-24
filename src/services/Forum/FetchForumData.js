@@ -1,4 +1,4 @@
-import { firebase } from "../../services/Firebase/Config";
+import { firebase } from "../Firebase/Config";
 
 const FetchForumData = (onSuccesfulFetch, onFailure) => {
   return firebase

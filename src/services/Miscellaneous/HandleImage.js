@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { firebase } from "../Firebase/Config";
 
-export async function pickImageFromCamera(upload) {
+export async function pickImageFromCamera(upload, aspect = [1, 1]) {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
   if (status !== "granted") {
     Alert.alert("Chattoku doesn't have access to your camera");
@@ -12,7 +12,7 @@ export async function pickImageFromCamera(upload) {
 
   const result = await ImagePicker.launchCameraAsync({
     allowsEditing: true,
-    aspect: [1, 1],
+    aspect: aspect,
     quality: 1
   });
 
@@ -21,7 +21,7 @@ export async function pickImageFromCamera(upload) {
   }
 }
 
-export async function pickImageFromLibrary(upload) {
+export async function pickImageFromLibrary(upload, aspect = [1, 1]) {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (status !== "granted") {
     Alert.alert("Chattoku doesn't have access to your image gallery");
@@ -31,7 +31,7 @@ export async function pickImageFromLibrary(upload) {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsEditing: true,
-    aspect: [1, 1],
+    aspect: aspect,
     quality: 1
   });
 
@@ -44,7 +44,8 @@ export async function uploadImage(
   imgUrl,
   beforeUpload,
   afterUpload,
-  updateImg
+  updateImg,
+  successMessage = "Profile picture has been updated"
 ) {
   if (imgUrl == null || imgUrl.length == 0) {
     return;
@@ -77,7 +78,7 @@ export async function uploadImage(
     })
     .then(() => {
       afterUpload();
-      Alert.alert("Profile picture has been updated");
+      Alert.alert(successMessage);
     })
     .catch((error) => {
       afterUpload();

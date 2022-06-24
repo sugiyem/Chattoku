@@ -1,78 +1,163 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { Image, Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
+import { firebase } from "../../services/Firebase/Config";
+import styled from "styled-components/native";
+import { useEffect, useState } from "react";
+import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 
-const Header = ({ img, title }) => {
+const Header = ({ img, title, banner, desc }) => {
   return (
-    <View style={styles.headerContainer}>
-      <Text style={styles.title}>{title}</Text>
-      <Image source={{ uri: img }} style={styles.logo} />
-    </View>
+    <HeaderContainer>
+      <Banner
+        source={
+          banner !== ""
+            ? { uri: banner }
+            : require("../../assets/default-banner.png")
+        }
+      />
+      <ForumDetails>
+        <Title>{title}</Title>
+        <Desc> {desc} </Desc>
+        <Logo
+          source={
+            img !== ""
+              ? { uri: img }
+              : require("../../assets/default-profile.png")
+          }
+        />
+      </ForumDetails>
+    </HeaderContainer>
   );
 };
 
 const ForumScreen = () => {
+  const [isBanned, setIsBanned] = useState(false);
   const navigation = useNavigation();
-  const [data, _] = useState(navigation.getState().routes[1].params.data);
-  console.log(data.id);
+  const data = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = data.owner === currentUID;
 
   function handleAddButtonClick() {
     navigation.navigate("AddPost", { data: data });
   }
 
+  function handleEditForumButton() {
+    navigation.navigate("ManageForum", { data: data });
+  }
+
+  useEffect(() => {
+    isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.buttonText}>Go Back</Text>
-      </TouchableOpacity>
+    <Container>
+      <CustomButton onPress={() => navigation.goBack()}>
+        <ButtonText>Go Back</ButtonText>
+      </CustomButton>
+      {isOwner && (
+        <CustomButton onPress={handleEditForumButton}>
+          <ButtonText>Manage Your Forum</ButtonText>
+        </CustomButton>
+      )}
       <Header {...data} />
-      <PostList forumId={data.id} />
-      <Icon
-        name="add"
-        type="material"
-        style={styles.add}
-        size={50}
-        onPress={handleAddButtonClick}
-      />
-    </View>
+      <PostList forumId={data.id} isOwner={isOwner} isBanned={isBanned} />
+      {isBanned ? (
+        <BannedText>You have been banned</BannedText>
+      ) : (
+        <Icon
+          name="add"
+          type="material"
+          style={styles.add}
+          size={50}
+          onPress={handleAddButtonClick}
+        />
+      )}
+    </Container>
   );
 };
 
 export default ForumScreen;
 
+const width = Dimensions.get("screen").width;
+
+const HeaderContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: ${width - 18}px;
+  background-color: cyan;
+  border-radius: 10px;
+  border-color: blue;
+  border-width: 1px;
+  margin: 5px;
+`;
+
+const Banner = styled.Image`
+  width: ${width - 20}px;
+  height: ${(width * 2) / 5 - 8}px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+`;
+
+const ForumDetails = styled.View`
+  width: 100%;
+  padding: 10px;
+`;
+
+const Logo = styled.Image`
+  position: absolute;
+  height: 80px;
+  width: 80px;
+  border-radius: 80px;
+  border-width: 1px;
+  border-color: white;
+  top: -70px;
+  left: 20px;
+`;
+
+const Title = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+`;
+
+const Desc = styled.Text`
+  font-size: 14px;
+`;
+
+const Container = styled.View`
+  flex: 1;
+  background-color: darkcyan;
+  padding: 5px;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+`;
+
+const ButtonText = styled.Text`
+  text-align: center;
+  color: blue;
+`;
+
+const BannedText = styled.Text`
+  border-radius: 10px;
+  padding: 10px;
+  background-color: navy;
+  margin: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+`;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  },
-  logo: {
-    marginTop: 10,
-    height: 100,
-    width: 100,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "black"
-  },
-  title: {
-    fontSize: 22
-  },
-  headerContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "cyan",
-    borderRadius: 10,
-    borderColor: "blue",
-    borderWidth: 1,
-    margin: 5,
-    padding: 30
-  },
   add: {
     height: 70,
     width: 70,
@@ -82,17 +167,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "flex-end"
-  },
-  button: {
-    alignSelf: "stretch",
-    padding: 5,
-    margin: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine"
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "blue"
   }
 });
