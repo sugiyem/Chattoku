@@ -23,6 +23,7 @@ const RenderGroupDetail = ({
   navigation
 }) => {
   let sectionDetails;
+  const groupID = groupInfo.id;
 
   const RenderTabs = ({ items }) =>
     items.map((item, idx) => (
@@ -38,14 +39,22 @@ const RenderGroupDetail = ({
           ...memberDetails,
           title: "Members",
           render: ({ items }) => (
-            <EditMemberComponent items={items} isMember={true} />
+            <EditMemberComponent
+              items={items}
+              isMember={true}
+              groupID={groupID}
+            />
           )
         },
         {
           ...pendingMemberDetails,
           title: "Pending Members",
           render: ({ items }) => (
-            <EditMemberComponent items={items} isMember={false} />
+            <EditMemberComponent
+              items={items}
+              isMember={false}
+              groupID={groupID}
+            />
           )
         }
       ];
