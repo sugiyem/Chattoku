@@ -1,4 +1,8 @@
 import { firebase } from "../Firebase/Config";
+import {
+  sendPushNotification,
+  sendNotificationToAllGroupMembers
+} from "../Miscellaneous/HandleNotification";
 
 export async function sendPrivateChat(message, recipientID, app = firebase) {
   const userID = app.auth().currentUser.uid;
@@ -6,10 +10,23 @@ export async function sendPrivateChat(message, recipientID, app = firebase) {
     userID > recipientID
       ? recipientID + "_" + userID
       : userID + "_" + recipientID;
-  const batch = app.firestore().batch();
+  const db = app.firestore();
+  const batch = db.batch();
   const sentTime = app.firestore.FieldValue.serverTimestamp();
-  const chatRoomRef = app.firestore().collection("chatrooms").doc(chatID);
+  const chatRoomRef = db.collection("chatrooms").doc(chatID);
   const newMessageID = chatRoomRef.collection("messages").doc().id;
+
+  const { username: friendName, notificationToken } = await db
+    .collection("users")
+    .doc(recipientID)
+    .get()
+    .then((doc) => doc.data());
+
+  const username = await db
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((doc) => doc.data().username);
 
   batch.set(chatRoomRef.collection("messages").doc(newMessageID), {
     ...message,
@@ -42,18 +59,31 @@ export async function sendPrivateChat(message, recipientID, app = firebase) {
     );
   }
 
-  await batch.commit();
+  await batch.commit().then(() => {
+    sendPushNotification(
+      notificationToken,
+      "Chattoku's Private Chat",
+      `Hi ${friendName}, you have a new private message from ${username}.`
+    );
+  });
 
   return { messageID: newMessageID, time: sentTime };
 }
 
 export async function sendGroupChat(message, groupID, app = firebase) {
   const userID = app.auth().currentUser.uid;
-  const batch = app.firestore().batch();
+  const db = app.firestore();
+  const batch = db.batch();
   const sentTime = app.firestore.FieldValue.serverTimestamp();
-  const groupRef = app.firestore().collection("groups").doc(groupID);
+  const groupRef = db.collection("groups").doc(groupID);
   const newMessageID = groupRef.collection("messages").doc().id;
   const membersSnapshot = await groupRef.collection("members").get();
+
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
 
   batch.update(groupRef, {
     lastAccessedAt: sentTime,
@@ -74,7 +104,15 @@ export async function sendGroupChat(message, groupID, app = firebase) {
     }
   });
 
-  await batch.commit();
+  await batch.commit().then(async () => {
+    await sendNotificationToAllGroupMembers(
+      groupID,
+      userID,
+      "Chattoku's Group Chat",
+      `There is a new message in ${groupName} group.`,
+      db
+    );
+  });
 
   return { messageID: newMessageID, time: sentTime };
 }
