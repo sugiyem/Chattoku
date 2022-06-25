@@ -1,4 +1,4 @@
-import { firebase } from "../../../services/Firebase/Config";
+import { firebase } from "../Firebase/Config";
 
 export default function FetchComment(
   forumId,

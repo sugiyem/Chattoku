@@ -20,6 +20,7 @@ export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
         await app
           .firestore()
           .collection("groups")
+          .orderBy("name", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -64,6 +65,7 @@ export function fetchGroupInvitation({ onSuccess, onFailure, app = firebase }) {
         await app
           .firestore()
           .collection("groups")
+          .orderBy("name", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -109,7 +111,7 @@ export function checkGroupInvitation({
             groupIDLists.push(documentSnapshot.id);
           });
 
-          await firebase
+          await app
             .firestore()
             .collection("groups")
             .get()
@@ -186,6 +188,7 @@ export function fetchGroupMembers({
         await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {
@@ -231,6 +234,7 @@ export function fetchPendingGroupMembers({
         await app
           .firestore()
           .collection("users")
+          .orderBy("username", "asc")
           .get()
           .then((snaps) => {
             snaps.forEach((snap) => {

@@ -1,5 +1,9 @@
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
+import {
+  sendPushNotification,
+  sendNotificationToAllGroupMembers
+} from "../Miscellaneous/HandleNotification";
 
 export async function createGroup(
   groupName,
@@ -21,7 +25,10 @@ export async function createGroup(
     lastMessageText: "",
     lastMessageAt: null
   });
-  batch.set(groupRef.collection("members").doc(userID), {});
+  batch.set(groupRef.collection("members").doc(userID), {
+    showMessage: false,
+    showNotif: false
+  });
   batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
@@ -67,6 +74,18 @@ export async function addUserToGroup(groupID, userID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const groupRef = db.collection("groups").doc(groupID);
 
+  const { username, notificationToken } = await db
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((doc) => doc.data());
+
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
+
   batch.set(userRef.collection("groupInvited").doc(groupID), {});
   batch.set(groupRef.collection("pendingMembers").doc(userID), {});
 
@@ -74,6 +93,13 @@ export async function addUserToGroup(groupID, userID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("This user has been invited to the group.");
+    })
+    .then(() => {
+      sendPushNotification(
+        notificationToken,
+        "Chattoku's New group Invitation",
+        `Hi ${username}, you have been invited to ${groupName}.`
+      );
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -89,10 +115,29 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
 
+  const { username, notificationToken } = await db
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((doc) => doc.data());
+
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
+
   await batch
     .commit()
     .then(() => {
       Alert.alert("This user has been removed from the group.");
+    })
+    .then(() => {
+      sendPushNotification(
+        notificationToken,
+        "Chattoku's Removal From Group",
+        `Hi ${username}, you have been kicked from ${groupName} by the group admin.`
+      );
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -125,6 +170,18 @@ export async function acceptGroupInvitation(groupID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const groupRef = db.collection("groups").doc(groupID);
 
+  const username = await db
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((doc) => doc.data().username);
+
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
+
   batch.delete(userRef.collection("groupInvited").doc(groupID));
   batch.delete(groupRef.collection("pendingMembers").doc(userID));
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
@@ -137,6 +194,15 @@ export async function acceptGroupInvitation(groupID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("You have successfully joined this group");
+    })
+    .then(() => {
+      sendNotificationToAllGroupMembers(
+        groupID,
+        userID,
+        "Chattoku's New Group Member",
+        `Please welcome ${username}, the new member of ${groupName}.`,
+        db
+      );
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
@@ -193,6 +259,12 @@ export async function deleteGroup(groupID, app = firebase) {
     .collection("pendingMembers")
     .get();
 
+  const groupName = await db
+    .collection("groups")
+    .doc(groupID)
+    .get()
+    .then((doc) => doc.data().name);
+
   messagesSnapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
   });
@@ -206,6 +278,14 @@ export async function deleteGroup(groupID, app = firebase) {
   });
 
   batch.delete(groupRef);
+
+  await sendNotificationToAllGroupMembers(
+    groupID,
+    null,
+    "Chattoku's Group Deletion",
+    `${groupName} is going to be deleted.`,
+    db
+  );
 
   await batch
     .commit()

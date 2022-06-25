@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { firebase } from "../services/Firebase/Config";
 import {
   isValidEmail,
   redirectToLoginScreen,
-  redirectToSignupScreen
+  redirectToSignupScreen,
+  sendForgotPasswordEmail
 } from "../services/Authentication/HandleAuthentication";
 
 const ForgotPasswordScreen = ({ navigation }) => {
@@ -23,19 +23,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
     if (!isValidEmail(email)) {
       Alert.alert("Email is not valid");
     } else {
-      await firebase
-        .auth()
-        .sendPasswordResetEmail(email)
-        .then(() => {
-          Alert.alert(
-            "Email successfully sent",
-            "An email to reset your password has been sent." +
-              " Do check your spam folder"
-          );
-        })
-        .catch((error) => {
-          Alert.alert("Email is not registered");
-        });
+      await sendForgotPasswordEmail(email);
     }
   }
 

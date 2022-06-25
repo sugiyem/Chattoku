@@ -1,60 +1,97 @@
-import { Card } from "react-native-elements";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import styled from "styled-components/native";
 
-const ForumCard = ({ img, title, id }) => {
+const ForumCard = ({ forumData }) => {
   const navigation = useNavigation();
+  const img = forumData.img;
+  const banner = forumData.banner;
+  const title = forumData.title;
+
   function goToForum() {
     navigation.navigate("Forum", {
-      data: { img: img, title: title, id: id }
+      data: forumData
     });
   }
 
   return (
-    <Card style={styles.container}>
-      <Card.Image
-        source={{ uri: img }}
-        style={styles.image}
-        containerStyle={styles.imageContainer}
+    <Container>
+      <Banner
+        source={
+          banner !== ""
+            ? { uri: banner }
+            : require("../../assets/default-banner.png")
+        }
       />
-      <Card.Divider />
-      <Card.Title style={styles.title}>{title}</Card.Title>
-      <TouchableOpacity onPress={goToForum} style={styles.button}>
-        <Text>Press Here To Continue to Forum</Text>
-      </TouchableOpacity>
-    </Card>
+      <ForumDetails>
+        <Logo
+          source={
+            img !== ""
+              ? { uri: img }
+              : require("../../assets/default-profile.png")
+          }
+        />
+        <Title>{title}</Title>
+        <CustomButton onPress={goToForum}>
+          <Text>Press Here To Continue to Forum</Text>
+        </CustomButton>
+      </ForumDetails>
+    </Container>
   );
 };
 
 export default ForumCard;
 
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  title: {
-    fontSize: 18
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "black",
-    margin: 10
-  },
-  imageContainer: {
-    alignSelf: "center",
-    justifyContent: "center"
-  },
-  button: {
-    borderRadius: 10,
-    padding: 5,
-    margin: 5,
-    flex: 1,
-    backgroundColor: "lightblue",
-    alignItems: "center"
-  }
-});
+const width = Dimensions.get("screen").width;
+
+const Container = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: ${width - 18}px;
+  background-color: white;
+  border-radius: 10px;
+  border-color: blue;
+  border-width: 1px;
+  margin: 5px;
+`;
+
+const Banner = styled.Image`
+  width: ${width - 20}px;
+  height: ${(width * 2) / 5 - 8}px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+`;
+
+const ForumDetails = styled.View`
+  width: 100%;
+  padding: 10px;
+  padding-top: 50px;
+  align-items: center;
+`;
+
+const Logo = styled.Image`
+  position: absolute;
+  align-self: center;
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  border-width: 1px;
+  border-color: white;
+  top: -50px;
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  font-weight: 400;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+  align-items: center;
+`;

@@ -17,7 +17,7 @@ export default GetUserWithUsername = async ({
         onNotFound();
       } else {
         querySnapshot.forEach((documentSnapshot) => {
-          onFound(documentSnapshot.data());
+          onFound({ ...documentSnapshot.data(), id: documentSnapshot.id });
         });
       }
     })

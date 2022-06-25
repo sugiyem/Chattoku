@@ -3,33 +3,56 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { firebase } from "../../../services/Firebase/Config";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { deletePost } from "./HandleForumPost";
+import { deletePost } from "../../../services/Forum/HandleForumPost";
+import LikeBar from "./LikeBar";
+import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import Warning from "../Warning";
 
-const PostCard = ({ title, content, id, uid, forumId }) => {
+const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState("fetching username...");
   const currentUID = firebase.auth().currentUser.uid;
 
-  // console.log(currentUID);
+  const likeBarState = {
+    forumId: forumId,
+    postId: id
+  };
 
+  // console.log(currentUID);
+  const postData = {
+    title: title,
+    content: content,
+    postId: id,
+    forumId: forumId,
+    uid: uid
+  };
+
+  //Fetch username of poster
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((snapshot) => setUsername(snapshot.data().username));
+    FetchInfoById(uid, (userData) => setUsername(userData.username));
   }, []);
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: {
-        title: title,
-        content: content,
-        postId: id,
-        forumId: forumId,
-        uid: uid
-      }
+      data: { ...postData, isOwner: isOwner, isBanned: isBanned }
+    });
+  }
+
+  function handleEditPress() {
+    navigation.navigate("EditPost", {
+      data: { ...postData, isOwner: isOwner }
+    });
+  }
+
+  function handleDelete() {
+    Warning(async () => {
+      await deletePost(
+        forumId,
+        id,
+        uid,
+        () => {},
+        (e) => Alert.alert(e)
+      );
     });
   }
 
@@ -40,24 +63,18 @@ const PostCard = ({ title, content, id, uid, forumId }) => {
       <Text> {content} </Text>
       <Card.Divider />
       <View style={styles.actionBar}>
+        <LikeBar {...likeBarState} />
         <TouchableOpacity style={styles.action} onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
-          <Text> comment</Text>
         </TouchableOpacity>
-        {currentUID === uid && (
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() =>
-              deletePost(
-                forumId,
-                id,
-                () => {},
-                (e) => Alert.alert(e)
-              )
-            }
-          >
+        {((!isBanned && currentUID === uid) || isOwner) && (
+          <TouchableOpacity style={styles.action} onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
-            <Text style={styles.delete}> Delete </Text>
+          </TouchableOpacity>
+        )}
+        {!isBanned && currentUID === uid && (
+          <TouchableOpacity style={styles.action} onPress={handleEditPress}>
+            <Icon name="edit" type="material" />
           </TouchableOpacity>
         )}
       </View>
