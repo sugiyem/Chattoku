@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Button, ButtonText, Container } from "../../styles/GeneralStyles";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const RecommendationScreen = ({ navigation }) => {
   const [genres, setGenres] = useState([]);
@@ -28,11 +23,7 @@ const RecommendationScreen = ({ navigation }) => {
   }, []);
 
   if (!isGenreLoaded) {
-    return (
-      <Container>
-        <ActivityIndicator size="large" />
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (

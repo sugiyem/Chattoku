@@ -6,8 +6,8 @@ import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import Loading from "../../components/Miscellaneous/Loading";
 import { fetchType } from "../../constants/MyAnimeList";
-import { ActivityIndicator } from "react-native";
 
 const AnimeHomeScreen = () => {
   const [search, setSearch] = useState("");
@@ -98,11 +98,7 @@ const AnimeHomeScreen = () => {
   }, [topPage]);
 
   if (!(isAiringLoaded && isTopLoaded)) {
-    return (
-      <Container>
-        <ActivityIndicator size="large" />
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (
