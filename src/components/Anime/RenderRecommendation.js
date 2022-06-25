@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import {
   Button,
   ButtonText,
   CenteredBoldText,
-  Container,
   ScrollContainer,
   SeparatedButton
 } from "../../styles/GeneralStyles";
 import AnimeCard from "./AnimeCard";
 import FetchRecommendations from "../../services/Anime/FetchRecommendations";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import Loading from "../Miscellaneous/Loading";
 import { fetchType } from "../../constants/MyAnimeList";
 import { favoriteType } from "../../constants/Favorite";
 import {
@@ -102,11 +102,7 @@ const RenderRecommendation = ({
   }, [recommendations, recommendationCount]);
 
   if (!(isRecommendationFound && isAnimeDataLoaded)) {
-    return (
-      <Container>
-        <ActivityIndicator size="large" />
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (
