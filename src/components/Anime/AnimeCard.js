@@ -9,7 +9,7 @@ import {
 } from "../../services/Anime/HandleFavorite";
 import { animeDetailsToGenreString } from "../../services/Anime/AnimeAndGenreConverter";
 
-const AnimeCard = ({ item, isFavorite, onPress1 = null, onPress2 = null }) => {
+const AnimeCard = ({ item, isFavorite, onEdit = null, onOpenURL = null }) => {
   const cleanedItem = {
     ...item,
     images: item.images.jpg.image_url,
@@ -19,8 +19,8 @@ const AnimeCard = ({ item, isFavorite, onPress1 = null, onPress2 = null }) => {
   };
 
   const onEditFavoritePress = () => {
-    if (onPress1) {
-      onPress1();
+    if (onEdit) {
+      onEdit();
       return;
     }
 
@@ -32,8 +32,8 @@ const AnimeCard = ({ item, isFavorite, onPress1 = null, onPress2 = null }) => {
   };
 
   const onOpenURLPress = () => {
-    if (onPress2) {
-      onPress2();
+    if (onOpenURL) {
+      onOpenURL();
       return;
     }
 

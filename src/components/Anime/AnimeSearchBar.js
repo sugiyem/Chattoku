@@ -9,12 +9,12 @@ import {
 const AnimeSearchBar = ({
   value,
   onChangeText,
-  onPress = null,
+  onPressSearchButton = null,
   navigation
 }) => {
   const onSearchClick = () => {
-    if (onPress) {
-      onPress();
+    if (onPressSearchButton) {
+      onPressSearchButton();
       return;
     }
     navigation.push("AnimeResult", { search: value });
