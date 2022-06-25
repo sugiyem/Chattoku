@@ -39,8 +39,8 @@ describe("Test Anime Card UI", () => {
       <AnimeCard
         item={mockItem}
         isFavorite={true}
-        onPress1={mockPressEditFavorite}
-        onPress2={mockPressOpenURL}
+        onEdit={mockPressEditFavorite}
+        onOpenURL={mockPressOpenURL}
       />
     );
 

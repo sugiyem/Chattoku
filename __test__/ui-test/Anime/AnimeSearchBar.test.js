@@ -18,7 +18,7 @@ describe("Test Anime search bar UI", () => {
       <AnimeSearchBar
         search={mockValue}
         onChangeText={mockChangeText}
-        onPress={mockPressSearchButton}
+        onPressSearchButton={mockPressSearchButton}
       />
     );
 
