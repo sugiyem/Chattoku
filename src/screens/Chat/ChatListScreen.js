@@ -77,7 +77,7 @@ const ChatListScreen = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("GroupChatList")}
+          onPress={() => navigation.push("GroupChatList")}
         >
           <NotificationText text="Group Chat List" isShown={isUnreadExists} />
         </TouchableOpacity>
