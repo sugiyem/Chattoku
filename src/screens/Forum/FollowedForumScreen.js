@@ -2,34 +2,37 @@ import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
 import ForumList from "../../components/Forum/ForumList";
 import { useState, useEffect } from "react";
-import FetchForumData from "../../services/Forum/FetchForumData";
+import { firebase } from "../../services/Firebase/Config";
+import FetchFollowedForumsData from "../../services/Forum/FetchFollowedForumData";
 import styled from "styled-components/native";
 
 const initialData = [];
 
-const ForumHomeScreen = () => {
+const FollowedForumScreen = () => {
   const [data, setData] = useState(initialData);
   const navigation = useNavigation();
+  const currentUID = firebase.auth().currentUser.uid;
+
+  console.log(data);
 
   useEffect(() => {
-    // console.log("useEffect triggered");
-    return FetchForumData(setData, (e) => Alert.alert(e));
+    return FetchFollowedForumsData(currentUID, setData);
   }, []);
 
   function handleCreateForumClick() {
     navigation.navigate("CreateForum");
   }
 
-  function navigateToFollowedForumScreen() {
-    navigation.replace("FollowedForums");
+  function handleDiscoverForumClick() {
+    navigation.replace("ForumHome");
   }
 
   return (
     <Container>
-      <FollowedForumButton onPress={navigateToFollowedForumScreen}>
-        <ButtonText> See Forums You Have Followed </ButtonText>
-      </FollowedForumButton>
-      <Title>Discover forums</Title>
+      <DiscoverForumButton onPress={handleDiscoverForumClick}>
+        <ButtonText> Discover New Forums </ButtonText>
+      </DiscoverForumButton>
+      <Title>Followed Forums</Title>
       <ForumList data={data} />
       <CreateForumButton>
         <Button
@@ -41,7 +44,7 @@ const ForumHomeScreen = () => {
   );
 };
 
-export default ForumHomeScreen;
+export default FollowedForumScreen;
 
 const Container = styled.View`
   background-color: darkcyan;
@@ -49,7 +52,13 @@ const Container = styled.View`
   flex: 1;
 `;
 
-const FollowedForumButton = styled.TouchableOpacity`
+const CreateForumButton = styled.TouchableOpacity`
+  margin-top: 5px;
+  border-width: 0.3px;
+  border-color: black;
+`;
+
+const DiscoverForumButton = styled.TouchableOpacity`
   align-self: stretch;
   padding: 10px;
   border-radius: 20px;
@@ -62,12 +71,6 @@ const ButtonText = styled.Text`
   font-size: 16px;
   font-weight: 400;
   color: white;
-`;
-
-const CreateForumButton = styled.TouchableOpacity`
-  margin-top: 5px;
-  border-width: 0.3px;
-  border-color: black;
 `;
 
 const Title = styled.Text`
