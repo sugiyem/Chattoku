@@ -1,7 +1,8 @@
 import { firebase } from "../Firebase/Config";
 import { likeStatus } from "../../constants/Post";
+import NotifyAllFollowers from "./NotifyAllFollowers";
 
-export async function addPost(forumId, post, onSuccess, onError) {
+export async function addPost(forumId, post, forumName, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
   const batch = firebase.firestore().batch();
   const postsRef = firebase
@@ -28,7 +29,10 @@ export async function addPost(forumId, post, onSuccess, onError) {
   //Create post
   batch
     .commit()
-    .then(() => onSuccess())
+    .then(() => {
+      NotifyAllFollowers(forumId, forumName, post.title);
+      onSuccess();
+    })
     .catch((e) => onError(e));
 }
 
