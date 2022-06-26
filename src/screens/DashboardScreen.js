@@ -58,8 +58,7 @@ const DashboardScreen = () => {
             tabBarLabelPosition: "below-icon",
             tabBarIcon: ({ tintColor }) => (
               <Icon name={item.icon} color="aquamarine" size={30} />
-            ),
-            unmountOnBlur: item.name === "Chat"
+            )
           }}
         />
       ))}

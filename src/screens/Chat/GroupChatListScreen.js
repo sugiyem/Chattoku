@@ -12,13 +12,13 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { chatType } from "../../constants/Chat";
 import {
-  fetchActivePrivateChats,
-  checkUnreadGroupMessages
+  fetchActiveGroupChats,
+  checkUnreadPrivateMessages
 } from "../../services/Chat/FetchActiveChats";
 import ActiveChatLists from "../../components/Chat/ActiveChatLists";
 import NotificationText from "../../components/Miscellaneous/NotificationText";
 
-const ChatListScreen = () => {
+const GroupChatListScreen = () => {
   const [search, setSearch] = useState("");
   const [activeChats, setActiveChats] = useState([]);
   const [isUnreadExists, setIsUnreadExists] = useState(false);
@@ -36,14 +36,18 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-    return fetchActivePrivateChats({
-      onSuccess: (data) => setActiveChats(data),
-      onFailure: (error) => Alert.alert(error.message)
+    return fetchActiveGroupChats({
+      onSuccess: (data) => {
+        setActiveChats(data);
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
     });
   }, []);
 
   useEffect(() => {
-    return checkUnreadGroupMessages({
+    return checkUnreadPrivateMessages({
       onFound: () => {
         setIsUnreadExists(true);
       },
@@ -65,28 +69,30 @@ const ChatListScreen = () => {
         style={styles.textInput}
       />
 
-      <Text style={styles.title}>Private Chat List</Text>
+      <Text style={styles.title}>Group Chat List</Text>
 
       <View style={styles.buttonGroup}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Friends")}
+          onPress={() =>
+            navigation.navigate("Friends", { screen: "GroupList" })
+          }
         >
-          <Text style={styles.buttonText}>Message other users</Text>
+          <Text style={styles.buttonText}>Message other groups</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.push("GroupChatList")}
+          onPress={() => navigation.push("ChatList")}
         >
-          <NotificationText text="Group Chat List" isShown={isUnreadExists} />
+          <NotificationText text="Private Chat List" isShown={isUnreadExists} />
         </TouchableOpacity>
       </View>
 
       <ActiveChatLists
-        type={chatType.PRIVATE_CHAT}
+        type={chatType.GROUP_CHAT}
         items={activeChats.filter((item) =>
-          item.username.toLowerCase().startsWith(search.toLowerCase())
+          item.name.toLowerCase().startsWith(search.toLowerCase())
         )}
         expandStatus={expandStatus}
         changeExpand={changeExpand}
@@ -96,7 +102,7 @@ const ChatListScreen = () => {
   );
 };
 
-export default ChatListScreen;
+export default GroupChatListScreen;
 
 const styles = StyleSheet.create({
   container: {
