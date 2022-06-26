@@ -1,23 +1,20 @@
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
-import FetchPost from "../../../services/Forum/FetchPost";
 import PostCard from "./PostCard";
 
-const PostList = ({ forumId, isOwner, isBanned }) => {
-  const [posts, setPosts] = useState([]);
+const PostList = ({
+  forumId,
+  isOwner,
+  isBanned,
+  Header = () => <></>,
+  posts
+}) => {
   const [search, setSearch] = useState("");
 
   const filteredPost = posts.filter((post) =>
     post.title.toLowerCase().startsWith(search.toLowerCase())
   );
-
-  useEffect(() => {
-    return FetchPost(
-      forumId,
-      (data) => setPosts(data),
-      (error) => Alert.alert(error)
-    );
-  }, []);
 
   // console.log("POST LIST");
   // console.log(posts);
@@ -33,26 +30,34 @@ const PostList = ({ forumId, isOwner, isBanned }) => {
     );
   };
 
-  const renderHeader = () => {};
+  const renderHeader = () => {
+    return (
+      <>
+        <Header />
+        <TextInput
+          onChangeText={(t) => setSearch(t)}
+          style={styles.textInput}
+          placeholder="Search By Title..."
+        />
+      </>
+    );
+  };
 
   const renderFooter = () => <></>;
 
   return (
     <>
-      <TextInput
-        onChangeText={(t) => setSearch(t)}
-        style={styles.textInput}
-        placeholder="Search By Title..."
-      />
       <SectionList
+        key={posts}
         removeClippedSubviews={true}
         sections={[
           {
             data: filteredPost
           }
         ]}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        renderHeader={renderHeader}
+        renderSectionHeader={renderHeader}
         renderFooter={renderFooter}
       />
     </>

@@ -16,6 +16,7 @@ import { favoriteType } from "../../constants/Favorite";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
+import styled from "styled-components/native";
 
 const initialState = {
   username: "",
@@ -93,38 +94,40 @@ const ProfileHomeScreen = () => {
   }, []);
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ alignItems: "center" }}
-    >
-      <View style={styles.contentContainer}>
+    <Container contentContainerStyle={{ alignItems: "center" }}>
+      <ContentContainer>
         {userInfo.img.length > 0 ? (
-          <Image style={styles.img} source={{ uri: userInfo.img }} />
+          <ProfilePicture source={{ uri: userInfo.img }} />
         ) : (
-          <Image
-            style={styles.img}
+          <ProfilePicture
             source={require("../../assets/default-profile.png")}
           />
         )}
 
-        <Text style={styles.username}>{userInfo.username}</Text>
-        <Text style={styles.bio}>{userInfo.bio}</Text>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={styles.button}
+        <Username>{userInfo.username}</Username>
+        <Bio>{userInfo.bio}</Bio>
+        <ButtonGroup>
+          <Button
+            onPress={() => {
+              navigation.navigate("PastPosts");
+            }}
+          >
+            <ButtonText> See Recent Posts </ButtonText>
+          </Button>
+          <Button
             onPress={() => {
               navigation.navigate("EditProfile", { userInfo: userInfo });
             }}
           >
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => logOut()}>
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+            <ButtonText>Edit Profile</ButtonText>
+          </Button>
+          <Button onPress={() => logOut()}>
+            <ButtonText>Logout</ButtonText>
+          </Button>
+        </ButtonGroup>
+      </ContentContainer>
 
-      <View style={styles.favoriteStuffContainer}>
+      <FavoriteStuffContainer>
         {datas.map((item, index) => (
           <ListItem.Accordion
             bottomDivider
@@ -132,7 +135,7 @@ const ProfileHomeScreen = () => {
             content={
               <ListItem.Content>
                 <ListItem.Title>
-                  <Text style={styles.titleText}>{item.title}</Text>
+                  <Title>{item.title}</Title>
                 </ListItem.Title>
               </ListItem.Content>
             }
@@ -142,72 +145,79 @@ const ProfileHomeScreen = () => {
             {item.isExpanded && <item.render items={item.data} />}
           </ListItem.Accordion>
         ))}
-      </View>
-    </ScrollView>
+      </FavoriteStuffContainer>
+    </Container>
   );
 };
 
 export default ProfileHomeScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    padding: 5,
-    flex: 1
-  },
-  contentContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10
-  },
-  favoriteStuffContainer: {
-    alignSelf: "stretch",
-    borderTopWidth: 1,
-    borderTopColor: "black",
-    margin: 10,
-    padding: 5
-  },
-  img: {
-    height: 150,
-    width: 150,
-    borderRadius: 75
-  },
-  username: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 10
-  },
-  bio: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "aquamarine",
-    textAlign: "center",
-    marginBottom: 10
-  },
-  buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "stretch",
-    marginBottom: 10
-  },
-  button: {
-    borderColor: "navy",
-    borderWidth: 2,
-    borderRadius: 3,
-    backgroundColor: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginHorizontal: 5
-  },
-  buttonText: {
-    color: "#2e64e5"
-  },
-  titleText: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 20,
-    fontWeight: "600",
-    textDecorationLine: "underline"
-  }
-});
+const Container = styled.ScrollView`
+  background-color: darkcyan;
+  padding: 5px;
+  flex: 1;
+`;
+
+const ContentContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const FavoriteStuffContainer = styled.View`
+  align-self: stretch;
+  border-top-width: 1px;
+  border-top-color: black;
+  margin: 10px;
+  padding: 5px;
+`;
+
+const ProfilePicture = styled.Image`
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+`;
+
+const Username = styled.Text`
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  font-size: 20px;
+  font-weight: bold;
+  text-align=center;
+  margin-vertical: 10px;
+`;
+
+const Bio = styled.Text`
+  font-size: 15px;
+  font-weight: 600;
+  color: aquamarine;
+  text-align: center;
+  margin-bottom: 10px;
+`;
+
+const ButtonGroup = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const Button = styled.TouchableOpacity`
+  border-color: navy;
+  border-width: 2px;
+  border-radius: 3px;
+  background-color: white;
+  padding-vertical: 8px;
+  padding-horizontal: 12px;
+  margin-horizontal: 5px;
+`;
+
+const ButtonText = styled.Text`
+  color: #2e64e5;
+`;
+
+const Title = styled.Text`
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration-line: underline;
+`;

@@ -3,7 +3,7 @@ import { Alert, SectionList } from "react-native";
 import FetchComment from "../../../services/Forum/FetchComment";
 import CommentCard from "./CommentCard";
 
-const CommentList = ({ forumId, postId }) => {
+const CommentList = ({ forumId, postId, Header = () => <></> }) => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -20,17 +20,16 @@ const CommentList = ({ forumId, postId }) => {
     return <CommentCard {...item} forumId={forumId} postId={postId} />;
   };
 
-  const renderHeader = () => <></>;
-
   const renderFooter = () => <></>;
 
   return (
     <>
       <SectionList
+        key={comments}
         removeClippedSubviews={true}
         sections={[{ data: comments }]}
         renderItem={renderItem}
-        renderHeader={renderHeader}
+        renderSectionHeader={Header}
         renderFooter={renderFooter}
       />
     </>
