@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text } from "react-native";
+import { Text, LogBox } from "react-native";
 import { useState, useEffect } from "react";
 import CommentList from "../../components/Forum/ForumComment/CommentList";
 import LikeBar from "../../components/Forum/ForumPost/LikeBar";
@@ -10,6 +10,9 @@ const initialUserData = {
   img: "",
   username: "fetching username..."
 };
+
+//Temporarily disable log (Because I don't know the cause of the warning)
+LogBox.ignoreAllLogs();
 
 const MainPost = ({ title, content, uid, forumId, postId }) => {
   const [userData, setUserData] = useState(initialUserData);

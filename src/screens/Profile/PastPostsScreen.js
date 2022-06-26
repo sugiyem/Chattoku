@@ -7,7 +7,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 const PastPostsScreen = () => {
   const [postData, setPostsData] = useState([]);
   const navigation = useNavigation();
-  const isFocused = useIsFocused;
+  const isFocused = useIsFocused();
 
   console.log(postData);
 
@@ -15,7 +15,7 @@ const PastPostsScreen = () => {
     if (!isFocused) {
       return;
     }
-    FetchPreviousPosts(setPostsData);
+    return FetchPreviousPosts(setPostsData);
   }, [isFocused]);
 
   function handleBackButtonClick() {

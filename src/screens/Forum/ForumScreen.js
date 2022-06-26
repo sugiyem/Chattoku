@@ -54,19 +54,22 @@ const ForumScreen = () => {
 
   console.log(posts);
 
+  //Check for ban
   useEffect(() => {
-    console.log("FIRED");
-    console.log(isFocused);
     if (!isFocused) return;
-    isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound))
-      .then(() =>
-        FetchPost(
-          data.id,
-          (data) => setPosts(data),
-          (error) => Alert.alert(error)
-        )
-      )
-      .then(() => console.log("finish"));
+
+    isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
+  }, [isFocused]);
+
+  //retrieve posts
+  useEffect(() => {
+    if (!isFocused) return;
+
+    return FetchPost(
+      data.id,
+      (data) => setPosts(data),
+      (error) => Alert.alert(error)
+    );
   }, [isFocused]);
 
   return (

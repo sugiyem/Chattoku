@@ -1,15 +1,14 @@
 import { firebase } from "../Firebase/Config";
 
-export async function FetchPreviousPosts(callbackSuccess) {
+export function FetchPreviousPosts(callbackSuccess) {
   const currentUID = firebase.auth().currentUser.uid;
   let db = firebase.firestore();
 
-  await db
+  return db
     .collection("users")
     .doc(currentUID)
     .collection("posts")
-    .get()
-    .then(async (querySnapshot) => {
+    .onSnapshot(async (querySnapshot) => {
       const data = [];
       const fetchedData = [];
 
