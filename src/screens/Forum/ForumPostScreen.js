@@ -12,7 +12,7 @@ const initialUserData = {
 };
 
 //Temporarily disable log (Because I don't know the cause of the warning)
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 
 const MainPost = ({ title, content, uid, forumId, postId }) => {
   const [userData, setUserData] = useState(initialUserData);
@@ -49,7 +49,7 @@ const ForumPostScreen = () => {
     navigation.navigate("AddComment", { data: data });
   }
 
-  function renderHeader() {
+  function RenderHeader() {
     return (
       <>
         <MainPost {...data} />
@@ -67,7 +67,8 @@ const ForumPostScreen = () => {
         <ButtonText>Go Back</ButtonText>
       </Button>
 
-      <CommentList {...data} Header={renderHeader} />
+      <RenderHeader />
+      <CommentList {...data} />
 
       {data.isBanned ? (
         <BannedText>You have been banned</BannedText>

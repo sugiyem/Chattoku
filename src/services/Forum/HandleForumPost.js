@@ -26,7 +26,7 @@ export async function addPost(forumId, post, onSuccess, onError) {
   });
 
   //Create post
-  batch
+  await batch
     .commit()
     .then(() => onSuccess())
     .catch((e) => onError(e));
@@ -68,7 +68,7 @@ export async function deletePost(forumId, postId, uid, onSuccess, onError) {
     batch.delete(doc.ref);
   });
 
-  batch
+  await batch
     .commit()
     .then(() => onSuccess())
     .catch((e) => onError(e));
@@ -92,6 +92,7 @@ export async function getLikeStatus(forumId, postId, callbackSuccess) {
   const currentUID = firebase.auth().currentUser.uid;
   const combinedId = forumId + postId;
   const userRef = firebase.firestore().collection("users").doc(currentUID);
+
   const isLiked = await userRef
     .collection("likes")
     .doc(combinedId)
@@ -162,7 +163,7 @@ export async function updateLikes(forumId, postId, postLikeStatus) {
     batch.delete(userLikeRef);
   }
 
-  batch
+  await batch
     .commit()
     .then(() => console.log("update success"))
     .catch((e) => console.error(e));
