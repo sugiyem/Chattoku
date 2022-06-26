@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 
 const Header = ({ img, title, banner, desc }) => {
+  const [isFollowed, setIsFollowed] = useState(false);
+
   return (
     <HeaderContainer>
       <Banner
@@ -18,7 +20,12 @@ const Header = ({ img, title, banner, desc }) => {
         }
       />
       <ForumDetails>
-        <Title>{title}</Title>
+        <TitleContainer>
+          <Title>{title}</Title>
+          <FollowButton>
+            <ButtonText> Follow </ButtonText>
+          </FollowButton>
+        </TitleContainer>
         <Desc> {desc} </Desc>
         <Logo
           source={
@@ -117,6 +124,11 @@ const Logo = styled.Image`
   left: 20px;
 `;
 
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
 const Title = styled.Text`
   font-size: 18px;
   font-weight: 600;
@@ -155,6 +167,18 @@ const BannedText = styled.Text`
   font-size: 18px;
   font-weight: 500;
   text-align: center;
+`;
+
+const FollowButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin: 5px;
+  margin-left: auto;
+  border-radius: 20px;
+  border-width: 1px;
+  background-color: white;
 `;
 
 const styles = StyleSheet.create({
