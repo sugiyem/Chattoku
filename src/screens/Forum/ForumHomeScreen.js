@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "react-native";
+import { Button, Platform } from "react-native";
 import ForumList from "../../components/Forum/ForumList";
 import { useState, useEffect } from "react";
 import FetchForumData from "../../services/Forum/FetchForumData";
