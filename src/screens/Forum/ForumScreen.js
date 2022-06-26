@@ -4,40 +4,10 @@ import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
 import { firebase } from "../../services/Firebase/Config";
 import styled from "styled-components/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 
-const Header = ({ img, title, banner, desc }) => {
-  const [isFollowed, setIsFollowed] = useState(false);
-
-  return (
-    <HeaderContainer>
-      <Banner
-        source={
-          banner !== ""
-            ? { uri: banner }
-            : require("../../assets/default-banner.png")
-        }
-      />
-      <ForumDetails>
-        <TitleContainer>
-          <Title>{title}</Title>
-          <FollowButton>
-            <ButtonText> Follow </ButtonText>
-          </FollowButton>
-        </TitleContainer>
-        <Desc> {desc} </Desc>
-        <Logo
-          source={
-            img !== ""
-              ? { uri: img }
-              : require("../../assets/default-profile.png")
-          }
-        />
-      </ForumDetails>
-    </HeaderContainer>
-  );
-};
+import ForumHeader from "../../components/Forum/ForumHeader";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
@@ -68,7 +38,7 @@ const ForumScreen = () => {
           <ButtonText>Manage Your Forum</ButtonText>
         </CustomButton>
       )}
-      <Header {...data} />
+      <ForumHeader {...data} isOwner={isOwner} />
       <PostList forumId={data.id} isOwner={isOwner} isBanned={isBanned} />
       {isBanned ? (
         <BannedText>You have been banned</BannedText>
@@ -86,57 +56,6 @@ const ForumScreen = () => {
 };
 
 export default ForumScreen;
-
-const width = Dimensions.get("screen").width;
-
-const HeaderContainer = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: ${width - 18}px;
-  background-color: cyan;
-  border-radius: 10px;
-  border-color: blue;
-  border-width: 1px;
-  margin: 5px;
-`;
-
-const Banner = styled.Image`
-  width: ${width - 20}px;
-  height: ${(width * 2) / 5 - 8}px;
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
-`;
-
-const ForumDetails = styled.View`
-  width: 100%;
-  padding: 10px;
-`;
-
-const Logo = styled.Image`
-  position: absolute;
-  height: 80px;
-  width: 80px;
-  border-radius: 80px;
-  border-width: 1px;
-  border-color: white;
-  top: -70px;
-  left: 20px;
-`;
-
-const TitleContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Title = styled.Text`
-  font-size: 18px;
-  font-weight: 600;
-`;
-
-const Desc = styled.Text`
-  font-size: 14px;
-`;
 
 const Container = styled.View`
   flex: 1;
@@ -167,18 +86,6 @@ const BannedText = styled.Text`
   font-size: 18px;
   font-weight: 500;
   text-align: center;
-`;
-
-const FollowButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin: 5px;
-  margin-left: auto;
-  border-radius: 20px;
-  border-width: 1px;
-  background-color: white;
 `;
 
 const styles = StyleSheet.create({
