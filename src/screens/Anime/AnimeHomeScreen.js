@@ -118,7 +118,11 @@ const AnimeHomeScreen = () => {
     </Container>
   );
 
-  return <Loading isLoading={isPageLoading} ExpectedRender={RenderPage} />;
+  return (
+    <Loading isLoading={isPageLoading}>
+      <RenderPage />
+    </Loading>
+  );
 };
 
 export default AnimeHomeScreen;
