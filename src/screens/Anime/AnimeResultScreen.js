@@ -56,11 +56,9 @@ const AnimeResultScreen = ({ navigation, route }) => {
     return () => abortController.abort();
   }, [resultPage]);
 
-  if (!isResultLoaded) {
-    return <Loading />;
-  }
+  const isPageLoading = !isResultLoaded;
 
-  return (
+  const RenderPage = () => (
     <Container>
       <AnimeSearchBar
         value={search}
@@ -75,6 +73,8 @@ const AnimeResultScreen = ({ navigation, route }) => {
       <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
     </Container>
   );
+
+  return <Loading isLoading={isPageLoading} ExpectedRender={RenderPage} />;
 };
 
 export default AnimeResultScreen;

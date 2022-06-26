@@ -101,11 +101,9 @@ const RenderRecommendation = ({
     return () => abortController.abort();
   }, [recommendations, recommendationCount]);
 
-  if (!(isRecommendationFound && isAnimeDataLoaded)) {
-    return <Loading />;
-  }
+  const isPageLoading = !(isRecommendationFound && isAnimeDataLoaded);
 
-  return (
+  const RenderPage = () => (
     <ScrollContainer>
       <CenteredBoldText size="20px">
         {isCalledFromFavoriteAnime
@@ -138,6 +136,8 @@ const RenderRecommendation = ({
       )}
     </ScrollContainer>
   );
+
+  return <Loading isLoading={isPageLoading} ExpectedRender={RenderPage} />;
 };
 
 export default RenderRecommendation;

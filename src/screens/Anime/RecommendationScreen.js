@@ -22,11 +22,9 @@ const RecommendationScreen = ({ navigation }) => {
     });
   }, []);
 
-  if (!isGenreLoaded) {
-    return <Loading />;
-  }
+  const isPageLoading = !isGenreLoaded;
 
-  return (
+  const RenderPage = () => (
     <Container>
       <TouchableOpacity
         style={styles.backButton}
@@ -57,6 +55,8 @@ const RecommendationScreen = ({ navigation }) => {
       </View>
     </Container>
   );
+
+  return <Loading isLoading={isPageLoading} ExpectedRender={RenderPage} />;
 };
 
 export default RecommendationScreen;

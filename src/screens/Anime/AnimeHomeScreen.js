@@ -97,11 +97,9 @@ const AnimeHomeScreen = () => {
     return () => abortController.abort();
   }, [topPage]);
 
-  if (!(isAiringLoaded && isTopLoaded)) {
-    return <Loading />;
-  }
+  const isPageLoading = !(isAiringLoaded && isTopLoaded);
 
-  return (
+  const RenderPage = () => (
     <Container>
       <AnimeSearchBar
         value={search}
@@ -119,6 +117,8 @@ const AnimeHomeScreen = () => {
       <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
     </Container>
   );
+
+  return <Loading isLoading={isPageLoading} ExpectedRender={RenderPage} />;
 };
 
 export default AnimeHomeScreen;
