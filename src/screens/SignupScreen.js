@@ -1,26 +1,25 @@
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Alert, Text } from "react-native";
 import { useState } from "react";
-import React from "react";
+import {
+  AuthContainer,
+  AuthSystemContainer,
+  AuthTextInput,
+  AuthTitle
+} from "../styles/AuthStyles";
+import { Button, ButtonText, RoundedImage } from "../styles/GeneralStyles";
 import {
   isUsernameTaken,
   isValidUsername
 } from "../services/Authentication/CheckUsername";
 import {
-  isValidEmail,
   isPasswordTooShort,
+  isValidEmail
+} from "../services/Authentication/CheckCredentials";
+import { signUp } from "../services/Authentication/HandleAuthentication";
+import {
   redirectToForgotPasswordScreen,
-  redirectToLoginScreen,
-  signUp
-} from "../services/Authentication/HandleAuthentication";
+  redirectToLoginScreen
+} from "../services/Authentication/AuthNavigation";
 
 const initialState = {
   username: "",
@@ -59,124 +58,62 @@ const SignupScreen = ({ navigation }) => {
     } else if (isPasswordTooShort(credentials.password)) {
       Alert.alert("password must at least be 6 characters long");
     } else {
-      signUp(credentials, navigation);
+      signUp(credentials, () => redirectToLoginScreen(navigation));
     }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Image style={styles.logoImage} source={require("../assets/logo.png")} />
+    <AuthContainer>
+      <RoundedImage source={require("../assets/logo.png")} />
 
-      <View style={styles.systemContainer}>
-        <Text style={styles.title}> Sign Up </Text>
+      <AuthSystemContainer>
+        <AuthTitle> Sign Up </AuthTitle>
         <Text> Username </Text>
-        <TextInput
-          style={styles.textInputContainer}
+        <AuthTextInput
           placeholder="username"
           value={credentials.username}
           onChangeText={(text) => handleChangeText(text, "username")}
         />
         <Text> Email </Text>
-        <TextInput
-          style={styles.textInputContainer}
+        <AuthTextInput
           placeholder="email"
           value={credentials.email}
           onChangeText={(text) => handleChangeText(text, "email")}
         />
         <Text> Password </Text>
-        <TextInput
-          style={styles.textInputContainer}
+        <AuthTextInput
           placeholder="password"
           secureTextEntry={true}
           value={credentials.password}
           onChangeText={(text) => handleChangeText(text, "password")}
         />
         <Text> Confirm password</Text>
-        <TextInput
-          style={styles.textInputContainer}
+        <AuthTextInput
           placeholder="confirm password"
           secureTextEntry={true}
           value={credentials.confirmPass}
           onChangeText={(text) => handleChangeText(text, "confirmPass")}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            redirectToLoginScreen(navigation);
-          }}
+        <Button color="#0000ff" onPress={handleSubmit}>
+          <ButtonText color="#ffffff">Sign Up</ButtonText>
+        </Button>
+        <Button
+          color="#0000ff"
+          onPress={() => redirectToLoginScreen(navigation)}
         >
-          <Text style={styles.buttonText}>Have an account? Login Now</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            redirectToForgotPasswordScreen(navigation);
-          }}
+          <ButtonText color="#ffffff">Have an account? Login Now</ButtonText>
+        </Button>
+        <Button
+          color="#0000ff"
+          onPress={() => redirectToForgotPasswordScreen(navigation)}
         >
-          <Text style={styles.buttonText}>
+          <ButtonText color="#ffffff">
             Forgot Your Password? Click Here
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          </ButtonText>
+        </Button>
+      </AuthSystemContainer>
+    </AuthContainer>
   );
 };
 
 export default SignupScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 5,
-    rowGap: "15px",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "darkcyan"
-  },
-  logoImage: {
-    height: 150,
-    width: 150,
-    borderRadius: 75,
-    borderWidth: 1,
-    backgroundColor: "white",
-    marginBottom: 10
-  },
-  systemContainer: {
-    margin: 10,
-    backgroundColor: "cyan",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    alignSelf: "stretch"
-  },
-  title: {
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 25,
-    color: "darkslateblue"
-  },
-  textInputContainer: {
-    borderRadius: 10,
-    borderWidth: 1,
-    alignSelf: "stretch",
-    backgroundColor: "white",
-    padding: 5,
-    marginVertical: 10
-  },
-  button: {
-    alignSelf: "stretch",
-    textAlign: "center",
-    backgroundColor: "blue",
-    borderRadius: 5,
-    borderWidth: 1,
-    marginVertical: 5,
-    padding: 5
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white"
-  }
-});
