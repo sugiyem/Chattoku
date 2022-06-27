@@ -14,6 +14,7 @@ import ManageForumScreen from "./Forum/ForumManagement/ManageForumScreen";
 import BannedUsersScreen from "./Forum/ForumManagement/BannedUsersScreen";
 import AdminsScreen from "./Forum/ForumManagement/AdminsScreen";
 import AddBannedScreen from "./Forum/ForumManagement/AddBannedScreen";
+import FollowedForumScreen from "./Forum/FollowedForumScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ const HomeScreen = () => {
     >
       {/* For displaying forums */}
       <Stack.Screen name="ForumHome" component={ForumHomeScreen} />
+      <Stack.Screen name="FollowedForums" component={FollowedForumScreen} />
       {/* For posts of a specific forum */}
       <Stack.Screen name="Forum" component={ForumScreen} />
       <Stack.Screen name="AddPost" component={AddPostScreen} />

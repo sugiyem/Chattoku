@@ -1,19 +1,14 @@
 import {
-  Alert,
   Platform,
   SectionList,
   StyleSheet,
   Text,
   TextInput
 } from "react-native";
-import FetchForumData from "../../services/Forum/FetchForumData";
 import ForumCard from "./ForumCard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-const initialData = [];
-
-const ForumList = () => {
-  const [data, setData] = useState(initialData);
+const ForumList = ({ data }) => {
   const [search, setSearch] = useState("");
 
   const filteredData = data.filter((forum) =>
@@ -21,11 +16,6 @@ const ForumList = () => {
   );
 
   // console.log(data);
-
-  useEffect(() => {
-    // console.log("useEffect triggered");
-    return FetchForumData(setData, (e) => Alert.alert(e));
-  }, []);
 
   const renderItem = ({ section, item }) => {
     return (
@@ -41,8 +31,11 @@ const ForumList = () => {
 
   return (
     <>
-      <Text style={styles.text}>List of forums</Text>
-      <TextInput onChangeText={(t) => setSearch(t)} style={styles.textInput} />
+      <TextInput
+        onChangeText={(t) => setSearch(t)}
+        style={styles.textInput}
+        placeholder="Search Forum By Name..."
+      />
       <SectionList
         removeClippedSubviews={true}
         sections={[{ data: filteredData }]}
@@ -64,14 +57,6 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
     margin: 5,
     padding: 5
-  },
-  text: {
-    fontSize: 25,
-    fontWeight: "bold",
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    textAlign: "center",
-    margin: 10,
-    textDecorationLine: "underline"
   },
   textInput: {
     flexGrow: 0,
