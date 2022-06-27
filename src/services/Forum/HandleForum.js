@@ -52,7 +52,7 @@ export async function getForumFollowData(forumId, callbackSuccess) {
     .then((doc) =>
       doc.exists
         ? callbackSuccess({ ...doc.data(), isFollowed: true })
-        : callbackSuccess({ isFollowed: false, isNotificationOn: false })
+        : callbackSuccess({ isFollowed: false, isNotificationOn: true })
     );
 }
 
