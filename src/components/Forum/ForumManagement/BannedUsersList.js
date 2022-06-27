@@ -8,7 +8,7 @@ const BannedUsersList = ({ forumId }) => {
   console.log(users.length);
 
   useEffect(() => {
-    getBannedUsers(forumId, setUsers);
+    return getBannedUsers(forumId, setUsers);
   }, []);
 
   const renderItem = ({ item }) => {

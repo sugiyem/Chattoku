@@ -23,7 +23,7 @@ export default FetchUserInfo = ({
 };
 
 export async function FetchInfoById(userID, callbackSuccess) {
-  return firebase
+  await firebase
     .firestore()
     .collection("users")
     .doc(userID)

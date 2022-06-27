@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
@@ -6,15 +6,19 @@ import { firebase } from "../../services/Firebase/Config";
 import styled from "styled-components/native";
 import { useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
-
+import FetchPost from "../../services/Forum/FetchPost";
 import ForumHeader from "../../components/Forum/ForumHeader";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
+  const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
   const isOwner = data.owner === currentUID;
+
+  console.log(data);
 
   function handleAddButtonClick() {
     navigation.navigate("AddPost", { data: data });
@@ -24,9 +28,25 @@ const ForumScreen = () => {
     navigation.navigate("ManageForum", { data: data });
   }
 
+  console.log(posts);
+
+  //Check for ban
   useEffect(() => {
+    if (!isFocused) return;
+
     isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
-  }, []);
+  }, [isFocused]);
+
+  //retrieve posts
+  useEffect(() => {
+    if (!isFocused) return;
+
+    return FetchPost(
+      data.id,
+      (data) => setPosts(data),
+      (error) => Alert.alert(error)
+    );
+  }, [isFocused]);
 
   return (
     <Container>
@@ -38,8 +58,14 @@ const ForumScreen = () => {
           <ButtonText>Manage Your Forum</ButtonText>
         </CustomButton>
       )}
-      <ForumHeader {...data} isOwner={isOwner} />
-      <PostList forumId={data.id} isOwner={isOwner} isBanned={isBanned} />
+      {/* <Header {...data} /> */}
+      <PostList
+        forumId={data.id}
+        isOwner={isOwner}
+        isBanned={isBanned}
+        Header={() => <ForumHeader {...data} />}
+        posts={posts}
+      />
       {isBanned ? (
         <BannedText>You have been banned</BannedText>
       ) : (

@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Anime search bar UI Renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <TextInput
+    placeholder="Search anime by original title"
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#000000",
+          "borderRadius": 10,
+          "borderWidth": 1,
+          "color": "#000000",
+          "flexBasis": 0,
+          "flexGrow": 3,
+          "flexShrink": 1,
+          "marginBottom": 5,
+          "marginLeft": 5,
+          "marginRight": 5,
+          "marginTop": 5,
+          "paddingBottom": 2,
+          "paddingLeft": 2,
+          "paddingRight": 2,
+          "paddingTop": 2,
+        },
+      ]
+    }
+    testID="searchInput"
+  />
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#483d8b",
+        "borderRadius": 10,
+        "flexBasis": 0,
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "marginBottom": 5,
+        "marginLeft": 5,
+        "marginRight": 5,
+        "marginTop": 5,
+        "opacity": 1,
+        "paddingBottom": 5,
+        "paddingLeft": 5,
+        "paddingRight": 5,
+        "paddingTop": 5,
+      }
+    }
+    testID="searchButton"
+  >
+    <Text
+      color="#ffffff"
+      style={
+        Array [
+          Object {
+            "color": "#ffffff",
+            "fontSize": 14,
+            "textAlign": "center",
+          },
+        ]
+      }
+    >
+      Search
+    </Text>
+  </View>
+</View>
+`;
