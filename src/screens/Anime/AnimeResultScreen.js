@@ -58,25 +58,21 @@ const AnimeResultScreen = ({ navigation, route }) => {
 
   const isPageLoading = !isResultLoaded;
 
-  const RenderPage = () => (
-    <Container>
-      <AnimeSearchBar
-        value={search}
-        onChangeText={setSearch}
-        navigation={navigation}
-      />
-
-      <Button onPress={() => navigation.goBack()}>
-        <ButtonText>Go back</ButtonText>
-      </Button>
-
-      <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
-    </Container>
-  );
-
   return (
     <Loading isLoading={isPageLoading}>
-      <RenderPage />
+      <Container>
+        <AnimeSearchBar
+          value={search}
+          onChangeText={setSearch}
+          navigation={navigation}
+        />
+
+        <Button onPress={() => navigation.goBack()}>
+          <ButtonText>Go back</ButtonText>
+        </Button>
+
+        <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
+      </Container>
     </Loading>
   );
 };
