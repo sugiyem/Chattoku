@@ -30,7 +30,10 @@ describe("Test Favorite Anime & Genre Handling", () => {
         mal_id: 42938,
         title: "Fruit Basket: The Final",
         images: { jpg: { image_url: "new-image-link" } },
-        url: "new-url"
+        url: "new-url",
+        genres: [{ name: "Drama" }, { name: "Romance" }],
+        themes: [],
+        demographics: [{ name: "Shoujo" }]
       },
       admin
     );
@@ -39,7 +42,10 @@ describe("Test Favorite Anime & Genre Handling", () => {
       id: 42938,
       title: "Fruit Basket: The Final",
       image: "new-image-link",
-      url: "new-url"
+      url: "new-url",
+      genres: ["Drama", "Romance"],
+      themes: [],
+      demographics: ["Shoujo"]
     });
   });
 

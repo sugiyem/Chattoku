@@ -14,7 +14,10 @@ export async function addAnimeToFavorite(item, app = firebase) {
       id: item.mal_id,
       title: item.title,
       image: item.images.jpg.image_url,
-      url: item.url
+      url: item.url,
+      genres: item.genres.map((value) => value.name),
+      themes: item.themes.map((value) => value.name),
+      demographics: item.demographics.map((value) => value.name)
     })
     .then(() => {
       Alert.alert("Anime succesfully added to favorite");

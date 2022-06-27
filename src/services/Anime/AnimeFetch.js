@@ -1,16 +1,17 @@
 import axios from "axios";
-import { AIRING_URL, SEARCH_URL, TOP_URL } from "../../constants/MyAnimeList";
-
-export const fetchType = {
-  SEARCH: 0,
-  AIRING: 1,
-  TOP: 2
-};
+import {
+  AIRING_URL,
+  SEARCH_URL,
+  TOP_URL,
+  BY_ID_URL,
+  fetchType
+} from "../../constants/MyAnimeList";
 
 export default AnimeFetch = async ({
   type,
   page,
   search,
+  malID,
   onSuccesfulFetch,
   abortController = new AbortController(),
   fetcher = axios
@@ -26,6 +27,9 @@ export default AnimeFetch = async ({
       break;
     case fetchType.TOP:
       url = TOP_URL + "?page=" + page;
+      break;
+    case fetchType.BY_ID:
+      url = BY_ID_URL + malID;
       break;
   }
 

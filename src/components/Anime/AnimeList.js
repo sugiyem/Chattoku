@@ -1,24 +1,30 @@
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ListItem } from "react-native-elements";
+import { BoldText } from "../../styles/GeneralStyles";
 
 const AnimeList = ({ item, isFavorite }) => {
+  const itemScore = "MyAnimeList score: " + (item.score ? item.score : "?");
+  const itemAiring =
+    (item.airing ? "Started airing from: " : "Aired from: ") +
+    item.aired.string;
+  const itemEpisodes =
+    "Number of episodes: " + (item.episodes ? item.episodes : "?");
+  const itemFavorite = isFavorite ? "Favorite" : "";
+
   return (
     <ListItem.Content>
       <ListItem.Title>
-        <Text style={styles.titleText}>{item.title}</Text>
+        <BoldText size="16px" testID="title">
+          {item.title}
+        </BoldText>
       </ListItem.Title>
       <ListItem.Subtitle>
         <View style={styles.detailContainer}>
-          <Text>MyAnimeList score: {item.score ? item.score : "?"}</Text>
-          {item.airing ? (
-            <Text>Started airing from: {item.aired.string.slice(0, -5)}</Text>
-          ) : (
-            <Text>Aired from: {item.aired.string}</Text>
-          )}
-
-          <Text>Number of episodes: {item.episodes ? item.episodes : "?"}</Text>
-          <Text>{isFavorite ? "Favorite" : ""}</Text>
+          <Text testID="score">{itemScore}</Text>
+          <Text testID="onAir">{itemAiring}</Text>
+          <Text testID="episodes">{itemEpisodes}</Text>
+          <Text testID="favorite">{itemFavorite}</Text>
         </View>
       </ListItem.Subtitle>
     </ListItem.Content>
@@ -28,11 +34,7 @@ const AnimeList = ({ item, isFavorite }) => {
 export default AnimeList;
 
 const styles = StyleSheet.create({
-  titleText: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontWeight: "bold",
-  },
   detailContainer: {
-    paddingTop: 10,
-  },
+    paddingTop: 10
+  }
 });

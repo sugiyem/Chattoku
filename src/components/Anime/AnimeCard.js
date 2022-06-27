@@ -1,60 +1,72 @@
 import React from "react";
-import {
-  Alert,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-elements";
+import { BoldText, Button } from "../../styles/GeneralStyles";
 import * as Linking from "expo-linking";
 import {
   addAnimeToFavorite,
   removeAnimeFromFavorite
 } from "../../services/Anime/HandleFavorite";
+import { animeDetailsToGenreString } from "../../services/Anime/AnimeAndGenreConverter";
 
-const AnimeCard = ({ item, isFavorite }) => {
+const AnimeCard = ({ item, isFavorite, onEdit = null, onOpenURL = null }) => {
+  const cleanedItem = {
+    ...item,
+    images: item.images.jpg.image_url,
+    genres: item.genres.map((value) => value.name),
+    themes: item.themes.map((value) => value.name),
+    demographics: item.demographics.map((value) => value.name)
+  };
+
+  const onEditFavoritePress = () => {
+    if (onEdit) {
+      onEdit();
+      return;
+    }
+
+    if (isFavorite) {
+      removeAnimeFromFavorite(item.mal_id.toString());
+    } else {
+      addAnimeToFavorite(item);
+    }
+  };
+
+  const onOpenURLPress = () => {
+    if (onOpenURL) {
+      onOpenURL();
+      return;
+    }
+
+    Linking.openURL(cleanedItem.url);
+  };
+
   return (
     <Card>
-      <Card.Title style={styles.topicText}>{item.title}</Card.Title>
+      <Card.Title style={styles.topicText} testID="title">
+        {cleanedItem.title}
+      </Card.Title>
       <Card.Divider />
-      <Card.Image
-        source={{ uri: item.images.jpg.image_url }}
-        style={styles.image}
-      />
+      <Card.Image source={{ uri: cleanedItem.images }} style={styles.image} />
       <Card.Divider />
       <View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (isFavorite) {
-              removeAnimeFromFavorite(item.mal_id.toString());
-            } else {
-              addAnimeToFavorite(item);
-            }
-          }}
+        <Button
+          color="#ADD8E6"
+          testID="editFavorite"
+          onPress={onEditFavoritePress}
         >
           {isFavorite ? (
             <Text>Remove this anime from favorite</Text>
           ) : (
             <Text> Add this anime to favorite </Text>
           )}
-        </TouchableOpacity>
-        <Text style={styles.topicText}>Synopsis:</Text>
-        <Text>{item.synopsis}</Text>
-        <Text style={styles.topicText}>Genres: </Text>
-        <Text>
-          {item.genres.reduce((x, y) => x + ", " + y.name, "").substring(2)}
-        </Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            Linking.openURL(item.url);
-          }}
-        >
+        </Button>
+        <BoldText size="20px">Synopsis:</BoldText>
+        <Text testID="synopsis">{cleanedItem.synopsis}</Text>
+        <BoldText size="20px">Genres: </BoldText>
+        <Text testID="genres">{animeDetailsToGenreString(cleanedItem)}</Text>
+        <Button color="#ADD8E6" testID="openURL" onPress={onOpenURLPress}>
           <Text>Click here for more information!</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </Card>
   );
@@ -68,16 +80,9 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 3 / 4
   },
-  button: {
-    borderRadius: 10,
-    padding: 5,
-    margin: 5,
-    flex: 1,
-    backgroundColor: "lightblue"
-  },
   topicText: {
+    fontWeight: "bold",
     fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 20
   }
 });
