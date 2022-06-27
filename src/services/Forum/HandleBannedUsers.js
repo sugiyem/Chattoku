@@ -1,8 +1,8 @@
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 
-export async function getBannedUsers(forumId, callbackSuccess) {
-  await firebase
+export function getBannedUsers(forumId, callbackSuccess) {
+  return firebase
     .firestore()
     .collection("forums")
     .doc(forumId)

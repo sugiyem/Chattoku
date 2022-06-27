@@ -8,35 +8,39 @@ import {
   getNumberOfLikes,
   getLikeStatus
 } from "../../../services/Forum/HandleForumPost";
+import { useIsFocused } from "@react-navigation/native";
 
 const LikeBar = ({ postId, forumId }) => {
   const [postLikeStatus, setPostLikeStatus] = useState(likeStatus.NEUTRAL);
   const [likeCount, setLikeCount] = useState(0);
+  const isFocused = useIsFocused();
   const isLiked = postLikeStatus === likeStatus.LIKE;
   const isDisliked = postLikeStatus === likeStatus.DISLIKE;
   const thumbsUpColor = isLiked ? "blue" : "black";
   const thumbsDownColor = isDisliked ? "red" : "black";
 
-  const debouncedUpdateLikes = useCallback(debounce(updateLikes, 2000), []);
+  const debouncedUpdateLikes = useCallback(debounce(updateLikes, 100), []);
 
   useEffect(() => {
-    getNumberOfLikes(forumId, postId, setLikeCount);
+    if (!isFocused) return;
+
     getLikeStatus(forumId, postId, setPostLikeStatus);
-  }, []);
+    getNumberOfLikes(forumId, postId, setLikeCount);
+  }, [isFocused]);
 
   function handleLikeButtonClick() {
     if (postLikeStatus === likeStatus.LIKE) {
       setPostLikeStatus(likeStatus.NEUTRAL);
-      debouncedUpdateLikes(forumId, postId, likeStatus.NEUTRAL);
       setLikeCount(likeCount - 1);
+      debouncedUpdateLikes(forumId, postId, likeStatus.NEUTRAL);
     } else if (postLikeStatus === likeStatus.DISLIKE) {
       setPostLikeStatus(likeStatus.LIKE);
-      debouncedUpdateLikes(forumId, postId, likeStatus.LIKE);
       setLikeCount(likeCount + 2);
+      debouncedUpdateLikes(forumId, postId, likeStatus.LIKE);
     } else {
       setPostLikeStatus(likeStatus.LIKE);
-      debouncedUpdateLikes(forumId, postId, likeStatus.LIKE);
       setLikeCount(likeCount + 1);
+      debouncedUpdateLikes(forumId, postId, likeStatus.LIKE);
     }
   }
 
