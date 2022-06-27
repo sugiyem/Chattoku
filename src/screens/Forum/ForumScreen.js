@@ -1,4 +1,4 @@
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
@@ -13,7 +13,6 @@ const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
   const isOwner = data.owner === currentUID;
@@ -32,21 +31,17 @@ const ForumScreen = () => {
 
   //Check for ban
   useEffect(() => {
-    if (!isFocused) return;
-
     isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
-  }, [isFocused]);
+  }, []);
 
   //retrieve posts
   useEffect(() => {
-    if (!isFocused) return;
-
     return FetchPost(
       data.id,
       (data) => setPosts(data),
       (error) => Alert.alert(error)
     );
-  }, [isFocused]);
+  }, []);
 
   return (
     <Container>
