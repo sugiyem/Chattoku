@@ -69,3 +69,12 @@ export const BoldText = styled.Text`
 export const CenteredBoldText = styled(BoldText)`
   text-align: center;
 `;
+
+export const RoundedImage = styled.Image`
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+  border-width: 1px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
+`;

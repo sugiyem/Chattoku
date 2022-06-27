@@ -2,30 +2,13 @@ import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 import { registerForPushNotificationsAsync } from "../Miscellaneous/HandleNotification";
 
-export function redirectToForgotPasswordScreen(navigation) {
-  navigation.replace("ForgotPassword");
-}
-
-export function redirectToLoginScreen(navigation) {
-  navigation.replace("Login");
-}
-
-export function redirectToSignupScreen(navigation) {
-  navigation.replace("Signup");
-}
-
-export function isPasswordTooShort(password) {
-  return password.length < 6;
-}
-
-// A str is considered a valid email if it is in the form of
-// anystring@anystring.anystring
-export function isValidEmail(str) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(str);
-}
-
-export async function login(credentials, navigation, app = firebase) {
+export async function login(
+  credentials,
+  onSuccess,
+  deviceToken = null,
+  isVerified = false,
+  app = firebase
+) {
   await app
     .auth()
     .signInWithEmailAndPassword(credentials.email, credentials.password)
@@ -34,16 +17,16 @@ export async function login(credentials, navigation, app = firebase) {
       Alert.alert("Incorrect Email / Password");
     });
 
-  const currentUser = firebase.auth().currentUser;
+  const currentUser = app.auth().currentUser;
 
-  // console.log(currentUser);
+  console.log(currentUser);
 
   if (currentUser === null) {
     return;
     // console.log("Incorrect Credentials");
     // Alert.alert("Incorrect Email / Password");
     // await firebase.auth().signOut();
-  } else if (!currentUser.emailVerified) {
+  } else if (!isVerified && !currentUser.emailVerified) {
     console.log("email not verified");
     Alert.alert("Please Verify Your Email Before Logging In", "", [
       {
@@ -54,9 +37,16 @@ export async function login(credentials, navigation, app = firebase) {
         text: "Cancel"
       }
     ]);
-    await app.auth().signOut();
+
+    signOut(app);
   } else {
-    const token = await registerForPushNotificationsAsync();
+    let token = null;
+
+    if (deviceToken) {
+      token = deviceToken;
+    } else {
+      token = await registerForPushNotificationsAsync();
+    }
 
     if (token) {
       await app
@@ -66,7 +56,7 @@ export async function login(credentials, navigation, app = firebase) {
         .set({ notificationToken: token }, { merge: true });
     }
 
-    navigation.replace("Dashboard");
+    onSuccess();
   }
 }
 
@@ -74,7 +64,7 @@ export function signOut(app = firebase) {
   app.auth().signOut();
 }
 
-export function signUp(credentials, navigation, app = firebase) {
+export async function signUp(credentials, onSuccess, app = firebase) {
   app
     .auth()
     .createUserWithEmailAndPassword(credentials.email, credentials.password)
@@ -83,8 +73,8 @@ export function signUp(credentials, navigation, app = firebase) {
 
       const currentUID = app.auth().currentUser.uid;
 
-      await firebase.firestore().collection("users").doc(currentUID).set({
-        app: credentials.username,
+      await app.firestore().collection("users").doc(currentUID).set({
+        username: credentials.username,
         bio: "",
         img: "",
         genres: [],
@@ -97,12 +87,12 @@ export function signUp(credentials, navigation, app = firebase) {
         "Please verify your account before signing in."
       );
 
-      signOut();
+      signOut(app);
 
       // console.log("finished");
     })
     .then(() => {
-      redirectToLoginScreen(navigation);
+      onSuccess();
     })
     .catch((e) => {
       console.log(e);

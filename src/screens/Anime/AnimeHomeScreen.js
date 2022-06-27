@@ -99,28 +99,24 @@ const AnimeHomeScreen = () => {
 
   const isPageLoading = !(isAiringLoaded && isTopLoaded);
 
-  const RenderPage = () => (
-    <Container>
-      <AnimeSearchBar
-        value={search}
-        onChangeText={setSearch}
-        navigation={navigation}
-      />
-
-      <Button
-        onPress={() => navigation.navigate("Recommendation")}
-        color="#00ffff"
-      >
-        <ButtonText>Find Recommendations</ButtonText>
-      </Button>
-
-      <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
-    </Container>
-  );
-
   return (
     <Loading isLoading={isPageLoading}>
-      <RenderPage />
+      <Container>
+        <AnimeSearchBar
+          value={search}
+          onChangeText={setSearch}
+          navigation={navigation}
+        />
+
+        <Button
+          onPress={() => navigation.navigate("Recommendation")}
+          color="#00ffff"
+        >
+          <ButtonText>Find Recommendations</ButtonText>
+        </Button>
+
+        <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
+      </Container>
     </Loading>
   );
 };
