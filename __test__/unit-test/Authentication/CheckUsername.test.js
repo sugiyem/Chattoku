@@ -7,7 +7,7 @@ import { fakeFirebase } from "../../Helper";
 
 mockFirebase(fakeFirebase);
 
-describe("Test Username", () => {
+describe("Test Username Validation", () => {
   const admin = require("firebase-admin");
   admin.initializeApp();
 
