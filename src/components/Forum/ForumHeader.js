@@ -4,20 +4,15 @@ import {
   unfollowForum,
   updateNotification
 } from "../../services/Forum/HandleForum";
-import { Dimensions } from "react-native";
+import { Alert, Dimensions } from "react-native";
 import { Icon } from "react-native-elements";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Warning from "../../components/Forum/Warning";
 import styled from "styled-components/native";
-import { debounce } from "lodash";
 
 const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
   const [isFollowed, setIsFollowed] = useState(false);
-  const [isNotificationOn, setIsNotificationOn] = useState(false);
-  const debouncedUpdateNotification = useCallback(
-    debounce(updateNotification, 300),
-    []
-  );
+  const [isNotificationOn, setIsNotificationOn] = useState(true);
 
   useEffect(() => {
     getForumFollowData(id, (data) => {
@@ -31,15 +26,21 @@ const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
       ? Warning(() =>
           unfollowForum(id, () => {
             setIsFollowed(!isFollowed);
-            setIsNotificationOn(false);
+            setIsNotificationOn(true);
           })
         )
       : followForum(id, () => setIsFollowed(!isFollowed));
   }
 
   function handleNotificationClick() {
-    setIsNotificationOn(!isNotificationOn);
-    debouncedUpdateNotification(id, !isNotificationOn);
+    const message = !isNotificationOn
+      ? "Notification turned on successfully"
+      : "Notification turned off successfully";
+
+    updateNotification(id, !isNotificationOn, () => {
+      Alert.alert(message);
+      setIsNotificationOn(!isNotificationOn);
+    });
   }
 
   const RenderNotificationButton = () => {

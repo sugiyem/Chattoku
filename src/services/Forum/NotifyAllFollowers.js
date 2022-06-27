@@ -34,9 +34,6 @@ export default async function NotifyAllFollowers(
           .get()
           .then((doc) => {
             const token = doc.data().notificationToken;
-            //Skip users which does not allow push notification
-            if (!token) return;
-
             sendPushNotification(token, "New On " + forumName, postTitle);
           });
       });

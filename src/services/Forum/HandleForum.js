@@ -73,7 +73,7 @@ export async function followForum(forumId, callbackSuccess) {
     .doc(currentUID);
 
   batch.set(userFollowListRef, {});
-  batch.set(forumFollowerListRef, { isNotificationOn: false });
+  batch.set(forumFollowerListRef, { isNotificationOn: true });
 
   batch.commit().then(() => callbackSuccess());
 }
@@ -99,7 +99,11 @@ export async function unfollowForum(forumId, callbackSuccess) {
   batch.commit().then(() => callbackSuccess());
 }
 
-export async function updateNotification(forumId, isNotificationOn) {
+export async function updateNotification(
+  forumId,
+  isNotificationOn,
+  callbackSuccess
+) {
   const currentUID = firebase.auth().currentUser.uid;
   console.log(forumId);
   console.log(isNotificationOn);
@@ -109,5 +113,6 @@ export async function updateNotification(forumId, isNotificationOn) {
     .doc(forumId)
     .collection("followers")
     .doc(currentUID)
-    .set({ isNotificationOn: isNotificationOn });
+    .set({ isNotificationOn: isNotificationOn })
+    .then(() => callbackSuccess());
 }
