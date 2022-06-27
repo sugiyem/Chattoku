@@ -15,8 +15,8 @@ School of Computing every summer break. <br />
 Chattoku is a cross-platform mobile application built by React Native to help the otaku community to interact
 with each other, as well as providing them with various anime-related features. <br />
 <br />
-**Project Poster:** [Link](https://drive.google.com/file/d/1kiwtASi1LM-V3vOMutPdp-9I7sJhmF0g/view?usp=sharing)<br />
-**Project Video:** [Link](https://drive.google.com/file/d/1lVnDzbUa5mklyU8R2ajIs6b0fVgkkGgh/view?usp=sharing)
+**Project Poster:** [Link](https://drive.google.com/file/d/1tYWB7aclCzNUz-Bd6IL3TEhQSDKSjBwz/view?usp=sharing)<br />
+**Project Video:** [Link](https://drive.google.com/file/d/1XnbHPAeRXGRYL7nVqy8qH3v2I_4V-eBG/view?usp=sharing)
 # Target Key Features
 - Anime database 
 - Anime recommendation system
@@ -25,14 +25,17 @@ with each other, as well as providing them with various anime-related features. 
 - Messaging (Direct & Group messaging)
 
 # Milestones
-**Milestone 1 report:** [Link](https://docs.google.com/document/d/1D8-vLoXohN733jaWMTrmSIA6-HuqPS0upaHn05JqmIY/edit?usp=sharing)
+**Milestone 1 report:** [Link](https://docs.google.com/document/d/1D8-vLoXohN733jaWMTrmSIA6-HuqPS0upaHn05JqmIY/edit?usp=sharing)<br />
+**Milestone 2 report:** [Link](https://docs.google.com/document/d/1xZ8hMrKNoLE1Tuvzi7kb7-gIRuTqCCkkwMDQw_8gz4g/edit?usp=sharing)
 
 # Documentation
 **User's guide:** [Link](https://docs.google.com/document/d/1vRrCSPBEcgSpYMyXMdp4F-L_7FXV8Iy6uVZLQcCYXu4/edit?usp=sharing)<br />
-**Project proposal:** [Link](https://docs.google.com/document/d/1xAhaE0ljn94Tjhqcp7yZmOlpP2r-etiCjmwijOf4cOw/edit?usp=sharing)
+**Developer's guide:** [Link](https://docs.google.com/document/d/19yG3KxJRWO_JsoFujwjKD_i41ny3NsG8iRydl3v2Dng/edit?usp=sharing)<br />
+**Project proposal:** [Link](https://docs.google.com/document/d/1xAhaE0ljn94Tjhqcp7yZmOlpP2r-etiCjmwijOf4cOw/edit?usp=sharing)<br />
+**Project log:** [Link](https://docs.google.com/document/d/1doheUZSefm5vYO2fsw0aX7HtRd7rRoMCJG7N4fs58ac/edit?usp=sharing)
 
 # Deployment
-As of milestone 1, Chattoku has been deployed for users to take a look at what this app can do. <br />
+As of milestone 2, Chattoku has been deployed for users to take a look at what this app can do. <br />
 
 To test this app, first you need to download Expo Go on your mobile phones. <br />
 
