@@ -52,6 +52,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
       ? addPost(
           forumData.id,
           post,
+          forumData.title,
           () => navigation.navigate("Forum", { data: forumData }),
           (e) => Alert.alert(e)
         )
