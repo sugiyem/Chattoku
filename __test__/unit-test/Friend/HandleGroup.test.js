@@ -47,7 +47,8 @@ describe("Test group system", () => {
       description: "Fourth group",
       img: "fourth-img-link",
       lastMessageText: "",
-      lastMessageAt: null
+      lastMessageAt: null,
+      lastAccessedAt: null
     });
     expect(mockBatchSet).toHaveBeenNthCalledWith(
       2,

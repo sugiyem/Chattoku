@@ -1,37 +1,63 @@
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Alert, SectionList } from "react-native";
-import FetchPost from "./FetchPost";
+import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
 import PostCard from "./PostCard";
 
-const PostList = ({ forumId }) => {
-  const [posts, setPosts] = useState([]);
+const PostList = ({
+  forumId,
+  isOwner,
+  isBanned,
+  Header = () => <></>,
+  posts
+}) => {
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    return FetchPost(
-      forumId,
-      (data) => setPosts(data),
-      (error) => Alert.alert(error)
-    );
-  }, []);
+  const filteredPost = posts.filter((post) =>
+    post.title.toLowerCase().startsWith(search.toLowerCase())
+  );
 
   // console.log("POST LIST");
   // console.log(posts);
 
   const renderItem = ({ section, item }) => {
-    return <PostCard {...item} forumId={forumId} />;
+    return (
+      <PostCard
+        {...item}
+        isOwner={isOwner}
+        isBanned={isBanned}
+        forumId={forumId}
+      />
+    );
   };
 
-  const renderHeader = () => <></>;
+  const renderHeader = () => {
+    return (
+      <>
+        <Header />
+        <TextInput
+          onChangeText={(t) => setSearch(t)}
+          style={styles.textInput}
+          placeholder="Search By Title..."
+        />
+      </>
+    );
+  };
 
   const renderFooter = () => <></>;
 
   return (
     <>
       <SectionList
+        key={posts}
         removeClippedSubviews={true}
-        sections={[{ data: posts }]}
+        sections={[
+          {
+            data: filteredPost
+          }
+        ]}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        renderHeader={renderHeader}
+        renderSectionHeader={renderHeader}
         renderFooter={renderFooter}
       />
     </>
@@ -39,3 +65,17 @@ const PostList = ({ forumId }) => {
 };
 
 export default PostList;
+
+const styles = StyleSheet.create({
+  textInput: {
+    flexGrow: 0,
+    flexShrink: 0,
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 10,
+    backgroundColor: "white",
+    color: "black",
+    padding: 5,
+    borderRadius: 10
+  }
+});

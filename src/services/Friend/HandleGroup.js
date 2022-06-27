@@ -23,7 +23,8 @@ export async function createGroup(
     description: groupDescription,
     img: groupImg,
     lastMessageText: "",
-    lastMessageAt: null
+    lastMessageAt: null,
+    lastAccessedAt: null
   });
   batch.set(groupRef.collection("members").doc(userID), {
     showMessage: false,

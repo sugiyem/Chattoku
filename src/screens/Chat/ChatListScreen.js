@@ -1,15 +1,98 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { chatType } from "../../constants/Chat";
+import {
+  fetchActivePrivateChats,
+  checkUnreadGroupMessages
+} from "../../services/Chat/FetchActiveChats";
+import ActiveChatLists from "../../components/Chat/ActiveChatLists";
+import NotificationText from "../../components/Miscellaneous/NotificationText";
 
 const ChatListScreen = () => {
+  const [search, setSearch] = useState("");
+  const [activeChats, setActiveChats] = useState([]);
+  const [isUnreadExists, setIsUnreadExists] = useState(false);
+  const [expand, setExpand] = useState(null);
+  const navigation = useNavigation();
+
+  const expandStatus = (value) => expand === value;
+
+  const changeExpand = (value) => {
+    if (expandStatus(value)) {
+      setExpand(null);
+    } else {
+      setExpand(value);
+    }
+  };
+
+  useEffect(() => {
+    return fetchActivePrivateChats({
+      onSuccess: (data) => setActiveChats(data),
+      onFailure: (error) => Alert.alert(error.message)
+    });
+  }, []);
+
+  useEffect(() => {
+    return checkUnreadGroupMessages({
+      onFound: () => {
+        setIsUnreadExists(true);
+      },
+      onNotFound: () => {
+        setIsUnreadExists(false);
+      },
+      onFailure: (error) => {
+        Alert.alert("Error", error.message);
+      }
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        The list of chats is still in progress.{"\n"}
-        You can try the chat functionality by messaging your friends in the
-        friend tab.
-      </Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <TextInput
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Search messages"
+        style={styles.textInput}
+      />
+
+      <Text style={styles.title}>Private Chat List</Text>
+
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Friends")}
+        >
+          <Text style={styles.buttonText}>Message other users</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.push("GroupChatList")}
+        >
+          <NotificationText text="Group Chat List" isShown={isUnreadExists} />
+        </TouchableOpacity>
+      </View>
+
+      <ActiveChatLists
+        type={chatType.PRIVATE_CHAT}
+        items={activeChats.filter((item) =>
+          item.username.toLowerCase().startsWith(search.toLowerCase())
+        )}
+        expandStatus={expandStatus}
+        changeExpand={changeExpand}
+        navigation={navigation}
+      />
+    </ScrollView>
   );
 };
 
@@ -19,9 +102,38 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "darkcyan",
     flex: 1,
+    padding: 5
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 5,
+    backgroundColor: "white",
+    color: "black",
+    borderRadius: 10,
+    padding: 2
+  },
+  buttonGroup: {
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    flexDirection: "row"
+  },
+  button: {
+    alignSelf: "stretch",
+    borderRadius: 10,
+    borderWidth: 1,
+    margin: 10,
     padding: 5,
+    backgroundColor: "aquamarine",
+    flex: 1
   },
-  text: {
-    textAlign: "center",
+  buttonText: {
+    textAlign: "center"
   },
+  title: {
+    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
+    fontSize: 30,
+    fontWeight: "bold",
+    textDecorationLine: "underline"
+  }
 });
