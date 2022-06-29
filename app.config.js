@@ -11,6 +11,7 @@ export default {
     icon: "./src/assets/logo.png",
     version: "1.0.0",
     assetBundlePatterns: ["**/*"],
+    orientation: "portrait",
     extra: {
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
