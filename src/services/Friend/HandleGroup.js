@@ -19,6 +19,7 @@ export async function createGroup(
   const groupRef = db.collection("groups").doc(groupID);
 
   batch.set(groupRef, {
+    owner: userID,
     name: groupName,
     description: groupDescription,
     img: groupImg,
@@ -30,7 +31,8 @@ export async function createGroup(
     showMessage: false,
     showNotif: false
   });
-  batch.set(userRef.collection("groupCreated").doc(groupID), {});
+  batch.set(groupRef.collection("admins").doc(userID), {});
+  // batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
   await batch
