@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   leaveGroup,
@@ -10,6 +10,7 @@ import { contactType } from "../../constants/Contact";
 import { groupListType } from "../../constants/Group";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
+import Caution from "../Miscellaneous/Caution";
 
 export default RenderGroupLists = ({
   type,
@@ -25,13 +26,17 @@ export default RenderGroupLists = ({
       buttonDetails.push(
         {
           title: "Detail",
-          icon: "folder-open",
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("GroupInfo", { groupData: item })
         },
         {
           title: "Message",
-          icon: "message",
+          type: "material-community",
+          icon: "message-processing-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("Chat", {
               screen: "GroupChatDetail",
@@ -40,22 +45,11 @@ export default RenderGroupLists = ({
         },
         {
           title: "Leave Group",
-          icon: "close",
-          onPress: (item) => {
-            Alert.alert(
-              "You will leave this group",
-              "This action is irreversible. Do you want to continue?",
-              [
-                {
-                  text: "Cancel"
-                },
-                {
-                  text: "Continue",
-                  onPress: () => leaveGroup(item.id)
-                }
-              ]
-            );
-          }
+          type: "ionicon",
+          icon: "exit-outline",
+          color: "red",
+          onPress: (item) =>
+            Caution("You will leave this group", () => leaveGroup(item.id))
         }
       );
       break;
@@ -64,18 +58,24 @@ export default RenderGroupLists = ({
       buttonDetails.push(
         {
           title: "Detail",
-          icon: "folder-open",
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("GroupRequestInfo", { groupData: item })
         },
         {
           title: "Accept Invitation",
+          type: "material",
           icon: "check",
+          color: "green",
           onPress: (item) => acceptGroupInvitation(item.id)
         },
         {
           title: "Decline Invitation",
+          type: "material",
           icon: "close",
+          color: "red",
           onPress: (item) => declineGroupInvitation(item.id)
         }
       );
