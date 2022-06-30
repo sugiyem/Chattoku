@@ -12,9 +12,9 @@ const ManageForumScreen = () => {
     navigation.navigate("BannedUsers");
   }
 
-  // function handleAdminButton() {
-  //   navigation.navigate("Admins");
-  // }
+  function handleAdminButton() {
+    navigation.navigate("Admins");
+  }
 
   return (
     <Container>
@@ -24,9 +24,9 @@ const ManageForumScreen = () => {
       <CustomButton onPress={handleBannedUsersButton}>
         <ButtonText> Banned Users </ButtonText>
       </CustomButton>
-      {/* <CustomButton onPress={handleAdminButton}>
+      <CustomButton onPress={handleAdminButton}>
         <ButtonText> Admins </ButtonText>
-      </CustomButton> */}
+      </CustomButton>
     </Container>
   );
 };
