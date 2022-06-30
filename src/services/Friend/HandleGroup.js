@@ -257,6 +257,7 @@ export async function deleteGroup(groupID, app = firebase) {
   const batch = db.batch();
   const groupRef = db.collection("groups").doc(groupID);
   const messagesSnapshot = await groupRef.collection("messages").get();
+  const adminsSnapshot = await groupRef.collection("admins").get();
   const membersSnapshot = await groupRef.collection("members").get();
   const pendingMembersSnapshot = await groupRef
     .collection("pendingMembers")
@@ -269,6 +270,10 @@ export async function deleteGroup(groupID, app = firebase) {
     .then((doc) => doc.data().name);
 
   messagesSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  adminsSnapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
   });
 
