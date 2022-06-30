@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Alert, Text } from "react-native";
 import {
-  Alert,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
+  BoldText,
+  Button,
+  ScrollContainer,
+  SearchInput
+} from "../../styles/GeneralStyles";
 import { fetchGroupInvitation } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
@@ -20,34 +17,26 @@ const GroupRequestsScreen = ({ navigation }) => {
 
   useEffect(() => {
     return fetchGroupInvitation({
-      onSuccess: (data) => {
-        setGroupRequests(data);
-      },
-      onFailure: (error) => {
-        Alert.alert("Error", error.message);
-      }
+      onSuccess: setGroupRequests,
+      onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
-  console.log(groupRequests);
+  // console.log(groupRequests);
 
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
+    <ScrollContainer>
+      <SearchInput
         value={search}
-        onChangeText={(text) => setSearch(text)}
+        onChangeText={setSearch}
         placeholder="Search group requests"
-        style={styles.textInput}
       />
 
-      <Text style={styles.title}>Group Requests List</Text>
+      <BoldText underline>Group Requests List</BoldText>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("GroupList")}
-      >
+      <Button onPress={() => navigation.replace("GroupList")}>
         <Text>Go Back</Text>
-      </TouchableOpacity>
+      </Button>
 
       <RenderGroupLists
         type={groupListType.GROUP_INVITATION}
@@ -58,37 +47,8 @@ const GroupRequestsScreen = ({ navigation }) => {
         expandStatus={(index) => expand === index}
         changeExpand={setExpand}
       />
-    </ScrollView>
+    </ScrollContainer>
   );
 };
 
 export default GroupRequestsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    padding: 5,
-    flex: 1
-  },
-  textInput: {
-    borderColor: "black",
-    borderWidth: 1,
-    margin: 5,
-    backgroundColor: "white",
-    color: "black",
-    borderRadius: 10,
-    padding: 2
-  },
-  button: {
-    margin: 5,
-    padding: 5,
-    backgroundColor: "aquamarine",
-    borderRadius: 10
-  },
-  title: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 30,
-    fontWeight: "bold",
-    textDecorationLine: "underline"
-  }
-});

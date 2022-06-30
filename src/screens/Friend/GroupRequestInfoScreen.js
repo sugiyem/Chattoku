@@ -13,12 +13,8 @@ const GroupRequestInfoScreen = ({ navigation, route }) => {
   useEffect(() => {
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: (data) => {
-        setMembers(data);
-      },
-      onFailure: (error) => {
-        Alert.alert("Error", error.message);
-      }
+      onSuccess: setMembers,
+      onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
