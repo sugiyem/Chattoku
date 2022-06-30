@@ -1,17 +1,20 @@
 import styled from "styled-components/native";
-import ForumAdminCard from "../../../components/Forum/ForumManagement/ForumAdminCard";
-import { firebase } from "../../../services/Firebase/Config";
-import { AdminPower } from "../../../constants/Admin";
+import ForumAdminList from "../../../components/Forum/ForumManagement/ForumAdminList";
+import { useNavigation } from "@react-navigation/native";
 
 const AdminsScreen = () => {
-  const currentUID = firebase.auth().currentUser.uid;
+  const navigation = useNavigation();
+  const forumData = navigation.getState().routes[1].params.data;
+
+  console.log(forumData);
 
   return (
     <Container>
-      <ForumAdminCard
-        userId={currentUID}
-        authorities={[AdminPower.BAN_USER, AdminPower.DELETE_POSTS]}
-      />
+      <CustomButton onPress={() => {}}>
+        <ButtonText>Add Admins</ButtonText>
+      </CustomButton>
+      <Title> Forum Admins </Title>
+      <ForumAdminList forumId={forumData.id} />
     </Container>
   );
 };
@@ -24,4 +27,28 @@ const Container = styled.View`
   align-items: center;
   padding: 10px;
   background-color: darkcyan;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: navy;
+  margin: 20px;
+`;
+
+const ButtonText = styled.Text`
+  justify-content: center;
+  align-self: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+`;
+
+const Title = styled.Text`
+  font-size: 22px;
+  padding: 5px;
+  font-weight: 400;
+  align-self: center;
+  color: white;
 `;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { Icon } from "react-native-elements";
-import { Text } from "react-native";
+import { Dimensions, Text } from "react-native";
 
 const initialUserData = {
   bio: "",
@@ -56,17 +56,18 @@ const ForumAdminCard = ({ userId, authorities }) => {
 };
 export default ForumAdminCard;
 
+const width = Dimensions.get("screen").width;
+
 const Card = styled.View`
   display: flex;
   flex-direction: row;
   padding: 10px;
   background-color: white;
-  margin: 10px;
   border-radius: 10px;
   border-width: 1px;
   border-color: black;
   align-items: center;
-  width: 100%;
+  width: ${width - 20}px;
 `;
 
 const UserDetails = styled.View`
