@@ -14,6 +14,9 @@ const ContactBar = ({ type, item }) => {
         <ListItem.Subtitle>
           {isUser ? item.bio : item.description}
         </ListItem.Subtitle>
+        {item.groupRole && (
+          <ListItem.Subtitle>{item.groupRole}</ListItem.Subtitle>
+        )}
       </ListItem.Content>
     </>
   );

@@ -5,7 +5,8 @@ export const groupListType = {
 
 export const groupMemberType = {
   OWNER: 0,
-  MEMBER: 1,
-  PENDING_MEMBER: 2,
-  NON_MEMBER: 3
+  ADMIN: 1,
+  MEMBER: 2,
+  PENDING_MEMBER: 3,
+  NON_MEMBER: 4
 };

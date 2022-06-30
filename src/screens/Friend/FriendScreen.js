@@ -13,6 +13,8 @@ import GroupListScreen from "./GroupListScreen";
 import GroupRequestsScreen from "./GroupRequestsScreen";
 import EditGroupScreen from "./EditGroupScreen";
 import AddGroupMemberScreen from "./AddGroupMemberScreen";
+import EditGroupMemberScreen from "./EditGroupMemberScreen";
+import EditPendingGroupMemberScreen from "./EditPendingGroupMemberScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +45,11 @@ const FriendScreen = () => {
       />
       <Stack.Screen name="EditGroup" component={EditGroupScreen} />
       <Stack.Screen name="AddGroupMember" component={AddGroupMemberScreen} />
-
+      <Stack.Screen name="EditGroupMember" component={EditGroupMemberScreen} />
+      <Stack.Screen
+        name="EditPendingGroupMember"
+        component={EditPendingGroupMemberScreen}
+      />
     </Stack.Navigator>
   );
 };
