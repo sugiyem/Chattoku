@@ -43,6 +43,7 @@ describe("Test group system", () => {
 
     expect(mockBatch).toHaveBeenCalled();
     expect(mockBatchSet).toHaveBeenNthCalledWith(1, groupRef, {
+      owner: userID,
       name: "group4",
       description: "Fourth group",
       img: "fourth-img-link",
@@ -60,7 +61,7 @@ describe("Test group system", () => {
     );
     expect(mockBatchSet).toHaveBeenNthCalledWith(
       3,
-      userRef.collection("groupCreated").doc(newGroupID),
+      groupRef.collection("admins").doc(userID),
       {}
     );
     expect(mockBatchSet).toHaveBeenNthCalledWith(
