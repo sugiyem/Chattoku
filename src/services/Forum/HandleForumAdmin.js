@@ -64,3 +64,35 @@ export function isUserAdmin(forumId, uid, callbackSuccess) {
         : callbackSuccess({ isFound: false })
     );
 }
+
+export function isAuthorizedToDeletePosts(forumId, callbackSuccess) {
+  const currentUID = firebase.auth().currentUser.uid;
+
+  return firebase
+    .firestore()
+    .collection("forums")
+    .doc(forumId)
+    .collection("admins")
+    .doc(currentUID)
+    .onSnapshot((doc) =>
+      callbackSuccess(
+        doc.exists && doc.data().authorities.includes("Delete Posts")
+      )
+    );
+}
+
+export function isAuthorizedToBanUsers(forumId, callbackSuccess) {
+  const currentUID = firebase.auth().currentUser.uid;
+
+  return firebase
+    .firestore()
+    .collection("forums")
+    .doc(forumId)
+    .collection("admins")
+    .doc(currentUID)
+    .onSnapshot((doc) =>
+      callbackSuccess(
+        doc.exists && doc.data().authorities.includes("Ban Users From Forum")
+      )
+    );
+}

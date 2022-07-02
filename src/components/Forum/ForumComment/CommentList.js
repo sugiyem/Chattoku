@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Alert, SectionList } from "react-native";
 import FetchComment from "../../../services/Forum/FetchComment";
 import CommentCard from "./CommentCard";
+import { isAuthorizedToDeletePosts } from "../../../services/Forum/HandleForumAdmin";
 
 const CommentList = ({ forumId, postId, Header = () => <></> }) => {
   const [comments, setComments] = useState([]);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     return FetchComment(
@@ -15,9 +17,20 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
     );
   }, []);
 
+  useEffect(() => {
+    return isAuthorizedToDeletePosts(forumId, setIsAuthorized);
+  }, []);
+
   const renderItem = ({ section, item }) => {
     console.log(item);
-    return <CommentCard {...item} forumId={forumId} postId={postId} />;
+    return (
+      <CommentCard
+        {...item}
+        forumId={forumId}
+        postId={postId}
+        isAuthorized={isAuthorized}
+      />
+    );
   };
 
   const renderFooter = () => <></>;

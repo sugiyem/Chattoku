@@ -14,10 +14,21 @@ const initialUserData = {
   username: "fetching username..."
 };
 
-const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
+const PostCard = ({
+  title,
+  content,
+  id,
+  uid,
+  forumId,
+  isOwner,
+  isBanned,
+  isAuthorized
+}) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(initialUserData);
   const currentUID = firebase.auth().currentUser.uid;
+  const forumData = navigation.getState().routes[1].params.data;
+  const isOwnersPost = forumData.owner === uid;
 
   const likeBarState = {
     forumId: forumId,
@@ -81,7 +92,9 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
         <Action onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </Action>
-        {((!isBanned && currentUID === uid) || isOwner) && (
+        {((!isBanned && currentUID === uid) ||
+          isOwner ||
+          (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
           </Action>
