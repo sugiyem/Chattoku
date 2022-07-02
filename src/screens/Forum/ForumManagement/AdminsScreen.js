@@ -8,9 +8,13 @@ const AdminsScreen = () => {
 
   console.log(forumData);
 
+  function handleAddAdminPress() {
+    navigation.navigate("AddAdmin");
+  }
+
   return (
     <Container>
-      <CustomButton onPress={() => {}}>
+      <CustomButton onPress={handleAddAdminPress}>
         <ButtonText>Add Admins</ButtonText>
       </CustomButton>
       <Title> Forum Admins </Title>

@@ -15,6 +15,7 @@ import BannedUsersScreen from "./Forum/ForumManagement/BannedUsersScreen";
 import AdminsScreen from "./Forum/ForumManagement/AdminsScreen";
 import AddBannedScreen from "./Forum/ForumManagement/AddBannedScreen";
 import FollowedForumScreen from "./Forum/FollowedForumScreen";
+import AddAdminScreen from "./Forum/ForumManagement/AddAdminScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,10 +39,14 @@ const HomeScreen = () => {
       {/* For forum management */}
       <Stack.Screen name="CreateForum" component={CreateForumScreen} />
       <Stack.Screen name="ManageForum" component={ManageForumScreen} />
+      {/* Manage forum details */}
       <Stack.Screen name="EditForum" component={ForumEditScreen} />
+      {/* Manage banned users */}
       <Stack.Screen name="AddBanned" component={AddBannedScreen} />
       <Stack.Screen name="BannedUsers" component={BannedUsersScreen} />
+      {/* Manage forum admins */}
       <Stack.Screen name="Admins" component={AdminsScreen} />
+      <Stack.Screen name="AddAdmin" component={AddAdminScreen} />
     </Stack.Navigator>
   );
 };

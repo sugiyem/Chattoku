@@ -1,4 +1,1 @@
-export const AdminPower = {
-  DELETE_POSTS: "Delete Posts",
-  BAN_USER: "Ban Users From Forum"
-};
+export const AdminPower = ["Delete Posts", "Ban Users From Forum"];

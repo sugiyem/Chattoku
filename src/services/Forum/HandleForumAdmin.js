@@ -50,3 +50,17 @@ export function getAllAdmins(forumId, callbackSuccess) {
       callbackSuccess(data);
     });
 }
+
+export function isUserAdmin(forumId, uid, callbackSuccess) {
+  return firebase
+    .firestore()
+    .collection("forums")
+    .doc(forumId)
+    .collection("admins")
+    .doc(uid)
+    .onSnapshot((doc) =>
+      doc.exists
+        ? callbackSuccess({ isFound: true, ...doc.data() })
+        : callbackSuccess({ isFound: false })
+    );
+}

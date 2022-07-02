@@ -62,12 +62,13 @@ const Card = styled.View`
   display: flex;
   flex-direction: row;
   padding: 10px;
+  margin: 10px;
   background-color: white;
   border-radius: 10px;
   border-width: 1px;
   border-color: black;
   align-items: center;
-  width: ${width - 20}px;
+  width: ${width - 40}px;
 `;
 
 const UserDetails = styled.View`
