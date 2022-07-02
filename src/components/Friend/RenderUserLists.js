@@ -7,10 +7,15 @@ import {
   declineFriendRequest,
   removeFriend
 } from "../../services/Friend/HandleFriend";
+import {
+  blockUser,
+  unblockUser
+} from "../../services/Friend/HandleBlockedUser";
 import { contactType } from "../../constants/Contact";
 import { friendshipType } from "../../constants/Friend";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
+import Caution from "../Miscellaneous/Caution";
 
 export default RenderUserLists = ({
   type,
@@ -19,15 +24,25 @@ export default RenderUserLists = ({
   expandStatus,
   changeExpand
 }) => {
-  const buttonDetails = [
+  let buttonDetails = [
     {
       title: "Message",
-      icon: "message",
+      type: "material-community",
+      icon: "message-processing-outline",
+      color: "blue",
       onPress: (item) =>
         navigation.navigate("Chat", {
           screen: "ChatDetail",
           params: { recipientID: item.id, recipientUsername: item.username }
         })
+    },
+    {
+      title: "Block",
+      type: "material",
+      icon: "block",
+      color: "red",
+      onPress: (item) =>
+        Caution("This user will be blocked", () => blockUser(item.id))
     }
   ];
 
@@ -36,28 +51,21 @@ export default RenderUserLists = ({
       buttonDetails.push(
         {
           title: "View details",
-          icon: "folder-open",
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("FriendInfo", { friendData: item })
         },
         {
           title: "Unfriend",
-          icon: "person-remove",
-          onPress: (item) => {
-            Alert.alert(
-              "This user will be removed from your friend's list",
-              "This action is irreversible. Do you want to continue?",
-              [
-                {
-                  text: "Cancel"
-                },
-                {
-                  text: "Continue",
-                  onPress: () => removeFriend(item.id)
-                }
-              ]
-            );
-          }
+          type: "ionicon",
+          icon: "ios-person-remove-outline",
+          color: "red",
+          onPress: (item) =>
+            Caution("This user will be removed from your friend's list", () =>
+              removeFriend(item.id)
+            )
         }
       );
       break;
@@ -65,22 +73,13 @@ export default RenderUserLists = ({
     case friendshipType.WAITING_RESPONSE:
       buttonDetails.push({
         title: "Cancel request",
-        icon: "close",
-        onPress: (item) => {
-          Alert.alert(
-            "This friend request will be removed",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => cancelFriendRequest(item.id)
-              }
-            ]
-          );
-        }
+        type: "material-community",
+        icon: "account-cancel-outline",
+        color: "red",
+        onPress: (item) =>
+          Caution("This friend request will be removed", () =>
+            cancelFriendRequest(item.id)
+          )
       });
       break;
 
@@ -88,16 +87,31 @@ export default RenderUserLists = ({
       buttonDetails.push(
         {
           title: "Accept request",
+          type: "material",
           icon: "check",
+          color: "green",
           onPress: (item) => acceptFriendRequest(item.id)
         },
         {
           title: "Decline request",
+          type: "material",
           icon: "close",
+          color: "red",
           onPress: (item) => declineFriendRequest(item.id)
         }
       );
       break;
+
+    case friendshipType.BLOCKED:
+      buttonDetails = [
+        {
+          title: "Unblock",
+          type: "material-community",
+          icon: "account-lock-open-outline",
+          color: "green",
+          onPress: (item) => unblockUser(item.id)
+        }
+      ];
   }
 
   const onRightClick = (index) => {
