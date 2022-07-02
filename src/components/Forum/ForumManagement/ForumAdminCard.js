@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { Icon } from "react-native-elements";
-import { Dimensions, Text } from "react-native";
+import { Alert, Dimensions, StyleSheet, Text } from "react-native";
+import { removeAdmin } from "../../../services/Forum/HandleForumAdmin";
+import { useNavigation } from "@react-navigation/native";
+import Warning from "../Warning";
+import ManageAdminCard from "./ManageAdminCard";
+import { renderType } from "../../../constants/Forum";
 
 const initialUserData = {
   bio: "",
@@ -12,10 +17,24 @@ const initialUserData = {
 
 const ForumAdminCard = ({ userId, authorities }) => {
   const [userData, setUserData] = useState(initialUserData);
+  const [isEditing, setIsEditing] = useState(false);
+  const navigation = useNavigation();
+  const forumId = navigation.getState().routes[1].params.data.id;
 
   useEffect(() => {
     FetchInfoById(userId, (data) => setUserData(data));
   }, []);
+
+  if (isEditing) {
+    return (
+      <ManageAdminCard
+        type={renderType.EDIT}
+        userData={userData}
+        authorities={authorities}
+        onSuccessfulEdit={() => setIsEditing(false)}
+      />
+    );
+  }
 
   const bulletedAuthorities = authorities.map((power) => {
     return (
@@ -26,7 +45,16 @@ const ForumAdminCard = ({ userId, authorities }) => {
     );
   });
 
-  function handleDelete() {}
+  function handleDelete() {
+    Warning(() => {
+      removeAdmin(forumId, userId, () =>
+        Alert.alert(
+          "Success",
+          userData.username + " has been removed successfully"
+        )
+      );
+    });
+  }
 
   return (
     <Card>
@@ -45,10 +73,21 @@ const ForumAdminCard = ({ userId, authorities }) => {
         {bulletedAuthorities}
       </InfoContainer>
       <Icon
+        name="edit"
+        type="material"
+        color="black"
+        size={35}
+        iconStyle={styles.icon}
+        onPress={() => {
+          setIsEditing(true);
+        }}
+      />
+      <Icon
         name="delete"
         type="material"
         color="red"
-        size={40}
+        size={35}
+        iconStyle={styles.icon}
         onPress={handleDelete}
       />
     </Card>
@@ -119,3 +158,9 @@ const Bullet = styled.View`
 const BulletText = styled.Text`
   font-size: 16px;
 `;
+
+const styles = StyleSheet.create({
+  icon: {
+    margin: 8
+  }
+});

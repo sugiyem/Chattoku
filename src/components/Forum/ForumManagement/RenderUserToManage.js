@@ -1,9 +1,10 @@
 import BannedUser from "./BannedUser";
 import ForumAdminCard from "./ForumAdminCard";
 import styled from "styled-components/native";
-import AddAdminCard from "./AddAdminCard";
+import ManageAdminCard from "./ManageAdminCard";
 import { useNavigation } from "@react-navigation/native";
 import OwnerCard from "./OwnerCard";
+import { renderType } from "../../../constants/Forum";
 
 const RenderUserToManage = ({ userData, data }) => {
   const navigation = useNavigation();
@@ -36,7 +37,7 @@ const RenderUserToManage = ({ userData, data }) => {
       </>
     );
   } else {
-    return <AddAdminCard userData={userData} />;
+    return <ManageAdminCard userData={userData} type={renderType.CREATE} />;
   }
 };
 

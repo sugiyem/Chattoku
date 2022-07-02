@@ -5,11 +5,16 @@ import { AdminPower } from "../../../constants/Admin";
 import Selector from "../../Miscellaneous/Selector";
 import { addAdmin } from "../../../services/Forum/HandleForumAdmin";
 import { useNavigation } from "@react-navigation/native";
+import { renderType } from "../../../constants/Forum";
 
-const AddAdminCard = ({ userData }) => {
-  const [selected, setSelected] = useState([]);
+const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
+  const [selected, setSelected] = useState(
+    type === renderType.CREATE ? [] : authorities
+  );
   const navigation = useNavigation();
   const forumId = navigation.getState().routes[1].params.data.id;
+  const successMessage =
+    type === renderType.CREATE ? "Authorization Success" : "Edit Success";
 
   console.log(selected);
 
@@ -41,7 +46,10 @@ const AddAdminCard = ({ userData }) => {
       return;
     }
     addAdmin(forumId, { uid: userData.id, authorities: selected }, () => {
-      Alert.alert("Authorization Success");
+      Alert.alert(successMessage);
+      if (type === renderType.EDIT) {
+        onSuccessfulEdit();
+      }
     });
   }
 
@@ -60,13 +68,22 @@ const AddAdminCard = ({ userData }) => {
       <BulletText> Choose Authorization: </BulletText>
       {AuthoritiesSelection}
       <CustomButton onPress={handleSubmit}>
-        <ButtonText> Add User As Admin </ButtonText>
+        <ButtonText>
+          {type === renderType.CREATE
+            ? "Add User As Admin"
+            : "Edit Authorization"}{" "}
+        </ButtonText>
       </CustomButton>
+      {type === renderType.EDIT && (
+        <CancelButton onPress={onSuccessfulEdit}>
+          <CancelText> Cancel Edit </CancelText>
+        </CancelButton>
+      )}
     </Card>
   );
 };
 
-export default AddAdminCard;
+export default ManageAdminCard;
 
 const width = Dimensions.get("screen").width;
 
@@ -121,7 +138,25 @@ const CustomButton = styled.TouchableOpacity`
   border-radius: 10px;
   padding: 15px;
   background-color: navy;
-  margin: 20px;
+  margin: 10px;
+`;
+
+const CancelButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 11px;
+  background-color: white;
+  margin: 10px;
+  border-width: 4px;
+  border-color: navy;
+`;
+
+const CancelText = styled.Text`
+  justify-content: center;
+  align-self: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: navy;
 `;
 
 const ButtonText = styled.Text`
