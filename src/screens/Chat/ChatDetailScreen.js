@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert } from "react-native";
+import {
+  ButtonGroup,
+  ButtonText,
+  SeparatedButton
+} from "../../styles/GeneralStyles";
+import { ChatContainer, ChatInfoContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
+import {
+  isBlockedByCurrentUser,
+  isCurrentUserBlocked,
+  blockUser,
+  unblockUser
+} from "../../services/Friend/HandleBlockedUser";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import Caution from "../../components/Miscellaneous/Caution";
 
 const initialState = {
   username: "",
@@ -14,6 +27,8 @@ const initialState = {
 const ChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
   const [messages, setMessages] = useState([]);
+  const [isGetBlocked, setIsGetBlocked] = useState(false);
+  const [isBlocking, setIsBlocking] = useState(false);
 
   const userID = firebase.auth().currentUser.uid;
   const recipientID = route.params.recipientID;
@@ -21,39 +36,63 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setUserInfo(data);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onSuccesfulFetch: setUserInfo,
+      onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
 
   useEffect(() => {
     return fetchPrivateChatMessages({
       recipientID: recipientID,
-      onSuccesfulFetch: (data) => {
-        setMessages(data);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onSuccesfulFetch: setMessages,
+      onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
 
+  useEffect(() => {
+    return isBlockedByCurrentUser(
+      recipientID,
+      () => setIsBlocking(true),
+      () => setIsBlocking(false)
+    );
+  }, []);
+
+  useEffect(() => {
+    return isCurrentUserBlocked(
+      recipientID,
+      () => setIsGetBlocked(true),
+      () => setIsGetBlocked(false)
+    );
+  }, []);
+
+  const blockButtonText = isBlocking ? "Unblock User" : "Block User";
+
+  function handleBlockButtonPress() {
+    if (isBlocking) {
+      unblockUser(recipientID);
+    } else {
+      Caution("This user will be blocked", () => blockUser(recipientID));
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("ChatList")}
-      >
-        <Text style={styles.text}>
-          {"Currently chatting with " +
-            recipientUsername +
-            ".\n Click here to go to the private chat list"}
-        </Text>
-      </TouchableOpacity>
+    <ChatContainer>
+      <ChatInfoContainer>
+        <ButtonText>{`Currently chatting with ${recipientUsername}.`}</ButtonText>
+      </ChatInfoContainer>
+
+      <ButtonGroup>
+        <SeparatedButton onPress={() => navigation.replace("ChatList")}>
+          <ButtonText size="12px" color="#000000">
+            Chat Lists
+          </ButtonText>
+        </SeparatedButton>
+        <SeparatedButton onPress={handleBlockButtonPress}>
+          <ButtonText size="12px" color="#000000">
+            {blockButtonText}
+          </ButtonText>
+        </SeparatedButton>
+      </ButtonGroup>
 
       <ChatSections
         type={chatType.PRIVATE_CHAT}
@@ -61,28 +100,11 @@ const ChatDetailScreen = ({ navigation, route }) => {
         receiverID={recipientID}
         messages={messages}
         updateMessages={setMessages}
+        isBlocking={isBlocking}
+        isGetBlocked={isGetBlocked}
       />
-    </View>
+    </ChatContainer>
   );
 };
 
 export default ChatDetailScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  },
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch"
-  },
-  text: {
-    textAlign: "center"
-  }
-});
