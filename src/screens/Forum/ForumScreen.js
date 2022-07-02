@@ -22,7 +22,7 @@ const ForumScreen = () => {
   console.log(data);
 
   useEffect(() => {
-    isUserAdmin(data.id, currentUID, (data) => setIsAdmin(data.isFound));
+    return isUserAdmin(data.id, currentUID, (data) => setIsAdmin(data.isFound));
   }, []);
 
   function handleAddButtonClick() {
@@ -37,7 +37,9 @@ const ForumScreen = () => {
 
   //Check for ban
   useEffect(() => {
-    isUserBanned(data.id, currentUID, (result) => setIsBanned(result.isFound));
+    return isUserBanned(data.id, currentUID, (result) =>
+      setIsBanned(result.isFound)
+    );
   }, []);
 
   //retrieve posts
