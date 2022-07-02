@@ -1,8 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
+import { firebase } from "../../../services/Firebase/Config";
 
 const ManageForumScreen = () => {
   const navigation = useNavigation();
+  const forumData = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = forumData.owner === currentUID;
+
+  console.log(isOwner);
 
   function handleEditForumButton() {
     navigation.navigate("EditForum");
@@ -18,9 +24,12 @@ const ManageForumScreen = () => {
 
   return (
     <Container>
-      <CustomButton onPress={handleEditForumButton}>
-        <ButtonText> Edit Forum Details </ButtonText>
-      </CustomButton>
+      <Title> Manage Forum </Title>
+      {isOwner && (
+        <CustomButton onPress={handleEditForumButton}>
+          <ButtonText> Edit Forum Details </ButtonText>
+        </CustomButton>
+      )}
       <CustomButton onPress={handleBannedUsersButton}>
         <ButtonText> Banned Users </ButtonText>
       </CustomButton>
@@ -55,4 +64,15 @@ const ButtonText = styled.Text`
   font-size: 15px;
   font-weight: bold;
   color: white;
+`;
+
+const Title = styled.Text`
+  position: absolute;
+  top: 10px;
+  color: #bdd0e7;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  text-align: center;
+  text-decoration-line: underline;
 `;

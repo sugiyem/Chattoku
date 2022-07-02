@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components/native";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
 import RenderUserToManage from "../../../components/Forum/ForumManagement/RenderUserToManage";
+import { manageType } from "../../../constants/Forum";
 
 const AddAdminScreen = () => {
   const [username, setUsername] = useState("");
@@ -41,7 +42,13 @@ const AddAdminScreen = () => {
           <ButtonText> Search </ButtonText>
         </CustomButton>
       </SearchContainer>
-      {showUserDetails && <RenderUserToManage userData={userData} />}
+      {showUserDetails && (
+        <RenderUserToManage
+          managementType={manageType.ADMIN}
+          userData={userData}
+          isAuthorized={true}
+        />
+      )}
     </Container>
   );
 };

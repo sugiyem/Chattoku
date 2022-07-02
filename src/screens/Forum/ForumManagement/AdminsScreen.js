@@ -1,10 +1,13 @@
 import styled from "styled-components/native";
 import ForumAdminList from "../../../components/Forum/ForumManagement/ForumAdminList";
 import { useNavigation } from "@react-navigation/native";
+import { firebase } from "../../../services/Firebase/Config";
 
 const AdminsScreen = () => {
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = forumData.owner === currentUID;
 
   console.log(forumData);
 
@@ -14,9 +17,11 @@ const AdminsScreen = () => {
 
   return (
     <Container>
-      <CustomButton onPress={handleAddAdminPress}>
-        <ButtonText>Add Admins</ButtonText>
-      </CustomButton>
+      {isOwner && (
+        <CustomButton onPress={handleAddAdminPress}>
+          <ButtonText>Add Admins</ButtonText>
+        </CustomButton>
+      )}
       <Title> Forum Admins </Title>
       <ForumAdminList forumId={forumData.id} />
     </Container>

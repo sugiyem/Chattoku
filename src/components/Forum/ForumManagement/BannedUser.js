@@ -13,13 +13,10 @@ const initialUserData = {
   username: ""
 };
 
-const BannedUser = ({ userId, reason }) => {
+const BannedUser = ({ userId, reason, isAuthorized }) => {
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
   const forumId = navigation.getState().routes[1].params.data.id;
-  console.log(userData);
-
-  console.log(forumId);
 
   useEffect(() => {
     FetchInfoById(userId, (data) => setUserData(data));
@@ -44,13 +41,15 @@ const BannedUser = ({ userId, reason }) => {
         <Username> {userData.username} </Username>
         <Text> {reason}</Text>
       </InfoContainer>
-      <Icon
-        name="delete"
-        type="material"
-        color="red"
-        size={40}
-        onPress={handleDelete}
-      />
+      {isAuthorized && (
+        <Icon
+          name="delete"
+          type="material"
+          color="red"
+          size={40}
+          onPress={handleDelete}
+        />
+      )}
     </Card>
   );
 };

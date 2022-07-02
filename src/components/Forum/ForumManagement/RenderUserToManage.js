@@ -4,10 +4,11 @@ import styled from "styled-components/native";
 import ManageAdminCard from "./ManageAdminCard";
 import { useNavigation } from "@react-navigation/native";
 import OwnerCard from "./OwnerCard";
-import { renderType } from "../../../constants/Forum";
+import { manageType, renderType } from "../../../constants/Forum";
 import { isUserBanned } from "../../../services/Forum/HandleBannedUsers";
 import { isUserAdmin } from "../../../services/Forum/HandleForumAdmin";
 import { useState, useEffect } from "react";
+import RenderUserToBan from "./RenderUserToBan";
 
 const initialData = {
   isBanned: false,
@@ -16,7 +17,7 @@ const initialData = {
   authorities: []
 };
 
-const RenderUserToManage = ({ userData }) => {
+const RenderUserToManage = ({ userData, managementType, isAuthorized }) => {
   const [data, setData] = useState(initialData);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
@@ -64,7 +65,11 @@ const RenderUserToManage = ({ userData }) => {
         <BannedBadge>
           <BannedText> Banned </BannedText>
         </BannedBadge>
-        <BannedUser userId={userData.id} {...data} />
+        <BannedUser
+          userId={userData.id}
+          {...data}
+          isAuthorized={isAuthorized}
+        />
       </>
     );
   } else if (data.isAdmin) {
@@ -76,8 +81,10 @@ const RenderUserToManage = ({ userData }) => {
         <ForumAdminCard userId={userData.id} {...data} />
       </>
     );
-  } else {
+  } else if (managementType === manageType.ADMIN) {
     return <ManageAdminCard userData={userData} type={renderType.CREATE} />;
+  } else {
+    return <RenderUserToBan {...userData} />;
   }
 };
 

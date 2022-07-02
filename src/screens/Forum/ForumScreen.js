@@ -8,16 +8,22 @@ import { useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 import FetchPost from "../../services/Forum/FetchPost";
 import ForumHeader from "../../components/Forum/ForumHeader";
+import { isUserAdmin } from "../../services/Forum/HandleForumAdmin";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigation = useNavigation();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
   const isOwner = data.owner === currentUID;
 
   console.log(data);
+
+  useEffect(() => {
+    isUserAdmin(data.id, currentUID, (data) => setIsAdmin(data.isFound));
+  }, []);
 
   function handleAddButtonClick() {
     navigation.navigate("AddPost", { data: data });
@@ -48,9 +54,9 @@ const ForumScreen = () => {
       <CustomButton onPress={() => navigation.goBack()}>
         <ButtonText>Go Back</ButtonText>
       </CustomButton>
-      {isOwner && (
+      {(isOwner || isAdmin) && (
         <CustomButton onPress={handleEditForumButton}>
-          <ButtonText>Manage Your Forum</ButtonText>
+          <ButtonText>Manage Forum</ButtonText>
         </CustomButton>
       )}
       {/* <Header {...data} /> */}

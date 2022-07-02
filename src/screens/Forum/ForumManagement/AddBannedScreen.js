@@ -1,27 +1,27 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
-import { isUserBanned } from "../../../services/Forum/HandleBannedUsers";
-import RenderUserToBan from "../../../components/Forum/ForumManagement/RenderUserToBan";
+import RenderUserToManage from "../../../components/Forum/ForumManagement/RenderUserToManage";
+import { firebase } from "../../../services/Firebase/Config";
+import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
+import { manageType } from "../../../constants/Forum";
 
 const AddBannedScreen = () => {
   const [username, setUsername] = useState("");
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [isBanned, setIsBanned] = useState(false);
-  const [reason, setReason] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
-  const forumId = navigation.getState().routes[1].params.data.id;
+  const forumData = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = forumData.owner === currentUID;
 
-  console.log(userData, isBanned, reason);
+  useEffect(() => {
+    if (isOwner) return;
 
-  const userDetailsState = {
-    ...userData,
-    isBanned: isBanned,
-    setIsBanned: setIsBanned,
-    reason: reason
-  };
+    return isAuthorizedToBanUsers(forumData.id, setIsAuthorized);
+  }, []);
 
   function handleChangeText(text) {
     setUsername(text);
@@ -32,17 +32,11 @@ const AddBannedScreen = () => {
       specifiedUsername: username,
       onFound: (data) => {
         setUserData(data);
-        isUserBanned(forumId, data.id, (result) => {
-          setIsBanned(result.isFound);
-          setShowUserDetails(true);
-          setReason(result.isFound ? result.reason : "");
-        });
       },
       onNotFound: () => {
-        setShowUserDetails(true);
         setUserData(null);
       }
-    });
+    }).then(() => setShowUserDetails(true));
   }
 
   return (
@@ -58,12 +52,13 @@ const AddBannedScreen = () => {
           <ButtonText> Search </ButtonText>
         </CustomButton>
       </SearchContainer>
-      {showUserDetails &&
-        (userData ? (
-          <RenderUserToBan {...userDetailsState} />
-        ) : (
-          <Title> No Such User Found </Title>
-        ))}
+      {showUserDetails && (
+        <RenderUserToManage
+          userData={userData}
+          managementType={manageType.BAN}
+          isAuthorized={isOwner || isAuthorized}
+        />
+      )}
     </Container>
   );
 };

@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import Warning from "../Warning";
 import ManageAdminCard from "./ManageAdminCard";
 import { renderType } from "../../../constants/Forum";
+import { firebase } from "../../../services/Firebase/Config";
 
 const initialUserData = {
   bio: "",
@@ -19,7 +20,12 @@ const ForumAdminCard = ({ userId, authorities }) => {
   const [userData, setUserData] = useState(initialUserData);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
-  const forumId = navigation.getState().routes[1].params.data.id;
+  const forumData = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = forumData.owner === currentUID;
+  const forumId = forumData.id;
+
+  console.log(isOwner);
 
   useEffect(() => {
     FetchInfoById(userId, (data) => setUserData(data));
@@ -72,24 +78,28 @@ const ForumAdminCard = ({ userId, authorities }) => {
         <BulletText> This User Can: </BulletText>
         {bulletedAuthorities}
       </InfoContainer>
-      <Icon
-        name="edit"
-        type="material"
-        color="black"
-        size={35}
-        iconStyle={styles.icon}
-        onPress={() => {
-          setIsEditing(true);
-        }}
-      />
-      <Icon
-        name="delete"
-        type="material"
-        color="red"
-        size={35}
-        iconStyle={styles.icon}
-        onPress={handleDelete}
-      />
+      {isOwner && (
+        <>
+          <Icon
+            name="edit"
+            type="material"
+            color="black"
+            size={35}
+            iconStyle={styles.icon}
+            onPress={() => {
+              setIsEditing(true);
+            }}
+          />
+          <Icon
+            name="delete"
+            type="material"
+            color="red"
+            size={35}
+            iconStyle={styles.icon}
+            onPress={handleDelete}
+          />
+        </>
+      )}
     </Card>
   );
 };
