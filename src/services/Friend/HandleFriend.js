@@ -9,6 +9,22 @@ export async function addFriend(friendID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const friendRef = db.collection("users").doc(friendID);
 
+  const isBlocked = await db
+    .collection("users")
+    .doc(friendID)
+    .collection("blockedUsers")
+    .doc(userID)
+    .get()
+    .then((doc) => doc.exists);
+
+  if (isBlocked) {
+    Alert.alert(
+      "Can't send friend request",
+      "You can't send friend request to this user as you've been blocked."
+    );
+    return;
+  }
+
   const { username: friendName, notificationToken } = await db
     .collection("users")
     .doc(friendID)
