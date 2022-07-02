@@ -85,3 +85,7 @@ export const ButtonGroup = styled.View`
   border-bottom-width: 1px;
   flex-direction: row;
 `;
+
+export const RowBar = styled.View`
+  flex-direction: row;
+`;
