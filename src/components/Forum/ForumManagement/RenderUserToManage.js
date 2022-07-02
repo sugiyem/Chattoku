@@ -5,10 +5,50 @@ import ManageAdminCard from "./ManageAdminCard";
 import { useNavigation } from "@react-navigation/native";
 import OwnerCard from "./OwnerCard";
 import { renderType } from "../../../constants/Forum";
+import { isUserBanned } from "../../../services/Forum/HandleBannedUsers";
+import { isUserAdmin } from "../../../services/Forum/HandleForumAdmin";
+import { useState, useEffect } from "react";
 
-const RenderUserToManage = ({ userData, data }) => {
+const initialData = {
+  isBanned: false,
+  reason: "",
+  isAdmin: false,
+  authorities: []
+};
+
+const RenderUserToManage = ({ userData }) => {
+  const [data, setData] = useState(initialData);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
+  const forumId = forumData.id;
+
+  useEffect(
+    () =>
+      isUserBanned(forumId, userData.id, (result) => {
+        setData((data) => {
+          return {
+            ...data,
+            isBanned: result.isFound,
+            reason: result.isFound ? result.reason : ""
+          };
+        });
+      }),
+    []
+  );
+
+  useEffect(
+    () =>
+      isUserAdmin(forumId, userData.id, (result) => {
+        setData((data) => {
+          return {
+            ...data,
+            isAdmin: result.isFound,
+            authorities: result.isFound ? result.authorities : []
+          };
+        });
+      }),
+    []
+  );
 
   if (!userData) {
     return <Title> No Such User Found </Title>;
