@@ -13,14 +13,17 @@ import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
-  const [expand, setExpand] = useState(null);
+  const [expand, setExpand] = useState([]);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
 
   useEffect(() => {
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setMembers,
+      onSuccess: (data) => {
+        setMembers(data);
+        setExpand(data.map((item) => false));
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -33,7 +36,8 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
   }, []);
 
   function changeExpand(index) {
-    expand === index ? setExpand(null) : setExpand(index);
+    const newExpand = expand.map((item, id) => (id === index ? !item : item));
+    setExpand(newExpand);
   }
 
   function isOwner(id) {
@@ -83,7 +87,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           }}
           isMember={true}
           groupInfo={{ ...groupInfo, admins: adminIDs }}
-          isExpanded={expand === index}
+          isExpanded={expand[index]}
           changeExpanded={() => changeExpand(index)}
         />
       ))}
