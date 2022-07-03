@@ -1,6 +1,13 @@
 import { firebase } from "../Firebase/Config";
+import { sendPushNotification } from "../Miscellaneous/HandleNotification";
 
-export async function addAdmin(forumId, adminDetails, callbackSuccess) {
+export async function addAdmin(
+  forumId,
+  adminDetails,
+  expoPushToken,
+  forumName,
+  callbackSuccess
+) {
   await firebase
     .firestore()
     .collection("forums")
@@ -8,10 +15,23 @@ export async function addAdmin(forumId, adminDetails, callbackSuccess) {
     .collection("admins")
     .doc(adminDetails.uid)
     .set(adminDetails)
-    .then(() => callbackSuccess());
+    .then(() => {
+      sendPushNotification(
+        expoPushToken,
+        forumName,
+        "You have been promoted to Admin"
+      );
+      callbackSuccess();
+    });
 }
 
-export async function removeAdmin(forumId, uid, callbackSuccess) {
+export async function removeAdmin(
+  forumId,
+  uid,
+  expoPushToken,
+  forumName,
+  callbackSuccess
+) {
   await firebase
     .firestore()
     .collection("forums")
@@ -19,7 +39,14 @@ export async function removeAdmin(forumId, uid, callbackSuccess) {
     .collection("admins")
     .doc(uid)
     .delete()
-    .then(() => callbackSuccess());
+    .then(() => {
+      sendPushNotification(
+        expoPushToken,
+        forumName,
+        "You have been demoted from Admin"
+      );
+      callbackSuccess();
+    });
 }
 
 export async function editAdminPower(

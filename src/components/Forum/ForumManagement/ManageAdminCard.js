@@ -3,7 +3,10 @@ import styled from "styled-components/native";
 import { Alert, Dimensions, Text } from "react-native";
 import { AdminPower } from "../../../constants/Admin";
 import Selector from "../../Miscellaneous/Selector";
-import { addAdmin } from "../../../services/Forum/HandleForumAdmin";
+import {
+  addAdmin,
+  editAdminPower
+} from "../../../services/Forum/HandleForumAdmin";
 import { useNavigation } from "@react-navigation/native";
 import { renderType } from "../../../constants/Forum";
 
@@ -12,7 +15,8 @@ const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
     type === renderType.CREATE ? [] : authorities
   );
   const navigation = useNavigation();
-  const forumId = navigation.getState().routes[1].params.data.id;
+  const forumData = navigation.getState().routes[1].params.data;
+  const forumId = forumData.id;
   const successMessage =
     type === renderType.CREATE ? "Authorization Success" : "Edit Success";
 
@@ -45,12 +49,22 @@ const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
       );
       return;
     }
-    addAdmin(forumId, { uid: userData.id, authorities: selected }, () => {
-      Alert.alert(successMessage);
-      if (type === renderType.EDIT) {
+    if (type === renderType.CREATE) {
+      addAdmin(
+        forumId,
+        { uid: userData.id, authorities: selected },
+        userData.notificationToken,
+        forumData.title,
+        () => {
+          Alert.alert(successMessage);
+        }
+      );
+    } else {
+      editAdminPower(forumId, userData.id, selected, () => {
+        Alert.alert(successMessage);
         onSuccessfulEdit();
-      }
-    });
+      });
+    }
   }
 
   return (
@@ -71,7 +85,7 @@ const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
         <ButtonText>
           {type === renderType.CREATE
             ? "Add User As Admin"
-            : "Edit Authorization"}{" "}
+            : "Edit Authorization"}
         </ButtonText>
       </CustomButton>
       {type === renderType.EDIT && (

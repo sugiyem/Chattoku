@@ -53,11 +53,16 @@ const ForumAdminCard = ({ userId, authorities }) => {
 
   function handleDelete() {
     Warning(() => {
-      removeAdmin(forumId, userId, () =>
-        Alert.alert(
-          "Success",
-          userData.username + " has been removed successfully"
-        )
+      removeAdmin(
+        forumId,
+        userId,
+        userData.notificationToken,
+        forumData.title,
+        () =>
+          Alert.alert(
+            "Success",
+            userData.username + " has been removed successfully"
+          )
       );
     });
   }

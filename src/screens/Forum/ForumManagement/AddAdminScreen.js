@@ -14,9 +14,6 @@ const AddAdminScreen = () => {
     setUsername(text);
   }
 
-  console.log(data);
-  console.log(showUserDetails);
-
   function onSearchPress() {
     GetUserWithUsername({
       specifiedUsername: username,
