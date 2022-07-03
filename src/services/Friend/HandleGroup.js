@@ -58,11 +58,14 @@ export async function editGroupDetails(
     .firestore()
     .collection("groups")
     .doc(groupID)
-    .set({
-      name: newName,
-      description: newDescription,
-      img: newImg
-    })
+    .set(
+      {
+        name: newName,
+        description: newDescription,
+        img: newImg
+      },
+      { merge: true }
+    )
     .then(() => {
       Alert.alert("Group has successfully edited");
     })
@@ -117,6 +120,9 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
+
+  // If user is an admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
 
   const { username, notificationToken } = await db
     .collection("users")
@@ -241,6 +247,9 @@ export async function leaveGroup(groupID, app = firebase) {
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
+
+  // If user is admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
 
   await batch
     .commit()
