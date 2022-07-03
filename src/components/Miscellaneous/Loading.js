@@ -1,11 +1,11 @@
 import React from "react";
-import { ActivityIndicator } from "react-native";
 import { Container } from "../../styles/GeneralStyles";
+import LoaderAnimation from "./LoaderAnimation";
 
 const Loading = ({ isLoading, children }) => {
   return isLoading ? (
     <Container>
-      <ActivityIndicator size="large" />
+      <LoaderAnimation />
     </Container>
   ) : (
     children
