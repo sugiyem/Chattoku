@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { ScrollView, SectionList, Text } from "react-native";
-import BannedUser from "./BannedUser";
-import { getBannedUsers } from "../../../services/Forum/HandleBannedUsers";
+import { SectionList } from "react-native";
+import { getAllAdmins } from "../../../services/Forum/HandleForumAdmin";
+import ForumAdminCard from "./ForumAdminCard";
 
-const BannedUsersList = ({ forumId, isAuthorized }) => {
+const ForumAdminList = ({ forumId }) => {
   const [users, setUsers] = useState([]);
-  console.log(users.length);
 
   useEffect(() => {
-    return getBannedUsers(forumId, setUsers);
+    return getAllAdmins(forumId, setUsers);
   }, []);
 
   const renderItem = ({ item }) => {
-    return <BannedUser {...item} isAuthorized={isAuthorized} />;
+    return <ForumAdminCard userId={item.uid} authorities={item.authorities} />;
   };
 
   const renderHeader = () => <></>;
@@ -27,7 +26,7 @@ const BannedUsersList = ({ forumId, isAuthorized }) => {
           data: users
         }
       ]}
-      keyExtractor={(item) => item.userId}
+      keyExtractor={(item) => item.uid}
       renderItem={renderItem}
       renderHeader={renderHeader}
       renderFooter={renderFooter}
@@ -35,4 +34,4 @@ const BannedUsersList = ({ forumId, isAuthorized }) => {
   );
 };
 
-export default BannedUsersList;
+export default ForumAdminList;

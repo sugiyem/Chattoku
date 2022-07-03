@@ -1,27 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components/native";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
 import RenderUserToManage from "../../../components/Forum/ForumManagement/RenderUserToManage";
-import { firebase } from "../../../services/Firebase/Config";
-import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
 import { manageType } from "../../../constants/Forum";
 
-const AddBannedScreen = () => {
+const AddAdminScreen = () => {
   const [username, setUsername] = useState("");
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
-  const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
-  const isOwner = forumData.owner === currentUID;
-
-  useEffect(() => {
-    if (isOwner) return;
-
-    return isAuthorizedToBanUsers(forumData.id, setIsAuthorized);
-  }, []);
 
   function handleChangeText(text) {
     setUsername(text);
@@ -44,7 +32,7 @@ const AddBannedScreen = () => {
       <BackButton onPress={navigation.goBack}>
         <BackButtonText> Go Back </BackButtonText>
       </BackButton>
-      <Title>Ban a User</Title>
+      <Title>Add Forum Admin</Title>
       <SearchContainer>
         <StyledTextInput
           placeholder="Search By Exact Username"
@@ -57,16 +45,16 @@ const AddBannedScreen = () => {
       </SearchContainer>
       {showUserDetails && (
         <RenderUserToManage
+          managementType={manageType.ADMIN}
           userData={userData}
-          managementType={manageType.BAN}
-          isAuthorized={isOwner || isAuthorized}
+          isAuthorized={true}
         />
       )}
     </Container>
   );
 };
 
-export default AddBannedScreen;
+export default AddAdminScreen;
 
 const Container = styled.View`
   display: flex;

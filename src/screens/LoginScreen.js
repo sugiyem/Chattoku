@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AuthContainer,
   AuthSystemContainer,
@@ -7,7 +7,10 @@ import {
   AuthTitle
 } from "../styles/AuthStyles";
 import { Button, ButtonText, RoundedImage } from "../styles/GeneralStyles";
-import { login } from "../services/Authentication/HandleAuthentication";
+import {
+  login,
+  handleIsLoggedIn
+} from "../services/Authentication/HandleAuthentication";
 import {
   redirectToForgotPasswordScreen,
   redirectToSignupScreen
@@ -31,6 +34,12 @@ const LoginScreen = ({ navigation }) => {
   async function handleSubmit() {
     await login(credentials, () => navigation.replace("Dashboard"));
   }
+
+  useEffect(() => {
+    handleIsLoggedIn(() => {
+      navigation.replace("Dashboard");
+    });
+  });
 
   // console.log(credentials);
 

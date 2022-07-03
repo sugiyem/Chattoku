@@ -1,10 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import BannedUsersList from "../../../components/Forum/ForumManagement/BannedUsersList";
+import { firebase } from "../../../services/Firebase/Config";
+import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
 
 const BannedUsersScreen = () => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
+  const currentUID = firebase.auth().currentUser.uid;
+  const isOwner = forumData.owner === currentUID;
+
+  useEffect(() => {
+    if (isOwner) return;
+
+    return isAuthorizedToBanUsers(forumData.id, setIsAuthorized);
+  });
 
   console.log(forumData);
 
@@ -14,11 +26,19 @@ const BannedUsersScreen = () => {
 
   return (
     <Container>
-      <CustomButton onPress={handleAddBannedUsers}>
-        <ButtonText>Add Banned Users</ButtonText>
-      </CustomButton>
+      <BackButton onPress={navigation.goBack}>
+        <BackButtonText> Go Back </BackButtonText>
+      </BackButton>
+      {(isOwner || isAuthorized) && (
+        <CustomButton onPress={handleAddBannedUsers}>
+          <ButtonText>Add Banned Users</ButtonText>
+        </CustomButton>
+      )}
       <Title> Banned Users </Title>
-      <BannedUsersList forumId={forumData.id} />
+      <BannedUsersList
+        forumId={forumData.id}
+        isAuthorized={isOwner || isAuthorized}
+      />
     </Container>
   );
 };
@@ -55,4 +75,18 @@ const ButtonText = styled.Text`
   font-size: 15px;
   font-weight: bold;
   color: white;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+`;
+
+const BackButtonText = styled.Text`
+  text-align: center;
+  color: blue;
 `;

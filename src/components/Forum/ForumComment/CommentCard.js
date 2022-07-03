@@ -13,13 +13,15 @@ const initialUserData = {
   username: "fetching username..."
 };
 
-const CommentCard = ({ content, uid, forumId, postId, id }) => {
+const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
   const currentUID = firebase.auth().currentUser.uid;
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
+  const forumData = navigation.getState().routes[1].params.data;
   const data = navigation.getState().routes[2].params.data;
   const isBanned = data.isBanned;
   const isOwner = data.isOwner;
+  const isOwnersPost = forumData.owner === uid;
 
   console.log(uid);
 
@@ -65,7 +67,9 @@ const CommentCard = ({ content, uid, forumId, postId, id }) => {
       </UserInfo>
       <Content> {content} </Content>
       <ActionBar>
-        {((!isBanned && currentUID === uid) || isOwner) && (
+        {((!isBanned && currentUID === uid) ||
+          isOwner ||
+          (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
             <DeleteText> Delete </DeleteText>
