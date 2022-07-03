@@ -22,6 +22,10 @@ export default FetchUserInfo = ({
     );
 };
 
+export function getCurrentUID() {
+  return firebase.auth().currentUser.uid;
+}
+
 export async function FetchInfoById(userID, callbackSuccess) {
   await firebase
     .firestore()
