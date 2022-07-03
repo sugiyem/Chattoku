@@ -9,6 +9,7 @@ const AddAdminScreen = () => {
   const [username, setUsername] = useState("");
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [userData, setUserData] = useState(null);
+  const navigation = useNavigation();
 
   function handleChangeText(text) {
     setUsername(text);
@@ -28,6 +29,9 @@ const AddAdminScreen = () => {
 
   return (
     <Container>
+      <BackButton onPress={navigation.goBack}>
+        <BackButtonText> Go Back </BackButtonText>
+      </BackButton>
       <Title>Add Forum Admin</Title>
       <SearchContainer>
         <StyledTextInput
@@ -99,4 +103,18 @@ const ButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: white;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+`;
+
+const BackButtonText = styled.Text`
+  text-align: center;
+  color: blue;
 `;

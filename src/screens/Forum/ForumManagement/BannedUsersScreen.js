@@ -26,6 +26,9 @@ const BannedUsersScreen = () => {
 
   return (
     <Container>
+      <BackButton onPress={navigation.goBack}>
+        <BackButtonText> Go Back </BackButtonText>
+      </BackButton>
       {(isOwner || isAuthorized) && (
         <CustomButton onPress={handleAddBannedUsers}>
           <ButtonText>Add Banned Users</ButtonText>
@@ -72,4 +75,18 @@ const ButtonText = styled.Text`
   font-size: 15px;
   font-weight: bold;
   color: white;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+`;
+
+const BackButtonText = styled.Text`
+  text-align: center;
+  color: blue;
 `;

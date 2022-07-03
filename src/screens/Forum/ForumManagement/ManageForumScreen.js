@@ -25,18 +25,23 @@ const ManageForumScreen = () => {
 
   return (
     <Container>
+      <BackButton onPress={navigation.goBack}>
+        <BackButtonText> Go Back </BackButtonText>
+      </BackButton>
       <Title> Manage Forum </Title>
-      {isOwner && (
-        <CustomButton onPress={handleEditForumButton}>
-          <ButtonText> Edit Forum Details </ButtonText>
+      <ButtonContainer>
+        {isOwner && (
+          <CustomButton onPress={handleEditForumButton}>
+            <ButtonText> Edit Forum Details </ButtonText>
+          </CustomButton>
+        )}
+        <CustomButton onPress={handleBannedUsersButton}>
+          <ButtonText> Banned Users </ButtonText>
         </CustomButton>
-      )}
-      <CustomButton onPress={handleBannedUsersButton}>
-        <ButtonText> Banned Users </ButtonText>
-      </CustomButton>
-      <CustomButton onPress={handleAdminButton}>
-        <ButtonText> Admins </ButtonText>
-      </CustomButton>
+        <CustomButton onPress={handleAdminButton}>
+          <ButtonText> Admins </ButtonText>
+        </CustomButton>
+      </ButtonContainer>
     </Container>
   );
 };
@@ -49,6 +54,11 @@ const Container = styled.View`
   align-items: center;
   padding: 10px;
   background-color: darkcyan;
+`;
+
+const ButtonContainer = styled.View`
+  width: 100%;
+  margin-bottom: auto;
 `;
 
 const CustomButton = styled.TouchableOpacity`
@@ -67,13 +77,26 @@ const ButtonText = styled.Text`
   color: white;
 `;
 
+const BackButton = styled.TouchableOpacity`
+  align-self: stretch;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  background-color: aquamarine;
+`;
+
+const BackButtonText = styled.Text`
+  text-align: center;
+  color: blue;
+`;
+
 const Title = styled.Text`
-  position: absolute;
-  top: 10px;
   color: #bdd0e7;
   font-size: 25px;
   font-weight: bold;
   font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
   text-align: center;
   text-decoration-line: underline;
+  margin-bottom: auto;
 `;
