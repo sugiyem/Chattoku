@@ -7,7 +7,6 @@ import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupRequestInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
-  const [isMemberExpanded, setIsMemberExpanded] = useState(false);
   const groupInfo = route.params.groupData;
 
   useEffect(() => {
@@ -22,11 +21,7 @@ const GroupRequestInfoScreen = ({ navigation, route }) => {
     <RenderGroupDetail
       type={groupMemberType.PENDING_MEMBER}
       groupInfo={groupInfo}
-      memberDetails={{
-        data: members,
-        isExpanded: isMemberExpanded,
-        changeExpanded: setIsMemberExpanded
-      }}
+      members={members}
       navigation={navigation}
     />
   );

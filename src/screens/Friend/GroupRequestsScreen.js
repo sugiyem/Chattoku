@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import {
   BoldText,
   Button,
@@ -13,7 +13,6 @@ import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 const GroupRequestsScreen = ({ navigation }) => {
   const [groupRequests, setGroupRequests] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
 
   useEffect(() => {
     return fetchGroupInvitation({
@@ -22,7 +21,22 @@ const GroupRequestsScreen = ({ navigation }) => {
     });
   }, []);
 
-  // console.log(groupRequests);
+  const filteredRequests = groupRequests.filter((item) =>
+    item.name.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const GroupContactLists = () => (
+    <View style={styles.listContainer}>
+      {filteredRequests.map((item, index) => (
+        <RenderGroupLists
+          key={index}
+          type={groupListType.GROUP_INVITATION}
+          item={item}
+          navigation={navigation}
+        />
+      ))}
+    </View>
+  );
 
   return (
     <ScrollContainer>
@@ -38,17 +52,18 @@ const GroupRequestsScreen = ({ navigation }) => {
         <Text>Go Back</Text>
       </Button>
 
-      <RenderGroupLists
-        type={groupListType.GROUP_INVITATION}
-        items={groupRequests.filter((item) =>
-          item.name.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
+      <GroupContactLists />
     </ScrollContainer>
   );
 };
 
 export default GroupRequestsScreen;
+
+const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    alignSelf: "stretch",
+    margin: 10,
+    padding: 5
+  }
+});

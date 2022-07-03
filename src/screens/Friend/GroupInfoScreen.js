@@ -6,15 +6,13 @@ import {
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
 import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
-import { groupMemberType } from "../../constants/Group";
+import { groupMemberType, groupMemberSorter } from "../../constants/Group";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
-  const [isMemberExpanded, setIsMemberExpanded] = useState(false);
-  const [isPendingMemberExpanded, setIsPendingMemberExpanded] = useState(false);
   const groupInfo = route.params.groupData;
   const currentID = firebase.auth().currentUser.uid;
 
@@ -32,16 +30,18 @@ const GroupInfoScreen = ({ navigation, route }) => {
     ? groupMemberType.ADMIN
     : groupMemberType.MEMBER;
 
-  const detailedMembers = members.map((member) => {
-    return {
-      ...member,
-      groupRole: isOwner(member.id)
-        ? "Owner"
-        : isAdmin(member.id)
-        ? "Admin"
-        : "Member"
-    };
-  });
+  const detailedMembers = members
+    .map((member) => {
+      return {
+        ...member,
+        groupRole: isOwner(member.id)
+          ? "Owner"
+          : isAdmin(member.id)
+          ? "Admin"
+          : "Member"
+      };
+    })
+    .sort(groupMemberSorter);
 
   console.log(detailedMembers);
 
@@ -72,17 +72,8 @@ const GroupInfoScreen = ({ navigation, route }) => {
     <RenderGroupDetail
       type={renderType}
       groupInfo={{ ...groupInfo, admins: adminIDs }}
-      memberDetails={{
-        data: detailedMembers,
-        isExpanded: isMemberExpanded,
-        changeExpanded: setIsMemberExpanded
-      }}
-      pendingMemberDetails={{
-        data: pendingMembers,
-        isExpanded: isPendingMemberExpanded,
-        changeExpanded: setIsPendingMemberExpanded
-      }}
-      adminLists={adminIDs}
+      members={detailedMembers}
+      pendingMembers={pendingMembers}
       navigation={navigation}
     />
   );
