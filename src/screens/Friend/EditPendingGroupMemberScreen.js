@@ -11,25 +11,16 @@ import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [pendingMembers, setPendingMembers] = useState([]);
-  const [expand, setExpand] = useState([]);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
 
   useEffect(() => {
     return fetchPendingGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: (data) => {
-        setPendingMembers(data);
-        setExpand(data.map((item) => false));
-      },
+      onSuccess: setPendingMembers,
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
-
-  function changeExpand(index) {
-    const newExpand = expand.map((item, id) => (id === index ? !item : item));
-    setExpand(newExpand);
-  }
 
   const filteredPendingMembers = pendingMembers.filter((pendingMember) =>
     pendingMember.username.toLowerCase().startsWith(search.toLowerCase())
@@ -55,8 +46,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           item={item}
           isMember={false}
           groupInfo={groupInfo}
-          isExpanded={expand[index]}
-          changeExpanded={() => changeExpand(index)}
         />
       ))}
     </ScrollContainer>

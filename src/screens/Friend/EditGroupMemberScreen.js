@@ -9,21 +9,18 @@ import {
   SearchInput
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
+import { groupMemberSorter } from "../../constants/Group";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
-  const [expand, setExpand] = useState([]);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
 
   useEffect(() => {
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: (data) => {
-        setMembers(data);
-        setExpand(data.map((item) => false));
-      },
+      onSuccess: setMembers,
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -34,11 +31,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       onSuccess: setAdminIDs
     });
   }, []);
-
-  function changeExpand(index) {
-    const newExpand = expand.map((item, id) => (id === index ? !item : item));
-    setExpand(newExpand);
-  }
 
   function isOwner(id) {
     return id === groupInfo.owner;
@@ -59,6 +51,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           : "Member"
       };
     })
+    .sort(groupMemberSorter)
     .filter((member) =>
       member.username.toLowerCase().startsWith(search.toLowerCase())
     );
@@ -87,8 +80,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           }}
           isMember={true}
           groupInfo={{ ...groupInfo, admins: adminIDs }}
-          isExpanded={expand[index]}
-          changeExpanded={() => changeExpand(index)}
         />
       ))}
     </ScrollContainer>
