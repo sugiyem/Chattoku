@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, LogBox, StyleSheet, View } from "react-native";
-import { Button, ButtonText } from "../../styles/GeneralStyles";
+import { Alert, LogBox } from "react-native";
+import { ChatContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchGroupChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import ChatHeader from "../../components/Chat/ChatHeader";
 
 const initialState = {
   username: "",
@@ -20,14 +21,11 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
 
   const userID = firebase.auth().currentUser.uid;
-  const groupID = route.params.groupID;
-  const groupName = route.params.groupName;
+  const groupData = route.params.groupData;
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setUserInfo(data);
-      },
+      onSuccesfulFetch: setUserInfo,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -36,10 +34,8 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     return fetchGroupChatMessages({
-      groupID: groupID,
-      onSuccess: (data) => {
-        setMessages(data);
-      },
+      groupID: groupData.id,
+      onSuccess: setMessages,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -47,32 +43,22 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Button onPress={() => navigation.replace("GroupChatList")}>
-        <ButtonText>
-          {"Currently in a group chat with " +
-            groupName +
-            ".\n Click here to go to the group chat list"}
-        </ButtonText>
-      </Button>
+    <ChatContainer>
+      <ChatHeader
+        type={chatType.GROUP_CHAT}
+        item={groupData}
+        navigation={navigation}
+      />
 
       <ChatSections
         type={chatType.GROUP_CHAT}
         userData={{ ...userInfo, id: userID }}
-        receiverID={groupID}
+        receiverID={groupData.id}
         messages={messages}
         updateMessages={setMessages}
       />
-    </View>
+    </ChatContainer>
   );
 };
 
 export default GroupChatDetailScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  }
-});

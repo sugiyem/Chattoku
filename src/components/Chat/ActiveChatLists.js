@@ -21,15 +21,26 @@ const ActiveChatLists = ({
 
   const onOpenMessage = (item) => {
     if (isPrivateChat) {
+      const data = {
+        id: item.id,
+        username: item.username,
+        bio: item.bio,
+        img: item.img
+      };
+
       navigation.navigate("ChatDetail", {
-        recipientID: item.id,
-        recipientUsername: item.username
+        userData: data
       });
     } else {
-      console.log(item);
+      const data = {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        img: item.img
+      };
+
       navigation.navigate("GroupChatDetail", {
-        groupID: item.id,
-        groupName: item.name
+        groupData: data
       });
     }
   };

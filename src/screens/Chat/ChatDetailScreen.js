@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, LogBox, StyleSheet, View } from "react-native";
+import { Alert, LogBox } from "react-native";
+import { ChatContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
-import { Button, ButtonText } from "../../styles/GeneralStyles";
+import ChatHeader from "../../components/Chat/ChatHeader";
 
 const initialState = {
   username: "",
@@ -20,14 +21,11 @@ const ChatDetailScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
 
   const userID = firebase.auth().currentUser.uid;
-  const recipientID = route.params.recipientID;
-  const recipientUsername = route.params.recipientUsername;
+  const recipientData = route.params.userData;
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setUserInfo(data);
-      },
+      onSuccesfulFetch: setUserInfo,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -36,10 +34,8 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     return fetchPrivateChatMessages({
-      recipientID: recipientID,
-      onSuccesfulFetch: (data) => {
-        setMessages(data);
-      },
+      recipientID: recipientData.id,
+      onSuccesfulFetch: setMessages,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -47,32 +43,22 @@ const ChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Button onPress={() => navigation.replace("ChatList")}>
-        <ButtonText>
-          {"Currently chatting with " +
-            recipientUsername +
-            ".\n Click here to go to the private chat list"}
-        </ButtonText>
-      </Button>
+    <ChatContainer>
+      <ChatHeader
+        type={chatType.PRIVATE_CHAT}
+        item={recipientData}
+        navigation={navigation}
+      />
 
       <ChatSections
         type={chatType.PRIVATE_CHAT}
         userData={{ ...userInfo, id: userID }}
-        receiverID={recipientID}
+        receiverID={recipientData.id}
         messages={messages}
         updateMessages={setMessages}
       />
-    </View>
+    </ChatContainer>
   );
 };
 
 export default ChatDetailScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  }
-});

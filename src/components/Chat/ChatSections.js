@@ -10,6 +10,7 @@ import {
 } from "../../services/Miscellaneous/HandleImage";
 import { Icon } from "react-native-elements";
 import Loading from "../Miscellaneous/Loading";
+import ChatAvatar from "./ChatAvatar";
 
 const ChatSections = ({
   type,
@@ -83,6 +84,9 @@ const ChatSections = ({
         messages={messages}
         onSend={onSend}
         user={userMessageData}
+        renderAvatar={(props) => (
+          <ChatAvatar {...props} isPrivate={isPrivateChat} />
+        )}
         renderUsernameOnMessage
         isLoadingEarlier
         renderAvatarOnTop
