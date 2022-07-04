@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, LogBox, StyleSheet, View } from "react-native";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import { Button, ButtonText } from "../../styles/GeneralStyles";
 
 const initialState = {
   username: "",
   img: ""
 };
+
+// Ignore warnings from Animated (Because of Gifted Chat)
+LogBox.ignoreLogs(["Animated"]);
 
 const ChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
@@ -44,16 +48,13 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("ChatList")}
-      >
-        <Text style={styles.text}>
+      <Button onPress={() => navigation.replace("ChatList")}>
+        <ButtonText>
           {"Currently chatting with " +
             recipientUsername +
             ".\n Click here to go to the private chat list"}
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
 
       <ChatSections
         type={chatType.PRIVATE_CHAT}
@@ -73,16 +74,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "darkcyan",
     padding: 5
-  },
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch"
-  },
-  text: {
-    textAlign: "center"
   }
 });

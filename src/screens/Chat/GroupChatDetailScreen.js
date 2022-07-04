@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, LogBox, StyleSheet, View } from "react-native";
+import { Button, ButtonText } from "../../styles/GeneralStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchGroupChatMessages } from "../../services/Chat/FetchChatMessages";
@@ -10,6 +11,9 @@ const initialState = {
   username: "",
   img: ""
 };
+
+// Ignore warnings from Animated (Because of Gifted Chat)
+LogBox.ignoreLogs(["Animated"]);
 
 const GroupChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
@@ -44,16 +48,13 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("GroupChatList")}
-      >
-        <Text style={styles.text}>
+      <Button onPress={() => navigation.replace("GroupChatList")}>
+        <ButtonText>
           {"Currently in a group chat with " +
             groupName +
             ".\n Click here to go to the group chat list"}
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
 
       <ChatSections
         type={chatType.GROUP_CHAT}
@@ -73,16 +74,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "darkcyan",
     padding: 5
-  },
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch"
-  },
-  text: {
-    textAlign: "center"
   }
 });
