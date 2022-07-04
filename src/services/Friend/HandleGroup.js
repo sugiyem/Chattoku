@@ -4,6 +4,7 @@ import {
   sendPushNotification,
   sendNotificationToAllGroupMembers
 } from "../Miscellaneous/HandleNotification";
+import { sendSystemMessageToGroup } from "../Chat/HandleSystemMessage";
 
 export async function createGroup(
   groupName,
@@ -102,6 +103,12 @@ export async function addUserToGroup(groupID, userID, app = firebase) {
         `Hi ${username}, you have been invited to ${groupName}.`
       );
     })
+    .then(() => {
+      sendSystemMessageToGroup(
+        `${username} has been invited by the group's admin.`,
+        groupID
+      );
+    })
     .catch((error) => {
       Alert.alert("Error", error.message);
     });
@@ -132,6 +139,12 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("This user has been removed from the group.");
+    })
+    .then(() => {
+      sendSystemMessageToGroup(
+        `${username} has been kicked by the group's admin.`,
+        groupID
+      );
     })
     .then(() => {
       sendPushNotification(
@@ -197,6 +210,13 @@ export async function acceptGroupInvitation(groupID, app = firebase) {
       Alert.alert("You have successfully joined this group");
     })
     .then(() => {
+      console.log("system message otw");
+      sendSystemMessageToGroup(
+        `${username} has just joined the group.`,
+        groupID
+      );
+    })
+    .then(() => {
       sendNotificationToAllGroupMembers(
         groupID,
         userID,
@@ -237,6 +257,8 @@ export async function leaveGroup(groupID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const groupRef = db.collection("groups").doc(groupID);
 
+  const username = await userRef.get().then((doc) => doc.data().username);
+
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
 
@@ -244,6 +266,9 @@ export async function leaveGroup(groupID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("You have successfully left this group.");
+    })
+    .then(() => {
+      sendSystemMessageToGroup(`${username} has just left the group.`, groupID);
     })
     .catch((error) => {
       Alert.alert("Error", error.message);
