@@ -4,7 +4,9 @@ import { ChatContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchGroupChatMessages } from "../../services/Chat/FetchChatMessages";
-import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import FetchUserInfo, {
+  FetchAllUserInfos
+} from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
 import ChatHeader from "../../components/Chat/ChatHeader";
 
@@ -18,6 +20,7 @@ LogBox.ignoreLogs(["Animated"]);
 
 const GroupChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
+  const [allUserInfos, setAllUserInfos] = useState([]);
   const [messages, setMessages] = useState([]);
 
   const userID = firebase.auth().currentUser.uid;
@@ -30,6 +33,10 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
         Alert.alert(error.message);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    return FetchAllUserInfos(setAllUserInfos);
   }, []);
 
   useEffect(() => {
@@ -56,6 +63,8 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
         receiverID={groupData.id}
         messages={messages}
         updateMessages={setMessages}
+        allUserInfos={allUserInfos}
+        navigation={navigation}
       />
     </ChatContainer>
   );

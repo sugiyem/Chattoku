@@ -1,23 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Avatar } from "react-native-gifted-chat";
-import ChatPopUp from "./ChatPopUp";
+import React, { useState } from "react";
+import { Avatar } from "react-native-elements";
+import ChatModal from "./ChatModal";
 
-const initialData = {
-  username: "",
-  bio: "",
-  img: ""
-};
 const ChatAvatar = (props) => {
-  const { isPrivate, ...remainingProps } = props;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { userInfo, navigation } = props;
 
-  if (isPrivate) {
-    return null;
+  const imgSource = userInfo.img
+    ? { uri: userInfo.img }
+    : require("../../assets/default-profile.png");
+
+  function closeModal() {
+    setIsModalVisible(false);
   }
 
-  return <Avatar {...remainingProps} />;
+  function openModal() {
+    setIsModalVisible(true);
+  }
+
+  function openMessage() {
+    navigation.navigate("ChatDetail", { userData: userInfo });
+  }
+
+  return (
+    <>
+      <ChatModal
+        item={userInfo}
+        isVisible={isModalVisible}
+        onCloseButtonPress={closeModal}
+        onMessageButtonPress={openMessage}
+      />
+      <Avatar rounded source={imgSource} size={40} onPress={openModal} />
+    </>
+  );
 };
 
 export default ChatAvatar;
-
-const styles = StyleSheet.create({});
