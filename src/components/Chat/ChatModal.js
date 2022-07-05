@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, StyleSheet } from "react-native";
+import { Modal, Platform, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import styled from "styled-components/native";
 
