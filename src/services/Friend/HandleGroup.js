@@ -19,6 +19,7 @@ export async function createGroup(
   const groupRef = db.collection("groups").doc(groupID);
 
   batch.set(groupRef, {
+    owner: userID,
     name: groupName,
     description: groupDescription,
     img: groupImg,
@@ -30,7 +31,8 @@ export async function createGroup(
     showMessage: false,
     showNotif: false
   });
-  batch.set(userRef.collection("groupCreated").doc(groupID), {});
+  batch.set(groupRef.collection("admins").doc(userID), {});
+  // batch.set(userRef.collection("groupCreated").doc(groupID), {});
   batch.set(userRef.collection("groupJoined").doc(groupID), {});
 
   await batch
@@ -56,11 +58,14 @@ export async function editGroupDetails(
     .firestore()
     .collection("groups")
     .doc(groupID)
-    .set({
-      name: newName,
-      description: newDescription,
-      img: newImg
-    })
+    .set(
+      {
+        name: newName,
+        description: newDescription,
+        img: newImg
+      },
+      { merge: true }
+    )
     .then(() => {
       Alert.alert("Group has successfully edited");
     })
@@ -115,6 +120,9 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
+
+  // If user is an admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
 
   const { username, notificationToken } = await db
     .collection("users")
@@ -240,6 +248,9 @@ export async function leaveGroup(groupID, app = firebase) {
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
 
+  // If user is admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
+
   await batch
     .commit()
     .then(() => {
@@ -255,6 +266,7 @@ export async function deleteGroup(groupID, app = firebase) {
   const batch = db.batch();
   const groupRef = db.collection("groups").doc(groupID);
   const messagesSnapshot = await groupRef.collection("messages").get();
+  const adminsSnapshot = await groupRef.collection("admins").get();
   const membersSnapshot = await groupRef.collection("members").get();
   const pendingMembersSnapshot = await groupRef
     .collection("pendingMembers")
@@ -267,6 +279,10 @@ export async function deleteGroup(groupID, app = firebase) {
     .then((doc) => doc.data().name);
 
   messagesSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  adminsSnapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
   });
 

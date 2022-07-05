@@ -26,7 +26,6 @@ export const fakeFirebase = {
           friendRequestsSent: [{ id: "imba" }],
           friendRequestsReceived: [{ id: "cupu" }],
           friends: [{ id: "yem456" }],
-          groupCreated: [{ id: "group1" }, { id: "group3" }],
           groupJoined: [{ id: "group1" }, { id: "group3" }],
           groupInvited: [{ id: "group2" }]
         }
@@ -37,7 +36,6 @@ export const fakeFirebase = {
         img: "yemima-img",
         _collections: {
           friends: [{ id: "yem123" }],
-          groupCreated: [{ id: "group2" }],
           groupJoined: [{ id: "group2", id: "group3" }]
         }
       },
@@ -56,7 +54,8 @@ export const fakeFirebase = {
         img: "farrel-img",
         _collections: {
           friendRequestsSent: [{ id: "yem123" }],
-          groupInvited: [{ id: "group1" }]
+          groupInvited: [{ id: "group1" }],
+          groupJoined: [{ id: "group3" }]
         }
       },
       {
@@ -68,12 +67,14 @@ export const fakeFirebase = {
     groups: [
       {
         id: "group1",
+        owner: "yem123",
         name: "First group",
         description: "This is a group",
         img: "first-image-link",
         lastMessageAt: new Timestamp(1, 1),
         lastMessageText: "2nd-group-message",
         _collections: {
+          admins: [{ id: "yem123" }],
           members: [{ id: "yem123", showMessage: false, showNotif: false }],
           pendingMembers: [{ id: "cupu" }],
           messages: [
@@ -84,25 +85,30 @@ export const fakeFirebase = {
       },
       {
         id: "group2",
+        owner: "yem456",
         name: "Second group",
         description: "This is a group",
         img: "second-image-link",
         _collections: {
+          admins: [{ id: "yem456" }],
           members: [{ id: "yem456" }, { id: "imba" }],
           pendingMembers: [{ id: "yem123" }]
         }
       },
       {
         id: "group3",
+        owner: "yem123",
         name: "Third group",
         description: "This is a group",
         img: "third-image-link",
         lastMessageAt: new Timestamp(2, 2),
         lastMessageText: "other-group-message",
         _collections: {
+          admins: [{ id: "yem123" }, { id: "yem456" }],
           members: [
             { id: "yem123", showMessage: true, showNotif: true },
-            { id: "yem456" }
+            { id: "yem456" },
+            { id: "cupu" }
           ],
           messages: [
             { createdAt: new Timestamp(2, 2), text: "other-group-message" }

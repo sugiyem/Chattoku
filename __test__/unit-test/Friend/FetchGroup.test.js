@@ -8,6 +8,7 @@ import {
 } from "../../../src/services/Friend/FetchGroup";
 import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase, flushPromises } from "../../Helper";
+import { Timestamp } from "firestore-jest-mock/mocks/timestamp";
 
 mockFirebase(fakeFirebase);
 
@@ -76,20 +77,26 @@ describe("Test group data fetching", () => {
     expect(result).toHaveLength(2);
     expect(result).toContainEqual({
       id: "group1",
+      owner: "yem123",
       name: "First group",
       description: "This is a group",
-      img: "first-image-link"
+      img: "first-image-link",
+      lastMessageAt: new Timestamp(1, 1),
+      lastMessageText: "2nd-group-message"
     });
     expect(result).toContainEqual({
       id: "group3",
+      owner: "yem123",
       name: "Third group",
       description: "This is a group",
-      img: "third-image-link"
+      img: "third-image-link",
+      lastMessageAt: new Timestamp(2, 2),
+      lastMessageText: "other-group-message"
     });
   });
 
   test("Can fetch data of all groups that invite user", async () => {
-    let result = {};
+    let result = [];
 
     fetchGroupInvitation({
       onSuccess: (data) => {
@@ -101,9 +108,12 @@ describe("Test group data fetching", () => {
 
     await flushPromises();
 
+    console.log(result);
+
     expect(result).toEqual([
       {
         id: "group2",
+        owner: "yem456",
         name: "Second group",
         description: "This is a group",
         img: "second-image-link"

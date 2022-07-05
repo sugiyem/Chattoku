@@ -1,5 +1,5 @@
-import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   leaveGroup,
@@ -10,14 +10,11 @@ import { contactType } from "../../constants/Contact";
 import { groupListType } from "../../constants/Group";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
+import Caution from "../Miscellaneous/Caution";
 
-export default RenderGroupLists = ({
-  type,
-  items,
-  navigation,
-  expandStatus,
-  changeExpand
-}) => {
+export default RenderGroupLists = ({ type, item, navigation }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const buttonDetails = [];
 
   switch (type) {
@@ -25,13 +22,17 @@ export default RenderGroupLists = ({
       buttonDetails.push(
         {
           title: "Detail",
-          icon: "folder-open",
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("GroupInfo", { groupData: item })
         },
         {
           title: "Message",
-          icon: "message",
+          type: "material-community",
+          icon: "message-processing-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("Chat", {
               screen: "GroupChatDetail",
@@ -40,22 +41,11 @@ export default RenderGroupLists = ({
         },
         {
           title: "Leave Group",
-          icon: "close",
-          onPress: (item) => {
-            Alert.alert(
-              "You will leave this group",
-              "This action is irreversible. Do you want to continue?",
-              [
-                {
-                  text: "Cancel"
-                },
-                {
-                  text: "Continue",
-                  onPress: () => leaveGroup(item.id)
-                }
-              ]
-            );
-          }
+          type: "ionicon",
+          icon: "exit-outline",
+          color: "red",
+          onPress: (item) =>
+            Caution("You will leave this group", () => leaveGroup(item.id))
         }
       );
       break;
@@ -64,48 +54,41 @@ export default RenderGroupLists = ({
       buttonDetails.push(
         {
           title: "Detail",
-          icon: "folder-open",
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
           onPress: (item) =>
             navigation.navigate("GroupRequestInfo", { groupData: item })
         },
         {
           title: "Accept Invitation",
+          type: "material",
           icon: "check",
+          color: "green",
           onPress: (item) => acceptGroupInvitation(item.id)
         },
         {
           title: "Decline Invitation",
+          type: "material",
           icon: "close",
+          color: "red",
           onPress: (item) => declineGroupInvitation(item.id)
         }
       );
       break;
   }
 
-  const onRightClick = (index) => {
-    if (expandStatus(index)) {
-      changeExpand(null);
-    } else {
-      changeExpand(index);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {items.map((item, index) => (
-        <ListItem.Accordion
-          key={index}
-          bottomDivider
-          content={<ContactBar type={contactType.GROUP} item={item} />}
-          isExpanded={expandStatus(index)}
-          onPress={() => onRightClick(index)}
-        >
-          {expandStatus(index) && (
-            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
-          )}
-        </ListItem.Accordion>
-      ))}
-    </View>
+    <ListItem.Accordion
+      bottomDivider
+      content={<ContactBar type={contactType.GROUP} item={item} />}
+      isExpanded={isExpanded}
+      onPress={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded && (
+        <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+      )}
+    </ListItem.Accordion>
   );
 };
 

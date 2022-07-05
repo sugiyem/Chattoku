@@ -43,6 +43,7 @@ describe("Test group system", () => {
 
     expect(mockBatch).toHaveBeenCalled();
     expect(mockBatchSet).toHaveBeenNthCalledWith(1, groupRef, {
+      owner: userID,
       name: "group4",
       description: "Fourth group",
       img: "fourth-img-link",
@@ -60,7 +61,7 @@ describe("Test group system", () => {
     );
     expect(mockBatchSet).toHaveBeenNthCalledWith(
       3,
-      userRef.collection("groupCreated").doc(newGroupID),
+      groupRef.collection("admins").doc(userID),
       {}
     );
     expect(mockBatchSet).toHaveBeenNthCalledWith(
@@ -80,11 +81,14 @@ describe("Test group system", () => {
       admin
     );
 
-    expect(mockSet).toHaveBeenCalledWith({
-      name: "Another group",
-      description: "This is another group",
-      img: "other-image-link"
-    });
+    expect(mockSet).toHaveBeenCalledWith(
+      {
+        name: "Another group",
+        description: "This is another group",
+        img: "other-image-link"
+      },
+      { merge: true }
+    );
   });
 
   test("Can add user to group", async () => {
@@ -119,6 +123,10 @@ describe("Test group system", () => {
     expect(mockBatchDelete).toHaveBeenNthCalledWith(
       2,
       groupRef.collection("members").doc("yem456")
+    );
+    expect(mockBatchDelete).toHaveBeenNthCalledWith(
+      3,
+      groupRef.collection("admins").doc("yem456")
     );
     expect(mockBatchCommit).toHaveBeenCalled();
   });
@@ -197,6 +205,10 @@ describe("Test group system", () => {
     expect(mockBatchDelete).toHaveBeenNthCalledWith(
       2,
       groupRef.collection("members").doc(userID)
+    );
+    expect(mockBatchDelete).toHaveBeenNthCalledWith(
+      3,
+      groupRef.collection("admins").doc(userID)
     );
     expect(mockBatchCommit).toHaveBeenCalled();
   });
