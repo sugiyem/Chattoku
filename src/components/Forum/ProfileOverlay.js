@@ -1,21 +1,32 @@
+import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { Icon } from "react-native-elements";
 import styled from "styled-components/native";
 import overlayContext from "../../screens/Forum/overlayContext";
 import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
+import RenderFriendSection from "./RenderFriendSection";
 
 const ProfileOverlay = ({ userData }) => {
+  const navigation = useNavigation();
   const currentUID = getCurrentUID();
   const setOverlayData = useContext(overlayContext);
   const isYou = currentUID === userData.id;
+
+  console.log(userData.id);
 
   function handleCloseClick() {
     setOverlayData(null);
   }
 
-  function handleAddFriend() {}
-
-  function handleMessageClick() {}
+  function handleMessageClick() {
+    navigation.navigate("Chat", {
+      screen: "ChatDetail",
+      params: {
+        recipientID: userData.id,
+        recipientUsername: userData.username
+      }
+    });
+  }
 
   function handleBlockClick() {
     //Will wait for the block system to be implemented
@@ -38,17 +49,9 @@ const ProfileOverlay = ({ userData }) => {
         {!isYou && (
           <>
             <Divider />
-            <Section>
-              <Icon
-                name="person-add"
-                type="material"
-                size={40}
-                color={"navy"}
-              />
-              <PositiveText> Add Friend </PositiveText>
-            </Section>
+            <RenderFriendSection userId={userData.id} />
             <Divider />
-            <Section>
+            <Section onPress={handleMessageClick}>
               <Icon name="message" type="material" size={40} color={"navy"} />
               <PositiveText> Message </PositiveText>
             </Section>
@@ -82,6 +85,8 @@ const Container = styled.View`
 
 const CloseButton = styled.TouchableOpacity`
   background-color: #303030;
+  margin: 0px;
+  width: 320px;
 `;
 
 const CloseText = styled.Text`
@@ -96,6 +101,8 @@ const Card = styled.View`
   width: 300px;
   border-width: 2px;
   border-color: black;
+  overflow: hidden;
+  align-items: center;
 `;
 
 const Profile = styled.Image`
@@ -134,6 +141,7 @@ const Section = styled.TouchableOpacity`
   align-items: center;
   justify-content: flex-start;
   padding: 10px 5px;
+  align-self: flex-start;
 `;
 
 const PositiveText = styled.Text`
@@ -149,6 +157,7 @@ const NegativeText = styled.Text`
 `;
 
 const Divider = styled.View`
+  width: 100%;
   height: 1.5px;
   background-color: black;
   margin-top: 4px;
