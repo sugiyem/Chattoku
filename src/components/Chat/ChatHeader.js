@@ -2,6 +2,7 @@ import { Dimensions, Platform } from "react-native";
 import React from "react";
 import { chatType } from "../../constants/Chat";
 import styled from "styled-components/native";
+import { Icon } from "react-native-elements";
 
 const ChatHeader = ({ type, item, navigation }) => {
   const isPrivateChat = type === chatType.PRIVATE_CHAT;
@@ -9,17 +10,20 @@ const ChatHeader = ({ type, item, navigation }) => {
   const info = isPrivateChat ? item.bio : item.description;
   const imgUrl = item.img;
 
-  function navigateToChatList() {
-    if (isPrivateChat) {
-      navigation.replace("ChatList");
-    } else {
-      navigation.replace("GroupChatList");
-    }
+  function goToGroupPage() {
+    navigation.navigate("Friends", {
+      screen: "GroupInfo",
+      params: { groupData: item }
+    });
   }
 
   return (
     <HeaderContainer>
-      <SectionContainer>
+      <SectionContainer size="1">
+        <Icon type="ionicon" name="arrow-back" onPress={navigation.goBack} />
+      </SectionContainer>
+
+      <SectionContainer size="2">
         <ProfilePicture
           source={
             imgUrl !== ""
@@ -29,18 +33,19 @@ const ChatHeader = ({ type, item, navigation }) => {
         />
       </SectionContainer>
 
-      <SectionContainer>
+      <SectionContainer size="3">
         <Name>{name}</Name>
         <Info>{info}</Info>
       </SectionContainer>
 
-      <SectionContainer>
-        <HeaderButton onPress={navigateToChatList}>
-          <HeaderButtonText>Chat Lists</HeaderButtonText>
-        </HeaderButton>
-        {isPrivateChat && (
+      <SectionContainer size="3">
+        {isPrivateChat ? (
           <HeaderButton>
             <HeaderButtonText>Block User</HeaderButtonText>
+          </HeaderButton>
+        ) : (
+          <HeaderButton onPress={goToGroupPage}>
+            <HeaderButtonText>Group Info</HeaderButtonText>
           </HeaderButton>
         )}
       </SectionContainer>
@@ -65,7 +70,7 @@ const HeaderContainer = styled.View`
 `;
 
 const SectionContainer = styled.View`
-  flex: 1;
+  flex: ${(props) => props.size};
 `;
 
 const ProfilePicture = styled.Image`
@@ -74,7 +79,6 @@ const ProfilePicture = styled.Image`
   border-radius: 80px;
   border-width: 1px;
   border-color: black;
-  margin-left: 20px;
 `;
 
 const Name = styled.Text`

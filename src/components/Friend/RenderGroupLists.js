@@ -32,11 +32,19 @@ export default RenderGroupLists = ({
         {
           title: "Message",
           icon: "message",
-          onPress: (item) =>
-            navigation.navigate("Chat", {
-              screen: "GroupChatDetail",
-              params: { groupID: item.id, groupName: item.name }
-            })
+          onPress: (item) => {
+            const data = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              img: item.img
+            };
+
+            navigation.navigate("GroupChatList");
+            navigation.navigate("GroupChatDetail", {
+              groupData: data
+            });
+          }
         },
         {
           title: "Leave Group",
