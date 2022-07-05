@@ -78,3 +78,9 @@ export const RoundedImage = styled.Image`
   background-color: #ffffff;
   margin-bottom: 10px;
 `;
+
+export const ButtonGroup = styled.View`
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  flex-direction: row;
+`;
