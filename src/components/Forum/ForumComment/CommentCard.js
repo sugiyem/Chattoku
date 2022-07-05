@@ -1,12 +1,13 @@
 import { Icon } from "react-native-elements";
 import { Alert, Text } from "react-native";
 import { firebase } from "../../../services/Firebase/Config";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DeleteComment } from "../../../services/Forum/HandleComment";
 import { useNavigation } from "@react-navigation/native";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import Warning from "../Warning";
 import styled from "styled-components/native";
+import overlayContext from "../../../screens/Forum/overlayContext";
 
 const initialUserData = {
   img: "",
@@ -17,6 +18,7 @@ const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
   const currentUID = firebase.auth().currentUser.uid;
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
+  const setOverlayData = useContext(overlayContext);
   const forumData = navigation.getState().routes[1].params.data;
   const data = navigation.getState().routes[2].params.data;
   const isBanned = data.isBanned;
@@ -55,7 +57,7 @@ const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
 
   return (
     <Container>
-      <UserInfo>
+      <UserInfo onPress={() => setOverlayData(userData)}>
         <Profile
           source={
             userData.img !== ""
@@ -65,6 +67,7 @@ const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
         />
         <Text> {userData.username}</Text>
       </UserInfo>
+      <Divider />
       <Content> {content} </Content>
       <ActionBar>
         {((!isBanned && currentUID === uid) ||
@@ -103,11 +106,17 @@ const Content = styled.Text`
   max-height: 100px;
 `;
 
-const UserInfo = styled.View`
+const UserInfo = styled.TouchableOpacity`
   font-size: 16px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+`;
+
+const Divider = styled.View`
+  height: 0.6px;
+  background-color: black;
+  margin-top: 4px;
 `;
 
 const Profile = styled.Image`
