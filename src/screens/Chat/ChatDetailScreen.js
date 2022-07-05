@@ -5,6 +5,7 @@ import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import { useIsFocused } from "@react-navigation/native";
 
 const initialState = {
   username: "",
@@ -12,12 +13,14 @@ const initialState = {
 };
 
 const ChatDetailScreen = ({ navigation, route }) => {
-  const [userInfo, setUserInfo] = useState(initialState);
-  const [messages, setMessages] = useState([]);
-
   const userID = firebase.auth().currentUser.uid;
   const recipientID = route.params.recipientID;
   const recipientUsername = route.params.recipientUsername;
+  const [userInfo, setUserInfo] = useState(initialState);
+  const [messages, setMessages] = useState([]);
+  //otherUserID is used to optimize firebase use
+  const [otherUserID, setOtherUserID] = useState("");
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     return FetchUserInfo({
@@ -31,6 +34,12 @@ const ChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
+    if (!isFocused) return;
+    if (otherUserID === recipientID) return;
+
+    console.log("triggered");
+    setOtherUserID(recipientID);
+
     return fetchPrivateChatMessages({
       recipientID: recipientID,
       onSuccesfulFetch: (data) => {
@@ -40,7 +49,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         Alert.alert(error.message);
       }
     });
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
