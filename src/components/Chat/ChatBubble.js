@@ -4,7 +4,7 @@ import { Bubble } from "react-native-gifted-chat";
 import styled from "styled-components/native";
 
 const ChatBubble = (props) => {
-  const { userData, ...remainingProps } = props;
+  const { username, ...remainingProps } = props;
   const currentMessage = remainingProps.currentMessage;
   const previousMessage = remainingProps.previousMessage;
   const isFirstMessage = Object.keys(previousMessage).length === 0;
@@ -16,7 +16,7 @@ const ChatBubble = (props) => {
     !isFirstMessage &&
     sameDay(currentMessage.createdAt, previousMessage.createdAt);
 
-  const isUsernameShown = isCurrentUser || isSameUser || isSameDay;
+  const isUsernameShown = isCurrentUser || (isSameUser && isSameDay);
 
   if (isUsernameShown) {
     return <Bubble {...remainingProps} />;
@@ -24,7 +24,7 @@ const ChatBubble = (props) => {
 
   return (
     <BubbleContainer>
-      <BubbleText>ayyaa</BubbleText>
+      <BubbleText>{username}</BubbleText>
       <Bubble {...remainingProps} />
     </BubbleContainer>
   );
