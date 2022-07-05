@@ -6,7 +6,8 @@ import {
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
 import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
-import { groupMemberType, groupMemberSorter } from "../../constants/Group";
+import { groupMemberType } from "../../constants/Group";
+import { groupMemberSorter } from "../../services/Friend/Sorter";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupInfoScreen = ({ navigation, route }) => {

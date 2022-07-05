@@ -9,7 +9,7 @@ import {
   SearchInput
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
-import { groupMemberSorter } from "../../constants/Group";
+import { groupMemberSorter } from "../../services/Friend/Sorter";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
