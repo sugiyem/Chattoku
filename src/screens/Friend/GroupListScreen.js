@@ -1,36 +1,31 @@
 import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import {
-  Alert,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
-import { Badge } from "react-native-elements";
+  BoldText,
+  Button,
+  ButtonGroup,
+  ButtonText,
+  ScrollContainer,
+  SearchInput,
+  SeparatedButton
+} from "../../styles/GeneralStyles";
 import {
   fetchGroup,
   checkGroupInvitation
 } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
+import NotificationText from "../../components/Miscellaneous/NotificationText";
 
 const GroupListScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
   const [isInvitationExist, setIsInvitationExist] = useState(false);
 
   useEffect(() => {
     return fetchGroup({
-      onSuccess: (data) => {
-        setGroups(data);
-      },
-      onFailure: (error) => {
-        Alert.alert("Error", error.message);
-      }
+      onSuccess: setGroups,
+      onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
@@ -48,119 +43,65 @@ const GroupListScreen = ({ navigation }) => {
     });
   }, []);
 
+  const filteredGroups = groups.filter((item) =>
+    item.name.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const GroupContactLists = () => (
+    <View style={styles.listContainer}>
+      {filteredGroups.map((item, index) => (
+        <RenderGroupLists
+          key={index}
+          type={groupListType.GROUP}
+          item={item}
+          navigation={navigation}
+        />
+      ))}
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
+    <ScrollContainer>
+      <SearchInput
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search group by name"
-        style={styles.textInput}
       />
 
-      <Text style={styles.title}>Groups List</Text>
+      <BoldText underline>Groups List</BoldText>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("FriendList")}
-      >
+      <Button onPress={() => navigation.replace("FriendList")}>
         <Text>Back to friend's list</Text>
-      </TouchableOpacity>
+      </Button>
 
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity
-          style={styles.groupButton}
-          onPress={() => navigation.navigate("GroupCreation")}
-        >
-          <Text style={styles.createGroupText}>Create Group</Text>
-        </TouchableOpacity>
+      <ButtonGroup>
+        <SeparatedButton onPress={() => navigation.navigate("GroupCreation")}>
+          <ButtonText size="12px" color="#000000">
+            Create Group
+          </ButtonText>
+        </SeparatedButton>
 
-        <TouchableOpacity
-          style={styles.groupButton}
-          onPress={() => navigation.navigate("GroupRequests")}
-        >
-          <View style={styles.invitationContainer}>
-            <Text style={styles.invitationText}>Group Invitations</Text>
-            {isInvitationExist && (
-              <Badge
-                status="primary"
-                value="!"
-                containerStyle={styles.invitationBadge}
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
+        <SeparatedButton onPress={() => navigation.navigate("GroupRequests")}>
+          <NotificationText
+            text="Group Invitations"
+            isShown={isInvitationExist}
+            size={12}
+          />
+        </SeparatedButton>
+      </ButtonGroup>
 
-      <RenderGroupLists
-        type={groupListType.GROUP}
-        items={groups.filter((item) =>
-          item.name.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
-    </ScrollView>
+      <GroupContactLists />
+    </ScrollContainer>
   );
 };
 
 export default GroupListScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    padding: 5,
-    flex: 1
-  },
-  textInput: {
-    borderColor: "black",
-    borderWidth: 1,
-    margin: 5,
-    backgroundColor: "white",
-    color: "black",
-    borderRadius: 10,
-    padding: 2
-  },
-  button: {
-    margin: 5,
-    padding: 5,
-    backgroundColor: "aquamarine",
-    borderRadius: 10
-  },
-  buttonGroup: {
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    flexDirection: "row"
-  },
-  groupButton: {
-    marginHorizontal: 10,
-    padding: 5,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "cyan",
-    flex: 1
-  },
-  invitationContainer: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  createGroupText: {
-    textAlign: "center",
-    fontSize: 12
-  },
-  invitationText: {
-    textAlign: "center",
-    fontSize: 12,
-    flex: 4
-  },
-  invitationBadge: {
-    flex: 1
-  },
-  title: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 30,
-    fontWeight: "bold",
-    textDecorationLine: "underline"
+  listContainer: {
+    flex: 1,
+    alignSelf: "stretch",
+    margin: 10,
+    padding: 5
   }
 });

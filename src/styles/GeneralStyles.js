@@ -76,6 +76,7 @@ export const RoundedImage = styled.Image`
   border-radius: 75px;
   border-width: 1px;
   background-color: #ffffff;
+  border-color: #000000;
   margin-bottom: 10px;
 `;
 

@@ -8,53 +8,40 @@ import {
   removeUserFromGroup
 } from "../../services/Friend/HandleGroup";
 import { groupMemberType } from "../../constants/Group";
+import Caution from "../Miscellaneous/Caution";
 
-const AddMemberComponent = ({ type, item, groupID }) => {
-  let buttonDetails = null;
+const AddMemberComponent = ({ type, isOwner, item, groupID }) => {
+  let buttonDetails = {
+    text: "Remove",
+    type: "material-community",
+    icon: "account-remove",
+    backgroundColor: "red",
+    onPress: () =>
+      Caution("User will be removed from the group", () =>
+        removeUserFromGroup(groupID, item.id)
+      )
+  };
 
   switch (type) {
-    case groupMemberType.MEMBER:
-      buttonDetails = {
-        text: "Remove",
-        icon: "delete",
-        backgroundColor: "red",
-        description: "Member",
-        onPress: () =>
-          Alert.alert(
-            "User will be removed from the group",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => removeUserFromGroup(groupID, item.id)
-              }
-            ]
-          )
-      };
+    case groupMemberType.OWNER:
+      buttonDetails = null;
+      break;
+
+    case groupMemberType.ADMIN:
+      if (!isOwner) {
+        buttonDetails = null;
+      }
       break;
 
     case groupMemberType.PENDING_MEMBER:
       buttonDetails = {
         text: "Cancel",
-        icon: "delete",
+        type: "material-community",
+        icon: "account-cancel",
         backgroundColor: "red",
-        description: "Pending Member",
         onPress: () =>
-          Alert.alert(
-            "This invitation will be removed",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => cancelGroupInvitation(groupID, item.id)
-              }
-            ]
+          Caution("This invitation will be removed", () =>
+            cancelGroupInvitation(groupID, item.id)
           )
       };
       break;
@@ -62,35 +49,50 @@ const AddMemberComponent = ({ type, item, groupID }) => {
     case groupMemberType.NON_MEMBER:
       buttonDetails = {
         text: "Add",
-        icon: "add",
+        type: "material-community",
+        icon: "account-plus",
         backgroundColor: "green",
-        description: "Not A Member",
         onPress: () => addUserToGroup(groupID, item.id)
       };
       break;
   }
 
+  const EditButton = () =>
+    buttonDetails && (
+      <Button
+        title={buttonDetails.text}
+        icon={{
+          type: buttonDetails.type,
+          name: buttonDetails.icon,
+          color: "white"
+        }}
+        buttonStyle={[
+          styles.button,
+          { backgroundColor: buttonDetails.backgroundColor }
+        ]}
+        onPress={buttonDetails.onPress}
+      />
+    );
+
+  const groupRole =
+    type === groupMemberType.OWNER
+      ? "Owner"
+      : type === groupMemberType.ADMIN
+      ? "Admin"
+      : type === groupMemberType.MEMBER
+      ? "Member"
+      : type === groupMemberType.PENDING_MEMBER
+      ? "Pending Member"
+      : "Not A Member";
+
   return (
-    <ListItem.Swipeable
-      bottomDivider
-      rightContent={
-        <Button
-          title={buttonDetails.text}
-          icon={{ name: buttonDetails.icon, color: "white" }}
-          buttonStyle={[
-            styles.button,
-            { backgroundColor: buttonDetails.backgroundColor }
-          ]}
-          onPress={buttonDetails.onPress}
-        />
-      }
-    >
+    <ListItem.Swipeable bottomDivider rightContent={<EditButton />}>
       <>
         <ContactImage item={item} />
         <ListItem.Content>
           <ListItem.Title>{item.username}</ListItem.Title>
           <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-          <ListItem.Subtitle>{buttonDetails.description}</ListItem.Subtitle>
+          <ListItem.Subtitle>{groupRole}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </>

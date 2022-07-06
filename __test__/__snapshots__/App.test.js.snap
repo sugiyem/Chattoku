@@ -92,6 +92,7 @@ exports[`<App /> Renders correctly 1`] = `
               Array [
                 Object {
                   "backgroundColor": "#ffffff",
+                  "borderColor": "#000000",
                   "borderRadius": 75,
                   "borderWidth": 1,
                   "height": 150,

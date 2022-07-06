@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 import { Icon } from "react-native-elements";
 import { deleteBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 import { useNavigation } from "@react-navigation/native";
@@ -13,13 +13,10 @@ const initialUserData = {
   username: ""
 };
 
-const BannedUser = ({ userId, reason }) => {
+const BannedUser = ({ userId, reason, isAuthorized }) => {
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
   const forumId = navigation.getState().routes[1].params.data.id;
-  console.log(userData);
-
-  console.log(forumId);
 
   useEffect(() => {
     FetchInfoById(userId, (data) => setUserData(data));
@@ -44,13 +41,15 @@ const BannedUser = ({ userId, reason }) => {
         <Username> {userData.username} </Username>
         <Text> {reason}</Text>
       </InfoContainer>
-      <Icon
-        name="delete"
-        type="material"
-        color="red"
-        size={40}
-        onPress={handleDelete}
-      />
+      {isAuthorized && (
+        <Icon
+          name="delete"
+          type="material"
+          color="red"
+          size={40}
+          onPress={handleDelete}
+        />
+      )}
     </Card>
   );
 };

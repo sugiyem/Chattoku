@@ -26,10 +26,8 @@ export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
             snaps.forEach((snap) => {
               if (groupIDLists.includes(snap.id)) {
                 groupInfoLists.push({
-                  id: snap.id,
-                  name: snap.data().name,
-                  description: snap.data().description,
-                  img: snap.data().img
+                  ...snap.data(),
+                  id: snap.id
                 });
               }
             });
@@ -71,10 +69,8 @@ export function fetchGroupInvitation({ onSuccess, onFailure, app = firebase }) {
             snaps.forEach((snap) => {
               if (groupIDLists.includes(snap.id)) {
                 groupInfoLists.push({
-                  id: snap.id,
-                  name: snap.data().name,
-                  description: snap.data().description,
-                  img: snap.data().img
+                  ...snap.data(),
+                  id: snap.id
                 });
               }
             });
@@ -249,39 +245,6 @@ export function fetchPendingGroupMembers({
           });
 
         onSuccess(pendingMemberInfo);
-      },
-      (error) => {
-        onFailure(error);
-      }
-    );
-}
-
-export function checkIfUserIsGroupOwner({
-  groupID,
-  onTrue,
-  onFalse,
-  onFailure,
-  app = firebase
-}) {
-  const userID = app.auth().currentUser.uid;
-
-  return app
-    .firestore()
-    .collection("users")
-    .doc(userID)
-    .collection("groupCreated")
-    .onSnapshot(
-      (querySnapshot) => {
-        const groupCreated = [];
-        querySnapshot.forEach((documentSnapshot) => {
-          groupCreated.push(documentSnapshot.id);
-        });
-
-        if (groupCreated.includes(groupID)) {
-          onTrue();
-        } else {
-          onFalse();
-        }
       },
       (error) => {
         onFailure(error);

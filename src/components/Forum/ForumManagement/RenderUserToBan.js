@@ -1,69 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Text, Platform } from "react-native";
+import { Platform, Alert } from "react-native";
 import styled from "styled-components/native";
-import { firebase } from "../../../services/Firebase/Config";
-import {
-  deleteBannedUsers,
-  addBannedUsers
-} from "../../../services/Forum/HandleBannedUsers";
-import Warning from "../../../components/Forum/Warning";
+import { addBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 
-const RenderUserToBan = ({
-  username,
-  img,
-  id,
-  reason,
-  isBanned,
-  setIsBanned
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const RenderUserToBan = ({ username, img, id, isAuthorized }) => {
   const [banDetail, setBanDetail] = useState("");
-  const [banReason, setBanReason] = useState(reason);
   const navigation = useNavigation();
   const forumId = navigation.getState().routes[1].params.data.id;
-  const currentUID = firebase.auth().currentUser.uid;
-  const isYou = currentUID === id;
-
-  let buttonMessage;
-
-  //Set Up Different Button Message
-  if (isYou) {
-    buttonMessage = "You can't ban yourself";
-  } else if (isBanned) {
-    buttonMessage = "unban";
-  } else if (isExpanded) {
-    buttonMessage = "cancel";
-  } else {
-    buttonMessage = "ban";
-  }
-
-  function handleButtonPress() {
-    if (isYou) return;
-
-    if (isBanned) {
-      //Unban Button
-      Warning(async () => {
-        await deleteBannedUsers(forumId, id).then(() => {
-          setIsBanned(false);
-          setBanReason("");
-        });
-      });
-    } else if (isExpanded) {
-      //Cancel Button
-      setIsExpanded(false);
-      setBanDetail("");
-    } else {
-      //Ban Button
-      setIsExpanded(true);
-    }
-  }
 
   function handleConfirmBanButton() {
     addBannedUsers(forumId, id, banDetail).then(() => {
-      setIsBanned(true);
-      setIsExpanded(false);
-      setBanReason(banDetail);
+      Alert.alert("Ban Successful");
     });
   }
 
@@ -78,28 +26,19 @@ const RenderUserToBan = ({
           }
         />
         <InfoContainer>
-          <Username>
-            {username} {isBanned && "(BANNED)"}
-          </Username>
-          <Text> {isBanned && banReason}</Text>
+          <Username>{username}</Username>
         </InfoContainer>
       </Card>
-      <CustomButton onPress={handleButtonPress}>
-        <ButtonText> {buttonMessage}</ButtonText>
+
+      <TextInputLabel>Enter Ban Details</TextInputLabel>
+      <StyledTextInput
+        multiline={true}
+        value={banDetail}
+        onChangeText={setBanDetail}
+      />
+      <CustomButton onPress={handleConfirmBanButton}>
+        <ButtonText> Ban </ButtonText>
       </CustomButton>
-      {isExpanded && (
-        <>
-          <TextInputLabel>Enter Ban Details</TextInputLabel>
-          <StyledTextInput
-            multiline={true}
-            value={banDetail}
-            onChangeText={setBanDetail}
-          />
-          <CustomButton onPress={handleConfirmBanButton}>
-            <ButtonText> Confirm </ButtonText>
-          </CustomButton>
-        </>
-      )}
     </>
   );
 };
@@ -163,7 +102,7 @@ const TextInputLabel = styled.Text`
 
 const StyledTextInput = styled.TextInput`
   width: 90%;
-  height: 180px;
+  min-height: 180px;
   margin: 5px;
   padding: 10px;
   border-radius: 5px;
@@ -171,4 +110,5 @@ const StyledTextInput = styled.TextInput`
   padding-bottom: 5px;
   align-self: center;
   text-align-vertical: top;
+  flex: 1;
 `;

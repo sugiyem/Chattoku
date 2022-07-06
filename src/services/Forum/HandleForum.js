@@ -105,8 +105,7 @@ export async function updateNotification(
   callbackSuccess
 ) {
   const currentUID = firebase.auth().currentUser.uid;
-  console.log(forumId);
-  console.log(isNotificationOn);
+
   await firebase
     .firestore()
     .collection("forums")

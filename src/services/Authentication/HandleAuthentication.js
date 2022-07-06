@@ -2,6 +2,14 @@ import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 import { registerForPushNotificationsAsync } from "../Miscellaneous/HandleNotification";
 
+export function handleIsLoggedIn(onIsLoggedIn, app = firebase) {
+  const currentUser = app.auth().currentUser;
+
+  if (!currentUser) return;
+
+  onIsLoggedIn();
+}
+
 export async function login(
   credentials,
   onSuccess,

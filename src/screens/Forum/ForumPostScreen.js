@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, LogBox } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CommentList from "../../components/Forum/ForumComment/CommentList";
 import LikeBar from "../../components/Forum/ForumPost/LikeBar";
 import styled from "styled-components/native";
 import { FetchInfoById } from "../../services/Profile/FetchUserInfo";
+import overlayContext from "./overlayContext";
+import ProfileOverlay from "../../components/Forum/ProfileOverlay";
 
 const initialUserData = {
   img: "",
@@ -16,6 +18,7 @@ const initialUserData = {
 
 const MainPost = ({ title, content, uid, forumId, postId }) => {
   const [userData, setUserData] = useState(initialUserData);
+  const setOverlayData = useContext(overlayContext);
 
   useEffect(() => {
     FetchInfoById(uid, setUserData);
@@ -23,7 +26,7 @@ const MainPost = ({ title, content, uid, forumId, postId }) => {
 
   return (
     <HeaderContainer>
-      <UserInfo>
+      <UserInfo onPress={() => setOverlayData(userData)}>
         <Profile
           source={
             userData.img !== ""
@@ -33,6 +36,7 @@ const MainPost = ({ title, content, uid, forumId, postId }) => {
         />
         <Text> {userData.username}</Text>
       </UserInfo>
+      <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
       <LikeBar forumId={forumId} postId={postId} />
@@ -42,6 +46,7 @@ const MainPost = ({ title, content, uid, forumId, postId }) => {
 
 const ForumPostScreen = () => {
   const navigation = useNavigation();
+  const [popupData, setPopupData] = useState(null);
   const [data] = useState(navigation.getState().routes[2].params.data);
   console.log(data);
 
@@ -62,22 +67,25 @@ const ForumPostScreen = () => {
   }
 
   return (
-    <Container>
-      <Button onPress={() => navigation.goBack()}>
-        <ButtonText>Go Back</ButtonText>
-      </Button>
-
-      <RenderHeader />
-      <CommentList {...data} />
-
-      {data.isBanned ? (
-        <BannedText>You have been banned</BannedText>
-      ) : (
-        <Button onPress={handleAddButtonClick}>
-          <ButtonText>Add Your Comment</ButtonText>
+    <overlayContext.Provider value={setPopupData}>
+      {popupData && <ProfileOverlay userData={popupData} />}
+      <Container>
+        <Button onPress={() => navigation.goBack()}>
+          <ButtonText>Go Back</ButtonText>
         </Button>
-      )}
-    </Container>
+
+        <RenderHeader />
+        <CommentList {...data} />
+
+        {data.isBanned ? (
+          <BannedText>You have been banned</BannedText>
+        ) : (
+          <Button onPress={handleAddButtonClick}>
+            <ButtonText>Add Your Comment</ButtonText>
+          </Button>
+        )}
+      </Container>
+    </overlayContext.Provider>
   );
 };
 
@@ -139,13 +147,18 @@ const Title = styled.Text`
   align-self: center;
 `;
 
-const UserInfo = styled.View`
+const UserInfo = styled.TouchableOpacity`
   font-size: 16px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
 `;
 
+const Divider = styled.View`
+  height: 0.6px;
+  background-color: black;
+  margin-top: 4px;
+`;
 const Content = styled.Text`
   padding-top: 5px;
   padding-bottom: 5px;

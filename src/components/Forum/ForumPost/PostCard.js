@@ -1,23 +1,36 @@
 import { Icon } from "react-native-elements";
 import { Alert, Text } from "react-native";
 import { firebase } from "../../../services/Firebase/Config";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "../../../services/Forum/HandleForumPost";
 import LikeBar from "./LikeBar";
 import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import Warning from "../Warning";
 import styled from "styled-components/native";
+import overlayContext from "../../../screens/Forum/overlayContext";
 
 const initialUserData = {
   img: "",
   username: "fetching username..."
 };
 
-const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
+const PostCard = ({
+  title,
+  content,
+  id,
+  uid,
+  forumId,
+  isOwner,
+  isBanned,
+  isAuthorized
+}) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(initialUserData);
   const currentUID = firebase.auth().currentUser.uid;
+  const forumData = navigation.getState().routes[1].params.data;
+  const setOverlayData = useContext(overlayContext);
+  const isOwnersPost = forumData.owner === uid;
 
   const likeBarState = {
     forumId: forumId,
@@ -64,7 +77,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
 
   return (
     <Container>
-      <UserInfo>
+      <UserInfo onPress={() => setOverlayData(userData)}>
         <Profile
           source={
             userData.img !== ""
@@ -74,6 +87,7 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
         />
         <Text> {userData.username}</Text>
       </UserInfo>
+      <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
       <ActionBar>
@@ -81,7 +95,9 @@ const PostCard = ({ title, content, id, uid, forumId, isOwner, isBanned }) => {
         <Action onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </Action>
-        {((!isBanned && currentUID === uid) || isOwner) && (
+        {((!isBanned && currentUID === uid) ||
+          isOwner ||
+          (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
           </Action>
@@ -123,11 +139,17 @@ const Title = styled.Text`
   align-self: center;
 `;
 
-const UserInfo = styled.View`
+const UserInfo = styled.TouchableOpacity`
   font-size: 16px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+`;
+
+const Divider = styled.View`
+  height: 0.6px;
+  background-color: black;
+  margin-top: 4px;
 `;
 
 const Content = styled.Text`
