@@ -24,6 +24,8 @@ export async function sendSystemMessageToUser(
     createdAt: sentTime,
     system: true
   });
+
+  return { messageID: systemMessageID, time: sentTime };
 }
 
 export async function sendSystemMessageToGroup(
@@ -45,4 +47,6 @@ export async function sendSystemMessageToGroup(
     createdAt: sentTime,
     system: true
   });
+
+  return { messageID: systemMessageID, time: sentTime };
 }

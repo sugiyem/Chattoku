@@ -69,6 +69,7 @@ describe("Test active chats fetching", () => {
         id: "group3",
         name: "Third group",
         img: "third-image-link",
+        description: "This is a group",
         lastMessage: "other-group-message",
         lastMessageTime: new Timestamp(2, 2).toDate(),
         showNotif: true
