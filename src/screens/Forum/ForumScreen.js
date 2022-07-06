@@ -4,22 +4,25 @@ import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
 import { firebase } from "../../services/Firebase/Config";
 import styled from "styled-components/native";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
 import FetchPost from "../../services/Forum/FetchPost";
 import ForumHeader from "../../components/Forum/ForumHeader";
 import { isUserAdmin } from "../../services/Forum/HandleForumAdmin";
+import ProfileOverlay from "../../components/Forum/ProfileOverlay";
+import overlayContext from "./overlayContext";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
   const [posts, setPosts] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [popupData, setPopupData] = useState(null);
   const navigation = useNavigation();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = firebase.auth().currentUser.uid;
   const isOwner = data.owner === currentUID;
 
-  console.log(data);
+  console.log(popupData);
 
   useEffect(() => {
     return isUserAdmin(data.id, currentUID, (data) => setIsAdmin(data.isFound));
@@ -32,8 +35,6 @@ const ForumScreen = () => {
   function handleEditForumButton() {
     navigation.navigate("ManageForum", { data: data });
   }
-
-  console.log(posts);
 
   //Check for ban
   useEffect(() => {
@@ -52,35 +53,41 @@ const ForumScreen = () => {
   }, []);
 
   return (
-    <Container>
-      <CustomButton onPress={() => navigation.goBack()}>
-        <ButtonText>Go Back</ButtonText>
-      </CustomButton>
-      {(isOwner || isAdmin) && (
-        <CustomButton onPress={handleEditForumButton}>
-          <ButtonText>Manage Forum</ButtonText>
-        </CustomButton>
-      )}
-      {/* <Header {...data} /> */}
-      <PostList
-        forumId={data.id}
-        isOwner={isOwner}
-        isBanned={isBanned}
-        Header={() => <ForumHeader {...data} />}
-        posts={posts}
-      />
-      {isBanned ? (
-        <BannedText>You have been banned</BannedText>
-      ) : (
-        <Icon
-          name="add"
-          type="material"
-          style={styles.add}
-          size={50}
-          onPress={handleAddButtonClick}
-        />
-      )}
-    </Container>
+    <>
+      <overlayContext.Provider value={setPopupData}>
+        {popupData && <ProfileOverlay userData={popupData} />}
+
+        <Container>
+          <CustomButton onPress={() => navigation.goBack()}>
+            <ButtonText>Go Back</ButtonText>
+          </CustomButton>
+          {(isOwner || isAdmin) && (
+            <CustomButton onPress={handleEditForumButton}>
+              <ButtonText>Manage Forum</ButtonText>
+            </CustomButton>
+          )}
+          {/* <Header {...data} /> */}
+          <PostList
+            forumId={data.id}
+            isOwner={isOwner}
+            isBanned={isBanned}
+            Header={() => <ForumHeader {...data} />}
+            posts={posts}
+          />
+          {isBanned ? (
+            <BannedText>You have been banned</BannedText>
+          ) : (
+            <Icon
+              name="add"
+              type="material"
+              style={styles.add}
+              size={50}
+              onPress={handleAddButtonClick}
+            />
+          )}
+        </Container>
+      </overlayContext.Provider>
+    </>
   );
 };
 
