@@ -14,7 +14,6 @@ import RenderUserLists from "../../components/Friend/RenderUserLists";
 const BlockedUserListScreen = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
 
   const navigation = useNavigation();
 
@@ -25,6 +24,16 @@ const BlockedUserListScreen = () => {
   const filteredBlockedUsers = blockedUsers.filter((data) =>
     data.username.toLowerCase().startsWith(search.toLowerCase())
   );
+
+  const UserLists = () =>
+    filteredBlockedUsers.map((item, index) => (
+      <RenderUserLists
+        key={index}
+        type={friendshipType.BLOCKED}
+        item={item}
+        navigation={navigation}
+      />
+    ));
 
   return (
     <ScrollContainer>
@@ -44,13 +53,7 @@ const BlockedUserListScreen = () => {
         <Text>Add blocked users</Text>
       </Button>
 
-      <RenderUserLists
-        type={friendshipType.BLOCKED}
-        items={filteredBlockedUsers}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
+      <UserLists />
     </ScrollContainer>
   );
 };

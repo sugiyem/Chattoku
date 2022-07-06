@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Alert, Text } from "react-native";
 import {
-  Alert,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity
-} from "react-native";
+  BoldText,
+  Button,
+  ScrollContainer,
+  SearchInput
+} from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import { fetchFriendRequestsSent } from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
@@ -16,79 +14,46 @@ import RenderUserLists from "../../components/Friend/RenderUserLists";
 const FriendRequestsSentScreen = () => {
   const [pendingFriends, setPendingFriends] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     return fetchFriendRequestsSent({
-      onSuccess: (data) => {
-        setPendingFriends(data);
-      },
-      onFailure: (error) => {
-        Alert.alert("Error", error.message);
-      }
+      onSuccess: setPendingFriends,
+      onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
+  const filteredRequests = pendingFriends.filter((item) =>
+    item.username.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const UserLists = filteredRequests.map((item, index) => (
+    <RenderUserLists
+      key={index}
+      type={friendshipType.WAITING_RESPONSE}
+      item={item}
+      navigation={navigation}
+    />
+  ));
+
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
+    <ScrollContainer>
+      <SearchInput
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search requests by username"
-        style={styles.textInput}
       />
 
-      <Text style={styles.title}>Pending Requests Sent</Text>
+      <BoldText underline>Pending Requests Sent</BoldText>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
+      <Button onPress={() => navigation.goBack()}>
         <Text>Back to friend's list</Text>
-      </TouchableOpacity>
+      </Button>
 
-      <RenderUserLists
-        type={friendshipType.WAITING_RESPONSE}
-        items={pendingFriends.filter((data) =>
-          data.username.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
-    </ScrollView>
+      <UserLists />
+    </ScrollContainer>
   );
 };
 
 export default FriendRequestsSentScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    padding: 5,
-    flex: 1
-  },
-  textInput: {
-    borderColor: "black",
-    borderWidth: 1,
-    margin: 5,
-    backgroundColor: "white",
-    color: "black",
-    borderRadius: 10,
-    padding: 2
-  },
-  button: {
-    margin: 5,
-    padding: 5,
-    backgroundColor: "aquamarine",
-    borderRadius: 10
-  },
-  title: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 25,
-    fontWeight: "bold",
-    textDecorationLine: "underline"
-  }
-});

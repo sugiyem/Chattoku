@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   leaveGroup,
@@ -25,15 +24,14 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           type: "ionicon",
           icon: "open-outline",
           color: "blue",
-          onPress: (item) =>
-            navigation.navigate("GroupInfo", { groupData: item })
+          onPress: () => navigation.navigate("GroupInfo", { groupData: item })
         },
         {
           title: "Message",
           type: "material-community",
           icon: "message-processing-outline",
           color: "blue",
-          onPress: (item) => {
+          onPress: () => {
             const data = {
               id: item.id,
               name: item.name,
@@ -41,9 +39,10 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
               img: item.img
             };
 
-            navigation.navigate("GroupChatList");
-            navigation.navigate("GroupChatDetail", {
-              groupData: data
+            navigation.navigate("Chat", {
+              screen: "GroupChatDetail",
+              initial: false,
+              params: { groupData: data }
             });
           }
         },
@@ -52,7 +51,7 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           type: "ionicon",
           icon: "exit-outline",
           color: "red",
-          onPress: (item) =>
+          onPress: () =>
             Caution("You will leave this group", () => leaveGroup(item.id))
         }
       );
@@ -65,7 +64,7 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           type: "ionicon",
           icon: "open-outline",
           color: "blue",
-          onPress: (item) =>
+          onPress: () =>
             navigation.navigate("GroupRequestInfo", { groupData: item })
         },
         {
@@ -73,14 +72,14 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           type: "material",
           icon: "check",
           color: "green",
-          onPress: (item) => acceptGroupInvitation(item.id)
+          onPress: () => acceptGroupInvitation(item.id)
         },
         {
           title: "Decline Invitation",
           type: "material",
           icon: "close",
           color: "red",
-          onPress: (item) => declineGroupInvitation(item.id)
+          onPress: () => declineGroupInvitation(item.id)
         }
       );
       break;
@@ -99,12 +98,3 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
     </ListItem.Accordion>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5
-  }
-});

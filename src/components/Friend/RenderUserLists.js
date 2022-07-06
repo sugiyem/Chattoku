@@ -1,5 +1,4 @@
-import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
 import { ListItem } from "react-native-elements";
 import {
   acceptFriendRequest,
@@ -17,20 +16,16 @@ import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
 import Caution from "../Miscellaneous/Caution";
 
-export default RenderUserLists = ({
-  type,
-  items,
-  navigation,
-  expandStatus,
-  changeExpand
-}) => {
+export default RenderUserLists = ({ type, item, navigation }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   let buttonDetails = [
     {
       title: "Message",
       type: "material-community",
       icon: "message-processing-outline",
       color: "blue",
-      onPress: (item) => {
+      onPress: () => {
         const data = {
           id: item.id,
           username: item.username,
@@ -38,9 +33,10 @@ export default RenderUserLists = ({
           img: item.img
         };
 
-        navigation.navigate("ChatList");
-        navigation.navigate("ChatDetail", {
-          userData: data
+        navigation.navigate("Chat", {
+          screen: "ChatDetail",
+          initial: false,
+          params: { userData: data }
         });
       }
     },
@@ -49,7 +45,7 @@ export default RenderUserLists = ({
       type: "material",
       icon: "block",
       color: "red",
-      onPress: (item) =>
+      onPress: () =>
         Caution("This user will be blocked", () => blockUser(item.id))
     }
   ];
@@ -62,15 +58,14 @@ export default RenderUserLists = ({
           type: "ionicon",
           icon: "open-outline",
           color: "blue",
-          onPress: (item) =>
-            navigation.navigate("FriendInfo", { friendData: item })
+          onPress: () => navigation.navigate("FriendInfo", { friendData: item })
         },
         {
           title: "Unfriend",
           type: "ionicon",
           icon: "ios-person-remove-outline",
           color: "red",
-          onPress: (item) =>
+          onPress: () =>
             Caution("This user will be removed from your friend's list", () =>
               removeFriend(item.id)
             )
@@ -84,7 +79,7 @@ export default RenderUserLists = ({
         type: "material-community",
         icon: "account-cancel-outline",
         color: "red",
-        onPress: (item) =>
+        onPress: () =>
           Caution("This friend request will be removed", () =>
             cancelFriendRequest(item.id)
           )
@@ -98,14 +93,17 @@ export default RenderUserLists = ({
           type: "material",
           icon: "check",
           color: "green",
-          onPress: (item) => acceptFriendRequest(item.id)
+          onPress: () => acceptFriendRequest(item.id)
         },
         {
           title: "Decline request",
           type: "material",
           icon: "close",
           color: "red",
-          onPress: (item) => declineFriendRequest(item.id)
+          onPress: () =>
+            Caution("This friend request will be declined", () =>
+              declineFriendRequest(item.id)
+            )
         }
       );
       break;
@@ -117,43 +115,22 @@ export default RenderUserLists = ({
           type: "material-community",
           icon: "account-lock-open-outline",
           color: "green",
-          onPress: (item) => unblockUser(item.id)
+          onPress: () =>
+            Caution("This user will be unblocked", () => unblockUser(item.id))
         }
       ];
   }
 
-  const onRightClick = (index) => {
-    if (expandStatus(index)) {
-      changeExpand(null);
-    } else {
-      changeExpand(index);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {items.map((item, index) => (
-        <ListItem.Accordion
-          key={index}
-          bottomDivider
-          content={<ContactBar type={contactType.USER} item={item} />}
-          isExpanded={expandStatus(index)}
-          onPress={() => onRightClick(index)}
-        >
-          {expandStatus(index) && (
-            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
-          )}
-        </ListItem.Accordion>
-      ))}
-    </View>
+    <ListItem.Accordion
+      bottomDivider
+      content={<ContactBar type={contactType.USER} item={item} />}
+      isExpanded={isExpanded}
+      onPress={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded && (
+        <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+      )}
+    </ListItem.Accordion>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5
-  }
-});

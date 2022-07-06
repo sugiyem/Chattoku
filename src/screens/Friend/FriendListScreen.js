@@ -17,12 +17,10 @@ import {
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
 import NotificationText from "../../components/Miscellaneous/NotificationText";
-import Loading from "../../components/Miscellaneous/Loading";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
   const [isRequestExist, setIsRequestExist] = useState(false);
 
   const navigation = useNavigation();
@@ -36,17 +34,25 @@ const FriendListScreen = () => {
 
   useEffect(() => {
     return checkFriendRequestsReceived({
-      onFound: () => {
-        setIsRequestExist(true);
-      },
-      onNotFound: () => {
-        setIsRequestExist(false);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onFound: () => setIsRequestExist(true),
+      onNotFound: () => setIsRequestExist(false),
+      onFailure: (error) => Alert.alert(error.message)
     });
   });
+
+  const filteredFriends = friends.filter((item) =>
+    item.username.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const UserLists = () =>
+    filteredFriends.map((item, index) => (
+      <RenderUserLists
+        key={index}
+        item={item}
+        type={friendshipType.FRIEND}
+        navigation={navigation}
+      />
+    ));
 
   return (
     <ScrollContainer>
@@ -90,15 +96,7 @@ const FriendListScreen = () => {
         </SeparatedButton>
       </ButtonGroup>
 
-      <RenderUserLists
-        type={friendshipType.FRIEND}
-        items={friends.filter((data) =>
-          data.username.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
+      <UserLists />
     </ScrollContainer>
   );
 };
