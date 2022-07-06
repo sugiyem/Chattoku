@@ -43,7 +43,7 @@ function sameDay(d1, d2) {
 const width = Dimensions.get("screen").width;
 
 const BubbleContainer = styled.View`
-  width: ${width / 2 - 50}px;
+  width: ${width - 70}px;
 `;
 
 const BubbleText = styled.Text`
