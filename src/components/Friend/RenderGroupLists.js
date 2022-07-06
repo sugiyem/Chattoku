@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
@@ -12,13 +12,9 @@ import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
 import Caution from "../Miscellaneous/Caution";
 
-export default RenderGroupLists = ({
-  type,
-  items,
-  navigation,
-  expandStatus,
-  changeExpand
-}) => {
+export default RenderGroupLists = ({ type, item, navigation }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const buttonDetails = [];
 
   switch (type) {
@@ -37,11 +33,19 @@ export default RenderGroupLists = ({
           type: "material-community",
           icon: "message-processing-outline",
           color: "blue",
-          onPress: (item) =>
-            navigation.navigate("Chat", {
-              screen: "GroupChatDetail",
-              params: { groupID: item.id, groupName: item.name }
-            })
+          onPress: (item) => {
+            const data = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              img: item.img
+            };
+
+            navigation.navigate("GroupChatList");
+            navigation.navigate("GroupChatDetail", {
+              groupData: data
+            });
+          }
         },
         {
           title: "Leave Group",
@@ -82,30 +86,17 @@ export default RenderGroupLists = ({
       break;
   }
 
-  const onRightClick = (index) => {
-    if (expandStatus(index)) {
-      changeExpand(null);
-    } else {
-      changeExpand(index);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {items.map((item, index) => (
-        <ListItem.Accordion
-          key={index}
-          bottomDivider
-          content={<ContactBar type={contactType.GROUP} item={item} />}
-          isExpanded={expandStatus(index)}
-          onPress={() => onRightClick(index)}
-        >
-          {expandStatus(index) && (
-            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
-          )}
-        </ListItem.Accordion>
-      ))}
-    </View>
+    <ListItem.Accordion
+      bottomDivider
+      content={<ContactBar type={contactType.GROUP} item={item} />}
+      isExpanded={isExpanded}
+      onPress={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded && (
+        <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+      )}
+    </ListItem.Accordion>
   );
 };
 

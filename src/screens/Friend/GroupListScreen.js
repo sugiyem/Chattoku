@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import {
   BoldText,
   Button,
@@ -20,7 +20,6 @@ import NotificationText from "../../components/Miscellaneous/NotificationText";
 const GroupListScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
   const [isInvitationExist, setIsInvitationExist] = useState(false);
 
   useEffect(() => {
@@ -43,6 +42,23 @@ const GroupListScreen = ({ navigation }) => {
       }
     });
   }, []);
+
+  const filteredGroups = groups.filter((item) =>
+    item.name.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const GroupContactLists = () => (
+    <View style={styles.listContainer}>
+      {filteredGroups.map((item, index) => (
+        <RenderGroupLists
+          key={index}
+          type={groupListType.GROUP}
+          item={item}
+          navigation={navigation}
+        />
+      ))}
+    </View>
+  );
 
   return (
     <ScrollContainer>
@@ -74,17 +90,18 @@ const GroupListScreen = ({ navigation }) => {
         </SeparatedButton>
       </ButtonGroup>
 
-      <RenderGroupLists
-        type={groupListType.GROUP}
-        items={groups.filter((item) =>
-          item.name.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
+      <GroupContactLists />
     </ScrollContainer>
   );
 };
 
 export default GroupListScreen;
+
+const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    alignSelf: "stretch",
+    margin: 10,
+    padding: 5
+  }
+});

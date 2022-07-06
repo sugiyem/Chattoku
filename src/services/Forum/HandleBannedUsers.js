@@ -43,15 +43,14 @@ export async function deleteBannedUsers(forumId, bannedUserId) {
     .then(() => Alert.alert("Unban Success"));
 }
 
-export async function isUserBanned(forumId, userId, callbackSuccess) {
-  await firebase
+export function isUserBanned(forumId, userId, callbackSuccess) {
+  return firebase
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("banned")
     .doc(userId)
-    .get()
-    .then((doc) =>
+    .onSnapshot((doc) =>
       doc.exists
         ? callbackSuccess({ isFound: true, ...doc.data() })
         : callbackSuccess({ isFound: false })

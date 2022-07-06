@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
+import { isAuthorizedToDeletePosts } from "../../../services/Forum/HandleForumAdmin";
 import PostCard from "./PostCard";
 
 const PostList = ({
@@ -11,10 +12,15 @@ const PostList = ({
   posts
 }) => {
   const [search, setSearch] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const filteredPost = posts.filter((post) =>
     post.title.toLowerCase().startsWith(search.toLowerCase())
   );
+
+  useEffect(() => {
+    return isAuthorizedToDeletePosts(forumId, setIsAuthorized);
+  }, []);
 
   // console.log("POST LIST");
   // console.log(posts);
@@ -26,6 +32,7 @@ const PostList = ({
         isOwner={isOwner}
         isBanned={isBanned}
         forumId={forumId}
+        isAuthorized={isAuthorized}
       />
     );
   };

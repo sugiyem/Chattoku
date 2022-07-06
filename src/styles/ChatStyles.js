@@ -2,16 +2,29 @@ import styled from "styled-components/native";
 
 export const ChatContainer = styled.View`
   flex: 1;
-  background-color: #008b8b;
+  background-color: darkcyan;
   padding: 5px;
 `;
 
-export const ChatInfoContainer = styled.View`
-  align-self: stretch;
-  border-width: 1px;
-  border-color: #000000;
-  background-color: #7fffd4;
-  border-radius: 10px;
-  margin: 5px;
+export const ScrollChatContainer = styled.ScrollView`
+  flex: 1;
+  background-color: darkcyan;
   padding: 5px;
+`;
+
+export const ChatListContainer = styled.View`
+  flex: 1;
+  align-self: stretch;
+  margin: 10px;
+  padding: 5px;
+`;
+
+export const IconContainer = styled.View`
+  margin-horizontal: ${(props) => (props.isSmall ? "5" : "20")}px;
+`;
+
+export const IconDescription = styled.Text`
+  text-align: center;
+  font-size: ${(props) => (props.isSmall ? "10" : "12")}px;
+  color: ${(props) => (props.color ? props.color : "white")};
 `;

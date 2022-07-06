@@ -11,7 +11,6 @@ import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [pendingMembers, setPendingMembers] = useState([]);
-  const [expand, setExpand] = useState(null);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
 
@@ -22,10 +21,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
-
-  function changeExpand(index) {
-    expand === index ? setExpand(null) : setExpand(index);
-  }
 
   const filteredPendingMembers = pendingMembers.filter((pendingMember) =>
     pendingMember.username.toLowerCase().startsWith(search.toLowerCase())
@@ -51,8 +46,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           item={item}
           isMember={false}
           groupInfo={groupInfo}
-          isExpanded={expand === index}
-          changeExpanded={() => changeExpand(index)}
         />
       ))}
     </ScrollContainer>

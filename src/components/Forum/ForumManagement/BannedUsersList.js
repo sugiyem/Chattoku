@@ -3,7 +3,7 @@ import { ScrollView, SectionList, Text } from "react-native";
 import BannedUser from "./BannedUser";
 import { getBannedUsers } from "../../../services/Forum/HandleBannedUsers";
 
-const BannedUsersList = ({ forumId }) => {
+const BannedUsersList = ({ forumId, isAuthorized }) => {
   const [users, setUsers] = useState([]);
   console.log(users.length);
 
@@ -12,7 +12,7 @@ const BannedUsersList = ({ forumId }) => {
   }, []);
 
   const renderItem = ({ item }) => {
-    return <BannedUser {...item} />;
+    return <BannedUser {...item} isAuthorized={isAuthorized} />;
   };
 
   const renderHeader = () => <></>;

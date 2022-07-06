@@ -10,30 +10,10 @@ export function fetchGroupAdminIDs({ groupID, onSuccess, app = firebase }) {
     .onSnapshot(
       (querySnapshot) => {
         const adminIDs = [];
-        const adminDatas = [];
 
         querySnapshot.forEach((documentSnapshot) => {
           adminIDs.push(documentSnapshot.id);
         });
-
-        /*await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (adminIDs.includes(snap.id)) {
-                adminDatas.push({
-                  id: snap.id,
-                  username: snap.data().username,
-                  bio: snap.data().bio,
-                  img: snap.data().img
-                });
-              }
-            });
-          });
-          */
 
         onSuccess(adminIDs);
       },

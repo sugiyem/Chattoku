@@ -1,9 +1,18 @@
-import React from "react";
-import { CenteredBoldText } from "../../styles/GeneralStyles";
-import { GiftedChat } from "react-native-gifted-chat";
+import React, { useState } from "react";
+import { Actions, Bubble, GiftedChat } from "react-native-gifted-chat";
 import { sendPrivateChat, sendGroupChat } from "../../services/Chat/HandleChat";
 import { DEFAULT_AVATAR_URL } from "../../constants/Chat";
 import { chatType } from "../../constants/Chat";
+import {
+  pickImageFromCamera,
+  pickImageFromLibrary,
+  uploadImage
+} from "../../services/Miscellaneous/HandleImage";
+import { Icon } from "react-native-elements";
+import Loading from "../Miscellaneous/Loading";
+import ChatAvatar from "./ChatAvatar";
+import ChatBubble from "./ChatBubble";
+import ChatInpurBar from "./ChatInpurBar";
 
 const ChatSections = ({
   type,
@@ -12,13 +21,23 @@ const ChatSections = ({
   messages,
   updateMessages,
   isBlocking = false,
-  isGetBlocked = false
+  isGetBlocked = false,
+  allUserInfos = [],
+  navigation
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const userID = userData.id;
   const isPrivateChat = type === chatType.PRIVATE_CHAT;
+  const userMessageData = {
+    _id: userID,
+    name: userData.username,
+    avatar: userData.img.length > 0 ? userData.img : DEFAULT_AVATAR_URL
+  };
 
-  const onSend = async (messageArray) => {
+  async function onSend(messageArray) {
     const msg = messageArray[0];
+    console.log(msg);
     const newMsg = {
       ...msg,
       sentBy: userData.id,
@@ -33,57 +52,89 @@ const ChatSections = ({
     if (isPrivateChat) {
       await sendPrivateChat(newMsg, receiverID);
     } else {
-      sendGroupChat(newMsg, receiverID);
+      await sendGroupChat(newMsg, receiverID);
     }
-  };
+  }
 
-  const BlockedInputToolbar = () => (
-    <CenteredBoldText size="18px">
-      You've been blocked by this user
-    </CenteredBoldText>
-  );
+  async function onSendImage(imgUrl) {
+    await onSend([{ _id: imgUrl, image: imgUrl, user: userMessageData }]);
+  }
 
-  const BlockingInputToolbar = () => (
-    <>
-      <CenteredBoldText size="15px">You've blocked this user.</CenteredBoldText>
-      <CenteredBoldText size="15px">
-        Unblock it before continue messaging.
-      </CenteredBoldText>
-    </>
-  );
-
-  if (isBlocking || isGetBlocked) {
-    return (
-      <GiftedChat
-        messages={messages}
-        user={{
-          _id: userID,
-          name: userData.username,
-          avatar: userData.img.length > 0 ? userData.img : DEFAULT_AVATAR_URL
-        }}
-        renderUsernameOnMessage
-        isLoadingEarlier
-        renderAvatarOnTop
-        renderInputToolbar={() =>
-          isGetBlocked ? <BlockedInputToolbar /> : <BlockingInputToolbar />
-        }
-      />
+  async function handleUploadPicture(imgUrl) {
+    await uploadImage(
+      imgUrl,
+      () => setIsLoading(true),
+      () => setIsLoading(false),
+      onSendImage,
+      "Picture has been sent"
     );
   }
 
+  const renderActions = (props) => {
+    if (isBlocking || isGetBlocked) {
+      return null;
+    }
+
+    return (
+      <Actions
+        {...props}
+        options={{
+          ["Open Camera"]: () => pickImageFromCamera(handleUploadPicture),
+          ["Open Gallery"]: () => pickImageFromLibrary(handleUploadPicture)
+        }}
+        icon={() => <Icon type="ionicon" name="image-outline" color="blue" />}
+        onSend={(args) => console.log(args)}
+      />
+    );
+  };
+
+  const renderAvatar = isPrivateChat
+    ? null
+    : (props) => {
+        const userInfo = allUserInfos.filter(
+          (item) => item.id === props.currentMessage.user._id
+        )[0];
+
+        return (
+          <ChatAvatar {...props} userInfo={userInfo} navigation={navigation} />
+        );
+      };
+
+  const renderBubble = (props) => {
+    if (isPrivateChat) {
+      return <Bubble {...props} />;
+    }
+
+    const username = allUserInfos.filter(
+      (item) => item.id === props.currentMessage.user._id
+    )[0].username;
+    return <ChatBubble {...props} username={username} />;
+  };
+
+  const renderInputBar = (props) => {
+    return (
+      <ChatInpurBar
+        {...props}
+        isBlocking={isBlocking}
+        isGetBlocked={isGetBlocked}
+      />
+    );
+  };
+
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={onSend}
-      user={{
-        _id: userID,
-        name: userData.username,
-        avatar: userData.img.length > 0 ? userData.img : DEFAULT_AVATAR_URL
-      }}
-      renderUsernameOnMessage
-      isLoadingEarlier
-      renderAvatarOnTop
-    />
+    <Loading isLoading={isLoading}>
+      <GiftedChat
+        messages={messages}
+        onSend={onSend}
+        user={userMessageData}
+        isLoadingEarlier
+        renderAvatarOnTop
+        renderActions={renderActions}
+        renderAvatar={renderAvatar}
+        renderBubble={renderBubble}
+        renderInputToolbar={renderInputBar}
+      />
+    </Loading>
   );
 };
 

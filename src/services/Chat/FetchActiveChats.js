@@ -66,7 +66,8 @@ export const fetchActivePrivateChats = ({
                   ...map.get(snap.id),
                   id: snap.id,
                   username: snap.data().username,
-                  img: snap.data().img
+                  img: snap.data().img,
+                  bio: snap.data().bio
                 });
               }
             });
@@ -110,6 +111,7 @@ export const fetchActiveGroupChats = ({
                   id: documentSnapshot.id,
                   name: documentSnapshot.data().name,
                   img: documentSnapshot.data().img,
+                  description: documentSnapshot.data().description,
                   lastMessage: documentSnapshot.data().lastMessageText,
                   lastMessageTime: documentSnapshot.data().lastMessageAt
                     ? documentSnapshot.data().lastMessageAt.toDate()

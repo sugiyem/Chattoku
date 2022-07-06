@@ -4,6 +4,7 @@ import {
   sendPushNotification,
   sendNotificationToAllGroupMembers
 } from "../Miscellaneous/HandleNotification";
+import { sendSystemMessageToGroup } from "../Chat/HandleSystemMessage";
 
 export async function createGroup(
   groupName,
@@ -58,11 +59,14 @@ export async function editGroupDetails(
     .firestore()
     .collection("groups")
     .doc(groupID)
-    .set({
-      name: newName,
-      description: newDescription,
-      img: newImg
-    })
+    .set(
+      {
+        name: newName,
+        description: newDescription,
+        img: newImg
+      },
+      { merge: true }
+    )
     .then(() => {
       Alert.alert("Group has successfully edited");
     })
@@ -104,6 +108,12 @@ export async function addUserToGroup(groupID, userID, app = firebase) {
         `Hi ${username}, you have been invited to ${groupName}.`
       );
     })
+    .then(() => {
+      sendSystemMessageToGroup(
+        `${username} has been invited by the group's admin.`,
+        groupID
+      );
+    })
     .catch((error) => {
       Alert.alert("Error", error.message);
     });
@@ -117,6 +127,9 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
 
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
+
+  // If user is an admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
 
   const { username, notificationToken } = await db
     .collection("users")
@@ -134,6 +147,12 @@ export async function removeUserFromGroup(groupID, userID, app = firebase) {
     .commit()
     .then(() => {
       Alert.alert("This user has been removed from the group.");
+    })
+    .then(() => {
+      sendSystemMessageToGroup(
+        `${username} has been kicked by the group's admin.`,
+        groupID
+      );
     })
     .then(() => {
       sendPushNotification(
@@ -199,6 +218,13 @@ export async function acceptGroupInvitation(groupID, app = firebase) {
       Alert.alert("You have successfully joined this group");
     })
     .then(() => {
+      console.log("system message otw");
+      sendSystemMessageToGroup(
+        `${username} has just joined the group.`,
+        groupID
+      );
+    })
+    .then(() => {
       sendNotificationToAllGroupMembers(
         groupID,
         userID,
@@ -239,13 +265,21 @@ export async function leaveGroup(groupID, app = firebase) {
   const userRef = db.collection("users").doc(userID);
   const groupRef = db.collection("groups").doc(groupID);
 
+  const username = await userRef.get().then((doc) => doc.data().username);
+
   batch.delete(userRef.collection("groupJoined").doc(groupID));
   batch.delete(groupRef.collection("members").doc(userID));
+
+  // If user is admin, demote first
+  batch.delete(groupRef.collection("admins").doc(userID));
 
   await batch
     .commit()
     .then(() => {
       Alert.alert("You have successfully left this group.");
+    })
+    .then(() => {
+      sendSystemMessageToGroup(`${username} has just left the group.`, groupID);
     })
     .catch((error) => {
       Alert.alert("Error", error.message);

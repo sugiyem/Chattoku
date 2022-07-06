@@ -9,11 +9,11 @@ import {
   SearchInput
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
+import { groupMemberSorter } from "../../services/Friend/Sorter";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
-  const [expand, setExpand] = useState(null);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
 
@@ -31,10 +31,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       onSuccess: setAdminIDs
     });
   }, []);
-
-  function changeExpand(index) {
-    expand === index ? setExpand(null) : setExpand(index);
-  }
 
   function isOwner(id) {
     return id === groupInfo.owner;
@@ -55,6 +51,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           : "Member"
       };
     })
+    .sort(groupMemberSorter)
     .filter((member) =>
       member.username.toLowerCase().startsWith(search.toLowerCase())
     );
@@ -83,8 +80,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           }}
           isMember={true}
           groupInfo={{ ...groupInfo, admins: adminIDs }}
-          isExpanded={expand === index}
-          changeExpanded={() => changeExpand(index)}
         />
       ))}
     </ScrollContainer>
