@@ -2,6 +2,9 @@ import React from "react";
 import { Modal, Platform, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import styled from "styled-components/native";
+import EditFriendIcon from "./EditFriendIcon";
+import BlockIcon from "./BlockIcon";
+import { IconContainer, IconDescription } from "../../styles/ChatStyles";
 
 const ChatModal = ({
   item,
@@ -34,14 +37,20 @@ const ChatModal = ({
           <ProfilePicture source={imgSource} />
           <Name>{item.username}</Name>
           <Bio>{item.bio}</Bio>
-          <Icon
-            containerStyle={styles.messageIcon}
-            type="material-community"
-            name="message-processing-outline"
-            color="aquamarine"
-            onPress={onMessageButtonPress}
-            size={50}
-          />
+          <IconGroup>
+            <IconContainer>
+              <Icon
+                type="material-community"
+                name="message-processing-outline"
+                color="aquamarine"
+                onPress={onMessageButtonPress}
+                size={40}
+              />
+              <IconDescription color="aquamarine">Message</IconDescription>
+            </IconContainer>
+            <EditFriendIcon userId={item.id} />
+            <BlockIcon userId={item.id} />
+          </IconGroup>
         </ModalContent>
       </ModalContainer>
     </Modal>
@@ -56,7 +65,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   messageIcon: {
-    marginTop: 40
+    marginHorizontal: 20
   }
 });
 
@@ -100,4 +109,9 @@ const Bio = styled.Text`
   text-align: center;
   margin-vertical: 10px;
   color: lightblue;
+`;
+
+const IconGroup = styled.View`
+  flex-direction: row;
+  margin-top: 40px;
 `;

@@ -18,3 +18,13 @@ export const ChatListContainer = styled.View`
   margin: 10px;
   padding: 5px;
 `;
+
+export const IconContainer = styled.View`
+  margin-horizontal: ${(props) => (props.isSmall ? "5" : "20")}px;
+`;
+
+export const IconDescription = styled.Text`
+  text-align: center;
+  font-size: ${(props) => (props.isSmall ? "10" : "12")}px;
+  color: ${(props) => (props.color ? props.color : "white")};
+`;

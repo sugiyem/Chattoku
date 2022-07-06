@@ -3,9 +3,15 @@ import React from "react";
 import { chatType } from "../../constants/Chat";
 import styled from "styled-components/native";
 import { Icon } from "react-native-elements";
+import EditFriendIcon from "./EditFriendIcon";
+import BlockIcon from "./BlockIcon";
+import { leaveGroup } from "../../services/Friend/HandleGroup";
+import Caution from "../Miscellaneous/Caution";
+import { IconContainer, IconDescription } from "../../styles/ChatStyles";
 
 const ChatHeader = ({ type, item, navigation }) => {
   const isPrivateChat = type === chatType.PRIVATE_CHAT;
+  const contactID = item.id;
   const name = isPrivateChat ? item.username : item.name;
   const info = isPrivateChat ? item.bio : item.description;
   const imgUrl = item.img;
@@ -15,6 +21,12 @@ const ChatHeader = ({ type, item, navigation }) => {
       screen: "GroupInfo",
       params: { groupData: item }
     });
+  }
+
+  function onLeaveGroup() {
+    Caution("You will left this group.", () =>
+      leaveGroup(contactID).then(() => navigation.replace("GroupChatList"))
+    );
   }
 
   return (
@@ -33,22 +45,47 @@ const ChatHeader = ({ type, item, navigation }) => {
         />
       </SectionContainer>
 
-      <SectionContainer size="3">
+      <SectionContainer size="2">
         <Name>{name}</Name>
         <Info>{info}</Info>
       </SectionContainer>
 
-      <SectionContainer size="3">
+      <RowSectionContainer>
         {isPrivateChat ? (
-          <HeaderButton>
-            <HeaderButtonText>Block User</HeaderButtonText>
-          </HeaderButton>
+          <>
+            <EditFriendIcon userId={item.id} isSmall={true} />
+            <BlockIcon userId={item.id} isSmall={true} />
+          </>
         ) : (
-          <HeaderButton onPress={goToGroupPage}>
-            <HeaderButtonText>Group Info</HeaderButtonText>
-          </HeaderButton>
+          <>
+            <IconContainer isSmall={true}>
+              <Icon
+                type="ionicon"
+                name="open-outline"
+                size={25}
+                color="navy"
+                onPress={goToGroupPage}
+              />
+              <IconDescription color="navy" isSmall={true}>
+                Group Info
+              </IconDescription>
+            </IconContainer>
+
+            <IconContainer isSmall={true}>
+              <Icon
+                type="ionicon"
+                name="exit-outline"
+                size={25}
+                color="#c10015"
+                onPress={onLeaveGroup}
+              />
+              <IconDescription color="#c10015" isSmall={true}>
+                Leave
+              </IconDescription>
+            </IconContainer>
+          </>
         )}
-      </SectionContainer>
+      </RowSectionContainer>
     </HeaderContainer>
   );
 };
@@ -73,6 +110,12 @@ const SectionContainer = styled.View`
   flex: ${(props) => props.size};
 `;
 
+const RowSectionContainer = styled.View`
+  flex: 3;
+  flex-direction: row;
+  justify-content: center;
+`;
+
 const ProfilePicture = styled.Image`
   height: 80px;
   width: 80px;
@@ -89,22 +132,4 @@ const Name = styled.Text`
 
 const Info = styled.Text`
   font-size: 14px;
-`;
-
-const HeaderButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  padding-horizontal: 10px;
-  margin: 5px;
-  margin-right: 10px;
-  border-radius: 20px;
-  border-width: 1px;
-  background-color: white;
-  justify-self: flex-end;
-`;
-
-const HeaderButtonText = styled.Text`
-  text-align: center;
-  font-size: 12px;
-  color: darkslateblue;
 `;
