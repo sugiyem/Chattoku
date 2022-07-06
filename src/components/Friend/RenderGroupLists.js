@@ -41,9 +41,12 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
               img: item.img
             };
 
-            navigation.navigate("GroupChatList");
-            navigation.navigate("GroupChatDetail", {
-              groupData: data
+            navigation.navigate("Chat", {
+              screen: "GroupChatDetail",
+              initial: false,
+              params: {
+                groupData: data
+              }
             });
           }
         },

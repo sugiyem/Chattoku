@@ -19,6 +19,7 @@ const ChatHeader = ({ type, item, navigation }) => {
   function goToGroupPage() {
     navigation.navigate("Friends", {
       screen: "GroupInfo",
+      initial: false,
       params: { groupData: item }
     });
   }

@@ -31,9 +31,12 @@ export default RenderUserLists = ({
           img: item.img
         };
 
-        navigation.navigate("ChatList");
-        navigation.navigate("ChatDetail", {
-          userData: data
+        navigation.navigate("Chat", {
+          screen: "ChatDetail",
+          initial: false,
+          params: {
+            userData: data
+          }
         });
       }
     }
