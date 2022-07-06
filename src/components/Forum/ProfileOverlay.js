@@ -12,18 +12,24 @@ const ProfileOverlay = ({ userData }) => {
   const setOverlayData = useContext(overlayContext);
   const isYou = currentUID === userData.id;
 
-  console.log(userData.id);
+  console.log(userData);
 
   function handleCloseClick() {
     setOverlayData(null);
   }
 
   function handleMessageClick() {
+    const data = {
+      id: userData.id,
+      username: userData.username,
+      bio: userData.bio,
+      img: userData.img
+    };
+
     navigation.navigate("Chat", {
       screen: "ChatDetail",
       params: {
-        recipientID: userData.id,
-        recipientUsername: userData.username
+        userData: data
       }
     });
   }
