@@ -25,7 +25,7 @@ const ChatHeader = ({ type, item, navigation }) => {
   }
 
   function onLeaveGroup() {
-    Caution("You will left this group.", () =>
+    Caution("You will leave this group.", () =>
       leaveGroup(contactID).then(() => navigation.replace("GroupChatList"))
     );
   }
