@@ -10,7 +10,7 @@ export async function AddComment(forumId, postId, comment, onSuccess, onError) {
     .collection("posts")
     .doc(postId)
     .collection("comments")
-    .add({ content: comment, uid: currentUID })
+    .add({ content: comment, uid: currentUID, timestamp: new Date() })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }

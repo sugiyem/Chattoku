@@ -19,7 +19,11 @@ export async function addPost(forumId, post, forumName, onSuccess, onError) {
     .collection("posts")
     .doc(forumId + newPostID);
 
-  batch.set(postsRef.doc(newPostID), { ...post, uid: currentUID });
+  batch.set(postsRef.doc(newPostID), {
+    ...post,
+    uid: currentUID,
+    timestamp: new Date()
+  });
   batch.set(userPostsRef, {
     postId: newPostID,
     forumId: forumId,

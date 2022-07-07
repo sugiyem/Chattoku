@@ -47,7 +47,10 @@ const ForumScreen = () => {
   useEffect(() => {
     return FetchPost(
       data.id,
-      (data) => setPosts(data),
+      (data) => {
+        data.sort((x, y) => (x.timestamp < y.timestamp ? 1 : -1));
+        setPosts(data);
+      },
       (error) => Alert.alert(error)
     );
   }, []);
