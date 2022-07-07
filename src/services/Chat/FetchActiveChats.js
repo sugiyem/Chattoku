@@ -15,7 +15,7 @@ export const fetchActivePrivateChats = ({
       const activeChatDatas = [];
       const map = new Map();
 
-      querySnapshot.forEach(async (documentSnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
         const chatID = documentSnapshot.id;
 
         if (chatID.startsWith(userID)) {
@@ -26,18 +26,13 @@ export const fetchActivePrivateChats = ({
           const friendID = chatID.substring(chatID.lastIndexOf("_") + 1);
           activeChatIDs.push(friendID);
 
-          const lastMessage = await getLastMessage(
-            documentSnapshot.data().lastMessageText,
-            documentSnapshot.data().lastMessageSenderID,
-            db
-          );
-
           map.set(friendID, {
             showNotif: documentSnapshot.data().showNotifToFirstUser,
             lastMessageTime: documentSnapshot.data().lastMessageAt
               ? documentSnapshot.data().lastMessageAt.toDate()
               : new Date(),
-            lastMessage: lastMessage
+            lastMessage: documentSnapshot.data().lastMessageText,
+            lastSenderID: documentSnapshot.data().lastMessageSenderID
           });
         } else if (chatID.endsWith(userID)) {
           if (!documentSnapshot.data().showMessageToSecondUser) {
@@ -47,42 +42,47 @@ export const fetchActivePrivateChats = ({
           const friendID = chatID.substring(0, chatID.lastIndexOf("_"));
           activeChatIDs.push(friendID);
 
-          const lastMessage = await getLastMessage(
-            documentSnapshot.data().lastMessageText,
-            documentSnapshot.data().lastMessageSenderID,
-            db
-          );
-
           map.set(friendID, {
             showNotif: documentSnapshot.data().showNotifToSecondUser,
             lastMessageTime: documentSnapshot.data().lastMessageAt
               ? documentSnapshot.data().lastMessageAt.toDate()
               : new Date(),
-            lastMessage: lastMessage
+            lastMessage: documentSnapshot.data().lastMessageText,
+            lastSenderID: documentSnapshot.data().lastMessageSenderID
           });
         }
       });
 
-      await db
-        .collection("users")
-        .get()
-        .then((snaps) => {
-          snaps.forEach((snap) => {
-            if (activeChatIDs.includes(snap.id)) {
-              activeChatDatas.push({
-                ...map.get(snap.id),
-                id: snap.id,
-                username: snap.data().username,
-                img: snap.data().img,
-                bio: snap.data().bio
-              });
-            }
-          });
-        })
-        .catch((error) => alert(error));
+      const PromisedData = activeChatIDs.map(async (friendID) => {
+        const { lastMessage, lastSenderID, ...remainingData } =
+          map.get(friendID);
 
-      onSuccess(
-        activeChatDatas.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
+        const shownLastMessage = await getLastMessage(
+          lastMessage,
+          lastSenderID,
+          db
+        );
+
+        await db
+          .collection("users")
+          .doc(friendID)
+          .get()
+          .then((doc) => {
+            activeChatDatas.push({
+              ...remainingData,
+              lastMessage: shownLastMessage,
+              id: friendID,
+              username: doc.data().username,
+              img: doc.data().img,
+              bio: doc.data().bio
+            });
+          });
+      });
+
+      await Promise.all(PromisedData).then(() =>
+        onSuccess(
+          activeChatDatas.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
+        )
       );
     },
     (error) => {

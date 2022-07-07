@@ -52,7 +52,8 @@ describe("Test chat system", () => {
         showMessageToSecondUser: true,
         showNotifToFirstUser: true,
         lastMessageAt: time,
-        lastMessageText: "Test"
+        lastMessageText: "Test",
+        lastMessageSenderID: userID
       },
       { merge: true }
     );
@@ -84,7 +85,8 @@ describe("Test chat system", () => {
         showMessageToSecondUser: true,
         showNotifToSecondUser: true,
         lastMessageAt: time,
-        lastMessageText: "Test"
+        lastMessageText: "Test",
+        lastMessageSenderID: userID
       },
       { merge: true }
     );
@@ -104,7 +106,8 @@ describe("Test chat system", () => {
     expect(mockBatchUpdate).toHaveBeenNthCalledWith(1, groupRef, {
       lastAccessedAt: time,
       lastMessageAt: time,
-      lastMessageText: "Test"
+      lastMessageText: "Test",
+      lastMessageSenderID: userID
     });
     expect(mockBatchUpdate).toHaveBeenNthCalledWith(
       2,

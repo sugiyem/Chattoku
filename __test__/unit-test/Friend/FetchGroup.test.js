@@ -91,7 +91,8 @@ describe("Test group data fetching", () => {
       description: "This is a group",
       img: "third-image-link",
       lastMessageAt: new Timestamp(2, 2),
-      lastMessageText: "other-group-message"
+      lastMessageText: "other-group-message",
+      lastMessageSenderID: "yem456"
     });
   });
 
