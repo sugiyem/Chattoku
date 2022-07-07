@@ -19,6 +19,7 @@ const ChatAvatar = (props) => {
   }
 
   function openMessage() {
+    setIsModalVisible(false);
     navigation.navigate("ChatDetail", { userData: userInfo });
   }
 
