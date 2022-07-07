@@ -12,7 +12,7 @@ import { Icon } from "react-native-elements";
 import Loading from "../Miscellaneous/Loading";
 import ChatAvatar from "./ChatAvatar";
 import ChatBubble from "./ChatBubble";
-import ChatInpurBar from "./ChatInpurBar";
+import ChatInputBar from "./ChatInputBar";
 
 const ChatSections = ({
   type,
@@ -113,7 +113,7 @@ const ChatSections = ({
 
   const renderInputBar = (props) => {
     return (
-      <ChatInpurBar
+      <ChatInputBar
         {...props}
         isBlocking={isBlocking}
         isGetBlocked={isGetBlocked}
