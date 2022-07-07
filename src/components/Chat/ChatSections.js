@@ -54,7 +54,9 @@ const ChatSections = ({
   }
 
   async function onSendImage(imgUrl) {
-    await onSend([{ _id: imgUrl, image: imgUrl, user: userMessageData }]);
+    await onSend([
+      { _id: imgUrl, image: imgUrl, text: "", user: userMessageData }
+    ]);
   }
 
   async function handleUploadPicture(imgUrl) {

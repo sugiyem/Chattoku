@@ -26,7 +26,7 @@ const ChatBar = ({ item, isPrivateChat }) => {
           {isPrivateChat ? item.username : item.name}
         </ListItem.Title>
         <ListItem.Subtitle>
-          <Text>Last message: {item.lastMessage}</Text>
+          <Text>{item.lastMessage}</Text>
         </ListItem.Subtitle>
         <ListItem.Subtitle>
           <Text>{dateString}</Text>
