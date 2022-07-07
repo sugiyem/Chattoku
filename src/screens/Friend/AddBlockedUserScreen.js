@@ -16,17 +16,12 @@ import {
 } from "../../styles/ContactStyles";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
-import { fetchBlockedUsers } from "../../services/Friend/FetchBlockedUsers";
-import {
-  blockUser,
-  unblockUser
-} from "../../services/Friend/HandleBlockedUser";
-import Caution from "../../components/Miscellaneous/Caution";
+import RenderUserFound from "../../components/Friend/RenderUserFound";
+import { userFoundType } from "../../constants/UserFound";
 
 const AddBlockedUserScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [ownUserName, setOwnUserName] = useState("");
-  const [blockedUsers, setBlockedUsers] = useState([]);
   const [userFound, setUserFound] = useState(null);
 
   useEffect(() => {
@@ -38,12 +33,6 @@ const AddBlockedUserScreen = ({ navigation }) => {
         Alert.alert(error.message);
       }
     });
-  }, []);
-
-  useEffect(() => {
-    return fetchBlockedUsers((data) =>
-      setBlockedUsers(data.map((item) => item.id))
-    );
   }, []);
 
   const handleClickOnSearch = () => {
@@ -60,51 +49,6 @@ const AddBlockedUserScreen = ({ navigation }) => {
       onFound: (data) => setUserFound(data),
       onNotFound: () => setUserFound(null)
     });
-  };
-
-  const handleClickOnUser = (isBlocked, id) => {
-    if (isBlocked) {
-      unblockUser(id);
-    } else {
-      Caution("This user will be blocked", () => blockUser(id));
-    }
-  };
-
-  const getTextByBlockStatus = (isBlocked) => {
-    return isBlocked ? "Unblock user" : "Block user";
-  };
-
-  const RenderImage = ({ item }) => {
-    const imageSource =
-      item.img.length > 0
-        ? { uri: item.img }
-        : require("../../assets/default-profile.png");
-
-    return <RoundedImage source={imageSource} />;
-  };
-
-  const RenderUserFound = ({ item }) => {
-    if (item === null) {
-      return <Text> There is no user with such username</Text>;
-    }
-
-    const isBlocked = blockedUsers.includes(item.id);
-
-    function handleUserPress() {
-      handleClickOnUser(isBlocked, userFound.id);
-    }
-
-    return (
-      <UserInnerContainer>
-        <RenderImage item={item} />
-
-        <Name color="#ffffff">{userFound.username}</Name>
-
-        <Button onPress={handleUserPress}>
-          <EditButtonText>{getTextByBlockStatus(isBlocked)}</EditButtonText>
-        </Button>
-      </UserInnerContainer>
-    );
   };
 
   return (
@@ -126,7 +70,7 @@ const AddBlockedUserScreen = ({ navigation }) => {
       </Button>
 
       <UserOuterContainer>
-        <RenderUserFound item={userFound} />
+        <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
       </UserOuterContainer>
     </Container>
   );

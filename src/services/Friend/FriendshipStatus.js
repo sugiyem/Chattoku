@@ -4,8 +4,7 @@ export function getFriendshipStatus(
   userID,
   friends,
   friendRequestsSent,
-  friendRequestsReceived,
-  blockedUsers
+  friendRequestsReceived
 ) {
   if (friends.includes(userID)) {
     return friendshipType.FRIEND;
@@ -13,8 +12,6 @@ export function getFriendshipStatus(
     return friendshipType.WAITING_RESPONSE;
   } else if (friendRequestsReceived.includes(userID)) {
     return friendshipType.RECEIVING_REQUEST;
-  } else if (blockedUsers.includes(userID)) {
-    return friendshipType.BLOCKED;
   } else {
     return friendshipType.NON_FRIEND;
   }
