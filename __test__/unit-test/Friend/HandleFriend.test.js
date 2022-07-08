@@ -45,6 +45,18 @@ describe("Test friend system", () => {
     expect(mockBatchCommit).toHaveBeenCalled();
   });
 
+  test("Can't send friend request to user that blocks me", async () => {
+    await addFriend("random-3", admin);
+
+    expect(mockBatchCommit).not.toHaveBeenCalled();
+  });
+
+  test("Can't send friend request to user that is blocked by me", async () => {
+    await addFriend("random-2", admin);
+
+    expect(mockBatchCommit).not.toHaveBeenCalled();
+  });
+
   test("Can accept friend request", async () => {
     await acceptFriendRequest("cupu", admin);
     const userRef = db.collection("users").doc(userID);

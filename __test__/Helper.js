@@ -27,7 +27,8 @@ export const fakeFirebase = {
           friendRequestsReceived: [{ id: "cupu" }],
           friends: [{ id: "yem456" }],
           groupJoined: [{ id: "group1" }, { id: "group3" }],
-          groupInvited: [{ id: "group2" }]
+          groupInvited: [{ id: "group2" }],
+          blockedUsers: [{ id: "random-2" }]
         }
       },
       {
@@ -62,6 +63,19 @@ export const fakeFirebase = {
         id: "random",
         username: "Anonim",
         img: "anonim-img"
+      },
+      {
+        id: "random-2",
+        username: "Anonim-2",
+        img: "anonim-img-2"
+      },
+      {
+        id: "random-3",
+        username: "Anonim-3",
+        img: "anonim-img-3",
+        _collections: {
+          blockedUsers: [{ id: "yem123" }]
+        }
       }
     ],
     groups: [
