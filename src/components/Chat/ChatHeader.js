@@ -19,12 +19,13 @@ const ChatHeader = ({ type, item, navigation }) => {
   function goToGroupPage() {
     navigation.navigate("Friends", {
       screen: "GroupInfo",
+      initial: false,
       params: { groupData: item }
     });
   }
 
   function onLeaveGroup() {
-    Caution("You will left this group.", () =>
+    Caution("You will leave this group.", () =>
       leaveGroup(contactID).then(() => navigation.replace("GroupChatList"))
     );
   }

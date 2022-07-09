@@ -42,7 +42,9 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
             navigation.navigate("Chat", {
               screen: "GroupChatDetail",
               initial: false,
-              params: { groupData: data }
+              params: {
+                groupData: data
+              }
             });
           }
         },

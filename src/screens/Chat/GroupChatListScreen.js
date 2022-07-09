@@ -27,7 +27,7 @@ const GroupChatListScreen = () => {
   const navigation = useNavigation();
 
   function navigateToGroupsList() {
-    navigation.navigate("GroupList");
+    navigation.navigate("Friends", { screen: "GroupList", initial: false });
   }
 
   function navigateToPrivateChat() {

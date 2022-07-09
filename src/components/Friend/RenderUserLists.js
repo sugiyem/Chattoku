@@ -36,7 +36,9 @@ export default RenderUserLists = ({ type, item, navigation }) => {
         navigation.navigate("Chat", {
           screen: "ChatDetail",
           initial: false,
-          params: { userData: data }
+          params: {
+            userData: data
+          }
         });
       }
     },

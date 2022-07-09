@@ -28,6 +28,7 @@ const ProfileOverlay = ({ userData }) => {
 
     navigation.navigate("Chat", {
       screen: "ChatDetail",
+      initial: false,
       params: {
         userData: data
       }

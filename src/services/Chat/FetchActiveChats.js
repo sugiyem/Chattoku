@@ -1,3 +1,4 @@
+import { last } from "lodash";
 import { firebase } from "../Firebase/Config";
 
 export const fetchActivePrivateChats = ({
@@ -6,82 +7,88 @@ export const fetchActivePrivateChats = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
-    .collection("chatrooms")
-    .onSnapshot(
-      async (querySnapshot) => {
-        const activeChatIDs = [];
-        const activeChatDatas = [];
-        const map = new Map();
+  return db.collection("chatrooms").onSnapshot(
+    async (querySnapshot) => {
+      const activeChatIDs = [];
+      const activeChatDatas = [];
+      const map = new Map();
 
-        querySnapshot.forEach((documentSnapshot) => {
-          const chatID = documentSnapshot.id;
+      querySnapshot.forEach((documentSnapshot) => {
+        const chatID = documentSnapshot.id;
 
-          if (chatID.startsWith(userID)) {
-            if (!documentSnapshot.data().showMessageToFirstUser) {
-              return;
-            }
-
-            const friendID = chatID.substring(chatID.lastIndexOf("_") + 1);
-            activeChatIDs.push(friendID);
-
-            map.set(friendID, {
-              showNotif: documentSnapshot.data().showNotifToFirstUser,
-              lastMessageTime: documentSnapshot.data().lastMessageAt
-                ? documentSnapshot.data().lastMessageAt.toDate()
-                : new Date(),
-              lastMessage: documentSnapshot.data().lastMessageText
-                ? documentSnapshot.data().lastMessageText
-                : ""
-            });
-          } else if (chatID.endsWith(userID)) {
-            if (!documentSnapshot.data().showMessageToSecondUser) {
-              return;
-            }
-
-            const friendID = chatID.substring(0, chatID.lastIndexOf("_"));
-            activeChatIDs.push(friendID);
-            map.set(friendID, {
-              showNotif: documentSnapshot.data().showNotifToSecondUser,
-              lastMessageTime: documentSnapshot.data().lastMessageAt
-                ? documentSnapshot.data().lastMessageAt.toDate()
-                : new Date(),
-              lastMessage: documentSnapshot.data().lastMessageText
-                ? documentSnapshot.data().lastMessageText
-                : ""
-            });
+        if (chatID.startsWith(userID)) {
+          if (!documentSnapshot.data().showMessageToFirstUser) {
+            return;
           }
-        });
 
-        await app
-          .firestore()
+          const friendID = chatID.substring(chatID.lastIndexOf("_") + 1);
+          activeChatIDs.push(friendID);
+
+          map.set(friendID, {
+            showNotif: documentSnapshot.data().showNotifToFirstUser,
+            lastMessageTime: documentSnapshot.data().lastMessageAt
+              ? documentSnapshot.data().lastMessageAt.toDate()
+              : new Date(),
+            lastMessage: documentSnapshot.data().lastMessageText,
+            lastSenderID: documentSnapshot.data().lastMessageSenderID
+          });
+        } else if (chatID.endsWith(userID)) {
+          if (!documentSnapshot.data().showMessageToSecondUser) {
+            return;
+          }
+
+          const friendID = chatID.substring(0, chatID.lastIndexOf("_"));
+          activeChatIDs.push(friendID);
+
+          map.set(friendID, {
+            showNotif: documentSnapshot.data().showNotifToSecondUser,
+            lastMessageTime: documentSnapshot.data().lastMessageAt
+              ? documentSnapshot.data().lastMessageAt.toDate()
+              : new Date(),
+            lastMessage: documentSnapshot.data().lastMessageText,
+            lastSenderID: documentSnapshot.data().lastMessageSenderID
+          });
+        }
+      });
+
+      const PromisedData = activeChatIDs.map(async (friendID) => {
+        const { lastMessage, lastSenderID, ...remainingData } =
+          map.get(friendID);
+
+        const shownLastMessage = await getLastMessage(
+          lastMessage,
+          lastSenderID,
+          db
+        );
+
+        await db
           .collection("users")
+          .doc(friendID)
           .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (activeChatIDs.includes(snap.id)) {
-                activeChatDatas.push({
-                  ...map.get(snap.id),
-                  id: snap.id,
-                  username: snap.data().username,
-                  img: snap.data().img,
-                  bio: snap.data().bio
-                });
-              }
+          .then((doc) => {
+            activeChatDatas.push({
+              ...remainingData,
+              lastMessage: shownLastMessage,
+              id: friendID,
+              username: doc.data().username,
+              img: doc.data().img,
+              bio: doc.data().bio
             });
-          })
-          .catch((error) => alert(error));
+          });
+      });
 
+      await Promise.all(PromisedData).then(() =>
         onSuccess(
           activeChatDatas.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
-        );
-      },
-      (error) => {
-        onFailure(error);
-      }
-    );
+        )
+      );
+    },
+    (error) => {
+      onFailure(error);
+    }
+  );
 };
 
 export const fetchActiveGroupChats = ({
@@ -90,55 +97,59 @@ export const fetchActiveGroupChats = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
-    .collection("groups")
-    .onSnapshot(
-      (querySnapshot) => {
-        const activeGroupChats = [];
-        let count = 0;
-        console.log(querySnapshot.size);
+  return db.collection("groups").onSnapshot(
+    (querySnapshot) => {
+      const activeGroupChats = [];
+      let count = 0;
+      console.log(querySnapshot.size);
 
-        querySnapshot.forEach(async (documentSnapshot) => {
-          await documentSnapshot.ref
-            .collection("members")
-            .doc(userID)
-            .get()
-            .then((doc) => {
-              if (doc.exists && doc.data().showMessage) {
-                activeGroupChats.push({
-                  id: documentSnapshot.id,
-                  name: documentSnapshot.data().name,
-                  img: documentSnapshot.data().img,
-                  description: documentSnapshot.data().description,
-                  lastMessage: documentSnapshot.data().lastMessageText,
-                  lastMessageTime: documentSnapshot.data().lastMessageAt
-                    ? documentSnapshot.data().lastMessageAt.toDate()
-                    : new Date(),
-                  showNotif: doc.data().showNotif
-                });
-              }
-              count = count + 1;
-            })
-            .then(() => {
-              if (querySnapshot.size === count) {
-                onSuccess(
-                  activeGroupChats.sort(
-                    (a, b) => b.lastMessageTime - a.lastMessageTime
-                  )
-                );
-              }
-            })
-            .catch((error) => {
-              onFailure(error);
-            });
-        });
-      },
-      (error) => {
-        onFailure(error);
-      }
-    );
+      querySnapshot.forEach(async (documentSnapshot) => {
+        const lastMessage = await getLastMessage(
+          documentSnapshot.data().lastMessageText,
+          documentSnapshot.data().lastMessageSenderID,
+          db
+        );
+
+        await documentSnapshot.ref
+          .collection("members")
+          .doc(userID)
+          .get()
+          .then((doc) => {
+            if (doc.exists && doc.data().showMessage) {
+              activeGroupChats.push({
+                id: documentSnapshot.id,
+                name: documentSnapshot.data().name,
+                img: documentSnapshot.data().img,
+                description: documentSnapshot.data().description,
+                lastMessage: lastMessage,
+                lastMessageTime: documentSnapshot.data().lastMessageAt
+                  ? documentSnapshot.data().lastMessageAt.toDate()
+                  : new Date(),
+                showNotif: doc.data().showNotif
+              });
+            }
+            count = count + 1;
+          })
+          .then(() => {
+            if (querySnapshot.size === count) {
+              onSuccess(
+                activeGroupChats.sort(
+                  (a, b) => b.lastMessageTime - a.lastMessageTime
+                )
+              );
+            }
+          })
+          .catch((error) => {
+            onFailure(error);
+          });
+      });
+    },
+    (error) => {
+      onFailure(error);
+    }
+  );
 };
 
 export const checkUnreadPrivateMessages = ({
@@ -229,3 +240,22 @@ export const checkUnreadGroupMessages = ({
       }
     );
 };
+
+async function getLastMessage(lastMessageText, senderID, db) {
+  const isLastMessageAnImage = lastMessageText === "";
+  let username = "";
+
+  if (senderID) {
+    username = await db
+      .collection("users")
+      .doc(senderID)
+      .get()
+      .then((doc) => doc.data().username);
+  }
+
+  if (isLastMessageAnImage) {
+    return `${username} has sent an image`;
+  } else {
+    return `${username}: ${lastMessageText}`;
+  }
+}

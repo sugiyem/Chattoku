@@ -7,7 +7,7 @@ const ChatBubble = (props) => {
   const { username, ...remainingProps } = props;
   const currentMessage = remainingProps.currentMessage;
   const previousMessage = remainingProps.previousMessage;
-  const isFirstMessage = Object.keys(previousMessage).length === 0;
+  const isFirstMessage = typeof previousMessage.user === "undefined";
 
   const isCurrentUser = currentMessage.user._id === remainingProps.user._id;
   const isSameUser =
