@@ -103,6 +103,7 @@ export const fakeFirebase = {
         img: "third-image-link",
         lastMessageAt: new Timestamp(2, 2),
         lastMessageText: "other-group-message",
+        lastMessageSenderID: "yem456",
         _collections: {
           admins: [{ id: "yem123" }, { id: "yem456" }],
           members: [
@@ -121,6 +122,7 @@ export const fakeFirebase = {
         id: "yem123_yem456",
         lastMessageAt: new Timestamp(1, 1),
         lastMessageText: "2nd-message",
+        lastMessageSenderID: "yem123",
         showMessageToFirstUser: true,
         showMessageToSecondUser: true,
         showNotifToFirstUser: false,
@@ -135,7 +137,8 @@ export const fakeFirebase = {
       {
         id: "imba_yem123",
         lastMessageAt: new Timestamp(2, 2),
-        lastMessageText: "special-message",
+        lastMessageText: "",
+        lastMessageSenderID: "imba",
         showMessageToFirstUser: true,
         showMessageToSecondUser: true,
         showNotifToFirstUser: false,

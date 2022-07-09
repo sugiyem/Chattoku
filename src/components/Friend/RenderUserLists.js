@@ -23,11 +23,22 @@ export default RenderUserLists = ({
     {
       title: "Message",
       icon: "message",
-      onPress: (item) =>
+      onPress: (item) => {
+        const data = {
+          id: item.id,
+          username: item.username,
+          bio: item.bio,
+          img: item.img
+        };
+
         navigation.navigate("Chat", {
           screen: "ChatDetail",
-          params: { recipientID: item.id, recipientUsername: item.username }
-        })
+          initial: false,
+          params: {
+            userData: data
+          }
+        });
+      }
     }
   ];
 

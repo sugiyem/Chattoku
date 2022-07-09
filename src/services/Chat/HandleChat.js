@@ -41,7 +41,8 @@ export async function sendPrivateChat(message, recipientID, app = firebase) {
         showMessageToSecondUser: true,
         showNotifToFirstUser: true,
         lastMessageAt: sentTime,
-        lastMessageText: message.text
+        lastMessageText: message.text,
+        lastMessageSenderID: userID
       },
       { merge: true }
     );
@@ -53,7 +54,8 @@ export async function sendPrivateChat(message, recipientID, app = firebase) {
         showMessageToSecondUser: true,
         showNotifToSecondUser: true,
         lastMessageAt: sentTime,
-        lastMessageText: message.text
+        lastMessageText: message.text,
+        lastMessageSenderID: userID
       },
       { merge: true }
     );
@@ -88,7 +90,8 @@ export async function sendGroupChat(message, groupID, app = firebase) {
   batch.update(groupRef, {
     lastAccessedAt: sentTime,
     lastMessageAt: sentTime,
-    lastMessageText: message.text
+    lastMessageText: message.text,
+    lastMessageSenderID: userID
   });
 
   batch.set(groupRef.collection("messages").doc(newMessageID), {

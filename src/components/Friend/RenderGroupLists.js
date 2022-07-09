@@ -33,11 +33,22 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           type: "material-community",
           icon: "message-processing-outline",
           color: "blue",
-          onPress: (item) =>
+          onPress: (item) => {
+            const data = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              img: item.img
+            };
+
             navigation.navigate("Chat", {
               screen: "GroupChatDetail",
-              params: { groupID: item.id, groupName: item.name }
-            })
+              initial: false,
+              params: {
+                groupData: data
+              }
+            });
+          }
         },
         {
           title: "Leave Group",
