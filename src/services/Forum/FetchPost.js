@@ -1,7 +1,12 @@
 import { firebase } from "../Firebase/Config";
 
-export default function FetchPost(forumId, onSuccessfulFetch, onError) {
-  return firebase
+export default function FetchPost(
+  forumId,
+  onSuccessfulFetch,
+  onError,
+  app = firebase
+) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)

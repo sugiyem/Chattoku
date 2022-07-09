@@ -1,8 +1,8 @@
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 
-export function getBannedUsers(forumId, callbackSuccess) {
-  return firebase
+export function getBannedUsers(forumId, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -22,8 +22,13 @@ export function getBannedUsers(forumId, callbackSuccess) {
     );
 }
 
-export async function addBannedUsers(forumId, bannedUserId, reason) {
-  await firebase
+export async function addBannedUsers(
+  forumId,
+  bannedUserId,
+  reason,
+  app = firebase
+) {
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -32,8 +37,8 @@ export async function addBannedUsers(forumId, bannedUserId, reason) {
     .set({ reason: reason });
 }
 
-export async function deleteBannedUsers(forumId, bannedUserId) {
-  await firebase
+export async function deleteBannedUsers(forumId, bannedUserId, app = firebase) {
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -43,8 +48,8 @@ export async function deleteBannedUsers(forumId, bannedUserId) {
     .then(() => Alert.alert("Unban Success"));
 }
 
-export function isUserBanned(forumId, userId, callbackSuccess) {
-  return firebase
+export function isUserBanned(forumId, userId, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)

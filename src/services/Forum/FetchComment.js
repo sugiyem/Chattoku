@@ -4,9 +4,10 @@ export default function FetchComment(
   forumId,
   postId,
   onSuccessfulFetch,
-  onError
+  onError,
+  app = firebase
 ) {
-  return firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)

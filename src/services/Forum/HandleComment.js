@@ -1,9 +1,16 @@
 import { firebase } from "../Firebase/Config";
 
-export async function AddComment(forumId, postId, comment, onSuccess, onError) {
-  const currentUID = firebase.auth().currentUser.uid;
+export async function AddComment(
+  forumId,
+  postId,
+  comment,
+  onSuccess,
+  onError,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -20,9 +27,10 @@ export async function DeleteComment(
   postId,
   commentId,
   onSuccess,
-  onError
+  onError,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -41,11 +49,10 @@ export async function EditComment(
   commentId,
   comment,
   onSuccess,
-  onError
+  onError,
+  app = firebase
 ) {
-  const currentUID = firebase.auth().currentUser.uid;
-
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
