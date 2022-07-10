@@ -17,9 +17,24 @@ export default function FetchComment(
       async (querySnapshot) => {
         const comments = [];
         querySnapshot.forEach((documentSnapshot) => {
+          const data = documentSnapshot.data();
+          const timestamp = data.timestamp;
+          const date = new Date(
+            timestamp.seconds * 1000 + timestamp.nanoseconds * 0.000001
+          );
+
+          const lastEdited = data.lastEdited;
+          const editedDate = lastEdited
+            ? new Date(
+                lastEdited.seconds * 1000 + timestamp.nanoseconds * 0.000001
+              )
+            : null;
+
           comments.push({
             ...documentSnapshot.data(),
-            id: documentSnapshot.id
+            id: documentSnapshot.id,
+            timestamp: date,
+            lastEdited: editedDate
           });
         });
         onSuccessfulFetch(comments);

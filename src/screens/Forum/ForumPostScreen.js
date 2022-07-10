@@ -16,7 +16,15 @@ const initialUserData = {
 //Temporarily disable log (Because I don't know the cause of the warning)
 // LogBox.ignoreAllLogs();
 
-const MainPost = ({ title, content, uid, forumId, postId }) => {
+const MainPost = ({
+  title,
+  content,
+  uid,
+  forumId,
+  postId,
+  timestamp,
+  lastEdited
+}) => {
   const [userData, setUserData] = useState(initialUserData);
   const setOverlayData = useContext(overlayContext);
 
@@ -35,10 +43,12 @@ const MainPost = ({ title, content, uid, forumId, postId }) => {
           }
         />
         <Text> {userData.username}</Text>
+        <DateText> {timestamp} </DateText>
       </UserInfo>
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
+      {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       <LikeBar forumId={forumId} postId={postId} />
     </HeaderContainer>
   );
@@ -145,6 +155,16 @@ const Title = styled.Text`
   font-weight: 500;
   padding: 10px;
   align-self: center;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
 `;
 
 const UserInfo = styled.TouchableOpacity`

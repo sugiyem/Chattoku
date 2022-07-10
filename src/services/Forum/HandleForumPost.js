@@ -4,6 +4,7 @@ import NotifyAllFollowers from "./NotifyAllFollowers";
 
 export async function addPost(forumId, post, forumName, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = new Date();
   const batch = firebase.firestore().batch();
   const postsRef = firebase
     .firestore()
@@ -19,11 +20,15 @@ export async function addPost(forumId, post, forumName, onSuccess, onError) {
     .collection("posts")
     .doc(forumId + newPostID);
 
-  batch.set(postsRef.doc(newPostID), { ...post, uid: currentUID });
+  batch.set(postsRef.doc(newPostID), {
+    ...post,
+    uid: currentUID,
+    timestamp: time
+  });
   batch.set(userPostsRef, {
     postId: newPostID,
     forumId: forumId,
-    timestamp: new Date()
+    timestamp: time
   });
 
   //Create post
@@ -80,6 +85,7 @@ export async function deletePost(forumId, postId, uid, onSuccess, onError) {
 
 export async function editPost(forumId, postId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = new Date();
 
   await firebase
     .firestore()
@@ -87,7 +93,7 @@ export async function editPost(forumId, postId, post, onSuccess, onError) {
     .doc(forumId)
     .collection("posts")
     .doc(postId)
-    .update(post)
+    .update({ ...post, lastEdited: time })
     .then(onSuccess)
     .catch((e) => onError(e));
 }

@@ -2,6 +2,7 @@ import { firebase } from "../Firebase/Config";
 
 export async function AddComment(forumId, postId, comment, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = new Date();
 
   await firebase
     .firestore()
@@ -10,7 +11,7 @@ export async function AddComment(forumId, postId, comment, onSuccess, onError) {
     .collection("posts")
     .doc(postId)
     .collection("comments")
-    .add({ content: comment, uid: currentUID })
+    .add({ content: comment, uid: currentUID, timestamp: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }
@@ -44,6 +45,7 @@ export async function EditComment(
   onError
 ) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = new Date();
 
   await firebase
     .firestore()
@@ -53,7 +55,7 @@ export async function EditComment(
     .doc(postId)
     .collection("comments")
     .doc(commentId)
-    .update({ content: comment })
+    .update({ content: comment, lastEdited: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }
