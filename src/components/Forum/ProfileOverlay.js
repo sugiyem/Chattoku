@@ -10,6 +10,7 @@ import {
   unblockUser,
   isBlockedByCurrentUser
 } from "../../services/Friend/HandleBlockedUser";
+import Caution from "../Miscellaneous/Caution";
 
 const BlockSection = ({ isBlocked, userId }) => {
   function handleBlock() {
