@@ -86,7 +86,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         messages={messages}
         updateMessages={setMessages}
         isBlocking={isBlocking}
-        isGetBlocked={isBlocked}
+        isBlocked={isBlocked}
       />
     </ChatContainer>
   );
