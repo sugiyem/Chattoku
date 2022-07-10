@@ -74,7 +74,7 @@ const ForumScreen = () => {
             forumId={data.id}
             isOwner={isOwner}
             isBanned={isBanned}
-            Header={() => <ForumHeader {...data} />}
+            Header={() => <ForumHeader {...data} isOwner={isOwner} />}
             posts={posts}
           />
           {isBanned ? (
