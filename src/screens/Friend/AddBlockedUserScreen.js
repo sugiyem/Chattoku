@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Text } from "react-native";
 import {
   Button,
@@ -19,15 +19,19 @@ import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
 import { userFoundType } from "../../constants/UserFound";
 
-const AddFriendScreen = ({ navigation }) => {
+const AddBlockedUserScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [ownUserName, setOwnUserName] = useState("");
   const [userFound, setUserFound] = useState(null);
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => setOwnUserName(data.username),
-      onFailure: (error) => Alert.alert(error.message)
+      onSuccesfulFetch: (data) => {
+        setOwnUserName(data.username);
+      },
+      onFailure: (error) => {
+        Alert.alert(error.message);
+      }
     });
   }, []);
 
@@ -53,7 +57,7 @@ const AddFriendScreen = ({ navigation }) => {
         <SeparatedSearchInput
           value={search}
           onChangeText={(text) => setSearch(text)}
-          placeholder="Add user by its exact username"
+          placeholder="Block user by its exact username"
         />
 
         <SearchButton onPress={() => handleClickOnSearch()}>
@@ -61,18 +65,15 @@ const AddFriendScreen = ({ navigation }) => {
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("FriendList")}>
-        <Text>Back to friend's list</Text>
+      <Button onPress={() => navigation.replace("BlockedUserList")}>
+        <Text>Back to blocked list</Text>
       </Button>
 
       <UserOuterContainer>
-        <RenderUserFound
-          type={userFoundType.TO_BEFRIEND}
-          userData={userFound}
-        />
+        <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
       </UserOuterContainer>
     </Container>
   );
 };
 
-export default AddFriendScreen;
+export default AddBlockedUserScreen;

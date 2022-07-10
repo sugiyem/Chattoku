@@ -50,7 +50,6 @@ export function FetchAllUserInfos(onSuccess, app = firebase) {
     );
 }
 
-
 export async function FetchInfoById(userID, callbackSuccess) {
   await firebase
     .firestore()
@@ -62,4 +61,25 @@ export async function FetchInfoById(userID, callbackSuccess) {
       callbackSuccess(doc);
     })
     .catch((e) => console.error(e));
+}
+
+export async function fetchFavoriteAnimeById(
+  userID,
+  onSuccess,
+  app = firebase
+) {
+  await app
+    .firestore()
+    .collection("users")
+    .doc(userID)
+    .collection("anime")
+    .get()
+    .then((querySnapshot) => {
+      const animeData = [];
+      querySnapshot.forEach((documentSnapshot) => {
+        animeData.push(documentSnapshot.data());
+      });
+      onSuccess(animeData);
+    })
+    .catch((error) => Alert.alert("Error", error.message));
 }

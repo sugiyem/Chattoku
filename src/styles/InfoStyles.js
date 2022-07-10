@@ -21,6 +21,7 @@ export const Name = styled.Text`
   font-weight: bold;
   text-align: center;
   margin-vertical: 10px;
+  color: ${(props) => (props.color ? props.color : "#000000")};
 `;
 
 export const Description = styled.Text`
@@ -51,4 +52,12 @@ export const EditButton = styled.TouchableOpacity`
 export const EditButtonText = styled.Text`
   color: #2e64e5;
   font-size: 13px;
+  text-align: center;
+`;
+
+export const ListTitleText = styled.Text`
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration-line: underline;
 `;

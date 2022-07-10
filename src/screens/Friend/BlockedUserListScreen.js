@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Text } from "react-native";
 import {
   BoldText,
   Button,
@@ -7,32 +7,29 @@ import {
   SearchInput
 } from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
-import { fetchFriendRequestsReceived } from "../../services/Friend/FetchFriendStatus";
+import { fetchBlockedUsers } from "../../services/Friend/FetchBlockedUsers";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
 
-const FriendRequestsReceivedScreen = () => {
-  const [pendingFriends, setPendingFriends] = useState([]);
+const BlockedUserListScreen = () => {
+  const [blockedUsers, setBlockedUsers] = useState([]);
   const [search, setSearch] = useState("");
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    return fetchFriendRequestsReceived({
-      onSuccess: setPendingFriends,
-      onFailure: (error) => Alert.alert("Error", error.message)
-    });
+    return fetchBlockedUsers(setBlockedUsers);
   }, []);
 
-  const filteredRequests = pendingFriends.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+  const filteredBlockedUsers = blockedUsers.filter((data) =>
+    data.username.toLowerCase().startsWith(search.toLowerCase())
   );
 
   const UserLists = () =>
-    filteredRequests.map((item, index) => (
+    filteredBlockedUsers.map((item, index) => (
       <RenderUserLists
         key={index}
-        type={friendshipType.RECEIVING_REQUEST}
+        type={friendshipType.BLOCKED}
         item={item}
         navigation={navigation}
       />
@@ -46,10 +43,14 @@ const FriendRequestsReceivedScreen = () => {
         placeholder="Search requests by username"
       />
 
-      <BoldText underline>Pending Requests Received</BoldText>
+      <BoldText underline>Blocked List</BoldText>
 
       <Button onPress={() => navigation.goBack()}>
         <Text>Back to friend's list</Text>
+      </Button>
+
+      <Button onPress={() => navigation.navigate("AddBlockedUser")}>
+        <Text>Add blocked users</Text>
       </Button>
 
       <UserLists />
@@ -57,4 +58,4 @@ const FriendRequestsReceivedScreen = () => {
   );
 };
 
-export default FriendRequestsReceivedScreen;
+export default BlockedUserListScreen;

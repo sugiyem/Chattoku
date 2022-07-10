@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { Alert, Text } from "react-native";
 import {
-  Alert,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
-import { Badge } from "react-native-elements";
+  BoldText,
+  Button,
+  ButtonGroup,
+  ButtonText,
+  ScrollContainer,
+  SearchInput,
+  SeparatedButton
+} from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import {
   fetchFriend,
@@ -17,160 +16,89 @@ import {
 } from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
+import NotificationText from "../../components/Miscellaneous/NotificationText";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
   const [search, setSearch] = useState("");
-  const [expand, setExpand] = useState(null);
   const [isRequestExist, setIsRequestExist] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     return fetchFriend({
-      onSuccess: (data) => {
-        setFriends(data);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onSuccess: setFriends,
+      onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
 
   useEffect(() => {
     return checkFriendRequestsReceived({
-      onFound: () => {
-        setIsRequestExist(true);
-      },
-      onNotFound: () => {
-        setIsRequestExist(false);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onFound: () => setIsRequestExist(true),
+      onNotFound: () => setIsRequestExist(false),
+      onFailure: (error) => Alert.alert(error.message)
     });
   });
 
+  const filteredFriends = friends.filter((item) =>
+    item.username.toLowerCase().startsWith(search.toLowerCase())
+  );
+
+  const UserLists = () =>
+    filteredFriends.map((item, index) => (
+      <RenderUserLists
+        key={index}
+        item={item}
+        type={friendshipType.FRIEND}
+        navigation={navigation}
+      />
+    ));
+
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
+    <ScrollContainer>
+      <SearchInput
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search friend by username"
-        style={styles.textInput}
       />
 
-      <Text style={styles.title}>Friends List</Text>
+      <BoldText underline>Friends List</BoldText>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("AddFriend")}
-      >
+      <Button onPress={() => navigation.navigate("AddFriend")}>
         <Text>Add more friends</Text>
-      </TouchableOpacity>
+      </Button>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("GroupList")}
-      >
+      <Button onPress={() => navigation.navigate("GroupList")}>
         <Text>View groups</Text>
-      </TouchableOpacity>
+      </Button>
 
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity
-          style={styles.requestButton}
+      <Button onPress={() => navigation.navigate("BlockedUserList")}>
+        <Text>View blocked users</Text>
+      </Button>
+
+      <ButtonGroup>
+        <SeparatedButton
           onPress={() => navigation.navigate("FriendRequestsSent")}
         >
-          <Text style={styles.requestText}>Outgoing Requests</Text>
-        </TouchableOpacity>
+          <ButtonText size="12px" color="#000000">
+            Outgoing Requests
+          </ButtonText>
+        </SeparatedButton>
 
-        <TouchableOpacity
-          style={styles.requestButton}
+        <SeparatedButton
           onPress={() => navigation.navigate("FriendRequestsReceived")}
         >
-          <View style={styles.requestReceivedContainer}>
-            <Text style={styles.requestReceivedTest}>Incoming Requests</Text>
-            {isRequestExist && (
-              <Badge
-                status="primary"
-                value="!"
-                containerStyle={styles.requestReceivedBadge}
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
+          <NotificationText
+            text="Incoming Requests"
+            isShown={isRequestExist}
+            size={12}
+          />
+        </SeparatedButton>
+      </ButtonGroup>
 
-      <RenderUserLists
-        type={friendshipType.FRIEND}
-        items={friends.filter((data) =>
-          data.username.toLowerCase().startsWith(search.toLowerCase())
-        )}
-        navigation={navigation}
-        expandStatus={(index) => expand === index}
-        changeExpand={setExpand}
-      />
-    </ScrollView>
+      <UserLists />
+    </ScrollContainer>
   );
 };
 
 export default FriendListScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "darkcyan",
-    padding: 5,
-    flex: 1
-  },
-  textInput: {
-    borderColor: "black",
-    borderWidth: 1,
-    margin: 5,
-    backgroundColor: "white",
-    color: "black",
-    borderRadius: 10,
-    padding: 2
-  },
-  button: {
-    margin: 5,
-    padding: 5,
-    backgroundColor: "aquamarine",
-    borderRadius: 10
-  },
-  buttonGroup: {
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    flexDirection: "row"
-  },
-  requestButton: {
-    marginHorizontal: 10,
-    padding: 5,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "cyan",
-    flex: 1
-  },
-  requestReceivedContainer: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  requestText: {
-    textAlign: "center",
-    fontSize: 12
-  },
-  requestReceivedTest: {
-    textAlign: "center",
-    fontSize: 12,
-    flex: 4
-  },
-  requestReceivedBadge: {
-    flex: 1
-  },
-  title: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 30,
-    fontWeight: "bold",
-    textDecorationLine: "underline"
-  }
-});

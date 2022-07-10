@@ -12,6 +12,7 @@ import { Icon } from "react-native-elements";
 import Loading from "../Miscellaneous/Loading";
 import ChatAvatar from "./ChatAvatar";
 import ChatBubble from "./ChatBubble";
+import ChatInputBar from "./ChatInputBar";
 
 const ChatSections = ({
   type,
@@ -19,6 +20,8 @@ const ChatSections = ({
   receiverID,
   messages,
   updateMessages,
+  isBlocking = false,
+  isBlocked = false,
   allUserInfos = [],
   navigation
 }) => {
@@ -70,6 +73,10 @@ const ChatSections = ({
   }
 
   const renderActions = (props) => {
+    if (isBlocking || isBlocked) {
+      return null;
+    }
+
     return (
       <Actions
         {...props}
@@ -106,6 +113,12 @@ const ChatSections = ({
     return <ChatBubble {...props} username={username} />;
   };
 
+  const renderInputBar = (props) => {
+    return (
+      <ChatInputBar {...props} isBlocking={isBlocking} isBlocked={isBlocked} />
+    );
+  };
+
   return (
     <Loading isLoading={isLoading}>
       <GiftedChat
@@ -117,6 +130,7 @@ const ChatSections = ({
         renderActions={renderActions}
         renderAvatar={renderAvatar}
         renderBubble={renderBubble}
+        renderInputToolbar={renderInputBar}
       />
     </Loading>
   );

@@ -4,7 +4,6 @@ import { Platform } from "react-native";
 export const Container = styled.View`
   flex: 1;
   align-items: center;
-  justify-content: center;
   padding: 5px;
   background-color: #008b8b;
 `;
@@ -83,5 +82,9 @@ export const RoundedImage = styled.Image`
 export const ButtonGroup = styled.View`
   padding-bottom: 10px;
   border-bottom-width: 1px;
+  flex-direction: row;
+`;
+
+export const RowBar = styled.View`
   flex-direction: row;
 `;
