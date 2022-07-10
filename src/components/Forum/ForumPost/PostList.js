@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Alert, SectionList, StyleSheet, TextInput } from "react-native";
 import { isAuthorizedToDeletePosts } from "../../../services/Forum/HandleForumAdmin";
@@ -55,7 +54,6 @@ const PostList = ({
   return (
     <>
       <SectionList
-        key={posts}
         removeClippedSubviews={true}
         sections={[
           {

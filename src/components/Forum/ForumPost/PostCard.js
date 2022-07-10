@@ -194,8 +194,8 @@ const Content = styled.Text`
 `;
 
 const ActionBar = styled.View`
+  width: 100%;
   flex-direction: row;
-  flex: 1;
   margin-top: 10px;
   justify-content: space-evenly;
 `;

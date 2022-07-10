@@ -41,7 +41,6 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
   return (
     <>
       <SectionList
-        key={comments}
         removeClippedSubviews={true}
         sections={[{ data: comments }]}
         renderItem={renderItem}
