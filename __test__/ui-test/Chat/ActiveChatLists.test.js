@@ -11,7 +11,7 @@ describe("Test Chat List UI", () => {
       bio: "CS newbie",
       img: "yemima-img",
       lastMessage: "Hello",
-      lastMessageTime: new Date(2022, 5, 8)
+      lastMessageTime: null
     };
     const tree = renderer
       .create(

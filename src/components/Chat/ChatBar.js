@@ -4,10 +4,10 @@ import { Badge, ListItem } from "react-native-elements";
 import ContactImage from "../Friend/ContactImage";
 
 const ChatBar = ({ item, isPrivateChat }) => {
-  const dateString =
-    item.lastMessageTime.toDateString() +
-    ", " +
-    item.lastMessageTime.toLocaleTimeString();
+  const date = item.lastMessageTime;
+  const dateString = date
+    ? date.toDateString() + ", " + date.toLocaleTimeString()
+    : "";
 
   const NotificationBadge = () => (
     <Badge
