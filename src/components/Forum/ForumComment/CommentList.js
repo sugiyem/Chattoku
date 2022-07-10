@@ -13,7 +13,7 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
       forumId,
       postId,
       (data) => {
-        data.sort((x, y) => (x.timestamp < y.timestamp ? 1 : -1));
+        data.sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1));
         setComments(data);
       },
       (error) => Alert.alert(error)
