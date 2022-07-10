@@ -1,16 +1,63 @@
 import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
 import styled from "styled-components/native";
 import overlayContext from "../../screens/Forum/overlayContext";
 import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import RenderFriendSection from "./RenderFriendSection";
+import {
+  blockUser,
+  unblockUser,
+  isBlockedByCurrentUser
+} from "../../services/Friend/HandleBlockedUser";
+
+const BlockSection = ({ isBlocked, userId }) => {
+  function handleBlock() {
+    Caution("This user will be blocked", () => blockUser(userId));
+  }
+
+  function handleUnblock() {
+    Caution("This user will be unblocked", () => unblockUser(userId));
+  }
+
+  if (isBlocked) {
+    return (
+      <Section onPress={handleUnblock}>
+        <Icon
+          name="account-lock-open-outline"
+          type="material-community"
+          size={40}
+          color="green"
+        />
+        <PositiveText>Unblock</PositiveText>
+      </Section>
+    );
+  } else {
+    return (
+      <Section onPress={handleBlock}>
+        <Icon name="block" type="material" size={40} color={"#c10015"} />
+        <NegativeText> Block </NegativeText>
+      </Section>
+    );
+  }
+};
 
 const ProfileOverlay = ({ userData }) => {
   const navigation = useNavigation();
   const currentUID = getCurrentUID();
   const setOverlayData = useContext(overlayContext);
   const isYou = currentUID === userData.id;
+  const [isBlocked, setIsBlocked] = useState(false);
+
+  useEffect(() => {
+    if (isYou) return;
+
+    return isBlockedByCurrentUser(
+      userData.id,
+      () => setIsBlocked(true),
+      () => setIsBlocked(false)
+    );
+  }, []);
 
   console.log(userData);
 
@@ -33,10 +80,6 @@ const ProfileOverlay = ({ userData }) => {
         userData: data
       }
     });
-  }
-
-  function handleBlockClick() {
-    //Will wait for the block system to be implemented
   }
 
   return (
@@ -63,10 +106,7 @@ const ProfileOverlay = ({ userData }) => {
               <PositiveText> Message </PositiveText>
             </Section>
             <Divider />
-            <Section>
-              <Icon name="block" type="material" size={40} color={"#c10015"} />
-              <NegativeText> Block </NegativeText>
-            </Section>
+            <BlockSection userId={userData.id} isBlocked={isBlocked} />
           </>
         )}
         <CloseButton onPress={handleCloseClick}>
