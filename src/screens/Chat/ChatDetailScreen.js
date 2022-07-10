@@ -28,7 +28,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
   const [userInfo, setUserInfo] = useState(initialState);
   const [messages, setMessages] = useState([]);
-  const [isGetBlocked, setIsGetBlocked] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
   //otherUserID is used to optimize firebase use
   const [otherUserID, setOtherUserID] = useState("");
@@ -66,8 +66,8 @@ const ChatDetailScreen = ({ navigation, route }) => {
   useEffect(() => {
     return isCurrentUserBlocked(
       recipientID,
-      () => setIsGetBlocked(true),
-      () => setIsGetBlocked(false)
+      () => setIsBlocked(true),
+      () => setIsBlocked(false)
     );
   }, []);
 
@@ -86,7 +86,7 @@ const ChatDetailScreen = ({ navigation, route }) => {
         messages={messages}
         updateMessages={setMessages}
         isBlocking={isBlocking}
-        isGetBlocked={isGetBlocked}
+        isGetBlocked={isBlocked}
       />
     </ChatContainer>
   );

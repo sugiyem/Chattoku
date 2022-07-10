@@ -21,7 +21,7 @@ const ChatSections = ({
   messages,
   updateMessages,
   isBlocking = false,
-  isGetBlocked = false,
+  isBlocked = false,
   allUserInfos = [],
   navigation
 }) => {
@@ -73,7 +73,7 @@ const ChatSections = ({
   }
 
   const renderActions = (props) => {
-    if (isBlocking || isGetBlocked) {
+    if (isBlocking || isBlocked) {
       return null;
     }
 
@@ -115,11 +115,7 @@ const ChatSections = ({
 
   const renderInputBar = (props) => {
     return (
-      <ChatInputBar
-        {...props}
-        isBlocking={isBlocking}
-        isGetBlocked={isGetBlocked}
-      />
+      <ChatInputBar {...props} isBlocking={isBlocking} isBlocked={isBlocked} />
     );
   };
 

@@ -3,9 +3,9 @@ import { InputToolbar } from "react-native-gifted-chat";
 import { CenteredBoldText } from "../../styles/GeneralStyles";
 
 const ChatInputBar = (props) => {
-  const { isBlocking, isGetBlocked, ...remainingProps } = props;
+  const { isBlocking, isBlocked, ...remainingProps } = props;
 
-  if (isGetBlocked) {
+  if (isBlocked) {
     return (
       <CenteredBoldText size="18px">
         You've been blocked by this user
