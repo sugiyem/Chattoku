@@ -23,6 +23,7 @@ const PostCard = ({
   forumId,
   isOwner,
   isBanned,
+  timestamp,
   isAuthorized
 }) => {
   const navigation = useNavigation();
@@ -31,6 +32,11 @@ const PostCard = ({
   const forumData = navigation.getState().routes[1].params.data;
   const setOverlayData = useContext(overlayContext);
   const isOwnersPost = forumData.owner === uid;
+  const dateText = timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
 
   const likeBarState = {
     forumId: forumId,
@@ -86,6 +92,7 @@ const PostCard = ({
           }
         />
         <Text> {userData.username}</Text>
+        <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
       <Title>{title}</Title>
@@ -121,6 +128,11 @@ const Profile = styled.Image`
   border-radius: 20px;
   border-width: 1px;
   border-color: white;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
 `;
 
 const Container = styled.View`

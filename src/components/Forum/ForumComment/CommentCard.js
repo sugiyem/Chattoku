@@ -14,7 +14,15 @@ const initialUserData = {
   username: "fetching username..."
 };
 
-const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
+const CommentCard = ({
+  content,
+  uid,
+  forumId,
+  postId,
+  id,
+  timestamp,
+  isAuthorized
+}) => {
   const currentUID = firebase.auth().currentUser.uid;
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
@@ -24,8 +32,11 @@ const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
   const isBanned = data.isBanned;
   const isOwner = data.isOwner;
   const isOwnersPost = forumData.owner === uid;
-
-  console.log(uid);
+  const dateText = timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
 
   //Fetch username of commenter
   useEffect(() => {
@@ -66,6 +77,7 @@ const CommentCard = ({ content, uid, forumId, postId, id, isAuthorized }) => {
           }
         />
         <Text> {userData.username}</Text>
+        <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
       <Content> {content} </Content>
@@ -98,6 +110,11 @@ const Container = styled.View`
   border-width: 1px;
   border-color: black;
   border-radius: 10px;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
 `;
 
 const Content = styled.Text`

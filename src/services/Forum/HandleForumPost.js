@@ -4,6 +4,7 @@ import NotifyAllFollowers from "./NotifyAllFollowers";
 
 export async function addPost(forumId, post, forumName, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = firebase.firestore.FieldValue.serverTimestamp();
   const batch = firebase.firestore().batch();
   const postsRef = firebase
     .firestore()
@@ -22,12 +23,12 @@ export async function addPost(forumId, post, forumName, onSuccess, onError) {
   batch.set(postsRef.doc(newPostID), {
     ...post,
     uid: currentUID,
-    timestamp: new Date()
+    timestamp: time
   });
   batch.set(userPostsRef, {
     postId: newPostID,
     forumId: forumId,
-    timestamp: new Date()
+    timestamp: time
   });
 
   //Create post

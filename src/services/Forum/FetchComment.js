@@ -17,9 +17,15 @@ export default function FetchComment(
       async (querySnapshot) => {
         const comments = [];
         querySnapshot.forEach((documentSnapshot) => {
+          const timestamp = documentSnapshot.data().timestamp;
+          const date = new Date(
+            timestamp.seconds * 1000 + timestamp.nanoseconds * 0.000001
+          );
+
           comments.push({
             ...documentSnapshot.data(),
-            id: documentSnapshot.id
+            id: documentSnapshot.id,
+            timestamp: date
           });
         });
         onSuccessfulFetch(comments);
