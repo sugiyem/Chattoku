@@ -18,21 +18,25 @@ import { friendshipType } from "../../constants/Friend";
 import Caution from "../Miscellaneous/Caution";
 import { IconContainer, IconDescription } from "../../styles/ChatStyles";
 
-const EditFriendIcon = ({ userId, isSmall = false }) => {
+const EditFriendIcon = ({ userId, isSmall = false, defaultStatus = null }) => {
   const [friends, setFriends] = useState([]);
   const [friendRequestsSent, setFriendRequestsSent] = useState([]);
   const [friendRequestsReceived, setFriendRequestsReceived] = useState([]);
+
+  const isTest = defaultStatus !== null;
   const iconSize = isSmall ? 25 : 40;
-  const status = useMemo(
-    () =>
-      getFriendshipStatus(
-        userId,
-        friends,
-        friendRequestsSent,
-        friendRequestsReceived
-      ),
-    [friends, friendRequestsReceived, friendRequestsSent]
-  );
+  const status = isTest
+    ? defaultStatus
+    : useMemo(
+        () =>
+          getFriendshipStatus(
+            userId,
+            friends,
+            friendRequestsSent,
+            friendRequestsReceived
+          ),
+        [friends, friendRequestsReceived, friendRequestsSent]
+      );
 
   useEffect(() => {
     return fetchFriend({
@@ -68,12 +72,22 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
   }, []);
 
   function handleRemove() {
+    if (isTest) {
+      removeFriend(userId);
+      return;
+    }
+
     Caution("This user will be removed from your friend's list", () =>
       removeFriend(userId)
     );
   }
 
   function handleDeny() {
+    if (isTest) {
+      declineFriendRequest(userId);
+      return;
+    }
+
     Caution("This friend request will be declined", () =>
       declineFriendRequest(userId).then(() =>
         Alert.alert("Declined Successfully")
@@ -90,8 +104,13 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
           size={iconSize}
           color="#c10015"
           onPress={handleRemove}
+          testID="unfriendIcon"
         />
-        <IconDescription color="#c10014" isSmall={isSmall}>
+        <IconDescription
+          color="#c10014"
+          isSmall={isSmall}
+          testID="unfriendDescription"
+        >
           Unfriend
         </IconDescription>
       </IconContainer>
@@ -106,8 +125,13 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
             size={iconSize}
             color="navy"
             onPress={() => acceptFriendRequest(userId)}
+            testID="acceptIcon"
           />
-          <IconDescription color="navy" isSmall={isSmall}>
+          <IconDescription
+            color="navy"
+            isSmall={isSmall}
+            testID="acceptDescription"
+          >
             Accept
           </IconDescription>
         </IconContainer>
@@ -119,8 +143,13 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
             size={iconSize}
             color="#c10015"
             onPress={handleDeny}
+            testID="declineIcon"
           />
-          <IconDescription color="#c10015" isSmall={isSmall}>
+          <IconDescription
+            color="#c10015"
+            isSmall={isSmall}
+            testID="declineDescription"
+          >
             Decline
           </IconDescription>
         </IconContainer>
@@ -135,8 +164,13 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
           size={iconSize}
           color="#c10015"
           onPress={() => cancelFriendRequest(userId)}
+          testID="cancelIcon"
         />
-        <IconDescription color="#c10014" isSmall={isSmall}>
+        <IconDescription
+          color="#c10014"
+          isSmall={isSmall}
+          testID="cancelDescription"
+        >
           Cancel
         </IconDescription>
       </IconContainer>
@@ -150,8 +184,9 @@ const EditFriendIcon = ({ userId, isSmall = false }) => {
           size={iconSize}
           color={"navy"}
           onPress={() => addFriend(userId)}
+          testID="addIcon"
         />
-        <IconDescription color="navy" isSmall={isSmall}>
+        <IconDescription color="navy" isSmall={isSmall} testID="addDescription">
           Add
         </IconDescription>
       </IconContainer>

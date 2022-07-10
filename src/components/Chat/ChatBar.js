@@ -22,11 +22,11 @@ const ChatBar = ({ item, isPrivateChat }) => {
     <>
       <ContactImage item={item} />
       <ListItem.Content>
-        <ListItem.Title style={styles.username}>
+        <ListItem.Title style={styles.username} testID="name">
           {isPrivateChat ? item.username : item.name}
         </ListItem.Title>
         <ListItem.Subtitle>
-          <Text>{item.lastMessage}</Text>
+          <Text testID="lastMessage">{item.lastMessage}</Text>
         </ListItem.Subtitle>
         <ListItem.Subtitle>
           <Text>{dateString}</Text>

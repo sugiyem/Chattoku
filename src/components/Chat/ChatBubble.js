@@ -16,15 +16,15 @@ const ChatBubble = (props) => {
     !isFirstMessage &&
     sameDay(currentMessage.createdAt, previousMessage.createdAt);
 
-  const isUsernameShown = isCurrentUser || (isSameUser && isSameDay);
+  const isUsernameNotShown = isCurrentUser || (isSameUser && isSameDay);
 
-  if (isUsernameShown) {
+  if (isUsernameNotShown) {
     return <Bubble {...remainingProps} />;
   }
 
   return (
     <BubbleContainer>
-      <BubbleText>{username}</BubbleText>
+      <BubbleText testID="username">{username}</BubbleText>
       <Bubble {...remainingProps} />
     </BubbleContainer>
   );

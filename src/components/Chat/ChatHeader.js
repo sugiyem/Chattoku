@@ -33,7 +33,12 @@ const ChatHeader = ({ type, item, navigation }) => {
   return (
     <HeaderContainer>
       <SectionContainer size="1">
-        <Icon type="ionicon" name="arrow-back" onPress={navigation.goBack} />
+        <Icon
+          type="ionicon"
+          name="arrow-back"
+          onPress={navigation.goBack}
+          testID="backIcon"
+        />
       </SectionContainer>
 
       <SectionContainer size="2">
@@ -43,12 +48,13 @@ const ChatHeader = ({ type, item, navigation }) => {
               ? { uri: imgUrl }
               : require("../../assets/default-profile.png")
           }
+          testID="profileImage"
         />
       </SectionContainer>
 
       <SectionContainer size="2">
-        <Name>{name}</Name>
-        <Info>{info}</Info>
+        <Name testID="name">{name}</Name>
+        <Info testID="info">{info}</Info>
       </SectionContainer>
 
       <RowSectionContainer>
@@ -66,6 +72,7 @@ const ChatHeader = ({ type, item, navigation }) => {
                 size={25}
                 color="navy"
                 onPress={goToGroupPage}
+                testID="groupPageIcon"
               />
               <IconDescription color="navy" isSmall={true}>
                 Group Info

@@ -31,12 +31,13 @@ const ChatModal = ({
             onPress={onCloseButtonPress}
             color="white"
             size={30}
+            testID="closeIcon"
           />
         </ModalHeader>
         <ModalContent>
-          <ProfilePicture source={imgSource} />
-          <Name>{item.username}</Name>
-          <Bio>{item.bio}</Bio>
+          <ProfilePicture testID="image" source={imgSource} />
+          <Name testID="username">{item.username}</Name>
+          <Bio testID="bio">{item.bio}</Bio>
           <IconGroup>
             <IconContainer>
               <Icon
@@ -45,6 +46,7 @@ const ChatModal = ({
                 color="aquamarine"
                 onPress={onMessageButtonPress}
                 size={40}
+                testID="messageIcon"
               />
               <IconDescription color="aquamarine">Message</IconDescription>
             </IconContainer>
