@@ -21,6 +21,7 @@ const CommentCard = ({
   postId,
   id,
   timestamp,
+  lastEdited,
   isAuthorized
 }) => {
   const currentUID = firebase.auth().currentUser.uid;
@@ -37,6 +38,14 @@ const CommentCard = ({
     .split(" ")
     .filter((_, index) => index > 0)
     .join(" ");
+
+  const editedText = lastEdited
+    ? lastEdited
+        .toDateString()
+        .split(" ")
+        .filter((_, index) => index > 0)
+        .join(" ")
+    : "";
 
   //Fetch username of commenter
   useEffect(() => {
@@ -81,6 +90,7 @@ const CommentCard = ({
       </UserInfo>
       <Divider />
       <Content> {content} </Content>
+      {!!lastEdited && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         {((!isBanned && currentUID === uid) ||
           isOwner ||
@@ -115,6 +125,11 @@ const Container = styled.View`
 const DateText = styled.Text`
   font-size: 13px;
   margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
 `;
 
 const Content = styled.Text`

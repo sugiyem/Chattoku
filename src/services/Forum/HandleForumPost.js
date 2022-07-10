@@ -85,6 +85,7 @@ export async function deletePost(forumId, postId, uid, onSuccess, onError) {
 
 export async function editPost(forumId, postId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = firebase.firestore.FieldValue.serverTimestamp();
 
   await firebase
     .firestore()
@@ -92,7 +93,7 @@ export async function editPost(forumId, postId, post, onSuccess, onError) {
     .doc(forumId)
     .collection("posts")
     .doc(postId)
-    .update(post)
+    .update({ ...post, lastEdited: time })
     .then(onSuccess)
     .catch((e) => onError(e));
 }

@@ -45,6 +45,7 @@ export async function EditComment(
   onError
 ) {
   const currentUID = firebase.auth().currentUser.uid;
+  const time = firebase.firestore.FieldValue.serverTimestamp();
 
   await firebase
     .firestore()
@@ -54,7 +55,7 @@ export async function EditComment(
     .doc(postId)
     .collection("comments")
     .doc(commentId)
-    .update({ content: comment })
+    .update({ content: comment, lastEdited: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }
