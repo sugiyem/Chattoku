@@ -2,7 +2,7 @@ import { firebase } from "../Firebase/Config";
 
 export async function AddComment(forumId, postId, comment, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
-  const time = firebase.firestore.FieldValue.serverTimestamp();
+  const time = new Date();
 
   await firebase
     .firestore()
@@ -45,7 +45,7 @@ export async function EditComment(
   onError
 ) {
   const currentUID = firebase.auth().currentUser.uid;
-  const time = firebase.firestore.FieldValue.serverTimestamp();
+  const time = new Date();
 
   await firebase
     .firestore()

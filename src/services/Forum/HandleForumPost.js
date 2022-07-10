@@ -4,7 +4,7 @@ import NotifyAllFollowers from "./NotifyAllFollowers";
 
 export async function addPost(forumId, post, forumName, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
-  const time = firebase.firestore.FieldValue.serverTimestamp();
+  const time = new Date();
   const batch = firebase.firestore().batch();
   const postsRef = firebase
     .firestore()
@@ -85,7 +85,7 @@ export async function deletePost(forumId, postId, uid, onSuccess, onError) {
 
 export async function editPost(forumId, postId, post, onSuccess, onError) {
   const currentUID = firebase.auth().currentUser.uid;
-  const time = firebase.firestore.FieldValue.serverTimestamp();
+  const time = new Date();
 
   await firebase
     .firestore()
