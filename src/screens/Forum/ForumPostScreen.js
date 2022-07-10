@@ -27,19 +27,6 @@ const MainPost = ({
 }) => {
   const [userData, setUserData] = useState(initialUserData);
   const setOverlayData = useContext(overlayContext);
-  const dateText = timestamp
-    .toDateString()
-    .split(" ")
-    .filter((_, index) => index > 0)
-    .join(" ");
-
-  const editedText = lastEdited
-    ? lastEdited
-        .toDateString()
-        .split(" ")
-        .filter((_, index) => index > 0)
-        .join(" ")
-    : "";
 
   useEffect(() => {
     FetchInfoById(uid, setUserData);
@@ -56,12 +43,12 @@ const MainPost = ({
           }
         />
         <Text> {userData.username}</Text>
-        <DateText> {dateText} </DateText>
+        <DateText> {timestamp} </DateText>
       </UserInfo>
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
-      {!!lastEdited && <EditedText> (Last Edited: {editedText})</EditedText>}
+      {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       <LikeBar forumId={forumId} postId={postId} />
     </HeaderContainer>
   );

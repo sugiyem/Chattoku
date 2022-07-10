@@ -59,8 +59,6 @@ const PostCard = ({
     content: content,
     postId: id,
     forumId: forumId,
-    timestamp: timestamp,
-    lastEdited: lastEdited,
     uid: uid
   };
 
@@ -71,7 +69,13 @@ const PostCard = ({
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: { ...postData, isOwner: isOwner, isBanned: isBanned }
+      data: {
+        ...postData,
+        isOwner: isOwner,
+        isBanned: isBanned,
+        timestamp: dateText,
+        lastEdited: editedText
+      }
     });
   }
 
