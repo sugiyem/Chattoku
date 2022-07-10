@@ -28,14 +28,15 @@ const FriendRequestsSentScreen = () => {
     item.username.toLowerCase().startsWith(search.toLowerCase())
   );
 
-  const UserLists = filteredRequests.map((item, index) => (
-    <RenderUserLists
-      key={index}
-      type={friendshipType.WAITING_RESPONSE}
-      item={item}
-      navigation={navigation}
-    />
-  ));
+  const UserLists = () =>
+    filteredRequests.map((item, index) => (
+      <RenderUserLists
+        key={index}
+        type={friendshipType.WAITING_RESPONSE}
+        item={item}
+        navigation={navigation}
+      />
+    ));
 
   return (
     <ScrollContainer>
