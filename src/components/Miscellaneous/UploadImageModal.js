@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import {
   pickImageFromCamera,
   pickImageFromLibrary,
+  removeImageFromCloudStorage,
   uploadImage
 } from "../../services/Miscellaneous/HandleImage";
 
@@ -11,6 +12,8 @@ const UploadImageModal = ({
   isVisible,
   onClose,
   removeImage,
+  currentImage,
+  initialImage,
   setImage,
   updateLoadingState
 }) => {
@@ -20,7 +23,14 @@ const UploadImageModal = ({
       imgUrl,
       () => updateLoadingState(true),
       () => updateLoadingState(false),
-      setImage
+      async (newImgUrl) => {
+        const prevImage = currentImage;
+        setImage(newImgUrl);
+
+        if (prevImage !== initialImage) {
+          await removeImageFromCloudStorage(prevImage);
+        }
+      }
     );
   }
 
