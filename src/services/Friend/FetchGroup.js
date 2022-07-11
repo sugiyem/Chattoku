@@ -111,14 +111,20 @@ export function checkGroupInvitation({
 
           const groupsRef = db.collection("groups");
           const promisedData = groupIDLists.map(async (groupID) => {
-            if (await groupsRef.doc(groupID).get().exists) {
-              isInvitationExist = true;
-            }
+            await groupsRef
+              .doc(groupID)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  isInvitationExist = true;
+                }
+              });
           });
 
-          await Promise.all(promisedData).then(() =>
-            isInvitationExist ? onFound() : onNotFound()
-          );
+          await Promise.all(promisedData).then(() => {
+            console.log(isInvitationExist);
+            isInvitationExist ? onFound() : onNotFound();
+          });
         } else {
           onNotFound();
         }
