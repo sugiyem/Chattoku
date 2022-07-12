@@ -9,6 +9,7 @@ import {
   uploadImage
 } from "../../../services/Miscellaneous/HandleImage";
 import { Icon } from "react-native-elements";
+import ImageSlider from "../../Miscellaneous/ImageSlider";
 
 const initialState = {
   title: "",
@@ -41,8 +42,6 @@ const RenderPostScreen = ({ renderScreenType }) => {
   const isImageUploaded = post.img.length > 0;
   const title = isCreateScreen ? "Create a Post in" : "Edit Your Post in";
   const submitButtonText = isCreateScreen ? "Post To Forum" : "Confirm Edit";
-  const isFirstImage = imageIndex === 0;
-  const isLastImage = post.img.length - 1 === imageIndex;
 
   console.log("Page Index: " + imageIndex);
 
@@ -88,13 +87,6 @@ const RenderPostScreen = ({ renderScreenType }) => {
     );
   }
 
-  function handleImageScroll({ nativeEvent }) {
-    // page index
-    const index = Math.round(nativeEvent.contentOffset.x / IMAGE_WIDTH);
-
-    setImageIndex(index);
-  }
-
   function handleDeleteImage() {
     const filteredImg = post.img.filter((_, index) => index !== imageIndex);
     setPost({ ...post, img: filteredImg });
@@ -102,24 +94,6 @@ const RenderPostScreen = ({ renderScreenType }) => {
     setImageIndex(newImageIndex);
     ImagesContainerRef.current.scrollTo({
       x: newImageIndex * IMAGE_WIDTH,
-      y: 0,
-      animated: true
-    });
-  }
-
-  function handleNextImage() {
-    setImageIndex(imageIndex + 1);
-    ImagesContainerRef.current.scrollTo({
-      x: (imageIndex + 1) * IMAGE_WIDTH,
-      y: 0,
-      animated: true
-    });
-  }
-
-  function handlePrevImage() {
-    setImageIndex(imageIndex - 1);
-    ImagesContainerRef.current.scrollTo({
-      x: (imageIndex - 1) * IMAGE_WIDTH,
       y: 0,
       animated: true
     });
@@ -153,33 +127,12 @@ const RenderPostScreen = ({ renderScreenType }) => {
 
       {isImageUploaded ? (
         <>
-          <ImageSlider>
-            <PrevIconWrapper onPress={handlePrevImage}>
-              {!isFirstImage && (
-                <Icon name="navigate-before" type="material" size={50} />
-              )}
-            </PrevIconWrapper>
-            <Border>
-              <ImagesContainer
-                pagingEnabled={true}
-                horizontal={true}
-                scrollEventThrottle={16}
-                onMomentumScrollEnd={handleImageScroll}
-                contentOffset={{ x: 0, y: 0 }}
-                ref={ImagesContainerRef}
-                scrollEnabled={false}
-              >
-                {post.img.map((src) => (
-                  <UploadedImage key={src} source={{ uri: src }} />
-                ))}
-              </ImagesContainer>
-            </Border>
-            <NextIconWrapper onPress={handleNextImage}>
-              {!isLastImage && (
-                <Icon name="navigate-next" type="material" size={50} />
-              )}
-            </NextIconWrapper>
-          </ImageSlider>
+          <ImageSlider
+            img={post.img}
+            onChangePage={setImageIndex}
+            imageRef={ImagesContainerRef}
+            state={[imageIndex, setImageIndex]}
+          />
           <Button>
             <ButtonText onPress={handleAddImage}>Add Another Image</ButtonText>
           </Button>
@@ -279,45 +232,4 @@ const ContentInput = styled.TextInput`
   border-width: 0.5px;
   background-color: whitesmoke;
   text-align-vertical: top;
-`;
-
-const Border = styled.View`
-  background-color: white;
-  padding: 4px;
-  border-width: 1px;
-  border-color: black;
-  margin: 20px;
-`;
-
-const ImageSlider = styled.View`
-  display: flex;
-  flex-direction: row;
-`;
-
-const ImagesContainer = styled.ScrollView`
-  height: ${IMAGE_WIDTH}px;
-  width: ${IMAGE_WIDTH}px;
-  align-self: center;
-`;
-
-const UploadedImage = styled.Image`
-  height: ${IMAGE_WIDTH}px;
-  width: ${IMAGE_WIDTH}px;
-`;
-
-const PrevIconWrapper = styled.TouchableOpacity`
-  position: absolute;
-  align-self: center;
-  background-color: white;
-  border-radius: 100px;
-  z-index: 40;
-`;
-
-const NextIconWrapper = styled.TouchableOpacity`
-  position: absolute;
-  align-self: center;
-  right: 0px;
-  background-color: white;
-  border-radius: 100px;
-  z-index: 40;
 `;
