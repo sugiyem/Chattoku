@@ -37,10 +37,7 @@ const AddBlockedUserScreen = ({ navigation }) => {
 
   const handleClickOnSearch = () => {
     if (search === ownUserName) {
-      Alert.alert(
-        "This username is yours",
-        "Search other username to add friend"
-      );
+      Alert.alert("This username is yours", "Search other username to block");
       return;
     }
 
