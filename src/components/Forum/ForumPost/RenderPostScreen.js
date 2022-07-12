@@ -6,6 +6,7 @@ import { renderType } from "../../../constants/Forum";
 import styled from "styled-components/native";
 import {
   pickImageFromLibrary,
+  removeImageFromCloudStorage,
   uploadImage
 } from "../../../services/Miscellaneous/HandleImage";
 import { Icon } from "react-native-elements";
@@ -88,6 +89,9 @@ const RenderPostScreen = ({ renderScreenType }) => {
   }
 
   function handleDeleteImage() {
+    //Users shouldn't know about this background process
+    removeImageFromCloudStorage(post.img[imageIndex]);
+
     const filteredImg = post.img.filter((_, index) => index !== imageIndex);
     setPost({ ...post, img: filteredImg });
     const newImageIndex = Math.min(imageIndex, filteredImg.length - 1);
