@@ -6,6 +6,7 @@ import {
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
 import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { groupMemberType } from "../../constants/Group";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
@@ -15,7 +16,7 @@ const GroupInfoScreen = ({ navigation, route }) => {
   const [pendingMembers, setPendingMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
   const groupInfo = route.params.groupData;
-  const currentID = firebase.auth().currentUser.uid;
+  const currentID = getCurrentUID();
 
   function isOwner(id) {
     return id === groupInfo.owner;

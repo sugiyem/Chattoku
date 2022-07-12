@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import {
   Button,
   ButtonText,
@@ -45,27 +46,32 @@ const RenderGroupDetail = ({
       <GroupMemberList key={index} title={item.title} items={item.data} />
     ));
 
+  const imageSource =
+    groupInfo.img !== ""
+      ? { uri: groupInfo.img }
+      : require("../../assets/default-profile.png");
+
   return (
     <ScrollContainer>
-      <Button onPress={() => navigation.replace("GroupList")}>
+      <Button
+        onPress={() => navigation.replace("GroupList")}
+        testID="backButton"
+      >
         <ButtonText color="#000000">Go Back</ButtonText>
       </Button>
 
       <ProfileContainer>
-        {groupInfo.img.length > 0 ? (
-          <RoundedImage source={{ uri: groupInfo.img }} />
-        ) : (
-          <RoundedImage source={require("../../assets/default-profile.png")} />
-        )}
-
-        <Name>{groupInfo.name}</Name>
-        <Description>{groupInfo.description}</Description>
+        <RoundedImage source={imageSource} testID="image" />
+        <Name testID="name">{groupInfo.name}</Name>
+        <Description testID="description">{groupInfo.description}</Description>
         {isAdmin && (
-          <GroupAdminButtons
-            type={type}
-            groupInfo={groupInfo}
-            navigation={navigation}
-          />
+          <View testID="adminButtons">
+            <GroupAdminButtons
+              type={type}
+              groupInfo={groupInfo}
+              navigation={navigation}
+            />
+          </View>
         )}
       </ProfileContainer>
 

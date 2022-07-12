@@ -10,8 +10,10 @@ const ContactBar = ({ type, item }) => {
     <>
       <ContactImage item={item} />
       <ListItem.Content>
-        <ListItem.Title>{isUser ? item.username : item.name}</ListItem.Title>
-        <ListItem.Subtitle>
+        <ListItem.Title testID="name">
+          {isUser ? item.username : item.name}
+        </ListItem.Title>
+        <ListItem.Subtitle testID="info">
           {isUser ? item.bio : item.description}
         </ListItem.Subtitle>
         {item.groupRole && (

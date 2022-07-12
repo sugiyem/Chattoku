@@ -4,16 +4,11 @@ import {
   Button,
   ButtonText,
   Container,
-  RoundedImage,
   RowBar,
   SearchButton,
   SeparatedSearchInput
 } from "../../styles/GeneralStyles";
-import { EditButtonText, Name } from "../../styles/InfoStyles";
-import {
-  UserInnerContainer,
-  UserOuterContainer
-} from "../../styles/ContactStyles";
+import { UserOuterContainer } from "../../styles/ContactStyles";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
@@ -58,14 +53,21 @@ const AddBlockedUserScreen = ({ navigation }) => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Block user by its exact username"
+          testID="searchBar"
         />
 
-        <SearchButton onPress={() => handleClickOnSearch()}>
+        <SearchButton
+          onPress={() => handleClickOnSearch()}
+          testID="searchButton"
+        >
           <ButtonText color="#ffffff">Search</ButtonText>
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("BlockedUserList")}>
+      <Button
+        onPress={() => navigation.replace("BlockedUserList")}
+        testID="blockedList"
+      >
         <Text>Back to blocked list</Text>
       </Button>
 

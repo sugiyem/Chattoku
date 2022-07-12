@@ -7,7 +7,7 @@ import styled from "styled-components/native";
 
 const RenderUserFound = ({ type, userData }) => {
   if (userData === null) {
-    return <Text>There is no user with such username</Text>;
+    return <Text testID="noUser">There is no user with such username</Text>;
   }
 
   const userId = userData.id;
@@ -23,8 +23,8 @@ const RenderUserFound = ({ type, userData }) => {
   return (
     <UserContainer>
       <TopContainer>
-        <Name>{userData.username}</Name>
-        <Bio>{userData.bio}</Bio>
+        <Name testID="name">{userData.username}</Name>
+        <Bio testID="bio">{userData.bio}</Bio>
       </TopContainer>
       <BottomContainer>
         <ProfileImage
@@ -33,6 +33,7 @@ const RenderUserFound = ({ type, userData }) => {
               ? { uri: userData.img }
               : require("../../assets/default-profile.png")
           }
+          testID="image"
         />
         <ButtonGroups />
       </BottomContainer>

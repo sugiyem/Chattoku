@@ -66,22 +66,34 @@ const GroupListScreen = ({ navigation }) => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search group by name"
+        testID="searchBar"
       />
 
-      <BoldText underline>Groups List</BoldText>
+      <BoldText underline testID="title">
+        Groups List
+      </BoldText>
 
-      <Button onPress={() => navigation.replace("FriendList")}>
+      <Button
+        onPress={() => navigation.replace("FriendList")}
+        testID="friendList"
+      >
         <Text>Back to friend's list</Text>
       </Button>
 
       <ButtonGroup>
-        <SeparatedButton onPress={() => navigation.navigate("GroupCreation")}>
+        <SeparatedButton
+          onPress={() => navigation.navigate("GroupCreation")}
+          testID="createGroup"
+        >
           <ButtonText size="12px" color="#000000">
             Create Group
           </ButtonText>
         </SeparatedButton>
 
-        <SeparatedButton onPress={() => navigation.navigate("GroupRequests")}>
+        <SeparatedButton
+          onPress={() => navigation.navigate("GroupRequests")}
+          testID="groupRequests"
+        >
           <NotificationText
             text="Group Invitations"
             isShown={isInvitationExist}
