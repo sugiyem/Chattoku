@@ -87,8 +87,7 @@ const ForumPostScreen = () => {
           <ButtonText>Go Back</ButtonText>
         </Button>
 
-        <RenderHeader />
-        <CommentList {...data} />
+        <CommentList {...data} Header={RenderHeader} />
 
         {data.isBanned ? (
           <BannedText>You have been banned</BannedText>
