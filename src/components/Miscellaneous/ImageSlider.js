@@ -67,7 +67,7 @@ const ImageSlider = ({
 export default ImageSlider;
 
 const width = Dimensions.get("screen").width;
-const IMAGE_WIDTH = width - 80;
+const IMAGE_WIDTH = width - 100;
 
 const Border = styled.View`
   background-color: white;
@@ -80,6 +80,7 @@ const Border = styled.View`
 const Container = styled.View`
   display: flex;
   flex-direction: row;
+  align-self: center;
 `;
 
 const ImagesContainer = styled.ScrollView`
@@ -96,8 +97,11 @@ const UploadedImage = styled.Image`
 const PrevIconWrapper = styled.TouchableOpacity`
   position: absolute;
   align-self: center;
-  background-color: white;
+  left: 0px;
+  background-color: whitesmoke;
   border-radius: 100px;
+  border-width: 1px;
+  border-color: black;
   z-index: 40;
 `;
 
@@ -105,7 +109,9 @@ const NextIconWrapper = styled.TouchableOpacity`
   position: absolute;
   align-self: center;
   right: 0px;
-  background-color: white;
+  background-color: whitesmoke;
   border-radius: 100px;
+  border-width: 1px;
+  border-color: black;
   z-index: 40;
 `;
