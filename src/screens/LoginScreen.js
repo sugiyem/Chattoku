@@ -15,6 +15,7 @@ import {
   redirectToForgotPasswordScreen,
   redirectToSignupScreen
 } from "../services/Authentication/AuthNavigation";
+import AnimatedInput from "../components/Miscellaneous/AnimatedInput";
 
 const initialState = {
   email: "",
@@ -48,19 +49,24 @@ const LoginScreen = ({ navigation }) => {
       <RoundedImage source={require("../assets/logo.png")} />
       <AuthSystemContainer>
         <AuthTitle> Log In </AuthTitle>
-        <Text> Email </Text>
+        <AnimatedInput
+          value={credentials.email}
+          placeholder="Email"
+          onChangeText={(text) => handleChangeText(text, "email")}
+        />
+        {/* <Text> Email </Text>
         <AuthTextInput
           placeholder="email"
           value={credentials.email}
           onChangeText={(text) => handleChangeText(text, "email")}
-        />
-        <Text> Password </Text>
-        <AuthTextInput
-          placeholder="password"
+        /> */}
+        <AnimatedInput
+          placeholder="Password"
           secureTextEntry={true}
           value={credentials.password}
           onChangeText={(text) => handleChangeText(text, "password")}
         />
+
         <Button color="#0000ff" onPress={handleSubmit}>
           <ButtonText color="#ffffff">Log In</ButtonText>
         </Button>
