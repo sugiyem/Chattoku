@@ -15,62 +15,51 @@ const initialUserData = {
   username: "fetching username..."
 };
 
-const PostCard = ({
-  title,
-  content,
-  id,
-  uid,
-  forumId,
-  isOwner,
-  isBanned,
-  timestamp,
-  lastEdited,
-  isAuthorized
-}) => {
+const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(initialUserData);
   const currentUID = firebase.auth().currentUser.uid;
   const forumData = navigation.getState().routes[1].params.data;
   const setOverlayData = useContext(overlayContext);
-  const isOwnersPost = forumData.owner === uid;
+  const isOwnersPost = forumData.owner === postData.uid;
 
-  const dateText = timestamp
+  const dateText = postData.timestamp
     .toDateString()
     .split(" ")
     .filter((_, index) => index > 0)
     .join(" ");
 
-  const editedText = lastEdited
-    ? lastEdited
+  const editedText = postData.lastEdited
+    ? postData.lastEdited
         .toDateString()
         .split(" ")
         .filter((_, index) => index > 0)
         .join(" ")
     : "";
 
-  const likeBarState = {
+  const passedPostState = {
+    title: postData.title,
+    content: postData.content,
+    postId: postData.id,
     forumId: forumId,
-    postId: id
+    uid: postData.uid,
+    img: postData.img
   };
 
-  // console.log(currentUID);
-  const postData = {
-    title: title,
-    content: content,
-    postId: id,
+  const likeBarState = {
     forumId: forumId,
-    uid: uid
+    postId: postData.id
   };
 
   //Fetch username of poster
   useEffect(() => {
-    FetchInfoById(uid, setUserData);
+    FetchInfoById(postData.uid, setUserData);
   }, []);
 
   function handleCommentPress() {
     navigation.navigate("Post", {
       data: {
-        ...postData,
+        ...passedPostState,
         isOwner: isOwner,
         isBanned: isBanned,
         timestamp: dateText,
@@ -81,7 +70,7 @@ const PostCard = ({
 
   function handleEditPress() {
     navigation.navigate("EditPost", {
-      data: { ...postData, isOwner: isOwner }
+      data: { ...passedPostState, isOwner: isOwner }
     });
   }
 
@@ -89,8 +78,8 @@ const PostCard = ({
     Warning(async () => {
       await deletePost(
         forumId,
-        id,
-        uid,
+        postData.id,
+        postData.uid,
         () => {},
         (e) => Alert.alert(e)
       );
@@ -111,22 +100,22 @@ const PostCard = ({
         <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
-      <Title>{title}</Title>
-      <Content> {content} </Content>
-      {!!lastEdited && <EditedText> (Last Edited: {editedText})</EditedText>}
+      <Title>{postData.title}</Title>
+      <Content> {postData.content} </Content>
+      {!!editedText && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         <LikeBar {...likeBarState} />
         <Action onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </Action>
-        {((!isBanned && currentUID === uid) ||
+        {((!isBanned && currentUID === postData.uid) ||
           isOwner ||
           (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
           </Action>
         )}
-        {!isBanned && currentUID === uid && (
+        {!isBanned && currentUID === postData.uid && (
           <Action onPress={handleEditPress}>
             <Icon name="edit" type="material" />
           </Action>

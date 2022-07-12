@@ -27,7 +27,7 @@ const PostList = ({
   const renderItem = ({ section, item }) => {
     return (
       <PostCard
-        {...item}
+        postData={item}
         isOwner={isOwner}
         isBanned={isBanned}
         forumId={forumId}
