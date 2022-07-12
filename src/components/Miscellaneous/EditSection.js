@@ -19,12 +19,14 @@ import { writeSectionType } from "../../constants/Miscellaneous";
 import { updateUserInfo } from "../../services/Profile/HandleUpdateInfo";
 import Loading from "./Loading";
 import UploadImageModal from "./UploadImageModal";
+import { removeImageFromCloudStorage } from "../../services/Miscellaneous/HandleImage";
 
 const EditSection = ({ type, currentState, navigation }) => {
   const [info, setInfo] = useState(currentState);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const initialUsername = currentState.username;
+  const initialImage = currentState.img;
 
   const isEditProfile = type === writeSectionType.EDIT_PROFILE;
   const isEditGroup = type === writeSectionType.EDIT_GROUP;
@@ -36,7 +38,13 @@ const EditSection = ({ type, currentState, navigation }) => {
     });
   }
 
-  function removeImage() {
+  async function removeImage() {
+    if (info.img !== initialImage) {
+      setIsLoading(true);
+      await removeImageFromCloudStorage(info.img);
+    }
+
+    setIsLoading(false);
     setInfo({
       ...info,
       img: ""
@@ -69,7 +77,11 @@ const EditSection = ({ type, currentState, navigation }) => {
 
       await updateUserInfo({
         newData: info,
-        onSuccess: () => {
+        onSuccess: async () => {
+          if (info.img !== initialImage) {
+            await removeImageFromCloudStorage(initialImage);
+          }
+
           setIsLoading(false);
           navigation.navigate("ProfileHome");
         },
@@ -86,17 +98,18 @@ const EditSection = ({ type, currentState, navigation }) => {
 
       if (isEditGroup) {
         setIsLoading(true);
-        await editGroupDetails(
-          info.id,
-          info.name,
-          info.description,
-          info.img
-        ).finally(() => {
-          setIsLoading(false);
-          navigation.replace("GroupInfo", {
-            groupData: info
+        await editGroupDetails(info.id, info.name, info.description, info.img)
+          .then(async () => {
+            if (info.img !== initialImage) {
+              await removeImageFromCloudStorage(initialImage);
+            }
+          })
+          .finally(() => {
+            setIsLoading(false);
+            navigation.replace("GroupInfo", {
+              groupData: info
+            });
           });
-        });
       } else {
         setIsLoading(true);
         await createGroup(info.name, info.description, info.img).finally(() => {
@@ -114,11 +127,23 @@ const EditSection = ({ type, currentState, navigation }) => {
           isVisible={modalVisible}
           onClose={closeModal}
           removeImage={removeImage}
+          currentImage={info.img}
+          initialImage={initialImage}
           setImage={(imgUrl) => handleChangeText(imgUrl, "img")}
           updateLoadingState={setIsLoading}
         />
 
-        <Button onPress={() => navigation.goBack()}>
+        <Button
+          onPress={async () => {
+            if (info.img !== initialImage) {
+              setIsLoading(true);
+              await removeImageFromCloudStorage(info.img);
+            }
+
+            setIsLoading(false);
+            navigation.goBack();
+          }}
+        >
           <ButtonText> Go back</ButtonText>
         </Button>
 
