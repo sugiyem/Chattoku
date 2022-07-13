@@ -1,11 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
-import { useRef, useState } from "react";
-import { Image, Alert, StyleSheet, Dimensions } from "react-native";
+import { useRef, useState, useEffect } from "react";
+import {
+  Image,
+  Alert,
+  StyleSheet,
+  Dimensions,
+  BackHandler
+} from "react-native";
 import { editPost, addPost } from "../../../services/Forum/HandleForumPost";
 import { renderType } from "../../../constants/Forum";
 import styled from "styled-components/native";
 import {
   pickImageFromLibrary,
+  removeAllImageFromCloud,
   removeImageFromCloudStorage,
   uploadImage
 } from "../../../services/Miscellaneous/HandleImage";
@@ -38,13 +45,22 @@ const RenderPostScreen = ({ renderScreenType }) => {
 
   const [imageIndex, setImageIndex] = useState(0);
   const [post, setPost] = useState(initialPostState);
+  const [allImg, setAllImg] = useState(initialPostState.img);
+  const initialImg = initialPostState.img;
   const ImagesContainerRef = useRef(null);
   const forumData = navigation.getState().routes[1].params.data;
   const isImageUploaded = post.img.length > 0;
   const title = isCreateScreen ? "Create a Post in" : "Edit Your Post in";
   const submitButtonText = isCreateScreen ? "Post To Forum" : "Confirm Edit";
 
-  console.log("Page Index: " + imageIndex);
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleCancel);
+
+    return () => {
+      console.log("test");
+      BackHandler.removeEventListener("hardwareBackPress", handleCancel);
+    };
+  }, [post.img, allImg]);
 
   function handleChange(text, name) {
     setPost({
@@ -54,20 +70,19 @@ const RenderPostScreen = ({ renderScreenType }) => {
   }
 
   function handleSubmit() {
+    const unusedImg = allImg.filter((img) => !post.img.includes(img));
+
+    const onSuccess = () => {
+      removeAllImageFromCloud(unusedImg);
+      navigation.navigate("Forum", { data: forumData });
+    };
+
     isCreateScreen
-      ? addPost(
-          forumData.id,
-          post,
-          forumData.title,
-          () => navigation.navigate("Forum", { data: forumData }),
-          (e) => Alert.alert(e)
+      ? addPost(forumData.id, post, forumData.title, onSuccess, (e) =>
+          Alert.alert(e)
         )
-      : editPost(
-          postData.forumId,
-          postData.postId,
-          post,
-          () => navigation.navigate("Forum", { data: forumData }),
-          (e) => Alert.alert(e)
+      : editPost(postData.forumId, postData.postId, post, onSuccess, (e) =>
+          Alert.alert(e)
         );
   }
 
@@ -82,16 +97,22 @@ const RenderPostScreen = ({ renderScreenType }) => {
         uri,
         () => {},
         () => {},
-        (src) => setPost({ ...post, img: [...post.img, src] }),
+        (src) => {
+          setPost({ ...post, img: [...post.img, src] });
+          setAllImg([...allImg, src]);
+        },
         "Image Added Successfully"
       )
     );
   }
 
-  function handleDeleteImage() {
-    //Users shouldn't know about this background process
-    removeImageFromCloudStorage(post.img[imageIndex]);
+  function handleCancel() {
+    const unusedImg = allImg.filter((img) => !initialImg.includes(img));
+    removeAllImageFromCloud(unusedImg);
+    navigation.goBack();
+  }
 
+  function handleDeleteImage() {
     const filteredImg = post.img.filter((_, index) => index !== imageIndex);
     setPost({ ...post, img: filteredImg });
     const newImageIndex = Math.min(imageIndex, filteredImg.length - 1);
@@ -105,7 +126,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
 
   return (
     <Container>
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={handleCancel}>
         <ButtonText>Go Back</ButtonText>
       </Button>
       <Title>
