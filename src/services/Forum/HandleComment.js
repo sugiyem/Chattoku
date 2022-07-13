@@ -9,6 +9,7 @@ export async function AddComment(
   app = firebase
 ) {
   const currentUID = app.auth().currentUser.uid;
+  const time = new Date();
 
   await app
     .firestore()
@@ -17,7 +18,7 @@ export async function AddComment(
     .collection("posts")
     .doc(postId)
     .collection("comments")
-    .add({ content: comment, uid: currentUID })
+    .add({ content: comment, uid: currentUID, timestamp: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }
@@ -52,6 +53,8 @@ export async function EditComment(
   onError,
   app = firebase
 ) {
+  const time = new Date();
+
   await app
     .firestore()
     .collection("forums")
@@ -60,7 +63,7 @@ export async function EditComment(
     .doc(postId)
     .collection("comments")
     .doc(commentId)
-    .update({ content: comment })
+    .update({ content: comment, lastEdited: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
 }

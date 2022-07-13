@@ -2,9 +2,9 @@ import { firebase } from "../Firebase/Config";
 
 export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
+  return db
     .collection("users")
     .doc(userID)
     .collection("groupJoined")
@@ -17,23 +17,26 @@ export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
           groupIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("groups")
-          .orderBy("name", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (groupIDLists.includes(snap.id)) {
-                groupInfoLists.push({
-                  ...snap.data(),
-                  id: snap.id
-                });
+        const groupsRef = db.collection("groups");
+        const promisedData = groupIDLists.map(async (groupID) => {
+          await groupsRef
+            .doc(groupID)
+            .get()
+            .then((doc) => {
+              // filter non-exists doc
+              if (doc.exists) {
+                groupInfoLists.push({ ...doc.data(), id: doc.id });
               }
             });
-          });
+        });
 
-        onSuccess(groupInfoLists);
+        await Promise.all(promisedData).then(() => {
+          // Sort groups by name
+          groupInfoLists.sort((x, y) => (x.name < y.name ? -1 : 1));
+          console.log(groupInfoLists);
+
+          onSuccess(groupInfoLists);
+        });
       },
       (error) => {
         onFailure(error);
@@ -43,9 +46,9 @@ export function fetchGroup({ onSuccess, onFailure, app = firebase }) {
 
 export function fetchGroupInvitation({ onSuccess, onFailure, app = firebase }) {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
+  return db
     .collection("users")
     .doc(userID)
     .collection("groupInvited")
@@ -58,25 +61,24 @@ export function fetchGroupInvitation({ onSuccess, onFailure, app = firebase }) {
           groupIDLists.push(documentSnapshot.id);
         });
 
-        console.log(groupIDLists);
-
-        await app
-          .firestore()
-          .collection("groups")
-          .orderBy("name", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (groupIDLists.includes(snap.id)) {
-                groupInfoLists.push({
-                  ...snap.data(),
-                  id: snap.id
-                });
+        const groupsRef = db.collection("groups");
+        const promisedData = groupIDLists.map(async (groupID) => {
+          await groupsRef
+            .doc(groupID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                groupInfoLists.push({ ...doc.data(), id: doc.id });
               }
             });
-          });
+        });
 
-        onSuccess(groupInfoLists);
+        await Promise.all(promisedData).then(() => {
+          // Sort groups by name
+          groupInfoLists.sort((x, y) => (x.name < y.name ? -1 : 1));
+
+          onSuccess(groupInfoLists);
+        });
       },
       (error) => {
         onFailure(error);
@@ -91,9 +93,9 @@ export function checkGroupInvitation({
   app = firebase
 }) {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
+  return db
     .collection("users")
     .doc(userID)
     .collection("groupInvited")
@@ -107,23 +109,22 @@ export function checkGroupInvitation({
             groupIDLists.push(documentSnapshot.id);
           });
 
-          await app
-            .firestore()
-            .collection("groups")
-            .get()
-            .then((snaps) => {
-              snaps.forEach((snap) => {
-                if (groupIDLists.includes(snap.id)) {
+          const groupsRef = db.collection("groups");
+          const promisedData = groupIDLists.map(async (groupID) => {
+            await groupsRef
+              .doc(groupID)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
                   isInvitationExist = true;
                 }
               });
-            });
+          });
 
-          if (isInvitationExist) {
-            onFound();
-          } else {
-            onNotFound();
-          }
+          await Promise.all(promisedData).then(() => {
+            console.log(isInvitationExist);
+            isInvitationExist ? onFound() : onNotFound();
+          });
         } else {
           onNotFound();
         }
@@ -167,39 +168,43 @@ export function fetchGroupMembers({
   onFailure,
   app = firebase
 }) {
-  return app
-    .firestore()
+  const db = app.firestore();
+
+  return db
     .collection("groups")
     .doc(groupID)
     .collection("members")
     .onSnapshot(
       async (querySnapshot) => {
-        const memberID = [];
-        const memberInfo = [];
+        const memberIDLists = [];
+        const memberInfoLists = [];
 
         querySnapshot.forEach((documentSnapshot) => {
-          memberID.push(documentSnapshot.id);
+          memberIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (memberID.includes(snap.id)) {
-                memberInfo.push({
-                  id: snap.id,
-                  username: snap.data().username,
-                  bio: snap.data().bio,
-                  img: snap.data().img
+        const promisedData = memberIDLists.map(async (memberID) => {
+          await db
+            .collection("users")
+            .doc(memberID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                memberInfoLists.push({
+                  id: doc.id,
+                  username: doc.data().username,
+                  bio: doc.data().bio,
+                  img: doc.data().img
                 });
               }
             });
-          });
+        });
 
-        onSuccess(memberInfo);
+        await Promise.all(promisedData).then(() => {
+          memberInfoLists.sort((x, y) => (x.username < y.username ? -1 : 1));
+
+          onSuccess(memberInfoLists);
+        });
       },
       (error) => {
         onFailure(error);
@@ -213,38 +218,44 @@ export function fetchPendingGroupMembers({
   onFailure,
   app = firebase
 }) {
-  return app
-    .firestore()
+  const db = app.firestore();
+
+  return db
     .collection("groups")
     .doc(groupID)
     .collection("pendingMembers")
     .onSnapshot(
       async (querySnapshot) => {
-        const pendingMemberID = [];
-        const pendingMemberInfo = [];
+        const pendingMemberIDLists = [];
+        const pendingMemberInfoLists = [];
 
         querySnapshot.forEach((documentSnapshot) => {
-          pendingMemberID.push(documentSnapshot.id);
+          pendingMemberIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (pendingMemberID.includes(snap.id)) {
-                pendingMemberInfo.push({
-                  id: snap.id,
-                  username: snap.data().username,
-                  img: snap.data().img
+        const promisedData = pendingMemberIDLists.map(async (memberID) => {
+          await db
+            .collection("users")
+            .doc(memberID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                pendingMemberInfoLists.push({
+                  id: doc.id,
+                  username: doc.data().username,
+                  img: doc.data().img
                 });
               }
             });
-          });
+        });
 
-        onSuccess(pendingMemberInfo);
+        await Promise.all(promisedData).then(() => {
+          pendingMemberInfoLists.sort((x, y) =>
+            x.username < y.username ? -1 : 1
+          );
+
+          onSuccess(pendingMemberInfoLists);
+        });
       },
       (error) => {
         onFailure(error);

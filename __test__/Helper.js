@@ -45,6 +45,7 @@ export const fakeFirebase = {
               timestamp: new Timestamp(1, 1)
             }
           ]
+          blockedUsers: [{ id: "random-2" }]
         }
       },
       {
@@ -79,6 +80,19 @@ export const fakeFirebase = {
         id: "random",
         username: "Anonim",
         img: "anonim-img"
+      },
+      {
+        id: "random-2",
+        username: "Anonim-2",
+        img: "anonim-img-2"
+      },
+      {
+        id: "random-3",
+        username: "Anonim-3",
+        img: "anonim-img-3",
+        _collections: {
+          blockedUsers: [{ id: "yem123" }]
+        }
       }
     ],
     groups: [
@@ -120,6 +134,7 @@ export const fakeFirebase = {
         img: "third-image-link",
         lastMessageAt: new Timestamp(2, 2),
         lastMessageText: "other-group-message",
+        lastMessageSenderID: "yem456",
         _collections: {
           admins: [{ id: "yem123" }, { id: "yem456" }],
           members: [
@@ -138,6 +153,7 @@ export const fakeFirebase = {
         id: "yem123_yem456",
         lastMessageAt: new Timestamp(1, 1),
         lastMessageText: "2nd-message",
+        lastMessageSenderID: "yem123",
         showMessageToFirstUser: true,
         showMessageToSecondUser: true,
         showNotifToFirstUser: false,
@@ -152,7 +168,8 @@ export const fakeFirebase = {
       {
         id: "imba_yem123",
         lastMessageAt: new Timestamp(2, 2),
-        lastMessageText: "special-message",
+        lastMessageText: "",
+        lastMessageSenderID: "imba",
         showMessageToFirstUser: true,
         showMessageToSecondUser: true,
         showNotifToFirstUser: false,

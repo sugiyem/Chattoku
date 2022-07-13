@@ -30,23 +30,26 @@ describe("Test active chats fetching", () => {
     });
 
     await flushPromises();
+    console.log(result);
 
     expect(result).toEqual([
       {
         showNotif: true,
         lastMessageTime: new Timestamp(2, 2).toDate(),
-        lastMessage: "special-message",
+        lastMessage: "Elbert has sent an image",
         id: "imba",
         username: "Elbert",
-        img: "elbert-img"
+        img: "elbert-img",
+        bio: undefined
       },
       {
         showNotif: false,
         lastMessageTime: new Timestamp(1, 1).toDate(),
-        lastMessage: "2nd-message",
+        lastMessage: "Sugiyem: 2nd-message",
         id: "yem456",
         username: "Yemima",
-        img: "yemima-img"
+        img: "yemima-img",
+        bio: undefined
       }
     ]);
   });
@@ -69,7 +72,8 @@ describe("Test active chats fetching", () => {
         id: "group3",
         name: "Third group",
         img: "third-image-link",
-        lastMessage: "other-group-message",
+        description: "This is a group",
+        lastMessage: "Yemima: other-group-message",
         lastMessageTime: new Timestamp(2, 2).toDate(),
         showNotif: true
       }

@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, LogBox } from "react-native";
+import { ChatContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchGroupChatMessages } from "../../services/Chat/FetchChatMessages";
-import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import FetchUserInfo, {
+  FetchAllUserInfos
+} from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import ChatHeader from "../../components/Chat/ChatHeader";
 
 const initialState = {
   username: "",
   img: ""
 };
 
+// Ignore warnings from Animated (Because of Gifted Chat)
+LogBox.ignoreLogs(["Animated"]);
+
 const GroupChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
+  const [allUserInfos, setAllUserInfos] = useState([]);
   const [messages, setMessages] = useState([]);
 
   const userID = firebase.auth().currentUser.uid;
-  const groupID = route.params.groupID;
-  const groupName = route.params.groupName;
+  const groupData = route.params.groupData;
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setUserInfo(data);
-      },
+      onSuccesfulFetch: setUserInfo,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -31,11 +36,13 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
+    return FetchAllUserInfos(setAllUserInfos);
+  }, []);
+
+  useEffect(() => {
     return fetchGroupChatMessages({
-      groupID: groupID,
-      onSuccess: (data) => {
-        setMessages(data);
-      },
+      groupID: groupData.id,
+      onSuccess: setMessages,
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -43,46 +50,24 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("GroupChatList")}
-      >
-        <Text style={styles.text}>
-          {"Currently in a group chat with " +
-            groupName +
-            ".\n Click here to go to the group chat list"}
-        </Text>
-      </TouchableOpacity>
+    <ChatContainer>
+      <ChatHeader
+        type={chatType.GROUP_CHAT}
+        item={groupData}
+        navigation={navigation}
+      />
 
       <ChatSections
         type={chatType.GROUP_CHAT}
         userData={{ ...userInfo, id: userID }}
-        receiverID={groupID}
+        receiverID={groupData.id}
         messages={messages}
         updateMessages={setMessages}
+        allUserInfos={allUserInfos}
+        navigation={navigation}
       />
-    </View>
+    </ChatContainer>
   );
 };
 
 export default GroupChatDetailScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  },
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch"
-  },
-  text: {
-    textAlign: "center"
-  }
-});

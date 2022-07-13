@@ -1,5 +1,4 @@
-import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
 import { ListItem } from "react-native-elements";
 import {
   acceptFriendRequest,
@@ -7,27 +6,49 @@ import {
   declineFriendRequest,
   removeFriend
 } from "../../services/Friend/HandleFriend";
+import {
+  blockUser,
+  unblockUser
+} from "../../services/Friend/HandleBlockedUser";
 import { contactType } from "../../constants/Contact";
 import { friendshipType } from "../../constants/Friend";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
+import Caution from "../Miscellaneous/Caution";
 
-export default RenderUserLists = ({
-  type,
-  items,
-  navigation,
-  expandStatus,
-  changeExpand
-}) => {
-  const buttonDetails = [
+export default RenderUserLists = ({ type, item, navigation }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  let buttonDetails = [
     {
       title: "Message",
-      icon: "message",
-      onPress: (item) =>
+      type: "material-community",
+      icon: "message-processing-outline",
+      color: "blue",
+      onPress: () => {
+        const data = {
+          id: item.id,
+          username: item.username,
+          bio: item.bio,
+          img: item.img
+        };
+
         navigation.navigate("Chat", {
           screen: "ChatDetail",
-          params: { recipientID: item.id, recipientUsername: item.username }
-        })
+          initial: false,
+          params: {
+            userData: data
+          }
+        });
+      }
+    },
+    {
+      title: "Block",
+      type: "material",
+      icon: "block",
+      color: "red",
+      onPress: () =>
+        Caution("This user will be blocked", () => blockUser(item.id))
     }
   ];
 
@@ -36,28 +57,20 @@ export default RenderUserLists = ({
       buttonDetails.push(
         {
           title: "View details",
-          icon: "folder-open",
-          onPress: (item) =>
-            navigation.navigate("FriendInfo", { friendData: item })
+          type: "ionicon",
+          icon: "open-outline",
+          color: "blue",
+          onPress: () => navigation.navigate("FriendInfo", { friendData: item })
         },
         {
           title: "Unfriend",
-          icon: "person-remove",
-          onPress: (item) => {
-            Alert.alert(
-              "This user will be removed from your friend's list",
-              "This action is irreversible. Do you want to continue?",
-              [
-                {
-                  text: "Cancel"
-                },
-                {
-                  text: "Continue",
-                  onPress: () => removeFriend(item.id)
-                }
-              ]
-            );
-          }
+          type: "ionicon",
+          icon: "ios-person-remove-outline",
+          color: "red",
+          onPress: () =>
+            Caution("This user will be removed from your friend's list", () =>
+              removeFriend(item.id)
+            )
         }
       );
       break;
@@ -65,22 +78,13 @@ export default RenderUserLists = ({
     case friendshipType.WAITING_RESPONSE:
       buttonDetails.push({
         title: "Cancel request",
-        icon: "close",
-        onPress: (item) => {
-          Alert.alert(
-            "This friend request will be removed",
-            "This action is irreversible. Do you want to continue?",
-            [
-              {
-                text: "Cancel"
-              },
-              {
-                text: "Continue",
-                onPress: () => cancelFriendRequest(item.id)
-              }
-            ]
-          );
-        }
+        type: "material-community",
+        icon: "account-cancel-outline",
+        color: "red",
+        onPress: () =>
+          Caution("This friend request will be removed", () =>
+            cancelFriendRequest(item.id)
+          )
       });
       break;
 
@@ -88,50 +92,47 @@ export default RenderUserLists = ({
       buttonDetails.push(
         {
           title: "Accept request",
+          type: "material",
           icon: "check",
-          onPress: (item) => acceptFriendRequest(item.id)
+          color: "green",
+          onPress: () => acceptFriendRequest(item.id)
         },
         {
           title: "Decline request",
+          type: "material",
           icon: "close",
-          onPress: (item) => declineFriendRequest(item.id)
+          color: "red",
+          onPress: () =>
+            Caution("This friend request will be declined", () =>
+              declineFriendRequest(item.id)
+            )
         }
       );
       break;
-  }
 
-  const onRightClick = (index) => {
-    if (expandStatus(index)) {
-      changeExpand(null);
-    } else {
-      changeExpand(index);
-    }
-  };
+    case friendshipType.BLOCKED:
+      buttonDetails = [
+        {
+          title: "Unblock",
+          type: "material-community",
+          icon: "account-lock-open-outline",
+          color: "green",
+          onPress: () =>
+            Caution("This user will be unblocked", () => unblockUser(item.id))
+        }
+      ];
+  }
 
   return (
-    <View style={styles.container}>
-      {items.map((item, index) => (
-        <ListItem.Accordion
-          key={index}
-          bottomDivider
-          content={<ContactBar type={contactType.USER} item={item} />}
-          isExpanded={expandStatus(index)}
-          onPress={() => onRightClick(index)}
-        >
-          {expandStatus(index) && (
-            <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
-          )}
-        </ListItem.Accordion>
-      ))}
-    </View>
+    <ListItem.Accordion
+      bottomDivider
+      content={<ContactBar type={contactType.USER} item={item} />}
+      isExpanded={isExpanded}
+      onPress={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded && (
+        <ContactButtonGroup item={item} buttonDetails={buttonDetails} />
+      )}
+    </ListItem.Accordion>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5
-  }
-});

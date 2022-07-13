@@ -2,10 +2,9 @@ import { firebase } from "../Firebase/Config";
 
 export const fetchFriend = ({ onSuccess, onFailure, app = firebase }) => {
   const userID = app.auth().currentUser.uid;
+  const usersRef = app.firestore().collection("users");
 
-  return app
-    .firestore()
-    .collection("users")
+  return usersRef
     .doc(userID)
     .collection("friends")
     .onSnapshot(
@@ -17,20 +16,23 @@ export const fetchFriend = ({ onSuccess, onFailure, app = firebase }) => {
           friendIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (friendIDLists.includes(snap.id)) {
-                friendInfoLists.push(snap.data());
+        const promisedData = friendIDLists.map(async (friendID) => {
+          await usersRef
+            .doc(friendID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                friendInfoLists.push(doc.data());
               }
             });
-          });
+        });
 
-        onSuccess(friendInfoLists);
+        await Promise.all(promisedData).then(() => {
+          // Sort friends by username
+          friendInfoLists.sort((x, y) => (x.username < y.username ? -1 : 1));
+
+          onSuccess(friendInfoLists);
+        });
       },
       (error) => {
         onFailure(error);
@@ -44,10 +46,9 @@ export const fetchFriendRequestsSent = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const usersRef = app.firestore().collection("users");
 
-  return app
-    .firestore()
-    .collection("users")
+  return usersRef
     .doc(userID)
     .collection("friendRequestsSent")
     .onSnapshot(
@@ -59,20 +60,25 @@ export const fetchFriendRequestsSent = ({
           pendingFriendIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (pendingFriendIDLists.includes(snap.id)) {
-                pendingFriendInfoLists.push(snap.data());
+        const promisedData = pendingFriendIDLists.map(async (friendID) => {
+          await usersRef
+            .doc(friendID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                pendingFriendInfoLists.push(doc.data());
               }
             });
-          });
+        });
 
-        onSuccess(pendingFriendInfoLists);
+        await Promise.all(promisedData).then(() => {
+          // Sort pending friends by username
+          pendingFriendInfoLists.sort((x, y) =>
+            x.username < y.username ? -1 : 1
+          );
+
+          onSuccess(pendingFriendInfoLists);
+        });
       },
       (error) => {
         onFailure(error);
@@ -86,6 +92,7 @@ export const fetchFriendRequestsReceived = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const usersRef = app.firestore().collection("users");
 
   return app
     .firestore()
@@ -101,20 +108,25 @@ export const fetchFriendRequestsReceived = ({
           pendingFriendIDLists.push(documentSnapshot.id);
         });
 
-        await app
-          .firestore()
-          .collection("users")
-          .orderBy("username", "asc")
-          .get()
-          .then((snaps) => {
-            snaps.forEach((snap) => {
-              if (pendingFriendIDLists.includes(snap.id)) {
-                pendingFriendInfoLists.push(snap.data());
+        const promisedData = pendingFriendIDLists.map(async (friendID) => {
+          await usersRef
+            .doc(friendID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                pendingFriendInfoLists.push(doc.data());
               }
             });
-          });
+        });
 
-        onSuccess(pendingFriendInfoLists);
+        await Promise.all(promisedData).then(() => {
+          // Sort pending friends by username
+          pendingFriendInfoLists.sort((x, y) =>
+            x.username < y.username ? -1 : 1
+          );
+
+          onSuccess(pendingFriendInfoLists);
+        });
       },
       (error) => {
         onFailure(error);

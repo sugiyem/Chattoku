@@ -2,7 +2,7 @@ import { Icon, ListItem } from "react-native-elements";
 
 const ContactButtonGroup = ({ item, buttonDetails }) =>
   buttonDetails.map((detail, id) => (
-    <ListItem key={id} bottomDivider onPress={() => detail.onPress(item)}>
+    <ListItem key={id} bottomDivider onPress={detail.onPress}>
       <Icon
         type={detail.type}
         name={detail.icon}

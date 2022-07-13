@@ -23,6 +23,8 @@ const PostCard = ({
   forumId,
   isOwner,
   isBanned,
+  timestamp,
+  lastEdited,
   isAuthorized
 }) => {
   const navigation = useNavigation();
@@ -31,6 +33,20 @@ const PostCard = ({
   const forumData = navigation.getState().routes[1].params.data;
   const setOverlayData = useContext(overlayContext);
   const isOwnersPost = forumData.owner === uid;
+
+  const dateText = timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
+
+  const editedText = lastEdited
+    ? lastEdited
+        .toDateString()
+        .split(" ")
+        .filter((_, index) => index > 0)
+        .join(" ")
+    : "";
 
   const likeBarState = {
     forumId: forumId,
@@ -53,7 +69,13 @@ const PostCard = ({
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: { ...postData, isOwner: isOwner, isBanned: isBanned }
+      data: {
+        ...postData,
+        isOwner: isOwner,
+        isBanned: isBanned,
+        timestamp: dateText,
+        lastEdited: editedText
+      }
     });
   }
 
@@ -86,10 +108,12 @@ const PostCard = ({
           }
         />
         <Text> {userData.username}</Text>
+        <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
+      {!!lastEdited && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         <LikeBar {...likeBarState} />
         <Action onPress={handleCommentPress}>
@@ -121,6 +145,16 @@ const Profile = styled.Image`
   border-radius: 20px;
   border-width: 1px;
   border-color: white;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
 `;
 
 const Container = styled.View`
@@ -160,8 +194,8 @@ const Content = styled.Text`
 `;
 
 const ActionBar = styled.View`
+  width: 100%;
   flex-direction: row;
-  flex: 1;
   margin-top: 10px;
   justify-content: space-evenly;
 `;

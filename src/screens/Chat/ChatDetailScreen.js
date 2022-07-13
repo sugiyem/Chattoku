@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, LogBox } from "react-native";
+import { ChatContainer } from "../../styles/ChatStyles";
 import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
+import {
+  isBlockedByCurrentUser,
+  isCurrentUserBlocked
+} from "../../services/Friend/HandleBlockedUser";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
+import ChatHeader from "../../components/Chat/ChatHeader";
 import { useIsFocused } from "@react-navigation/native";
 
 const initialState = {
@@ -12,24 +18,26 @@ const initialState = {
   img: ""
 };
 
+// Ignore warnings from Animated (Because of Gifted Chat)
+LogBox.ignoreLogs(["Animated"]);
+
 const ChatDetailScreen = ({ navigation, route }) => {
   const userID = firebase.auth().currentUser.uid;
-  const recipientID = route.params.recipientID;
-  const recipientUsername = route.params.recipientUsername;
+  const recipientData = route.params.userData;
+  const recipientID = recipientData.id;
+
   const [userInfo, setUserInfo] = useState(initialState);
   const [messages, setMessages] = useState([]);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [isBlocking, setIsBlocking] = useState(false);
   //otherUserID is used to optimize firebase use
   const [otherUserID, setOtherUserID] = useState("");
   const isFocused = useIsFocused();
 
   useEffect(() => {
     return FetchUserInfo({
-      onSuccesfulFetch: (data) => {
-        setUserInfo(data);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onSuccesfulFetch: setUserInfo,
+      onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
 
@@ -42,27 +50,34 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
     return fetchPrivateChatMessages({
       recipientID: recipientID,
-      onSuccesfulFetch: (data) => {
-        setMessages(data);
-      },
-      onFailure: (error) => {
-        Alert.alert(error.message);
-      }
+      onSuccesfulFetch: setMessages,
+      onFailure: (error) => Alert.alert(error.message)
     });
   }, [isFocused]);
 
+  useEffect(() => {
+    return isBlockedByCurrentUser(
+      recipientID,
+      () => setIsBlocking(true),
+      () => setIsBlocking(false)
+    );
+  }, []);
+
+  useEffect(() => {
+    return isCurrentUserBlocked(
+      recipientID,
+      () => setIsBlocked(true),
+      () => setIsBlocked(false)
+    );
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("ChatList")}
-      >
-        <Text style={styles.text}>
-          {"Currently chatting with " +
-            recipientUsername +
-            ".\n Click here to go to the private chat list"}
-        </Text>
-      </TouchableOpacity>
+    <ChatContainer>
+      <ChatHeader
+        type={chatType.PRIVATE_CHAT}
+        item={recipientData}
+        navigation={navigation}
+      />
 
       <ChatSections
         type={chatType.PRIVATE_CHAT}
@@ -70,28 +85,11 @@ const ChatDetailScreen = ({ navigation, route }) => {
         receiverID={recipientID}
         messages={messages}
         updateMessages={setMessages}
+        isBlocking={isBlocking}
+        isBlocked={isBlocked}
       />
-    </View>
+    </ChatContainer>
   );
 };
 
 export default ChatDetailScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "darkcyan",
-    padding: 5
-  },
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "aquamarine",
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch"
-  },
-  text: {
-    textAlign: "center"
-  }
-});

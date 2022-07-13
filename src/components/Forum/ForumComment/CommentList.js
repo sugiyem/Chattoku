@@ -12,7 +12,10 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
     return FetchComment(
       forumId,
       postId,
-      (data) => setComments(data),
+      (data) => {
+        data.sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1));
+        setComments(data);
+      },
       (error) => Alert.alert(error)
     );
   }, []);
@@ -38,7 +41,6 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
   return (
     <>
       <SectionList
-        key={comments}
         removeClippedSubviews={true}
         sections={[{ data: comments }]}
         renderItem={renderItem}

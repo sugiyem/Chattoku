@@ -11,11 +11,11 @@ export async function addPost(
   app = firebase
 ) {
   const currentUID = app.auth().currentUser.uid;
+  const time = new Date();
   const db = app.firestore();
   const batch = db.batch();
   const postsRef = db.collection("forums").doc(forumId).collection("posts");
   const newPostID = postsRef.doc().id;
-  const postDate = new Date();
 
   const userPostsRef = db
     .collection("users")
@@ -23,11 +23,15 @@ export async function addPost(
     .collection("posts")
     .doc(forumId + newPostID);
 
-  batch.set(postsRef.doc(newPostID), { ...post, uid: currentUID });
+  batch.set(postsRef.doc(newPostID), {
+    ...post,
+    uid: currentUID,
+    timestamp: time
+  });
   batch.set(userPostsRef, {
     postId: newPostID,
     forumId: forumId,
-    timestamp: postDate
+    timestamp: time
   });
 
   //Create post
@@ -39,7 +43,7 @@ export async function addPost(
     })
     .catch((e) => onError(e));
 
-  return { postID: newPostID, time: postDate };
+  return { postID: newPostID, time: time };
 }
 
 export async function deletePost(
@@ -99,6 +103,7 @@ export async function editPost(
   app = firebase
 ) {
   const currentUID = app.auth().currentUser.uid;
+  const time = new Date();
 
   await app
     .firestore()
@@ -106,7 +111,7 @@ export async function editPost(
     .doc(forumId)
     .collection("posts")
     .doc(postId)
-    .update(post)
+    .update({ ...post, lastEdited: time })
     .then(onSuccess)
     .catch((e) => onError(e));
 }
