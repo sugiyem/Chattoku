@@ -48,7 +48,7 @@ describe("Test forum post system", () => {
     expect(mockBatchSet).toHaveBeenNthCalledWith(
       1,
       db.collection("forums").doc("forum-1").collection("posts").doc(postID),
-      { ...samplePostData, uid: userID }
+      { ...samplePostData, uid: userID, timestamp: time }
     );
     expect(mockBatchSet).toHaveBeenNthCalledWith(
       2,
@@ -96,7 +96,7 @@ describe("Test forum post system", () => {
   });
 
   test("Can edit post", async () => {
-    await editPost(
+    const editPostTime = await editPost(
       "forum-1",
       "forum-1-post-2",
       samplePostData,
@@ -107,7 +107,10 @@ describe("Test forum post system", () => {
 
     expect(mockCollection).toHaveBeenLastCalledWith("posts");
     expect(mockDoc).toHaveBeenLastCalledWith("forum-1-post-2");
-    expect(mockUpdate).toHaveBeenCalledWith(samplePostData);
+    expect(mockUpdate).toHaveBeenCalledWith({
+      ...samplePostData,
+      lastEdited: editPostTime
+    });
   });
 
   test("Can get user's like status of current post", async () => {

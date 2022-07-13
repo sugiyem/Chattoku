@@ -21,6 +21,8 @@ export async function AddComment(
     .add({ content: comment, uid: currentUID, timestamp: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
+
+  return time;
 }
 
 export async function DeleteComment(
@@ -66,4 +68,6 @@ export async function EditComment(
     .update({ content: comment, lastEdited: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
+
+  return time;
 }

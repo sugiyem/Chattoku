@@ -25,7 +25,7 @@ describe("Test comment system", () => {
   });
 
   test("Can add comment to a specific post", async () => {
-    await AddComment(
+    const addCommentTime = await AddComment(
       "forum-1",
       "forum-1-post-1",
       "new comment",
@@ -39,7 +39,8 @@ describe("Test comment system", () => {
     expect(mockCollection).toHaveBeenLastCalledWith("comments");
     expect(mockAdd).toHaveBeenCalledWith({
       content: "new comment",
-      uid: userID
+      uid: userID,
+      timestamp: addCommentTime
     });
   });
 
@@ -61,7 +62,7 @@ describe("Test comment system", () => {
   });
 
   test("Can edit comment", async () => {
-    await EditComment(
+    const editCommentTime = await EditComment(
       "forum-1",
       "forum-1-post-1",
       "comment-1",
@@ -75,6 +76,9 @@ describe("Test comment system", () => {
     expect(mockDoc).toHaveBeenNthCalledWith(2, "forum-1-post-1");
     expect(mockDoc).toHaveBeenNthCalledWith(3, "comment-1");
     expect(mockCollection).toHaveBeenLastCalledWith("comments");
-    expect(mockUpdate).toHaveBeenCalledWith({ content: "Edited comment" });
+    expect(mockUpdate).toHaveBeenCalledWith({
+      content: "Edited comment",
+      lastEdited: editCommentTime
+    });
   });
 });

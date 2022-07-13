@@ -102,7 +102,6 @@ export async function editPost(
   onError,
   app = firebase
 ) {
-  const currentUID = app.auth().currentUser.uid;
   const time = new Date();
 
   await app
@@ -114,6 +113,8 @@ export async function editPost(
     .update({ ...post, lastEdited: time })
     .then(onSuccess)
     .catch((e) => onError(e));
+
+  return time;
 }
 
 export async function getLikeStatus(
