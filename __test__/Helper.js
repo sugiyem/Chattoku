@@ -44,7 +44,7 @@ export const fakeFirebase = {
               postId: "forum-2-post-1",
               timestamp: new Timestamp(1, 1)
             }
-          ]
+          ],
           blockedUsers: [{ id: "random-2" }]
         }
       },
