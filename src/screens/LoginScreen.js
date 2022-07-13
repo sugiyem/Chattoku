@@ -1,10 +1,15 @@
 import { Text } from "react-native";
 import { useState, useEffect } from "react";
 import {
+  AppLogo,
   AuthContainer,
+  AuthPrimaryButton,
+  AuthPrimaryText,
+  AuthSecondaryButton,
+  AuthSecondaryText,
   AuthSystemContainer,
-  AuthTextInput,
-  AuthTitle
+  AuthTitle,
+  GradientBackground
 } from "../styles/AuthStyles";
 import { Button, ButtonText, RoundedImage } from "../styles/GeneralStyles";
 import {
@@ -16,6 +21,7 @@ import {
   redirectToSignupScreen
 } from "../services/Authentication/AuthNavigation";
 import AnimatedInput from "../components/Miscellaneous/AnimatedInput";
+import { LinearGradient } from "expo-linear-gradient";
 
 const initialState = {
   email: "",
@@ -45,49 +51,45 @@ const LoginScreen = ({ navigation }) => {
   // console.log(credentials);
 
   return (
-    <AuthContainer>
-      <RoundedImage source={require("../assets/logo.png")} />
-      <AuthSystemContainer>
-        <AuthTitle> Log In </AuthTitle>
-        <AnimatedInput
-          value={credentials.email}
-          placeholder="Email"
-          onChangeText={(text) => handleChangeText(text, "email")}
-        />
-        {/* <Text> Email </Text>
-        <AuthTextInput
-          placeholder="email"
-          value={credentials.email}
-          onChangeText={(text) => handleChangeText(text, "email")}
-        /> */}
-        <AnimatedInput
-          placeholder="Password"
-          secureTextEntry={true}
-          value={credentials.password}
-          onChangeText={(text) => handleChangeText(text, "password")}
-        />
+    <GradientBackground>
+      <AuthContainer>
+        <AppLogo source={require("../assets/logo.png")} />
+        <AuthSystemContainer>
+          <AuthTitle> Log In </AuthTitle>
+          <AnimatedInput
+            value={credentials.email}
+            placeholder="Email"
+            onChangeText={(text) => handleChangeText(text, "email")}
+          />
+          <AnimatedInput
+            placeholder="Password"
+            secureTextEntry={true}
+            value={credentials.password}
+            onChangeText={(text) => handleChangeText(text, "password")}
+          />
 
-        <Button color="#0000ff" onPress={handleSubmit}>
-          <ButtonText color="#ffffff">Log In</ButtonText>
-        </Button>
-        <Button
-          color="#0000ff"
-          onPress={() => redirectToSignupScreen(navigation)}
-        >
-          <ButtonText color="#ffffff">
-            Don't Have an Account? Sign Up Here
-          </ButtonText>
-        </Button>
-        <Button
-          color="#0000ff"
-          onPress={() => redirectToForgotPasswordScreen(navigation)}
-        >
-          <ButtonText color="#ffffff">
-            Forgot Your Password? Click Here
-          </ButtonText>
-        </Button>
-      </AuthSystemContainer>
-    </AuthContainer>
+          <AuthPrimaryButton onPress={handleSubmit}>
+            <AuthPrimaryText>Log In</AuthPrimaryText>
+          </AuthPrimaryButton>
+          <AuthSecondaryButton
+            color="#0000ff"
+            onPress={() => redirectToSignupScreen(navigation)}
+          >
+            <AuthSecondaryText>
+              Don't Have an Account? Sign Up Here
+            </AuthSecondaryText>
+          </AuthSecondaryButton>
+          <AuthSecondaryButton
+            color="#0000ff"
+            onPress={() => redirectToForgotPasswordScreen(navigation)}
+          >
+            <AuthSecondaryText color="#ffffff">
+              Forgot Your Password? Click Here
+            </AuthSecondaryText>
+          </AuthSecondaryButton>
+        </AuthSystemContainer>
+      </AuthContainer>
+    </GradientBackground>
   );
 };
 

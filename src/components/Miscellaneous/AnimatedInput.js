@@ -13,7 +13,7 @@ const AnimatedInput = ({
 
   const offset = position.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -30]
+    outputRange: [0, -35]
   });
 
   const size = position.interpolate({
@@ -91,7 +91,7 @@ const AnimatedInput = ({
           style={[
             styles.placeholder,
             {
-              color: "blue",
+              color: "navy",
               opacity: opacity,
               transform: [
                 { translateY: offset },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    padding: 5,
+    padding: 7,
     paddingLeft: 5,
     borderRadius: 10,
     width: "100%",
