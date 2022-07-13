@@ -115,7 +115,10 @@ const RenderPostScreen = ({ renderScreenType }) => {
   function handleDeleteImage() {
     const filteredImg = post.img.filter((_, index) => index !== imageIndex);
     setPost({ ...post, img: filteredImg });
-    const newImageIndex = Math.min(imageIndex, filteredImg.length - 1);
+    const newImageIndex = Math.max(
+      0,
+      Math.min(imageIndex, filteredImg.length - 1)
+    );
     setImageIndex(newImageIndex);
     ImagesContainerRef.current.scrollTo({
       x: newImageIndex * IMAGE_WIDTH,
