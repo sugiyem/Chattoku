@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 import { FetchInfoById } from "../../services/Profile/FetchUserInfo";
 import overlayContext from "./overlayContext";
 import ProfileOverlay from "../../components/Forum/ProfileOverlay";
+import ImageSlider from "../../components/Miscellaneous/ImageSlider";
 
 const initialUserData = {
   img: "",
@@ -22,6 +23,7 @@ const MainPost = ({
   uid,
   forumId,
   postId,
+  img,
   timestamp,
   lastEdited
 }) => {
@@ -48,6 +50,7 @@ const MainPost = ({
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
+      <ImageSlider img={img} />
       {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       <LikeBar forumId={forumId} postId={postId} />
     </HeaderContainer>
@@ -84,8 +87,7 @@ const ForumPostScreen = () => {
           <ButtonText>Go Back</ButtonText>
         </Button>
 
-        <RenderHeader />
-        <CommentList {...data} />
+        <CommentList {...data} Header={RenderHeader} />
 
         {data.isBanned ? (
           <BannedText>You have been banned</BannedText>
