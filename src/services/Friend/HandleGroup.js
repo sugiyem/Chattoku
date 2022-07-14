@@ -289,7 +289,7 @@ export async function leaveGroup(groupID, app = firebase) {
 
 export async function deleteGroup(groupID, app = firebase) {
   const db = app.firestore();
-  const batch = db.batch();
+  let batch = db.batch();
   const groupRef = db.collection("groups").doc(groupID);
   const firebaseRefToBeDeleted = [];
   const messagesSnapshot = await groupRef.collection("messages").get();
