@@ -5,6 +5,7 @@ import {
   sendNotificationToAllGroupMembers
 } from "../Miscellaneous/HandleNotification";
 import { sendSystemMessageToGroup } from "../Chat/HandleSystemMessage";
+import { MAXIMUM_BATCH_SIZE } from "../../constants/Batch";
 
 export async function createGroup(
   groupName,
@@ -290,6 +291,7 @@ export async function deleteGroup(groupID, app = firebase) {
   const db = app.firestore();
   const batch = db.batch();
   const groupRef = db.collection("groups").doc(groupID);
+  const firebaseRefToBeDeleted = [];
   const messagesSnapshot = await groupRef.collection("messages").get();
   const adminsSnapshot = await groupRef.collection("admins").get();
   const membersSnapshot = await groupRef.collection("members").get();
@@ -303,23 +305,14 @@ export async function deleteGroup(groupID, app = firebase) {
     .get()
     .then((doc) => doc.data().name);
 
-  messagesSnapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
+  messagesSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  adminsSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  membersSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  pendingMembersSnapshot.docs.forEach((doc) =>
+    firebaseRefToBeDeleted.push(doc.ref)
+  );
 
-  adminsSnapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
-
-  membersSnapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
-
-  pendingMembersSnapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
-
-  batch.delete(groupRef);
+  firebaseRefToBeDeleted.push(groupRef);
 
   await sendNotificationToAllGroupMembers(
     groupID,
@@ -329,12 +322,25 @@ export async function deleteGroup(groupID, app = firebase) {
     db
   );
 
+  let count = 0;
+  // Number of batch operation needed might be larger than
+  // the limit given by firebase. Need to split it into
+  // different commits
+  for (let i = 0; i < firebaseRefToBeDeleted.length; i++) {
+    batch.delete(firebaseRefToBeDeleted[i]);
+    count++;
+    if (count == MAXIMUM_BATCH_SIZE) {
+      await batch
+        .commit()
+        .catch((error) => Alert.alert("Error", error.message));
+      // reinitialize batch & count
+      batch = db.batch();
+      count = 0;
+    }
+  }
+  // Last batch commit
   await batch
     .commit()
-    .then(() => {
-      Alert.alert("Group successfully deleted");
-    })
-    .catch((error) => {
-      Alert.alert("Error", error.message);
-    });
+    .then(() => Alert.alert("Group successfully deleted"))
+    .catch((error) => Alert.alert("Error", error.message));
 }
