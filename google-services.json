@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "281736995407",
+    "project_id": "chattoku-e2672",
+    "storage_bucket": "chattoku-e2672.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281736995407:android:959e5f02346c2a702a403a",
+        "android_client_info": {
+          "package_name": "com.WOrbital.Chattoku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281736995407-54ekbari2l4lac3ol7aj7642ecsurg6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm8HyECmksxVMV2K5Jy3niCUHIaNmmFCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "281736995407-54ekbari2l4lac3ol7aj7642ecsurg6r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
