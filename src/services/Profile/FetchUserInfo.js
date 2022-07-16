@@ -57,6 +57,10 @@ export async function FetchInfoById(userID, callbackSuccess) {
     .doc(userID)
     .get()
     .then((documentSnapshot) => {
+      if (!documentSnapshot.exists) {
+        callbackSuccess({ isDeleted: true });
+        return;
+      }
       const doc = documentSnapshot.data();
       callbackSuccess(doc);
     })

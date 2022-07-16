@@ -51,7 +51,7 @@ const ProfileOverlay = ({ userData }) => {
   const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
-    if (isYou) return;
+    if (isYou || userData.isDeleted) return;
 
     return isBlockedByCurrentUser(
       userData.id,
@@ -97,7 +97,7 @@ const ProfileOverlay = ({ userData }) => {
           <Username> {userData.username}</Username>
           {isYou && <CurrentUserText> (YOU) </CurrentUserText>}
         </UserInfo>
-        {!isYou && (
+        {!(isYou || userData.isDeleted) && (
           <>
             <Divider />
             <RenderFriendSection userId={userData.id} />

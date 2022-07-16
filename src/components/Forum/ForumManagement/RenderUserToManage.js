@@ -23,33 +23,37 @@ const RenderUserToManage = ({ userData, managementType, isAuthorized }) => {
   const forumData = navigation.getState().routes[1].params.data;
   const forumId = forumData.id;
 
-  useEffect(
-    () =>
-      isUserBanned(forumId, userData.id, (result) => {
-        setData((data) => {
-          return {
-            ...data,
-            isBanned: result.isFound,
-            reason: result.isFound ? result.reason : ""
-          };
-        });
-      }),
-    []
-  );
+  useEffect(() => {
+    if (!userData) {
+      return;
+    }
 
-  useEffect(
-    () =>
-      isUserAdmin(forumId, userData.id, (result) => {
-        setData((data) => {
-          return {
-            ...data,
-            isAdmin: result.isFound,
-            authorities: result.isFound ? result.authorities : []
-          };
-        });
-      }),
-    []
-  );
+    return isUserBanned(forumId, userData.id, (result) => {
+      setData((data) => {
+        return {
+          ...data,
+          isBanned: result.isFound,
+          reason: result.isFound ? result.reason : ""
+        };
+      });
+    });
+  }, [userData]);
+
+  useEffect(() => {
+    if (!userData) {
+      return;
+    }
+
+    isUserAdmin(forumId, userData.id, (result) => {
+      setData((data) => {
+        return {
+          ...data,
+          isAdmin: result.isFound,
+          authorities: result.isFound ? result.authorities : []
+        };
+      });
+    });
+  }, [userData]);
 
   if (!userData) {
     return <Title> No Such User Found </Title>;
