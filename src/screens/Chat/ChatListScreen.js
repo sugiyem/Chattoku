@@ -82,7 +82,7 @@ const ChatListScreen = () => {
       </BoldText>
 
       <ButtonGroup>
-        <SeparatedButton onPress={navigateToAddChat}>
+        <SeparatedButton onPress={navigateToAddChat} testID="addChatButton">
           <ButtonText color="#000000">Message other users</ButtonText>
         </SeparatedButton>
 

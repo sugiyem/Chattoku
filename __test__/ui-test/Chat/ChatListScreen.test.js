@@ -34,14 +34,11 @@ describe("Test private chat list UI", () => {
   it("Buttons and input bar are working as expected", () => {
     const { getByTestId } = render(<ChatListScreen />);
 
-    fireEvent.press(getByTestId("friendListButton"));
+    fireEvent.press(getByTestId("addChatButton"));
     fireEvent.press(getByTestId("groupChatButton"));
     fireEvent.changeText(getByTestId("searchBar"), "Elbert CS God");
 
-    expect(mockNavigate).toHaveBeenCalledWith("Friends", {
-      screen: "FriendList",
-      initial: false
-    });
+    expect(mockNavigate).toHaveBeenCalledWith("AddChat");
     expect(mockPush).toHaveBeenCalledWith("GroupChatList");
     expect(mockSetState).toHaveBeenLastCalledWith("Elbert CS God");
   });
