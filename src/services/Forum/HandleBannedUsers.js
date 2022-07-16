@@ -1,4 +1,3 @@
-import { result } from "lodash";
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 import { FetchInfoById } from "../Profile/FetchUserInfo";
@@ -22,9 +21,13 @@ export function getBannedUsers(forumId, callbackSuccess, app = firebase) {
         const deleted = [];
 
         const existencePromise = bannedUsers.map((banned, i) =>
-          FetchInfoById(banned.userId, (result) => {
-            deleted[i] = result.isDeleted;
-          })
+          FetchInfoById(
+            banned.userId,
+            (result) => {
+              deleted[i] = result.isDeleted;
+            },
+            app
+          )
         );
 
         await Promise.all(existencePromise);

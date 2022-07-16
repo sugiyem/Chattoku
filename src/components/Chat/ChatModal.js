@@ -47,6 +47,7 @@ const ChatModal = ({
                   name="message-processing-outline"
                   color="aquamarine"
                   onPress={onMessageButtonPress}
+                  testID="messageIcon"
                   size={40}
                 />
                 <IconDescription color="aquamarine">Message</IconDescription>
