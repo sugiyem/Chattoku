@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Alert, LogBox } from "react-native";
 import { ChatContainer } from "../../styles/ChatStyles";
-import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchPrivateChatMessages } from "../../services/Chat/FetchChatMessages";
 import {
   isBlockedByCurrentUser,
   isCurrentUserBlocked
 } from "../../services/Friend/HandleBlockedUser";
-import FetchUserInfo from "../../services/Profile/FetchUserInfo";
+import FetchUserInfo, {
+  getCurrentUID
+} from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
 import ChatHeader from "../../components/Chat/ChatHeader";
 import { useIsFocused } from "@react-navigation/native";
@@ -22,7 +23,7 @@ const initialState = {
 LogBox.ignoreLogs(["Animated"]);
 
 const ChatDetailScreen = ({ navigation, route }) => {
-  const userID = firebase.auth().currentUser.uid;
+  const userID = getCurrentUID();
   const recipientData = route.params.userData;
   const recipientID = recipientData.id;
 

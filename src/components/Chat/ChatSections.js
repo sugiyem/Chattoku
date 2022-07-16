@@ -93,9 +93,18 @@ const ChatSections = ({
   const renderAvatar = isPrivateChat
     ? null
     : (props) => {
-        const userInfo = allUserInfos.filter(
+        let userInfo = {
+          id: props.currentMessage.user._id,
+          username: "Deleted-Account",
+          bio: "This account has been deleted",
+          img: ""
+        };
+        const filteredInfo = allUserInfos.filter(
           (item) => item.id === props.currentMessage.user._id
-        )[0];
+        );
+        if (filteredInfo.length > 0) {
+          userInfo = filteredInfo[0];
+        }
 
         return (
           <ChatAvatar {...props} userInfo={userInfo} navigation={navigation} />
@@ -107,9 +116,14 @@ const ChatSections = ({
       return <Bubble {...props} />;
     }
 
-    const username = allUserInfos.filter(
+    let username = "Deleted-Account";
+    const filteredInfo = allUserInfos.filter(
       (item) => item.id === props.currentMessage.user._id
-    )[0].username;
+    );
+    if (filteredInfo.length > 0) {
+      username = filteredInfo[0].username;
+    }
+
     return <ChatBubble {...props} username={username} />;
   };
 

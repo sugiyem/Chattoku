@@ -7,7 +7,7 @@ const ChatInputBar = (props) => {
 
   if (isBlocked) {
     return (
-      <CenteredBoldText size="18px">
+      <CenteredBoldText size="18px" testID="blockedWarning">
         You've been blocked by this user
       </CenteredBoldText>
     );
@@ -16,7 +16,7 @@ const ChatInputBar = (props) => {
   if (isBlocking) {
     return (
       <>
-        <CenteredBoldText size="15px">
+        <CenteredBoldText size="15px" testID="blockingWarning">
           You've blocked this user.
         </CenteredBoldText>
         <CenteredBoldText size="15px">

@@ -49,7 +49,18 @@ const CommentCard = ({
 
   //Fetch username of commenter
   useEffect(() => {
-    FetchInfoById(uid, setUserData);
+    FetchInfoById(uid, (data) => {
+      if (data.isDeleted) {
+        setUserData({
+          ...initialUserData,
+          username: "[Deleted Account]",
+          isDeleted: true
+        });
+        return;
+      }
+
+      setUserData(data);
+    });
   }, []);
 
   function handleEditPress() {

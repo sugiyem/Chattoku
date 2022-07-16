@@ -1,14 +1,16 @@
 import { firebase } from "../Firebase/Config";
 import { sendPushNotification } from "../Miscellaneous/HandleNotification";
+import { FetchInfoById } from "../Profile/FetchUserInfo";
 
 export async function addAdmin(
   forumId,
   adminDetails,
   expoPushToken,
   forumName,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -30,9 +32,10 @@ export async function removeAdmin(
   uid,
   expoPushToken,
   forumName,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -53,9 +56,10 @@ export async function editAdminPower(
   forumId,
   uid,
   adminPowers,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -65,21 +69,42 @@ export async function editAdminPower(
     .then(() => callbackSuccess());
 }
 
-export function getAllAdmins(forumId, callbackSuccess) {
-  return firebase
+export function getAllAdmins(forumId, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("admins")
-    .onSnapshot((querySnapshot) => {
-      data = [];
+    .onSnapshot(async (querySnapshot) => {
+      let data = [];
       querySnapshot.forEach((doc) => data.push(doc.data()));
+
+      const deleted = [];
+
+      const existencePromise = data.map((admin, i) =>
+        FetchInfoById(
+          admin.uid,
+          (result) => {
+            deleted[i] = result.isDeleted;
+          },
+          app
+        )
+      );
+
+      await Promise.all(existencePromise);
+
+      console.log("deleted", deleted);
+
+      await Promise.all(existencePromise);
+
+      data = data.filter((_, i) => !deleted[i]);
+
       callbackSuccess(data);
     });
 }
 
-export function isUserAdmin(forumId, uid, callbackSuccess) {
-  return firebase
+export function isUserAdmin(forumId, uid, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -92,10 +117,14 @@ export function isUserAdmin(forumId, uid, callbackSuccess) {
     );
 }
 
-export function isAuthorizedToDeletePosts(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export function isAuthorizedToDeletePosts(
+  forumId,
+  callbackSuccess,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -108,10 +137,14 @@ export function isAuthorizedToDeletePosts(forumId, callbackSuccess) {
     );
 }
 
-export function isAuthorizedToBanUsers(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export function isAuthorizedToBanUsers(
+  forumId,
+  callbackSuccess,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)

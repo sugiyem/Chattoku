@@ -2,19 +2,22 @@ import { firebase } from "../Firebase/Config";
 import { likeStatus } from "../../constants/Post";
 import NotifyAllFollowers from "./NotifyAllFollowers";
 
-export async function addPost(forumId, post, forumName, onSuccess, onError) {
-  const currentUID = firebase.auth().currentUser.uid;
+export async function addPost(
+  forumId,
+  post,
+  forumName,
+  onSuccess,
+  onError,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
   const time = new Date();
-  const batch = firebase.firestore().batch();
-  const postsRef = firebase
-    .firestore()
-    .collection("forums")
-    .doc(forumId)
-    .collection("posts");
+  const db = app.firestore();
+  const batch = db.batch();
+  const postsRef = db.collection("forums").doc(forumId).collection("posts");
   const newPostID = postsRef.doc().id;
 
-  const userPostsRef = firebase
-    .firestore()
+  const userPostsRef = db
     .collection("users")
     .doc(currentUID)
     .collection("posts")
@@ -39,20 +42,28 @@ export async function addPost(forumId, post, forumName, onSuccess, onError) {
       onSuccess();
     })
     .catch((e) => onError(e));
+
+  return { postID: newPostID, time: time };
 }
 
-export async function deletePost(forumId, postId, uid, onSuccess, onError) {
+export async function deletePost(
+  forumId,
+  postId,
+  uid,
+  onSuccess,
+  onError,
+  app = firebase
+) {
   console.log("run");
-  const batch = firebase.firestore().batch();
-  const postRef = firebase
-    .firestore()
+  const db = app.firestore();
+  const batch = db.batch();
+  const postRef = db
     .collection("forums")
     .doc(forumId)
     .collection("posts")
     .doc(postId);
 
-  const userPostRef = firebase
-    .firestore()
+  const userPostRef = db
     .collection("users")
     .doc(uid)
     .collection("posts")
@@ -83,11 +94,17 @@ export async function deletePost(forumId, postId, uid, onSuccess, onError) {
     .catch((e) => onError(e));
 }
 
-export async function editPost(forumId, postId, post, onSuccess, onError) {
-  const currentUID = firebase.auth().currentUser.uid;
+export async function editPost(
+  forumId,
+  postId,
+  post,
+  onSuccess,
+  onError,
+  app = firebase
+) {
   const time = new Date();
 
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -96,12 +113,19 @@ export async function editPost(forumId, postId, post, onSuccess, onError) {
     .update({ ...post, lastEdited: time })
     .then(onSuccess)
     .catch((e) => onError(e));
+
+  return time;
 }
 
-export async function getLikeStatus(forumId, postId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export async function getLikeStatus(
+  forumId,
+  postId,
+  callbackSuccess,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
   const combinedId = forumId + postId;
-  const userRef = firebase.firestore().collection("users").doc(currentUID);
+  const userRef = app.firestore().collection("users").doc(currentUID);
 
   const isLiked = await userRef
     .collection("likes")
@@ -124,8 +148,13 @@ export async function getLikeStatus(forumId, postId, callbackSuccess) {
   }
 }
 
-export async function getNumberOfLikes(forumId, postId, callbackSuccess) {
-  const postRef = firebase
+export async function getNumberOfLikes(
+  forumId,
+  postId,
+  callbackSuccess,
+  app = firebase
+) {
+  const postRef = app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -140,10 +169,15 @@ export async function getNumberOfLikes(forumId, postId, callbackSuccess) {
   callbackSuccess(likes - dislikes);
 }
 
-export async function updateLikes(forumId, postId, postLikeStatus) {
-  const currentUID = firebase.auth().currentUser.uid;
-  const postRef = firebase
-    .firestore()
+export async function updateLikes(
+  forumId,
+  postId,
+  postLikeStatus,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const postRef = db
     .collection("forums")
     .doc(forumId)
     .collection("posts")
@@ -151,10 +185,10 @@ export async function updateLikes(forumId, postId, postLikeStatus) {
   const likeRef = postRef.collection("likes").doc(currentUID);
   const dislikeRef = postRef.collection("dislikes").doc(currentUID);
 
-  const userRef = firebase.firestore().collection("users").doc(currentUID);
+  const userRef = db.collection("users").doc(currentUID);
   const userLikeRef = userRef.collection("likes").doc(forumId + postId);
   const userDislikeRef = userRef.collection("dislikes").doc(forumId + postId);
-  const batch = firebase.firestore().batch();
+  const batch = db.batch();
 
   if (postLikeStatus === likeStatus.LIKE) {
     batch.set(likeRef, {});

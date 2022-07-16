@@ -31,7 +31,18 @@ const MainPost = ({
   const setOverlayData = useContext(overlayContext);
 
   useEffect(() => {
-    FetchInfoById(uid, setUserData);
+    FetchInfoById(uid, (data) => {
+      if (data.isDeleted) {
+        setUserData({
+          ...initialUserData,
+          username: "[Deleted Account]",
+          isDeleted: true
+        });
+        return;
+      }
+
+      setUserData(data);
+    });
   }, []);
 
   return (
@@ -50,7 +61,7 @@ const MainPost = ({
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
-      <ImageSlider img={img} />
+      {img.length > 0 && <ImageSlider img={img} />}
       {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       <LikeBar forumId={forumId} postId={postId} />
     </HeaderContainer>

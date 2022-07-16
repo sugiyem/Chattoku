@@ -1,4 +1,3 @@
-import { last } from "lodash";
 import { firebase } from "../Firebase/Config";
 
 export const fetchActivePrivateChats = ({
@@ -68,14 +67,17 @@ export const fetchActivePrivateChats = ({
           .doc(friendID)
           .get()
           .then((doc) => {
-            activeChatDatas.push({
-              ...remainingData,
-              lastMessage: shownLastMessage,
-              id: friendID,
-              username: doc.data().username,
-              img: doc.data().img,
-              bio: doc.data().bio
-            });
+            // check if user still exists
+            if (doc.exists) {
+              activeChatDatas.push({
+                ...remainingData,
+                lastMessage: shownLastMessage,
+                id: friendID,
+                username: doc.data().username,
+                img: doc.data().img,
+                bio: doc.data().bio
+              });
+            }
           });
       });
 
@@ -159,42 +161,53 @@ export const checkUnreadPrivateMessages = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
 
-  return app
-    .firestore()
-    .collection("chatrooms")
-    .onSnapshot(
-      async (querySnapshot) => {
-        let isUnreadExists = false;
+  return db.collection("chatrooms").onSnapshot(
+    async (querySnapshot) => {
+      let isUnreadExists = false;
+      const activeChatIDs = [];
 
-        querySnapshot.forEach((documentSnapshot) => {
-          const chatID = documentSnapshot.id;
+      querySnapshot.forEach((documentSnapshot) => {
+        const chatID = documentSnapshot.id;
 
-          if (
-            chatID.startsWith(userID) &&
-            documentSnapshot.data().showNotifToFirstUser
-          ) {
-            isUnreadExists = true;
-          }
-
-          if (
-            chatID.endsWith(userID) &&
-            documentSnapshot.data().showNotifToSecondUser
-          ) {
-            isUnreadExists = true;
-          }
-        });
-
-        if (isUnreadExists) {
-          onFound();
-        } else {
-          onNotFound();
+        if (
+          chatID.startsWith(userID) &&
+          documentSnapshot.data().showNotifToFirstUser
+        ) {
+          const friendID = chatID.substring(chatID.lastIndexOf("_") + 1);
+          activeChatIDs.push(friendID);
         }
-      },
-      (error) => {
-        onFailure(error);
-      }
-    );
+
+        if (
+          chatID.endsWith(userID) &&
+          documentSnapshot.data().showNotifToSecondUser
+        ) {
+          const friendID = chatID.substring(0, chatID.lastIndexOf("_"));
+          activeChatIDs.push(friendID);
+        }
+      });
+
+      const usersRef = db.collection("users");
+      const promisedData = activeChatIDs.map(async (userID) => {
+        await usersRef
+          .doc(userID)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              isUnreadExists = true;
+            }
+          });
+      });
+
+      await Promise.all(promisedData).then(() => {
+        isUnreadExists ? onFound() : onNotFound();
+      });
+    },
+    (error) => {
+      onFailure(error);
+    }
+  );
 };
 
 export const checkUnreadGroupMessages = ({
@@ -250,7 +263,13 @@ async function getLastMessage(lastMessageText, senderID, db) {
       .collection("users")
       .doc(senderID)
       .get()
-      .then((doc) => doc.data().username);
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data().username;
+        } else {
+          return "Deleted-Account";
+        }
+      });
   }
 
   if (isLastMessageAnImage) {
