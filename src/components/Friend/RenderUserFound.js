@@ -1,9 +1,12 @@
-import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Platform, Text } from "react-native";
+import { Icon } from "react-native-elements";
+import { IconContainer, IconDescription } from "../../styles/ChatStyles";
 import React from "react";
 import BlockIcon from "../Chat/BlockIcon";
 import EditFriendIcon from "../Chat/EditFriendIcon";
 import { userFoundType } from "../../constants/UserFound";
 import styled from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
 
 const RenderUserFound = ({ type, userData }) => {
   if (userData === null) {
@@ -12,11 +15,31 @@ const RenderUserFound = ({ type, userData }) => {
 
   const userId = userData.id;
   const isToBefriend = type === userFoundType.TO_BEFRIEND;
+  const isToChat = type === userFoundType.TO_CHAT;
+  const navigation = useNavigation();
+
+  function onMessageButtonPress() {
+    navigation.navigate("ChatDetail", { userData: userData });
+  }
+
+  const MessageIcon = () => (
+    <IconContainer>
+      <Icon
+        type="material-community"
+        name="message-processing-outline"
+        color="blue"
+        onPress={onMessageButtonPress}
+        size={40}
+      />
+      <IconDescription color="blue">Message</IconDescription>
+    </IconContainer>
+  );
 
   const ButtonGroups = () => (
     <ButtonContainer>
       {isToBefriend && <EditFriendIcon userId={userId} />}
-      <BlockIcon userId={userId} />
+      {!isToChat && <BlockIcon userId={userId} />}
+      {isToChat && <MessageIcon />}
     </ButtonContainer>
   );
 

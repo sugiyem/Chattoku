@@ -1,7 +1,11 @@
 import { firebase } from "../Firebase/Config";
 
-export default function FetchFollowedForumsData(uid, callbackSuccess) {
-  let db = firebase.firestore();
+export default function FetchFollowedForumsData(
+  uid,
+  callbackSuccess,
+  app = firebase
+) {
+  let db = app.firestore();
 
   return db
     .collection("users")

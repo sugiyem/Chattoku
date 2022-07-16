@@ -10,12 +10,14 @@ import {
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
+import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
   const [search, setSearch] = useState("");
   const groupInfo = route.params.groupInfo;
+  const memberIDs = members.map((user) => user.id);
 
   useEffect(() => {
     return fetchGroupMembers({
@@ -41,16 +43,16 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
   }
 
   const filteredMembers = members
-    .map((member) => {
-      return {
-        ...member,
-        groupRole: isOwner(member.id)
-          ? "Owner"
-          : isAdmin(member.id)
-          ? "Admin"
-          : "Member"
-      };
-    })
+    .map((member) => ({
+      ...member,
+      groupRole: getAdvancedGroupRole(
+        member.id,
+        groupInfo.owner,
+        adminIDs,
+        memberIDs,
+        []
+      )
+    }))
     .sort(groupMemberSorter)
     .filter((member) =>
       member.username.toLowerCase().startsWith(search.toLowerCase())
@@ -76,13 +78,9 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       {filteredMembers.map((item, index) => (
         <EditMemberComponent
           key={index}
-          item={{
-            ...item,
-            isAdmin: isAdmin(item.id),
-            isOwner: isOwner(item.id)
-          }}
+          item={item}
           isMember={true}
-          groupInfo={{ ...groupInfo, admins: adminIDs }}
+          groupInfo={groupInfo}
         />
       ))}
     </ScrollContainer>

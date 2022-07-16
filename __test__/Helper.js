@@ -28,6 +28,23 @@ export const fakeFirebase = {
           friends: [{ id: "yem456" }],
           groupJoined: [{ id: "group1" }, { id: "group3" }],
           groupInvited: [{ id: "group2" }],
+          follows: [{ id: "forum-1" }],
+          likes: [{ id: "forum-1forum-1-post-1" }],
+          dislikes: [{ id: "forum-1forum-1-post-2" }],
+          posts: [
+            {
+              id: "forum-1forum-1-post-1",
+              forumId: "forum-1",
+              postId: "forum-1-post-1",
+              timestamp: new Timestamp(2, 2)
+            },
+            {
+              id: "forum-2forum-2-post-1",
+              forumId: "forum-2",
+              postId: "forum-2-post-1",
+              timestamp: new Timestamp(1, 1)
+            }
+          ],
           blockedUsers: [{ id: "random-2" }]
         }
       },
@@ -160,6 +177,79 @@ export const fakeFirebase = {
         _collections: {
           messages: [
             { createdAt: new Timestamp(2, 2), text: "special-message" }
+          ]
+        }
+      }
+    ],
+    forums: [
+      {
+        id: "forum-1",
+        owner: "yem123",
+        title: "First Forum",
+        banner: "first-forum-banner",
+        img: "first-forum-img",
+        desc: "first-forum-desc",
+        _collections: {
+          posts: [
+            {
+              id: "forum-1-post-1",
+              uid: "yem123",
+              title: "First Post Title",
+              content: "This is my first post",
+              _collections: {
+                likes: [{ id: "yem123" }],
+                comments: [
+                  {
+                    id: "comment-1",
+                    uid: "yem123",
+                    content: "Hi, I'm Sugiyem"
+                  },
+                  { id: "comment-2", uid: "cupu", content: "Hi, I'm Farrel" }
+                ]
+              }
+            },
+            {
+              id: "forum-1-post-2",
+              _collections: { dislikes: [{ id: "yem123" }] }
+            },
+            { id: "forum-1-post-3" }
+          ],
+          admins: [
+            { id: "cupu", uid: "cupu", authorities: ["Ban Users From Forum"] }
+          ],
+          banned: [{ id: "random", reason: "NSFW comments" }]
+        }
+      },
+      {
+        id: "forum-2",
+        owner: "yem456",
+        title: "Second Forum",
+        banner: "second-forum-banner",
+        img: "second-forum-img",
+        desc: "second-forum-desc",
+        _collections: {
+          posts: [
+            {
+              id: "forum-2-post-1",
+              uid: "yem123",
+              title: "Real First Post",
+              content: "Actually, this is my first post"
+            }
+          ],
+          admins: [
+            {
+              id: "yem123",
+              uid: "yem123",
+              authorities: ["Ban Users From Forum"]
+            }
+          ]
+        }
+      },
+      {
+        id: "forum-3",
+        _collections: {
+          admins: [
+            { id: "yem123", uid: "yem123", authorities: ["Delete Posts"] }
           ]
         }
       }

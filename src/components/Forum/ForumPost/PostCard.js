@@ -15,51 +15,62 @@ const initialUserData = {
   username: "fetching username..."
 };
 
-const PostCard = ({
-  title,
-  content,
-  id,
-  uid,
-  forumId,
-  isOwner,
-  isBanned,
-  isAuthorized
-}) => {
+const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(initialUserData);
   const currentUID = firebase.auth().currentUser.uid;
   const forumData = navigation.getState().routes[1].params.data;
   const setOverlayData = useContext(overlayContext);
-  const isOwnersPost = forumData.owner === uid;
+  const isOwnersPost = forumData.owner === postData.uid;
+
+  const dateText = postData.timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
+
+  const editedText = postData.lastEdited
+    ? postData.lastEdited
+        .toDateString()
+        .split(" ")
+        .filter((_, index) => index > 0)
+        .join(" ")
+    : "";
+
+  const passedPostState = {
+    title: postData.title,
+    content: postData.content,
+    postId: postData.id,
+    forumId: forumId,
+    uid: postData.uid,
+    img: postData.img
+  };
 
   const likeBarState = {
     forumId: forumId,
-    postId: id
-  };
-
-  // console.log(currentUID);
-  const postData = {
-    title: title,
-    content: content,
-    postId: id,
-    forumId: forumId,
-    uid: uid
+    postId: postData.id
   };
 
   //Fetch username of poster
   useEffect(() => {
-    FetchInfoById(uid, setUserData);
+    FetchInfoById(postData.uid, setUserData);
   }, []);
 
   function handleCommentPress() {
     navigation.navigate("Post", {
-      data: { ...postData, isOwner: isOwner, isBanned: isBanned }
+      data: {
+        ...passedPostState,
+        isOwner: isOwner,
+        isBanned: isBanned,
+        timestamp: dateText,
+        lastEdited: editedText
+      }
     });
   }
 
   function handleEditPress() {
     navigation.navigate("EditPost", {
-      data: { ...postData, isOwner: isOwner }
+      data: { ...passedPostState, isOwner: isOwner }
     });
   }
 
@@ -67,8 +78,8 @@ const PostCard = ({
     Warning(async () => {
       await deletePost(
         forumId,
-        id,
-        uid,
+        postData.id,
+        postData.uid,
         () => {},
         (e) => Alert.alert(e)
       );
@@ -86,23 +97,25 @@ const PostCard = ({
           }
         />
         <Text> {userData.username}</Text>
+        <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
-      <Title>{title}</Title>
-      <Content> {content} </Content>
+      <Title>{postData.title}</Title>
+      <Content> {postData.content} </Content>
+      {!!editedText && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         <LikeBar {...likeBarState} />
         <Action onPress={handleCommentPress}>
           <Icon name="comment" type="material" color="blue" />
         </Action>
-        {((!isBanned && currentUID === uid) ||
+        {((!isBanned && currentUID === postData.uid) ||
           isOwner ||
           (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
             <Icon name="delete" type="material" color="red" />
           </Action>
         )}
-        {!isBanned && currentUID === uid && (
+        {!isBanned && currentUID === postData.uid && (
           <Action onPress={handleEditPress}>
             <Icon name="edit" type="material" />
           </Action>
@@ -121,6 +134,16 @@ const Profile = styled.Image`
   border-radius: 20px;
   border-width: 1px;
   border-color: white;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
 `;
 
 const Container = styled.View`
@@ -160,8 +183,8 @@ const Content = styled.Text`
 `;
 
 const ActionBar = styled.View`
+  width: 100%;
   flex-direction: row;
-  flex: 1;
   margin-top: 10px;
   justify-content: space-evenly;
 `;

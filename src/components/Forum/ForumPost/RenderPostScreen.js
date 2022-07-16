@@ -1,19 +1,28 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
+  Image,
+  Alert,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert
+  Dimensions,
+  BackHandler
 } from "react-native";
 import { editPost, addPost } from "../../../services/Forum/HandleForumPost";
 import { renderType } from "../../../constants/Forum";
+import styled from "styled-components/native";
+import {
+  pickImageFromLibrary,
+  removeAllImageFromCloud,
+  removeImageFromCloudStorage,
+  uploadImage
+} from "../../../services/Miscellaneous/HandleImage";
+import { Icon } from "react-native-elements";
+import ImageSlider from "../../Miscellaneous/ImageSlider";
 
 const initialState = {
   title: "",
-  content: ""
+  content: "",
+  img: []
 };
 
 const RenderPostScreen = ({ renderScreenType }) => {
@@ -30,15 +39,28 @@ const RenderPostScreen = ({ renderScreenType }) => {
     ? initialState
     : {
         title: postData.title,
-        content: postData.content
+        content: postData.content,
+        img: postData.img
       };
 
+  const [imageIndex, setImageIndex] = useState(0);
   const [post, setPost] = useState(initialPostState);
-
+  const [allImg, setAllImg] = useState(initialPostState.img);
+  const initialImg = initialPostState.img;
+  const ImagesContainerRef = useRef(null);
   const forumData = navigation.getState().routes[1].params.data;
-
+  const isImageUploaded = post.img.length > 0;
   const title = isCreateScreen ? "Create a Post in" : "Edit Your Post in";
   const submitButtonText = isCreateScreen ? "Post To Forum" : "Confirm Edit";
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleCancel);
+
+    return () => {
+      console.log("test");
+      BackHandler.removeEventListener("hardwareBackPress", handleCancel);
+    };
+  }, [post.img, allImg]);
 
   function handleChange(text, name) {
     setPost({
@@ -48,103 +70,194 @@ const RenderPostScreen = ({ renderScreenType }) => {
   }
 
   function handleSubmit() {
+    const unusedImg = allImg.filter((img) => !post.img.includes(img));
+
+    const onSuccess = () => {
+      removeAllImageFromCloud(unusedImg);
+      navigation.navigate("Forum", { data: forumData });
+    };
+
     isCreateScreen
-      ? addPost(
-          forumData.id,
-          post,
-          forumData.title,
-          () => navigation.navigate("Forum", { data: forumData }),
-          (e) => Alert.alert(e)
+      ? addPost(forumData.id, post, forumData.title, onSuccess, (e) =>
+          Alert.alert(e)
         )
-      : editPost(
-          postData.forumId,
-          postData.postId,
-          post,
-          () => navigation.navigate("Forum", { data: forumData }),
-          (e) => Alert.alert(e)
+      : editPost(postData.forumId, postData.postId, post, onSuccess, (e) =>
+          Alert.alert(e)
         );
   }
 
+  function handleAddImage() {
+    if (post.img.length === 10) {
+      Alert.alert("You Can Only Upload A Maximum Of 10 Images");
+      return;
+    }
+
+    pickImageFromLibrary((uri) =>
+      uploadImage(
+        uri,
+        () => {},
+        () => {},
+        (src) => {
+          setPost({ ...post, img: [...post.img, src] });
+          setAllImg([...allImg, src]);
+        },
+        "Image Added Successfully"
+      )
+    );
+  }
+
+  function handleCancel() {
+    const unusedImg = allImg.filter((img) => !initialImg.includes(img));
+    removeAllImageFromCloud(unusedImg);
+    navigation.goBack();
+  }
+
+  function handleDeleteImage() {
+    const filteredImg = post.img.filter((_, index) => index !== imageIndex);
+    setPost({ ...post, img: filteredImg });
+    const newImageIndex = Math.max(
+      0,
+      Math.min(imageIndex, filteredImg.length - 1)
+    );
+    setImageIndex(newImageIndex);
+    ImagesContainerRef.current.scrollTo({
+      x: newImageIndex * IMAGE_WIDTH,
+      y: 0,
+      animated: true
+    });
+  }
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.buttonText}>Go Back</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>
+    <Container>
+      <Button onPress={handleCancel}>
+        <ButtonText>Go Back</ButtonText>
+      </Button>
+      <Title>
         {title} {forumData.title}
-      </Text>
-      <View style={styles.inputContainer}>
-        <Text> Title </Text>
-        <TextInput
-          style={styles.inputTitle}
+      </Title>
+      <InputContainer>
+        <InputLabel> Title </InputLabel>
+        <TitleInput
           placeholder="title"
           onChangeText={(t) => handleChange(t, "title")}
           value={post.title}
         />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text> Content</Text>
-        <TextInput
+      </InputContainer>
+      <InputContainer>
+        <InputLabel> Content</InputLabel>
+        <ContentInput
           multiline={true}
-          style={styles.content}
           placeholder="content"
           onChangeText={(t) => handleChange(t, "content")}
           value={post.content}
         />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>{submitButtonText}</Text>
-      </TouchableOpacity>
-    </View>
+      </InputContainer>
+
+      {isImageUploaded ? (
+        <>
+          <ImageSlider
+            img={post.img}
+            onChangePage={setImageIndex}
+            imageRef={ImagesContainerRef}
+            state={[imageIndex, setImageIndex]}
+          />
+          <Button>
+            <ButtonText onPress={handleAddImage}>Add Another Image</ButtonText>
+          </Button>
+          <DeleteButton onPress={handleDeleteImage}>
+            <ButtonText> Delete Current Image </ButtonText>
+          </DeleteButton>
+        </>
+      ) : (
+        <Button onPress={handleAddImage}>
+          <ButtonText>Add an Image </ButtonText>
+        </Button>
+      )}
+      <SubmitButton onPress={handleSubmit}>
+        <SubmitText>{submitButtonText}</SubmitText>
+      </SubmitButton>
+    </Container>
   );
 };
 
 export default RenderPostScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    backgroundColor: "darkcyan",
-    flex: 1,
-    padding: 15
-  },
-  title: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10,
-    textDecorationLine: "underline"
-  },
-  inputContainer: {
-    margin: 10
-  },
-  inputTitle: {
-    borderColor: "black",
-    padding: 10,
-    borderWidth: 0.5,
-    backgroundColor: "whitesmoke"
-  },
-  content: {
-    display: "flex",
-    height: 400,
-    borderColor: "black",
-    padding: 10,
-    borderWidth: 0.5,
-    backgroundColor: "whitesmoke",
-    textAlignVertical: "top"
-  },
-  button: {
-    alignSelf: "stretch",
-    margin: 5,
-    padding: 5,
-    borderRadius: 5,
-    backgroundColor: "blue"
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 18
-  }
-});
+const width = Dimensions.get("screen").width;
+const IMAGE_WIDTH = width - 80;
+
+const Container = styled.ScrollView`
+  display: flex;
+  background-color: darkcyan;
+  flex: 1;
+  padding: 15px;
+`;
+
+const Button = styled.TouchableOpacity`
+  align-self: stretch;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: blue;
+`;
+
+const ButtonText = styled.Text`
+  text-align: center;
+  color: white;
+  font-size: 18px;
+`;
+
+const SubmitButton = styled.TouchableOpacity`
+  align-self: stretch;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: cyan;
+`;
+
+const SubmitText = styled.Text`
+  text-align: center;
+  color: navy;
+  font-size: 18px;
+`;
+
+const DeleteButton = styled.TouchableOpacity`
+  align-self: stretch;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #c10015;
+`;
+
+const InputContainer = styled.View`
+  margin: 10px;
+`;
+
+const InputLabel = styled.Text`
+  color: whitesmoke;
+  font-size: 18px;
+  padding-bottom: 3px;
+`;
+
+const Title = styled.Text`
+  font-size: 20px;
+  text-align: center;
+  margin: 10px;
+  text-decoration-line: underline;
+`;
+
+const TitleInput = styled.TextInput`
+  border-color: black;
+  padding: 10px;
+  border-width: 0.5px;
+  background-color: whitesmoke;
+`;
+
+const ContentInput = styled.TextInput`
+  display: flex;
+  height: 200px;
+  border-color: black;
+  padding: 10px;
+  border-width: 0.5px;
+  background-color: whitesmoke;
+  text-align-vertical: top;
+`;

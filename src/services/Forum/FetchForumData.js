@@ -1,7 +1,7 @@
 import { firebase } from "../Firebase/Config";
 
-const FetchForumData = (onSuccesfulFetch, onFailure) => {
-  return firebase
+const FetchForumData = (onSuccesfulFetch, onFailure, app = firebase) => {
+  return app
     .firestore()
     .collection("forums")
     .onSnapshot(

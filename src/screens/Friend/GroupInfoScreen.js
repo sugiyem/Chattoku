@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { firebase } from "../../services/Firebase/Config";
 import {
   fetchGroupMembers,
   fetchPendingGroupMembers
@@ -9,6 +8,8 @@ import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
 import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { groupMemberType } from "../../constants/Group";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
+import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 
 const GroupInfoScreen = ({ navigation, route }) => {
@@ -17,32 +18,26 @@ const GroupInfoScreen = ({ navigation, route }) => {
   const [adminIDs, setAdminIDs] = useState([]);
   const groupInfo = route.params.groupData;
   const currentID = getCurrentUID();
+  const memberIDs = members.map((user) => user.id);
+  const pendingMemberIDs = pendingMembers.map((user) => user.id);
 
-  function isOwner(id) {
-    return id === groupInfo.owner;
-  }
-
-  function isAdmin(id) {
-    return adminIDs.includes(id);
-  }
-
-  const renderType = isOwner(currentID)
-    ? groupMemberType.OWNER
-    : isAdmin(currentID)
-    ? groupMemberType.ADMIN
+  const renderType = adminIDs.includes(currentID)
+    ? currentID === groupInfo.owner
+      ? groupMemberType.OWNER
+      : groupMemberType.ADMIN
     : groupMemberType.MEMBER;
 
   const detailedMembers = members
-    .map((member) => {
-      return {
-        ...member,
-        groupRole: isOwner(member.id)
-          ? "Owner"
-          : isAdmin(member.id)
-          ? "Admin"
-          : "Member"
-      };
-    })
+    .map((member) => ({
+      ...member,
+      groupRole: getAdvancedGroupRole(
+        member.id,
+        groupInfo.owner,
+        adminIDs,
+        memberIDs,
+        pendingMemberIDs
+      )
+    }))
     .sort(groupMemberSorter);
 
   console.log(detailedMembers);
@@ -73,7 +68,7 @@ const GroupInfoScreen = ({ navigation, route }) => {
   return (
     <RenderGroupDetail
       type={renderType}
-      groupInfo={{ ...groupInfo, admins: adminIDs }}
+      groupInfo={groupInfo}
       members={detailedMembers}
       pendingMembers={pendingMembers}
       navigation={navigation}

@@ -14,7 +14,7 @@ import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
 import { userFoundType } from "../../constants/UserFound";
 
-const AddBlockedUserScreen = ({ navigation }) => {
+const AddChatScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [ownUserName, setOwnUserName] = useState("");
   const [userFound, setUserFound] = useState(null);
@@ -32,7 +32,7 @@ const AddBlockedUserScreen = ({ navigation }) => {
 
   const handleClickOnSearch = () => {
     if (search === ownUserName) {
-      Alert.alert("This username is yours", "Search other username to block");
+      Alert.alert("This username is yours", "Search other username to message");
       return;
     }
 
@@ -43,36 +43,43 @@ const AddBlockedUserScreen = ({ navigation }) => {
     });
   };
 
+  function backToChatList() {
+    navigation.goBack();
+  }
+
+  function navigateToFriendList() {
+    navigation.navigate("Friends", { screen: "FriendList", initial: false });
+  }
+
   return (
     <Container>
       <RowBar>
         <SeparatedSearchInput
           value={search}
           onChangeText={(text) => setSearch(text)}
-          placeholder="Block user by its exact username"
+          placeholder="Message user by its exact username"
           testID="searchBar"
         />
 
-        <SearchButton
-          onPress={() => handleClickOnSearch()}
-          testID="searchButton"
-        >
-          <ButtonText color="#ffffff">Search</ButtonText>
+        <SearchButton onPress={() => handleClickOnSearch()}>
+          <ButtonText color="#ffffff" testID="searchButton">
+            Search
+          </ButtonText>
         </SearchButton>
       </RowBar>
 
-      <Button
-        onPress={() => navigation.replace("BlockedUserList")}
-        testID="blockedList"
-      >
-        <Text>Back to blocked list</Text>
+      <Button onPress={backToChatList} testID="chatList">
+        <Text>Back to chat list</Text>
+      </Button>
+      <Button onPress={navigateToFriendList} testID="friendList">
+        <Text>View friends</Text>
       </Button>
 
       <UserOuterContainer>
-        <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
+        <RenderUserFound type={userFoundType.TO_CHAT} userData={userFound} />
       </UserOuterContainer>
     </Container>
   );
 };
 
-export default AddBlockedUserScreen;
+export default AddChatScreen;

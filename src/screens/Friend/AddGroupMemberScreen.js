@@ -7,23 +7,26 @@ import {
   SearchInput
 } from "../../styles/GeneralStyles";
 import { fetchFriend } from "../../services/Friend/FetchFriendStatus";
-import { firebase } from "../../services/Firebase/Config";
 import {
   fetchGroupMembers,
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
-import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
-import { groupMemberType } from "../../constants/Group";
+import {
+  addUserToGroup,
+  cancelGroupInvitation
+} from "../../services/Friend/HandleGroup";
 import AddMemberComponent from "../../components/Friend/AddMemberComponent";
+import { getSimplifiedGroupRole } from "../../services/Friend/GroupRole";
+import { reversedGroupMemberSorter } from "../../services/Friend/Sorter";
+import Caution from "../../components/Miscellaneous/Caution";
 
 const AddGroupMemberScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [membersID, setMembersID] = useState([]);
   const [pendingMembersID, setPendingMembersID] = useState([]);
-  const [adminsID, setAdminsID] = useState([]);
   const groupInfo = route.params.groupInfo;
-  const isOwner = groupInfo.owner === firebase.auth().currentUser.uid;
+  const groupID = groupInfo.id;
 
   useEffect(() => {
     return fetchFriend({
@@ -48,28 +51,35 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
     });
   }, []);
 
-  useEffect(() => {
-    return fetchGroupAdminIDs({
-      groupID: groupInfo.id,
-      onSuccess: setAdminsID
-    });
-  }, []);
-
-  function getMemberType(item) {
-    return item.id === groupInfo.owner
-      ? groupMemberType.OWNER
-      : adminsID.includes(item.id)
-      ? groupMemberType.ADMIN
-      : membersID.includes(item.id)
-      ? groupMemberType.MEMBER
-      : pendingMembersID.includes(item.id)
-      ? groupMemberType.PENDING_MEMBER
-      : groupMemberType.NON_MEMBER;
+  function onInviteToGroup(id) {
+    addUserToGroup(groupID, id);
   }
 
-  const filteredFriends = friends.filter((friend) =>
-    friend.username.toLowerCase().startsWith(search.toLowerCase())
-  );
+  function onCancelInvitation(id) {
+    Caution("This invitation will be removed", () =>
+      cancelGroupInvitation(groupID, id)
+    );
+  }
+
+  const filteredFriends = friends
+    .map((friend) => ({
+      ...friend,
+      groupRole: getSimplifiedGroupRole(friend.id, membersID, pendingMembersID)
+    }))
+    .sort(reversedGroupMemberSorter)
+    .filter((friend) =>
+      friend.username.toLowerCase().startsWith(search.toLowerCase())
+    );
+
+  const FriendList = () =>
+    filteredFriends.map((item, idx) => (
+      <AddMemberComponent
+        key={idx}
+        item={item}
+        onInvite={() => onInviteToGroup(item.id)}
+        onCancel={() => onCancelInvitation(item.id)}
+      />
+    ));
 
   return (
     <ScrollContainer>
@@ -77,23 +87,18 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search friend"
+        testID="searchBar"
       />
 
-      <BoldText underline>Add Friends to Group</BoldText>
+      <BoldText underline testID="title">
+        Add Friends to Group
+      </BoldText>
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="goBack">
         <Text>Go Back</Text>
       </Button>
 
-      {filteredFriends.map((item, idx) => (
-        <AddMemberComponent
-          type={getMemberType(item)}
-          isOwner={isOwner}
-          key={idx}
-          item={item}
-          groupID={groupInfo.id}
-        />
-      ))}
+      <FriendList />
     </ScrollContainer>
   );
 };
