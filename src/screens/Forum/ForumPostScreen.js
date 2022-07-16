@@ -50,7 +50,7 @@ const MainPost = ({
       <Divider />
       <Title>{title}</Title>
       <Content> {content} </Content>
-      <ImageSlider img={img} />
+      {img.length > 0 && <ImageSlider img={img} />}
       {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       <LikeBar forumId={forumId} postId={postId} />
     </HeaderContainer>
