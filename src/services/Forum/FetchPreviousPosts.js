@@ -1,8 +1,8 @@
 import { firebase } from "../Firebase/Config";
 
-export function FetchPreviousPosts(callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
-  let db = firebase.firestore();
+export function FetchPreviousPosts(callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
+  let db = app.firestore();
 
   return db
     .collection("users")
