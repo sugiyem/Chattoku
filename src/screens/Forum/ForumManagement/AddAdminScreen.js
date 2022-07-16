@@ -4,6 +4,8 @@ import styled from "styled-components/native";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
 import RenderUserToManage from "../../../components/Forum/ForumManagement/RenderUserToManage";
 import { manageType } from "../../../constants/Forum";
+import { Container } from "../../../styles/GeneralStyles";
+import { AquaButton, AquaButtonText } from "../../../styles/ForumStyles";
 
 const AddAdminScreen = () => {
   const [username, setUsername] = useState("");
@@ -29,9 +31,9 @@ const AddAdminScreen = () => {
 
   return (
     <Container>
-      <BackButton onPress={navigation.goBack}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={navigation.goBack}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       <Title>Add Forum Admin</Title>
       <SearchContainer>
         <StyledTextInput
@@ -56,14 +58,6 @@ const AddAdminScreen = () => {
 
 export default AddAdminScreen;
 
-const Container = styled.View`
-  display: flex;
-  background-color: darkcyan;
-  padding: 5px;
-  padding-top: 10px;
-  flex: 1;
-`;
-
 const SearchContainer = styled.View`
   display: flex;
   flex-direction: row;
@@ -86,7 +80,7 @@ const Title = styled.Text`
   padding: 5px;
   font-weight: 400;
   align-self: center;
-  color: white;
+  color: whitesmoke;
 `;
 
 const CustomButton = styled.TouchableOpacity`
@@ -103,18 +97,4 @@ const ButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: white;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
 `;

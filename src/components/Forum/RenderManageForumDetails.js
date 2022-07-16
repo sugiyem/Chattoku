@@ -11,6 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import { createForum, editForum } from "../../services/Forum/HandleForum";
 import { imageType } from "../../constants/Image";
 import { renderType } from "../../constants/Forum";
+import {
+  AquaButton,
+  AquaButtonText,
+  DarkButton,
+  DarkButtonText,
+  ScrollContainer
+} from "../../styles/ForumStyles";
 
 const initialForumInfo = {
   img: "",
@@ -91,7 +98,7 @@ const RenderManageForumDetails = ({ manageType }) => {
         });
   };
   return (
-    <Container>
+    <ScrollContainer>
       <Modal
         animationType="fade"
         visible={modalVisible}
@@ -113,9 +120,9 @@ const RenderManageForumDetails = ({ manageType }) => {
         </ModalContainer>
       </Modal>
 
-      <BackButton onPress={() => navigation.goBack()}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={() => navigation.goBack()}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       <Title> Enter Forum Details </Title>
       <ImageContainer>
         {forumInfo.banner.length > 0 ? (
@@ -124,9 +131,9 @@ const RenderManageForumDetails = ({ manageType }) => {
           <Banner source={require("../../assets/default-banner.png")} />
         )}
       </ImageContainer>
-      <CustomButton onPress={handleUploadBannerClick}>
-        <ButtonText> Upload Banner </ButtonText>
-      </CustomButton>
+      <DarkButton onPress={handleUploadBannerClick}>
+        <DarkButtonText> Upload Banner </DarkButtonText>
+      </DarkButton>
       <ImageContainer>
         {forumInfo.img.length > 0 ? (
           <ProfilePicture source={{ uri: forumInfo.img }} />
@@ -136,9 +143,9 @@ const RenderManageForumDetails = ({ manageType }) => {
           />
         )}
       </ImageContainer>
-      <CustomButton onPress={handleUploadProfileClick}>
-        <ButtonText> Upload Image </ButtonText>
-      </CustomButton>
+      <DarkButton onPress={handleUploadProfileClick}>
+        <DarkButtonText> Upload Image </DarkButtonText>
+      </DarkButton>
       <TextInputLabel> Title </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "title")}
@@ -149,10 +156,10 @@ const RenderManageForumDetails = ({ manageType }) => {
         onChangeText={(text) => handleChangeText(text, "desc")}
         value={forumInfo.desc}
       />
-      <CustomButton onPress={handleSubmit}>
-        <ButtonText> {submitButtonText} </ButtonText>
-      </CustomButton>
-    </Container>
+      <DarkButton onPress={handleSubmit}>
+        <DarkButtonText> {submitButtonText} </DarkButtonText>
+      </DarkButton>
+    </ScrollContainer>
   );
 };
 
@@ -171,13 +178,6 @@ const Title = styled.Text`
 const Banner = styled.Image`
   width: ${width - 20}px;
   height: ${(width * 2) / 5 - 8}px;
-`;
-
-const Container = styled.ScrollView`
-  display: flex;
-  background-color: darkcyan;
-  padding: 5px;
-  flex: 1;
 `;
 
 const ModalContainer = styled.View`
@@ -219,43 +219,24 @@ const ImageContainer = styled.View`
   justify-content: center;
 `;
 
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: navy;
-  margin: 20px;
-`;
-
 const TextInputLabel = styled.Text`
   font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
   font-weight: bold;
   text-decoration-line: underline;
   margin: 5px;
   align-self: center;
+  color: whitesmoke;
+  font-size: 16px;
 `;
 
 const StyledTextInput = styled.TextInput`
   flex-direction: row;
   width: 90%;
   margin: 5px;
-  padding-left: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
   background-color: white;
   padding-bottom: 5px;
   align-self: center;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-  padding: 5px;
-  margin-top: 10px;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
+  font-size: 15px;
 `;

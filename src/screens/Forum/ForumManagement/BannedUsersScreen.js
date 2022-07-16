@@ -4,6 +4,13 @@ import styled from "styled-components/native";
 import BannedUsersList from "../../../components/Forum/ForumManagement/BannedUsersList";
 import { firebase } from "../../../services/Firebase/Config";
 import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
+import {
+  AquaButton,
+  AquaButtonText,
+  DarkButton,
+  DarkButtonText
+} from "../../../styles/ForumStyles";
+import { Container } from "../../../styles/GeneralStyles";
 
 const BannedUsersScreen = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -26,13 +33,13 @@ const BannedUsersScreen = () => {
 
   return (
     <Container>
-      <BackButton onPress={navigation.goBack}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={navigation.goBack}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       {(isOwner || isAuthorized) && (
-        <CustomButton onPress={handleAddBannedUsers}>
-          <ButtonText>Add Banned Users</ButtonText>
-        </CustomButton>
+        <DarkButton onPress={handleAddBannedUsers}>
+          <DarkButtonText>Add Banned Users</DarkButtonText>
+        </DarkButton>
       )}
       <Title> Banned Users </Title>
       <BannedUsersList
@@ -45,48 +52,10 @@ const BannedUsersScreen = () => {
 
 export default BannedUsersScreen;
 
-const Container = styled.View`
-  display: flex;
-  background-color: darkcyan;
-  padding: 5px;
-  padding-top: 10px;
-  flex: 1;
-`;
-
 const Title = styled.Text`
   font-size: 22px;
   padding: 5px;
   font-weight: 400;
   align-self: center;
-  color: white;
-`;
-
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: navy;
-  margin: 20px;
-`;
-
-const ButtonText = styled.Text`
-  justify-content: center;
-  align-self: center;
-  font-size: 15px;
-  font-weight: bold;
-  color: white;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
+  color: whitesmoke;
 `;

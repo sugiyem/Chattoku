@@ -9,7 +9,7 @@ import { Container } from "../../styles/GeneralStyles";
 import {
   CreateForumButton,
   CreateForumText,
-  DarkButton,
+  RoundDarkButton,
   DarkButtonText,
   ForumHomeTitle
 } from "../../styles/ForumStyles";
@@ -37,9 +37,9 @@ const FollowedForumScreen = () => {
 
   return (
     <Container>
-      <DarkButton onPress={handleDiscoverForumClick}>
+      <RoundDarkButton onPress={handleDiscoverForumClick}>
         <DarkButtonText> Discover New Forums </DarkButtonText>
-      </DarkButton>
+      </RoundDarkButton>
       <ForumHomeTitle>Followed Forums</ForumHomeTitle>
       <ForumList data={data} />
       <CreateForumButton onPress={handleCreateForumClick}>

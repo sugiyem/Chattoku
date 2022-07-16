@@ -84,7 +84,7 @@ export const AquaButtonText = styled.Text`
   color: navy;
 `;
 
-export const DarkButton = styled.TouchableOpacity`
+export const RoundDarkButton = styled.TouchableOpacity`
   align-self: stretch;
   padding: 10px;
   border-radius: 20px;
@@ -92,10 +92,21 @@ export const DarkButton = styled.TouchableOpacity`
   background-color: darkblue;
 `;
 
+export const DarkButton = styled.TouchableOpacity`
+  align-self: stretch;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: navy;
+  margin: 20px;
+  border-width: 1px;
+  border-color: #44d0fe;
+`;
+
 export const DarkButtonText = styled.Text`
+  justify-content: center;
   align-self: center;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: bold;
   color: white;
 `;
 
