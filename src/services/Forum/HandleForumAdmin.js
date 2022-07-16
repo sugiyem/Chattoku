@@ -1,5 +1,7 @@
+import { result } from "lodash";
 import { firebase } from "../Firebase/Config";
 import { sendPushNotification } from "../Miscellaneous/HandleNotification";
+import { FetchInfoById } from "../Profile/FetchUserInfo";
 
 export async function addAdmin(
   forumId,
@@ -74,9 +76,26 @@ export function getAllAdmins(forumId, callbackSuccess, app = firebase) {
     .collection("forums")
     .doc(forumId)
     .collection("admins")
-    .onSnapshot((querySnapshot) => {
-      data = [];
+    .onSnapshot(async (querySnapshot) => {
+      let data = [];
       querySnapshot.forEach((doc) => data.push(doc.data()));
+
+      const deleted = [];
+
+      const existencePromise = data.map((admin, i) =>
+        FetchInfoById(admin.uid, (result) => {
+          deleted[i] = result.isDeleted;
+        })
+      );
+
+      await Promise.all(existencePromise);
+
+      console.log("deleted", deleted);
+
+      await Promise.all(existencePromise);
+
+      data = data.filter((_, i) => !deleted[i]);
+
       callbackSuccess(data);
     });
 }

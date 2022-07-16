@@ -1,5 +1,7 @@
+import { result } from "lodash";
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
+import { FetchInfoById } from "../Profile/FetchUserInfo";
 
 export function getBannedUsers(forumId, callbackSuccess, app = firebase) {
   return app
@@ -8,14 +10,27 @@ export function getBannedUsers(forumId, callbackSuccess, app = firebase) {
     .doc(forumId)
     .collection("banned")
     .onSnapshot(
-      (querySnapshot) => {
-        const bannedUsers = [];
+      async (querySnapshot) => {
+        let bannedUsers = [];
         querySnapshot.forEach((documentSnapshot) => {
           bannedUsers.push({
             ...documentSnapshot.data(),
             userId: documentSnapshot.id
           });
         });
+
+        const deleted = [];
+
+        const existencePromise = bannedUsers.map((banned, i) =>
+          FetchInfoById(banned.userId, (result) => {
+            deleted[i] = result.isDeleted;
+          })
+        );
+
+        await Promise.all(existencePromise);
+
+        bannedUsers = bannedUsers.filter((_, i) => !deleted[i]);
+
         callbackSuccess(bannedUsers);
       },
       (error) => console.error(error)

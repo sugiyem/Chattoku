@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Alert, Platform } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../../services/Firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
+import { deleteAccount } from "../../services/Authentication/HandleAuthentication";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
 import styled from "styled-components/native";
+import Loading from "../../components/Miscellaneous/Loading";
+import Caution from "../../components/Miscellaneous/Caution";
 
 const initialState = {
   username: "",
@@ -30,6 +24,7 @@ const ProfileHomeScreen = () => {
   const [favoriteAnime, setFavoriteAnime] = useState([]);
   const [animeExpanded, setAnimeExpanded] = useState(false);
   const [genreExpanded, setGenreExpanded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -71,7 +66,24 @@ const ProfileHomeScreen = () => {
     }
   }
 
+  function onDelete() {
+    Caution("This account will be deleted", async () => {
+      setIsLoading(true);
+      await deleteAccount(
+        () => {
+          navigation.replace("Login");
+          Alert.alert("Account has been deleted");
+        },
+        (error) => Alert.alert("Error", error.message)
+      ).finally(() => setIsLoading(false));
+    });
+  }
+
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     return FetchUserInfo({
       onSuccesfulFetch: (userInfo) => {
         setUserInfo(userInfo);
@@ -80,9 +92,13 @@ const ProfileHomeScreen = () => {
         Alert.alert(error.message);
       }
     });
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     return FetchFavoriteAnime({
       onSuccesfulFetch: (favorite) => {
         setFavoriteAnime(favorite);
@@ -91,62 +107,69 @@ const ProfileHomeScreen = () => {
         Alert.alert(error.message);
       }
     });
-  }, []);
+  }, [isLoading]);
 
   return (
-    <Container contentContainerStyle={{ alignItems: "center" }}>
-      <ContentContainer>
-        {userInfo.img.length > 0 ? (
-          <ProfilePicture source={{ uri: userInfo.img }} />
-        ) : (
-          <ProfilePicture
-            source={require("../../assets/default-profile.png")}
-          />
-        )}
+    <Loading isLoading={isLoading}>
+      <Container contentContainerStyle={{ alignItems: "center" }}>
+        <ContentContainer>
+          {userInfo.img.length > 0 ? (
+            <ProfilePicture source={{ uri: userInfo.img }} />
+          ) : (
+            <ProfilePicture
+              source={require("../../assets/default-profile.png")}
+            />
+          )}
 
-        <Username>{userInfo.username}</Username>
-        <Bio>{userInfo.bio}</Bio>
-        <ButtonGroup>
-          <Button
-            onPress={() => {
-              navigation.navigate("PastPosts");
-            }}
-          >
-            <ButtonText> See Recent Posts </ButtonText>
-          </Button>
-          <Button
-            onPress={() => {
-              navigation.navigate("EditProfile", { userInfo: userInfo });
-            }}
-          >
-            <ButtonText>Edit Profile</ButtonText>
-          </Button>
-          <Button onPress={() => logOut()}>
-            <ButtonText>Logout</ButtonText>
-          </Button>
-        </ButtonGroup>
-      </ContentContainer>
+          <Username>{userInfo.username}</Username>
+          <Bio>{userInfo.bio}</Bio>
+          <ButtonGroup>
+            <Button
+              onPress={() => {
+                navigation.navigate("PastPosts");
+              }}
+            >
+              <ButtonText> See Recent Posts </ButtonText>
+            </Button>
+            <Button
+              onPress={() => {
+                navigation.navigate("EditProfile", { userInfo: userInfo });
+              }}
+            >
+              <ButtonText>Edit Profile</ButtonText>
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button onPress={logOut}>
+              <ButtonText>Logout</ButtonText>
+            </Button>
+            <Button onPress={onDelete}>
+              <ButtonText>Delete Account</ButtonText>
+            </Button>
+          </ButtonGroup>
+        </ContentContainer>
 
-      <FavoriteStuffContainer>
-        {datas.map((item, index) => (
-          <ListItem.Accordion
-            bottomDivider
-            key={index}
-            content={
-              <ListItem.Content>
-                <ListItem.Title>
-                  <Title>{item.title}</Title>
-                </ListItem.Title>
-              </ListItem.Content>
-            }
-            isExpanded={item.isExpanded}
-            onPress={() => item.changeExpanded(!item.isExpanded)}
-          >
-            {item.isExpanded && <item.render items={item.data} />}
-          </ListItem.Accordion>
-        ))}
-      </FavoriteStuffContainer>
-    </Container>
+        <FavoriteStuffContainer>
+          {datas.map((item, index) => (
+            <ListItem.Accordion
+              bottomDivider
+              key={index}
+              content={
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <Title>{item.title}</Title>
+                  </ListItem.Title>
+                </ListItem.Content>
+              }
+              isExpanded={item.isExpanded}
+              onPress={() => item.changeExpanded(!item.isExpanded)}
+            >
+              {item.isExpanded && <item.render items={item.data} />}
+            </ListItem.Accordion>
+          ))}
+        </FavoriteStuffContainer>
+      </Container>
+    </Loading>
   );
 };
 

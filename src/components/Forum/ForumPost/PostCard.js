@@ -23,6 +23,8 @@ const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
   const setOverlayData = useContext(overlayContext);
   const isOwnersPost = forumData.owner === postData.uid;
 
+  console.log(userData);
+
   const dateText = postData.timestamp
     .toDateString()
     .split(" ")
@@ -53,7 +55,18 @@ const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
 
   //Fetch username of poster
   useEffect(() => {
-    FetchInfoById(postData.uid, setUserData);
+    FetchInfoById(postData.uid, (data) => {
+      if (data.isDeleted) {
+        setUserData({
+          ...initialUserData,
+          username: "[Deleted Account]",
+          isDeleted: true
+        });
+        return;
+      }
+
+      setUserData(data);
+    });
   }, []);
 
   function handleCommentPress() {
