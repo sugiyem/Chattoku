@@ -16,7 +16,7 @@ export const ForumSearchBar = styled.TextInput`
 export const ForumNavigation = styled.TouchableOpacity`
   align-self: stretch;
   padding: 10px;
-  border-width: 0.7px;
+  border-width: 1px;
   border-color: navy;
   background-color: aquamarine;
 `;
@@ -82,4 +82,17 @@ export const DarkButtonText = styled.Text`
   font-size: 16px;
   font-weight: 400;
   color: white;
+`;
+
+export const BannedText = styled.Text`
+  border-radius: 10px;
+  padding: 10px 30px;
+  background-color: navy;
+  margin: 10px;
+  color: whitesmoke;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  border-width: 0.5px;
+  border-color: whitesmoke;
 `;

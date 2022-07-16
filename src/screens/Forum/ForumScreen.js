@@ -12,7 +12,11 @@ import { isUserAdmin } from "../../services/Forum/HandleForumAdmin";
 import ProfileOverlay from "../../components/Forum/ProfileOverlay";
 import overlayContext from "./overlayContext";
 import { PaddinglessContainer } from "../../styles/GeneralStyles";
-import { ForumNavigation, NavigationText } from "../../styles/ForumStyles";
+import {
+  BannedText,
+  ForumNavigation,
+  NavigationText
+} from "../../styles/ForumStyles";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
@@ -98,18 +102,6 @@ const ForumScreen = () => {
 };
 
 export default ForumScreen;
-const BannedText = styled.Text`
-  border-radius: 10px;
-  padding: 10px 30px;
-  background-color: navy;
-  margin: 10px;
-  color: whitesmoke;
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-  border-width: 0.5px;
-  border-color: whitesmoke;
-`;
 
 const styles = StyleSheet.create({
   add: {

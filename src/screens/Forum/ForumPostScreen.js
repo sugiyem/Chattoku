@@ -8,6 +8,14 @@ import { FetchInfoById } from "../../services/Profile/FetchUserInfo";
 import overlayContext from "./overlayContext";
 import ProfileOverlay from "../../components/Forum/ProfileOverlay";
 import ImageSlider from "../../components/Miscellaneous/ImageSlider";
+import { PaddinglessContainer } from "../../styles/GeneralStyles";
+import {
+  AquaButton,
+  AquaButtonText,
+  BannedText,
+  ForumNavigation,
+  NavigationText
+} from "../../styles/ForumStyles";
 
 const initialUserData = {
   img: "",
@@ -93,57 +101,26 @@ const ForumPostScreen = () => {
   return (
     <overlayContext.Provider value={setPopupData}>
       {popupData && <ProfileOverlay userData={popupData} />}
-      <Container>
-        <Button onPress={() => navigation.goBack()}>
-          <ButtonText>Go Back</ButtonText>
-        </Button>
+      <PaddinglessContainer>
+        <ForumNavigation onPress={() => navigation.goBack()}>
+          <NavigationText>Go Back</NavigationText>
+        </ForumNavigation>
 
         <CommentList {...data} Header={RenderHeader} />
 
         {data.isBanned ? (
-          <BannedText>You have been banned</BannedText>
+          <BannedText> You have been banned</BannedText>
         ) : (
-          <Button onPress={handleAddButtonClick}>
-            <ButtonText>Add Your Comment</ButtonText>
-          </Button>
+          <AquaButton onPress={handleAddButtonClick}>
+            <AquaButtonText>Add Your Comment</AquaButtonText>
+          </AquaButton>
         )}
-      </Container>
+      </PaddinglessContainer>
     </overlayContext.Provider>
   );
 };
 
 export default ForumPostScreen;
-
-const Container = styled.View`
-  padding: 5px;
-  flex: 1;
-  background-color: darkcyan;
-`;
-
-const Button = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const ButtonText = styled.Text`
-  text-align: center;
-  color: blue;
-`;
-
-const BannedText = styled.Text`
-  border-radius: 10px;
-  padding: 10px;
-  background-color: navy;
-  margin: 20px;
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-`;
 
 const Profile = styled.Image`
   align-self: center;
