@@ -6,9 +6,10 @@ export async function addAdmin(
   adminDetails,
   expoPushToken,
   forumName,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -30,9 +31,10 @@ export async function removeAdmin(
   uid,
   expoPushToken,
   forumName,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -53,9 +55,10 @@ export async function editAdminPower(
   forumId,
   uid,
   adminPowers,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -65,8 +68,8 @@ export async function editAdminPower(
     .then(() => callbackSuccess());
 }
 
-export function getAllAdmins(forumId, callbackSuccess) {
-  return firebase
+export function getAllAdmins(forumId, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -78,8 +81,8 @@ export function getAllAdmins(forumId, callbackSuccess) {
     });
 }
 
-export function isUserAdmin(forumId, uid, callbackSuccess) {
-  return firebase
+export function isUserAdmin(forumId, uid, callbackSuccess, app = firebase) {
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -92,10 +95,14 @@ export function isUserAdmin(forumId, uid, callbackSuccess) {
     );
 }
 
-export function isAuthorizedToDeletePosts(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export function isAuthorizedToDeletePosts(
+  forumId,
+  callbackSuccess,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -108,10 +115,14 @@ export function isAuthorizedToDeletePosts(forumId, callbackSuccess) {
     );
 }
 
-export function isAuthorizedToBanUsers(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export function isAuthorizedToBanUsers(
+  forumId,
+  callbackSuccess,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
 
-  return firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)

@@ -85,3 +85,28 @@ export async function uploadImage(
       Alert.alert(error.message);
     });
 }
+
+export async function removeImageFromCloudStorage(imgUrl) {
+  if (imgUrl === "") {
+    return;
+  }
+
+  await firebase
+    .storage()
+    .refFromURL(imgUrl)
+    .delete()
+    .catch((error) => Alert.alert("Error", error.message));
+}
+
+export async function removeAllImageFromCloud(images, retries = 0) {
+  if (retries === 5) {
+    //Give up deletion
+    return;
+  }
+  let promisedDelete = images.map(removeImageFromCloudStorage);
+
+  await Promise.all(promisedDelete).catch(() =>
+    //retry deletion if something went wrong
+    removeAllImageFromCloud(images, retries + 1)
+  );
+}

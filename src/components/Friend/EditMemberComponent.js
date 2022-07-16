@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
 import { Icon, ListItem } from "react-native-elements";
-import { firebase } from "../../services/Firebase/Config";
 import {
   cancelGroupInvitation,
   removeUserFromGroup
@@ -10,15 +8,19 @@ import {
   demoteAdminToMember,
   promoteMemberToAdmin
 } from "../../services/Friend/HandleGroupAdmin";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { contactType } from "../../constants/Contact";
 import ContactBar from "./ContactBar";
 import Caution from "../Miscellaneous/Caution";
 
 const EditMemberComponent = ({ item, isMember, groupInfo }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const currentID = firebase.auth().currentUser.uid;
+  const currentID = getCurrentUID();
   const groupID = groupInfo.id;
   const itemID = item.id;
+
+  const isOtherUserOwner = item.groupRole === "Owner";
+  const isOtherUserAdmin = item.groupRole === "Admin";
 
   const alertTitle = isMember
     ? "This user will be removed from the group"
@@ -26,7 +28,8 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 
   const isCurrentUserOwner = currentID === groupInfo.owner;
   const isEditable =
-    !isMember || (!item.isOwner && (isCurrentUserOwner || !item.isAdmin));
+    !isMember ||
+    (!isOtherUserOwner && (isCurrentUserOwner || !isOtherUserAdmin));
 
   const buttonDetails = [
     {
@@ -40,9 +43,9 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 
   if (isCurrentUserOwner && isMember) {
     buttonDetails.push({
-      title: item.isAdmin ? "Demote" : "Promote",
+      title: isOtherUserAdmin ? "Demote" : "Promote",
       type: "material-community",
-      icon: item.isAdmin ? "account-arrow-down" : "account-arrow-up",
+      icon: isOtherUserAdmin ? "account-arrow-down" : "account-arrow-up",
       color: "blue",
       onPress: onAdminUpdatePress
     });
@@ -59,7 +62,7 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
   }
 
   async function onAdminUpdatePress() {
-    if (item.isAdmin) {
+    if (isOtherUserAdmin) {
       await demoteAdminToMember(groupID, itemID);
     } else {
       await promoteMemberToAdmin(groupID, itemID);
@@ -102,10 +105,3 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 };
 
 export default EditMemberComponent;
-
-const styles = StyleSheet.create({
-  removeButton: {
-    minHeight: "100%",
-    backgroundColor: "red"
-  }
-});

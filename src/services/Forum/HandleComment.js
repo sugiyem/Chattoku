@@ -1,18 +1,28 @@
 import { firebase } from "../Firebase/Config";
 
-export async function AddComment(forumId, postId, comment, onSuccess, onError) {
-  const currentUID = firebase.auth().currentUser.uid;
+export async function AddComment(
+  forumId,
+  postId,
+  comment,
+  onSuccess,
+  onError,
+  app = firebase
+) {
+  const currentUID = app.auth().currentUser.uid;
+  const time = new Date();
 
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("posts")
     .doc(postId)
     .collection("comments")
-    .add({ content: comment, uid: currentUID })
+    .add({ content: comment, uid: currentUID, timestamp: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
+
+  return time;
 }
 
 export async function DeleteComment(
@@ -20,9 +30,10 @@ export async function DeleteComment(
   postId,
   commentId,
   onSuccess,
-  onError
+  onError,
+  app = firebase
 ) {
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -41,11 +52,12 @@ export async function EditComment(
   commentId,
   comment,
   onSuccess,
-  onError
+  onError,
+  app = firebase
 ) {
-  const currentUID = firebase.auth().currentUser.uid;
+  const time = new Date();
 
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)
@@ -53,7 +65,9 @@ export async function EditComment(
     .doc(postId)
     .collection("comments")
     .doc(commentId)
-    .update({ content: comment })
+    .update({ content: comment, lastEdited: time })
     .then(() => onSuccess())
     .catch((e) => onError(e));
+
+  return time;
 }

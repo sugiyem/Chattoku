@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Alert, Text } from "react-native";
 import {
+  AppLogo,
   AuthContainer,
+  AuthPrimaryButton,
+  AuthPrimaryText,
+  AuthSecondaryButton,
+  AuthSecondaryText,
   AuthSystemContainer,
-  AuthTextInput,
-  AuthTitle
+  AuthTitle,
+  GradientBackground
 } from "../styles/AuthStyles";
 import { Button, ButtonText, RoundedImage } from "../styles/GeneralStyles";
 import { isValidEmail } from "../services/Authentication/CheckCredentials";
@@ -13,6 +18,7 @@ import {
   redirectToLoginScreen,
   redirectToSignupScreen
 } from "../services/Authentication/AuthNavigation";
+import AnimatedInput from "../components/Miscellaneous/AnimatedInput";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -26,35 +32,34 @@ const ForgotPasswordScreen = ({ navigation }) => {
   }
 
   return (
-    <AuthContainer>
-      <RoundedImage source={require("../assets/logo.png")} />
-      <AuthSystemContainer>
-        <AuthTitle> Forgot Password </AuthTitle>
-        <Text> Email </Text>
-        <AuthTextInput
-          placeholder="email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Button color="#0000ff" onPress={handleSubmit}>
-          <ButtonText color="#ffffff">Send Password Reset Email</ButtonText>
-        </Button>
-        <Button
-          color="#0000ff"
-          onPress={() => redirectToSignupScreen(navigation)}
-        >
-          <ButtonText color="#ffffff">
-            Don't Have an Account? Sign Up Here
-          </ButtonText>
-        </Button>
-        <Button
-          color="#0000ff"
-          onPress={() => redirectToLoginScreen(navigation)}
-        >
-          <ButtonText color="#ffffff">Have an account? Login Now</ButtonText>
-        </Button>
-      </AuthSystemContainer>
-    </AuthContainer>
+    <GradientBackground>
+      <AuthContainer>
+        <AppLogo source={require("../assets/logo.png")} />
+        <AuthSystemContainer>
+          <AuthTitle> Forgot Password </AuthTitle>
+          <AnimatedInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <AuthPrimaryButton onPress={handleSubmit}>
+            <AuthPrimaryText>Send Password Reset Email</AuthPrimaryText>
+          </AuthPrimaryButton>
+          <AuthSecondaryButton
+            onPress={() => redirectToSignupScreen(navigation)}
+          >
+            <AuthSecondaryText>
+              Don't Have an Account? Sign Up Here
+            </AuthSecondaryText>
+          </AuthSecondaryButton>
+          <AuthSecondaryButton
+            onPress={() => redirectToLoginScreen(navigation)}
+          >
+            <AuthSecondaryText>Have an account? Login Now</AuthSecondaryText>
+          </AuthSecondaryButton>
+        </AuthSystemContainer>
+      </AuthContainer>
+    </GradientBackground>
   );
 };
 

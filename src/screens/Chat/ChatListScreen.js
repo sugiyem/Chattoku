@@ -26,8 +26,8 @@ const ChatListScreen = () => {
   const [isUnreadExists, setIsUnreadExists] = useState(false);
   const navigation = useNavigation();
 
-  function navigateToFriendsList() {
-    navigation.navigate("Friends", { screen: "FriendList", initial: false });
+  function navigateToAddChat() {
+    navigation.navigate("AddChat");
   }
 
   function navigateToGroupChat() {
@@ -82,10 +82,7 @@ const ChatListScreen = () => {
       </BoldText>
 
       <ButtonGroup>
-        <SeparatedButton
-          onPress={navigateToFriendsList}
-          testID="friendListButton"
-        >
+        <SeparatedButton onPress={navigateToAddChat}>
           <ButtonText color="#000000">Message other users</ButtonText>
         </SeparatedButton>
 

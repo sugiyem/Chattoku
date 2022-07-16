@@ -17,20 +17,28 @@ export function fetchBlockedUsers(onSuccess, app = firebase) {
           blockedUsersID.push(documentSnapshot.id);
         });
 
-        await usersRef.get().then((snaps) => {
-          snaps.forEach((snap) => {
-            if (blockedUsersID.includes(snap.id)) {
-              blockedUsersData.push({
-                id: snap.id,
-                username: snap.data().username,
-                bio: snap.data().bio,
-                img: snap.data().img
-              });
-            }
-          });
+        const promisedData = blockedUsersID.map(async (blockedID) => {
+          await usersRef
+            .doc(blockedID)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                blockedUsersData.push({
+                  id: doc.id,
+                  username: doc.data().username,
+                  bio: doc.data().bio,
+                  img: doc.data().img
+                });
+              }
+            });
         });
 
-        onSuccess(blockedUsersData);
+        await Promise.all(promisedData).then(() => {
+          // Sort blocked users by username
+          blockedUsersData.sort((x, y) => (x.username < y.username ? -1 : 1));
+
+          onSuccess(blockedUsersData);
+        });
       },
       (error) => Alert.alert("Error", error.message)
     );
