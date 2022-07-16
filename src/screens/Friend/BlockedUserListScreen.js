@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import {
   BoldText,
   Button,
+  GradientBackground,
+  IconGroup,
+  IconText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -10,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { fetchBlockedUsers } from "../../services/Friend/FetchBlockedUsers";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
+import { Icon } from "react-native-elements";
 
 const BlockedUserListScreen = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
@@ -36,25 +40,42 @@ const BlockedUserListScreen = () => {
     ));
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-        placeholder="Search requests by username"
-      />
+    <GradientBackground>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Search requests by username"
+        />
 
-      <BoldText underline>Blocked List</BoldText>
+        <BoldText underline>Blocked List</BoldText>
 
-      <Button onPress={() => navigation.goBack()}>
-        <Text>Back to friend's list</Text>
-      </Button>
+        <IconGroup>
+          <View>
+            <Icon
+              type="antdesign"
+              name="back"
+              color="navy"
+              size={30}
+              onPress={navigation.goBack}
+            />
+            <IconText>Go Back</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-remove"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("AddBlockedUser")}
+            />
+            <IconText>Block User</IconText>
+          </View>
+        </IconGroup>
 
-      <Button onPress={() => navigation.navigate("AddBlockedUser")}>
-        <Text>Add blocked users</Text>
-      </Button>
-
-      <UserLists />
-    </ScrollContainer>
+        <UserLists />
+      </ScrollContainer>
+    </GradientBackground>
   );
 };
 

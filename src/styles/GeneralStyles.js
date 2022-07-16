@@ -1,17 +1,32 @@
 import styled from "styled-components/native";
-import { Platform } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Badge } from "react-native-elements";
+
+const width = Dimensions.get("screen").width;
+
+export const GradientBackground = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87CEEB", "#ffffff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      {children}
+    </LinearGradient>
+  );
+};
 
 export const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 5px;
-  background-color: #008b8b;
 `;
 
 export const ScrollContainer = styled.ScrollView`
   flex: 1;
   padding: 5px;
-  background-color: #008b8b;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -88,3 +103,32 @@ export const ButtonGroup = styled.View`
 export const RowBar = styled.View`
   flex-direction: row;
 `;
+
+export const IconGroup = styled.View`
+  background-color: transparent;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+  width: ${width - 20}px;
+`;
+
+export const IconText = styled.Text`
+  text-align: center;
+  color: #002244;
+`;
+
+export const NotificationIcon = ({ children, isVisible }) => (
+  <View style={{ alignItems: "center" }}>
+    {children}
+    {isVisible && (
+      <Badge
+        status="success"
+        containerStyle={{
+          position: "absolute",
+          top: -2,
+          right: "30%"
+        }}
+      />
+    )}
+  </View>
+);

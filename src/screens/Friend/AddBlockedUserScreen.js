@@ -4,16 +4,12 @@ import {
   Button,
   ButtonText,
   Container,
-  RoundedImage,
+  GradientBackground,
   RowBar,
   SearchButton,
   SeparatedSearchInput
 } from "../../styles/GeneralStyles";
-import { EditButtonText, Name } from "../../styles/InfoStyles";
-import {
-  UserInnerContainer,
-  UserOuterContainer
-} from "../../styles/ContactStyles";
+import { UserOuterContainer } from "../../styles/ContactStyles";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
@@ -49,27 +45,29 @@ const AddBlockedUserScreen = ({ navigation }) => {
   };
 
   return (
-    <Container>
-      <RowBar>
-        <SeparatedSearchInput
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          placeholder="Block user by its exact username"
-        />
+    <GradientBackground>
+      <Container>
+        <RowBar>
+          <SeparatedSearchInput
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            placeholder="Block user by its exact username"
+          />
 
-        <SearchButton onPress={() => handleClickOnSearch()}>
-          <ButtonText color="#ffffff">Search</ButtonText>
-        </SearchButton>
-      </RowBar>
+          <SearchButton onPress={() => handleClickOnSearch()}>
+            <ButtonText color="#ffffff">Search</ButtonText>
+          </SearchButton>
+        </RowBar>
 
-      <Button onPress={() => navigation.replace("BlockedUserList")}>
-        <Text>Back to blocked list</Text>
-      </Button>
+        <Button onPress={() => navigation.replace("BlockedUserList")}>
+          <ButtonText>Back to blocked list</ButtonText>
+        </Button>
 
-      <UserOuterContainer>
-        <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
-      </UserOuterContainer>
-    </Container>
+        <UserOuterContainer>
+          <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
+        </UserOuterContainer>
+      </Container>
+    </GradientBackground>
   );
 };
 

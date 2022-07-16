@@ -10,12 +10,16 @@ const ContactBar = ({ type, item }) => {
     <>
       <ContactImage item={item} />
       <ListItem.Content>
-        <ListItem.Title>{isUser ? item.username : item.name}</ListItem.Title>
-        <ListItem.Subtitle>
+        <ListItem.Title style={{ color: "#1D428A" }}>
+          {isUser ? item.username : item.name}
+        </ListItem.Title>
+        <ListItem.Subtitle style={{ color: "#1D428A" }}>
           {isUser ? item.bio : item.description}
         </ListItem.Subtitle>
         {item.groupRole && (
-          <ListItem.Subtitle>{item.groupRole}</ListItem.Subtitle>
+          <ListItem.Subtitle style={{ color: "#1D428A" }}>
+            {item.groupRole}
+          </ListItem.Subtitle>
         )}
       </ListItem.Content>
     </>
