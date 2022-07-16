@@ -9,6 +9,7 @@ const mockUserData = {
   img: "yemima-img"
 };
 
+jest.mock("@react-navigation/native");
 jest.mock("../../../src/services/Friend/FetchFriendStatus");
 jest.mock("../../../src/services/Friend/FriendshipStatus");
 jest.mock("../../../src/services/Friend/HandleBlockedUser");
