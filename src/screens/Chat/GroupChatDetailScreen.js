@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Alert, LogBox } from "react-native";
 import { ChatContainer } from "../../styles/ChatStyles";
-import { firebase } from "../../services/Firebase/Config";
 import { chatType } from "../../constants/Chat";
 import { fetchGroupChatMessages } from "../../services/Chat/FetchChatMessages";
 import FetchUserInfo, {
-  FetchAllUserInfos
+  FetchAllUserInfos,
+  getCurrentUID
 } from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
 import ChatHeader from "../../components/Chat/ChatHeader";
@@ -23,7 +23,7 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   const [allUserInfos, setAllUserInfos] = useState([]);
   const [messages, setMessages] = useState([]);
 
-  const userID = firebase.auth().currentUser.uid;
+  const userID = getCurrentUID();
   const groupData = route.params.groupData;
 
   useEffect(() => {

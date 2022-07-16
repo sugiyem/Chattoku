@@ -50,8 +50,8 @@ export function FetchAllUserInfos(onSuccess, app = firebase) {
     );
 }
 
-export async function FetchInfoById(userID, callbackSuccess) {
-  await firebase
+export async function FetchInfoById(userID, callbackSuccess, app = firebase) {
+  await app
     .firestore()
     .collection("users")
     .doc(userID)

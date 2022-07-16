@@ -1,4 +1,3 @@
-import { result } from "lodash";
 import { firebase } from "../Firebase/Config";
 import { sendPushNotification } from "../Miscellaneous/HandleNotification";
 import { FetchInfoById } from "../Profile/FetchUserInfo";
@@ -83,9 +82,13 @@ export function getAllAdmins(forumId, callbackSuccess, app = firebase) {
       const deleted = [];
 
       const existencePromise = data.map((admin, i) =>
-        FetchInfoById(admin.uid, (result) => {
-          deleted[i] = result.isDeleted;
-        })
+        FetchInfoById(
+          admin.uid,
+          (result) => {
+            deleted[i] = result.isDeleted;
+          },
+          app
+        )
       );
 
       await Promise.all(existencePromise);
