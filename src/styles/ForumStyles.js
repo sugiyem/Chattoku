@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView } from "react-native";
+import { ScrollView, Platform } from "react-native";
 import styled from "styled-components/native";
 
 export const ScrollContainer = ({ children }) => {
