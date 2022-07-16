@@ -8,7 +8,7 @@ export const Container = ({ children }) => {
       colors={["#87ceeb", "#4d4dff"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={{ flex: 1, alignItems: "center", padding: 5 }}
+      style={{ flex: 1, padding: 5 }}
     >
       {children}
     </LinearGradient>
@@ -21,7 +21,7 @@ export const PaddinglessContainer = ({ children }) => {
       colors={["#87ceeb", "#4d4dff"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={{ flex: 1, alignItems: "center" }}
+      style={{ flex: 1, alignItems: "stretch" }}
     >
       {children}
     </LinearGradient>

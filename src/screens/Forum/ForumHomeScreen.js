@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 import { Container } from "../../styles/GeneralStyles";
 import {
   CreateForumButton,
+  CreateForumText,
   DarkButton,
   DarkButtonText,
   ForumHomeTitle
@@ -39,7 +40,7 @@ const ForumHomeScreen = () => {
       <ForumHomeTitle>Discover forums</ForumHomeTitle>
       <ForumList data={data} />
       <CreateForumButton onPress={handleCreateForumClick}>
-        <Button title={"Create Your Own Forum"} />
+        <CreateForumText> Create Your Own Forum </CreateForumText>
       </CreateForumButton>
     </Container>
   );

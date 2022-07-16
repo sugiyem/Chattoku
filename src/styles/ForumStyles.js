@@ -1,4 +1,19 @@
+import { LinearGradient } from "expo-linear-gradient";
+import { ScrollView } from "react-native";
 import styled from "styled-components/native";
+
+export const ScrollContainer = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, alignItems: "stretch" }}
+    >
+      <ScrollView>{children}</ScrollView>
+    </LinearGradient>
+  );
+};
 
 export const ForumSearchBar = styled.TextInput`
   flex-grow: 0;
