@@ -9,6 +9,7 @@ import FetchUserInfo, {
 } from "../../services/Profile/FetchUserInfo";
 import ChatSections from "../../components/Chat/ChatSections";
 import ChatHeader from "../../components/Chat/ChatHeader";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const initialState = {
   username: "",
@@ -22,13 +23,20 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState(initialState);
   const [allUserInfos, setAllUserInfos] = useState([]);
   const [messages, setMessages] = useState([]);
-
+  const [isInfoLoading, setIsInfoLoading] = useState(false);
+  const [isAllInfoLoading, setIsAllInfoLoading] = useState(false);
+  const [isMessageLoading, setIsMessageLoading] = useState(false);
   const userID = getCurrentUID();
   const groupData = route.params.groupData;
 
   useEffect(() => {
+    setIsInfoLoading(true);
+
     return FetchUserInfo({
-      onSuccesfulFetch: setUserInfo,
+      onSuccesfulFetch: (data) => {
+        setUserInfo(data);
+        setIsInfoLoading(false);
+      },
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -36,13 +44,23 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    return FetchAllUserInfos(setAllUserInfos);
+    setIsAllInfoLoading(true);
+
+    return FetchAllUserInfos((data) => {
+      setAllUserInfos(data);
+      setIsAllInfoLoading(false);
+    });
   }, []);
 
   useEffect(() => {
+    setIsMessageLoading(true);
+
     return fetchGroupChatMessages({
       groupID: groupData.id,
-      onSuccess: setMessages,
+      onSuccess: (data) => {
+        setMessages(data);
+        setIsMessageLoading(false);
+      },
       onFailure: (error) => {
         Alert.alert(error.message);
       }
@@ -50,23 +68,25 @@ const GroupChatDetailScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <ChatContainer>
-      <ChatHeader
-        type={chatType.GROUP_CHAT}
-        item={groupData}
-        navigation={navigation}
-      />
+    <Loading isLoading={isInfoLoading || isAllInfoLoading || isMessageLoading}>
+      <ChatContainer>
+        <ChatHeader
+          type={chatType.GROUP_CHAT}
+          item={groupData}
+          navigation={navigation}
+        />
 
-      <ChatSections
-        type={chatType.GROUP_CHAT}
-        userData={{ ...userInfo, id: userID }}
-        receiverID={groupData.id}
-        messages={messages}
-        updateMessages={setMessages}
-        allUserInfos={allUserInfos}
-        navigation={navigation}
-      />
-    </ChatContainer>
+        <ChatSections
+          type={chatType.GROUP_CHAT}
+          userData={{ ...userInfo, id: userID }}
+          receiverID={groupData.id}
+          messages={messages}
+          updateMessages={setMessages}
+          allUserInfos={allUserInfos}
+          navigation={navigation}
+        />
+      </ChatContainer>
+    </Loading>
   );
 };
 

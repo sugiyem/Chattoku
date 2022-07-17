@@ -6,13 +6,10 @@ import {
 } from "../../styles/ChatStyles";
 import {
   BoldText,
-  ButtonGroup,
-  ButtonText,
   IconGroup,
   IconText,
   NotificationIcon,
-  SearchInput,
-  SeparatedButton
+  SearchInput
 } from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import { chatType } from "../../constants/Chat";
@@ -21,7 +18,6 @@ import {
   checkUnreadGroupMessages
 } from "../../services/Chat/FetchActiveChats";
 import ActiveChatLists from "../../components/Chat/ActiveChatLists";
-import NotificationText from "../../components/Miscellaneous/NotificationText";
 import Loading from "../../components/Miscellaneous/Loading";
 import { Icon } from "react-native-elements";
 

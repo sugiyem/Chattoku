@@ -6,13 +6,10 @@ import {
 } from "../../styles/ChatStyles";
 import {
   BoldText,
-  ButtonGroup,
-  ButtonText,
   IconGroup,
   IconText,
   NotificationIcon,
-  SearchInput,
-  SeparatedButton
+  SearchInput
 } from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import { chatType } from "../../constants/Chat";
@@ -21,13 +18,14 @@ import {
   checkUnreadPrivateMessages
 } from "../../services/Chat/FetchActiveChats";
 import ActiveChatLists from "../../components/Chat/ActiveChatLists";
-import NotificationText from "../../components/Miscellaneous/NotificationText";
+import Loading from "../../components/Miscellaneous/Loading";
 import { Icon } from "react-native-elements";
 
 const GroupChatListScreen = () => {
   const [search, setSearch] = useState("");
   const [activeChats, setActiveChats] = useState([]);
   const [isUnreadExists, setIsUnreadExists] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   function navigateToGroupsList() {
@@ -39,8 +37,13 @@ const GroupChatListScreen = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchActiveGroupChats({
-      onSuccess: setActiveChats,
+      onSuccess: (data) => {
+        setActiveChats(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -73,46 +76,48 @@ const GroupChatListScreen = () => {
   };
 
   return (
-    <ScrollChatContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search messages"
-        testID="searchBar"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollChatContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search messages"
+          testID="searchBar"
+        />
 
-      <BoldText underline testID="title">
-        Group Chat List
-      </BoldText>
+        <BoldText underline testID="title">
+          Group Chat List
+        </BoldText>
 
-      <IconGroup>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-group"
-            color="navy"
-            size={30}
-            onPress={navigateToGroupsList}
-            testID="groupListButton"
-          />
-          <IconText>Message Other Groups</IconText>
-        </View>
-        <View>
-          <NotificationIcon isVisible={isUnreadExists}>
+        <IconGroup>
+          <View>
             <Icon
-              type="ionicon"
-              name="md-chatbubble-ellipses"
+              type="material-community"
+              name="account-group"
               color="navy"
               size={30}
-              onPress={navigateToPrivateChat}
+              onPress={navigateToGroupsList}
+              testID="groupListButton"
             />
-          </NotificationIcon>
-          <IconText>Private Chat List</IconText>
-        </View>
-      </IconGroup>
+            <IconText>Message Other Groups</IconText>
+          </View>
+          <View>
+            <NotificationIcon isVisible={isUnreadExists}>
+              <Icon
+                type="ionicon"
+                name="md-chatbubble-ellipses"
+                color="navy"
+                size={30}
+                onPress={navigateToPrivateChat}
+              />
+            </NotificationIcon>
+            <IconText>Private Chat List</IconText>
+          </View>
+        </IconGroup>
 
-      <ChatLists />
-    </ScrollChatContainer>
+        <ChatLists />
+      </ScrollChatContainer>
+    </Loading>
   );
 };
 
