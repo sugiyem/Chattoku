@@ -109,6 +109,7 @@ const GroupChatListScreen = () => {
                 color="navy"
                 size={30}
                 onPress={navigateToPrivateChat}
+                testID="privateChatButton"
               />
             </NotificationIcon>
             <IconText>Private Chat List</IconText>
