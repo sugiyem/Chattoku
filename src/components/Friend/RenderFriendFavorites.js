@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Avatar, ListItem } from "react-native-elements";
 import { favoriteType } from "../../constants/Favorite";
-import { ListTitleText } from "../../styles/InfoStyles";
+import { ListTitleText, elementContainerStyle } from "../../styles/InfoStyles";
 import { itemContainerStyle } from "../../styles/ListStyles";
 
 const RenderFriendFavorites = ({ type, title, data }) => {

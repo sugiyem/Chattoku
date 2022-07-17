@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   ButtonText,
-  GradientBackground,
   RoundedImage,
   ScrollContainer
 } from "../../styles/GeneralStyles";
@@ -44,30 +43,26 @@ const FriendInfoScreen = ({ navigation, route }) => {
     ));
 
   return (
-    <GradientBackground>
-      <ScrollContainer>
-        <Button onPress={() => navigation.goBack()}>
-          <ButtonText>Go Back</ButtonText>
-        </Button>
+    <ScrollContainer>
+      <Button onPress={() => navigation.goBack()}>
+        <ButtonText>Go Back</ButtonText>
+      </Button>
 
-        <ProfileContainer>
-          {friendData.img != "" ? (
-            <RoundedImage source={{ uri: friendData.img }} />
-          ) : (
-            <RoundedImage
-              source={require("../../assets/default-profile.png")}
-            />
-          )}
+      <ProfileContainer>
+        {friendData.img != "" ? (
+          <RoundedImage source={{ uri: friendData.img }} />
+        ) : (
+          <RoundedImage source={require("../../assets/default-profile.png")} />
+        )}
 
-          <Name>{friendData.username}</Name>
-          <Description>{friendData.bio}</Description>
-        </ProfileContainer>
+        <Name>{friendData.username}</Name>
+        <Description>{friendData.bio}</Description>
+      </ProfileContainer>
 
-        <ListContainer>
-          <FriendFavoriteLists />
-        </ListContainer>
-      </ScrollContainer>
-    </GradientBackground>
+      <ListContainer>
+        <FriendFavoriteLists />
+      </ListContainer>
+    </ScrollContainer>
   );
 };
 

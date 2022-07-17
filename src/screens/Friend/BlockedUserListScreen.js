@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import {
   BoldText,
-  Button,
-  GradientBackground,
   IconGroup,
   IconText,
   ScrollContainer,
@@ -40,42 +38,40 @@ const BlockedUserListScreen = () => {
     ));
 
   return (
-    <GradientBackground>
-      <ScrollContainer>
-        <SearchInput
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          placeholder="Search requests by username"
-        />
+    <ScrollContainer>
+      <SearchInput
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+        placeholder="Search requests by username"
+      />
 
-        <BoldText underline>Blocked List</BoldText>
+      <BoldText underline>Blocked List</BoldText>
 
-        <IconGroup>
-          <View>
-            <Icon
-              type="antdesign"
-              name="back"
-              color="navy"
-              size={30}
-              onPress={navigation.goBack}
-            />
-            <IconText>Go Back</IconText>
-          </View>
-          <View>
-            <Icon
-              type="material-community"
-              name="account-remove"
-              color="navy"
-              size={30}
-              onPress={() => navigation.navigate("AddBlockedUser")}
-            />
-            <IconText>Block User</IconText>
-          </View>
-        </IconGroup>
+      <IconGroup>
+        <View>
+          <Icon
+            type="antdesign"
+            name="back"
+            color="navy"
+            size={30}
+            onPress={navigation.goBack}
+          />
+          <IconText>Go Back</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-remove"
+            color="navy"
+            size={30}
+            onPress={() => navigation.navigate("AddBlockedUser")}
+          />
+          <IconText>Block User</IconText>
+        </View>
+      </IconGroup>
 
-        <UserLists />
-      </ScrollContainer>
-    </GradientBackground>
+      <UserLists />
+    </ScrollContainer>
   );
 };
 

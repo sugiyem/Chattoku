@@ -4,7 +4,6 @@ import {
   Button,
   ButtonText,
   Container,
-  GradientBackground,
   RowBar,
   SearchButton,
   SeparatedSearchInput
@@ -44,32 +43,30 @@ const AddFriendScreen = ({ navigation }) => {
   };
 
   return (
-    <GradientBackground>
-      <Container>
-        <RowBar>
-          <SeparatedSearchInput
-            value={search}
-            onChangeText={(text) => setSearch(text)}
-            placeholder="Add user by its exact username"
-          />
+    <Container>
+      <RowBar>
+        <SeparatedSearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Add user by its exact username"
+        />
 
-          <SearchButton onPress={() => handleClickOnSearch()}>
-            <ButtonText color="#ffffff">Search</ButtonText>
-          </SearchButton>
-        </RowBar>
+        <SearchButton onPress={() => handleClickOnSearch()}>
+          <ButtonText color="#ffffff">Search</ButtonText>
+        </SearchButton>
+      </RowBar>
 
-        <Button onPress={() => navigation.replace("FriendList")}>
-          <ButtonText>Back to friend's list</ButtonText>
-        </Button>
+      <Button onPress={() => navigation.replace("FriendList")}>
+        <ButtonText>Back to friend's list</ButtonText>
+      </Button>
 
-        <UserOuterContainer>
-          <RenderUserFound
-            type={userFoundType.TO_BEFRIEND}
-            userData={userFound}
-          />
-        </UserOuterContainer>
-      </Container>
-    </GradientBackground>
+      <UserOuterContainer>
+        <RenderUserFound
+          type={userFoundType.TO_BEFRIEND}
+          userData={userFound}
+        />
+      </UserOuterContainer>
+    </Container>
   );
 };
 

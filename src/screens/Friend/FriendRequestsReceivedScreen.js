@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import {
   BoldText,
-  Button,
   IconGroup,
   IconText,
-  GradientBackground,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -43,51 +41,49 @@ const FriendRequestsReceivedScreen = () => {
     ));
 
   return (
-    <GradientBackground>
-      <ScrollContainer>
-        <SearchInput
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          placeholder="Search requests by username"
-        />
+    <ScrollContainer>
+      <SearchInput
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+        placeholder="Search requests by username"
+      />
 
-        <BoldText underline>Pending Requests Received</BoldText>
+      <BoldText underline>Pending Requests Received</BoldText>
 
-        <IconGroup>
-          <View>
-            <Icon
-              type="antdesign"
-              name="back"
-              color="navy"
-              size={30}
-              onPress={navigation.goBack}
-            />
-            <IconText>Go Back</IconText>
-          </View>
-          <View>
-            <Icon
-              type="material-community"
-              name="account-sync"
-              color="#4C516D"
-              size={30}
-            />
-            <IconText>Request Received</IconText>
-          </View>
-          <View>
-            <Icon
-              type="material-community"
-              name="account-star"
-              color="navy"
-              size={30}
-              onPress={() => navigation.replace("FriendRequestsSent")}
-            />
-            <IconText>Request Sent</IconText>
-          </View>
-        </IconGroup>
+      <IconGroup>
+        <View>
+          <Icon
+            type="antdesign"
+            name="back"
+            color="navy"
+            size={30}
+            onPress={navigation.goBack}
+          />
+          <IconText>Go Back</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-sync"
+            color="#4C516D"
+            size={30}
+          />
+          <IconText>Request Received</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-star"
+            color="navy"
+            size={30}
+            onPress={() => navigation.replace("FriendRequestsSent")}
+          />
+          <IconText>Request Sent</IconText>
+        </View>
+      </IconGroup>
 
-        <UserLists />
-      </ScrollContainer>
-    </GradientBackground>
+      <UserLists />
+    </ScrollContainer>
   );
 };
 

@@ -4,7 +4,6 @@ import {
   Button,
   ButtonText,
   Container,
-  GradientBackground,
   RowBar,
   SearchButton,
   SeparatedSearchInput
@@ -45,29 +44,27 @@ const AddBlockedUserScreen = ({ navigation }) => {
   };
 
   return (
-    <GradientBackground>
-      <Container>
-        <RowBar>
-          <SeparatedSearchInput
-            value={search}
-            onChangeText={(text) => setSearch(text)}
-            placeholder="Block user by its exact username"
-          />
+    <Container>
+      <RowBar>
+        <SeparatedSearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Block user by its exact username"
+        />
 
-          <SearchButton onPress={() => handleClickOnSearch()}>
-            <ButtonText color="#ffffff">Search</ButtonText>
-          </SearchButton>
-        </RowBar>
+        <SearchButton onPress={() => handleClickOnSearch()}>
+          <ButtonText color="#ffffff">Search</ButtonText>
+        </SearchButton>
+      </RowBar>
 
-        <Button onPress={() => navigation.replace("BlockedUserList")}>
-          <ButtonText>Back to blocked list</ButtonText>
-        </Button>
+      <Button onPress={() => navigation.replace("BlockedUserList")}>
+        <ButtonText>Back to blocked list</ButtonText>
+      </Button>
 
-        <UserOuterContainer>
-          <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
-        </UserOuterContainer>
-      </Container>
-    </GradientBackground>
+      <UserOuterContainer>
+        <RenderUserFound type={userFoundType.TO_BLOCK} userData={userFound} />
+      </UserOuterContainer>
+    </Container>
   );
 };
 

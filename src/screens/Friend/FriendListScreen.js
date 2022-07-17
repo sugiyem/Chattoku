@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import {
   BoldText,
-  GradientBackground,
   IconGroup,
   IconText,
   NotificationIcon,
@@ -55,64 +54,62 @@ const FriendListScreen = () => {
     ));
 
   return (
-    <GradientBackground>
-      <ScrollContainer>
-        <SearchInput
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          placeholder="Search friend by username"
-        />
+    <ScrollContainer>
+      <SearchInput
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+        placeholder="Search friend by username"
+      />
 
-        <BoldText underline>Friends List</BoldText>
+      <BoldText underline>Friends List</BoldText>
 
-        <IconGroup>
-          <View>
+      <IconGroup>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-plus"
+            color="navy"
+            size={30}
+            onPress={() => navigation.navigate("AddFriend")}
+          />
+          <IconText>Add Friend</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-group"
+            color="navy"
+            size={30}
+            onPress={() => navigation.navigate("GroupList")}
+          />
+          <IconText>Groups</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-cancel"
+            color="navy"
+            size={30}
+            onPress={() => navigation.navigate("BlockedUserList")}
+          />
+          <IconText>Blocked</IconText>
+        </View>
+        <View>
+          <NotificationIcon isVisible={isRequestExist}>
             <Icon
               type="material-community"
-              name="account-plus"
+              name="account-sync"
               color="navy"
               size={30}
-              onPress={() => navigation.navigate("AddFriend")}
+              onPress={() => navigation.navigate("FriendRequestsReceived")}
             />
-            <IconText>Add Friend</IconText>
-          </View>
-          <View>
-            <Icon
-              type="material-community"
-              name="account-group"
-              color="navy"
-              size={30}
-              onPress={() => navigation.navigate("GroupList")}
-            />
-            <IconText>Groups</IconText>
-          </View>
-          <View>
-            <Icon
-              type="material-community"
-              name="account-cancel"
-              color="navy"
-              size={30}
-              onPress={() => navigation.navigate("BlockedUserList")}
-            />
-            <IconText>Blocked</IconText>
-          </View>
-          <View>
-            <NotificationIcon isVisible={isRequestExist}>
-              <Icon
-                type="material-community"
-                name="account-sync"
-                color="navy"
-                size={30}
-                onPress={() => navigation.navigate("FriendRequestsReceived")}
-              />
-            </NotificationIcon>
-            <IconText>Pending</IconText>
-          </View>
-        </IconGroup>
+          </NotificationIcon>
+          <IconText>Pending</IconText>
+        </View>
+      </IconGroup>
 
-        <UserLists />
-      </ScrollContainer>
-    </GradientBackground>
+      <UserLists />
+    </ScrollContainer>
   );
 };
 
