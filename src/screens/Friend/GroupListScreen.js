@@ -15,15 +15,22 @@ import {
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
 import { Icon } from "react-native-elements";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const GroupListScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [isInvitationExist, setIsInvitationExist] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchGroup({
-      onSuccess: setGroups,
+      onSuccess: (data) => {
+        setGroups(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -60,52 +67,54 @@ const GroupListScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-        placeholder="Search group by name"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Search group by name"
+        />
 
-      <BoldText underline>Groups List</BoldText>
+        <BoldText underline>Groups List</BoldText>
 
-      <IconGroup>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-multiple"
-            color="navy"
-            size={30}
-            onPress={() => navigation.replace("FriendList")}
-          />
-          <IconText>Friends</IconText>
-        </View>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-multiple-plus"
-            color="navy"
-            size={30}
-            onPress={() => navigation.navigate("GroupCreation")}
-          />
-          <IconText>Add Group</IconText>
-        </View>
-        <View>
-          <NotificationIcon isVisible={isInvitationExist}>
+        <IconGroup>
+          <View>
             <Icon
               type="material-community"
-              name="account-multiple-check"
+              name="account-multiple"
               color="navy"
               size={30}
-              onPress={() => navigation.navigate("GroupRequests")}
+              onPress={() => navigation.replace("FriendList")}
             />
-          </NotificationIcon>
-          <IconText>Invitation</IconText>
-        </View>
-      </IconGroup>
+            <IconText>Friends</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-multiple-plus"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("GroupCreation")}
+            />
+            <IconText>Add Group</IconText>
+          </View>
+          <View>
+            <NotificationIcon isVisible={isInvitationExist}>
+              <Icon
+                type="material-community"
+                name="account-multiple-check"
+                color="navy"
+                size={30}
+                onPress={() => navigation.navigate("GroupRequests")}
+              />
+            </NotificationIcon>
+            <IconText>Invitation</IconText>
+          </View>
+        </IconGroup>
 
-      <GroupContactLists />
-    </ScrollContainer>
+        <GroupContactLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 

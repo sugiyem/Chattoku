@@ -12,26 +12,39 @@ import {
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
 import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
   const [search, setSearch] = useState("");
+  const [isMemberLoading, setIsMemberLoading] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
   const groupInfo = route.params.groupInfo;
   const memberIDs = members.map((user) => user.id);
 
   useEffect(() => {
+    setIsMemberLoading(true);
+
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setMembers,
+      onSuccess: (data) => {
+        setMembers(data);
+        setIsMemberLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsAdminLoading(true);
+
     return fetchGroupAdminIDs({
       groupID: groupInfo.id,
-      onSuccess: setAdminIDs
+      onSuccess: (data) => {
+        setAdminIDs(data);
+        setIsAdminLoading(false);
+      }
     });
   }, []);
 
@@ -52,28 +65,30 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
     );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search member by username"
-      />
-
-      <BoldText underline>Member's List</BoldText>
-
-      <Button onPress={() => navigation.goBack()}>
-        <ButtonText> Go back</ButtonText>
-      </Button>
-
-      {filteredMembers.map((item, index) => (
-        <EditMemberComponent
-          key={index}
-          item={item}
-          isMember={true}
-          groupInfo={groupInfo}
+    <Loading isLoading={isAdminLoading || isMemberLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search member by username"
         />
-      ))}
-    </ScrollContainer>
+
+        <BoldText underline>Member's List</BoldText>
+
+        <Button onPress={() => navigation.goBack()}>
+          <ButtonText> Go back</ButtonText>
+        </Button>
+
+        {filteredMembers.map((item, index) => (
+          <EditMemberComponent
+            key={index}
+            item={item}
+            isMember={true}
+            groupInfo={groupInfo}
+          />
+        ))}
+      </ScrollContainer>
+    </Loading>
   );
 };
 

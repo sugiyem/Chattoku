@@ -16,17 +16,24 @@ import {
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
 import { Icon } from "react-native-elements";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
   const [search, setSearch] = useState("");
   const [isRequestExist, setIsRequestExist] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchFriend({
-      onSuccess: setFriends,
+      onSuccess: (data) => {
+        setFriends(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
@@ -54,62 +61,64 @@ const FriendListScreen = () => {
     ));
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-        placeholder="Search friend by username"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Search friend by username"
+        />
 
-      <BoldText underline>Friends List</BoldText>
+        <BoldText underline>Friends List</BoldText>
 
-      <IconGroup>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-plus"
-            color="navy"
-            size={30}
-            onPress={() => navigation.navigate("AddFriend")}
-          />
-          <IconText>Add Friend</IconText>
-        </View>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-group"
-            color="navy"
-            size={30}
-            onPress={() => navigation.navigate("GroupList")}
-          />
-          <IconText>Groups</IconText>
-        </View>
-        <View>
-          <Icon
-            type="material-community"
-            name="account-cancel"
-            color="navy"
-            size={30}
-            onPress={() => navigation.navigate("BlockedUserList")}
-          />
-          <IconText>Blocked</IconText>
-        </View>
-        <View>
-          <NotificationIcon isVisible={isRequestExist}>
+        <IconGroup>
+          <View>
             <Icon
               type="material-community"
-              name="account-sync"
+              name="account-plus"
               color="navy"
               size={30}
-              onPress={() => navigation.navigate("FriendRequestsReceived")}
+              onPress={() => navigation.navigate("AddFriend")}
             />
-          </NotificationIcon>
-          <IconText>Pending</IconText>
-        </View>
-      </IconGroup>
+            <IconText>Add Friend</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-group"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("GroupList")}
+            />
+            <IconText>Groups</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-cancel"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("BlockedUserList")}
+            />
+            <IconText>Blocked</IconText>
+          </View>
+          <View>
+            <NotificationIcon isVisible={isRequestExist}>
+              <Icon
+                type="material-community"
+                name="account-sync"
+                color="navy"
+                size={30}
+                onPress={() => navigation.navigate("FriendRequestsReceived")}
+              />
+            </NotificationIcon>
+            <IconText>Pending</IconText>
+          </View>
+        </IconGroup>
 
-      <UserLists />
-    </ScrollContainer>
+        <UserLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 

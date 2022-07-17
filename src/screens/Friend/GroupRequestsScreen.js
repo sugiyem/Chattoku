@@ -10,14 +10,21 @@ import {
 import { fetchGroupInvitation } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const GroupRequestsScreen = ({ navigation }) => {
   const [groupRequests, setGroupRequests] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchGroupInvitation({
-      onSuccess: setGroupRequests,
+      onSuccess: (data) => {
+        setGroupRequests(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -40,21 +47,23 @@ const GroupRequestsScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search group requests"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search group requests"
+        />
 
-      <BoldText underline>Group Requests List</BoldText>
+        <BoldText underline>Group Requests List</BoldText>
 
-      <Button onPress={() => navigation.replace("GroupList")}>
-        <ButtonText>Go Back</ButtonText>
-      </Button>
+        <Button onPress={() => navigation.replace("GroupList")}>
+          <ButtonText>Go Back</ButtonText>
+        </Button>
 
-      <GroupContactLists />
-    </ScrollContainer>
+        <GroupContactLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 
