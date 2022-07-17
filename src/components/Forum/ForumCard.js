@@ -1,6 +1,7 @@
 import { Text, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
+import { AquaButton, AquaButtonText } from "../../styles/ForumStyles";
 
 const ForumCard = ({ forumData }) => {
   const navigation = useNavigation();
@@ -32,9 +33,9 @@ const ForumCard = ({ forumData }) => {
           }
         />
         <Title>{title}</Title>
-        <CustomButton onPress={goToForum}>
-          <Text>Press Here To Continue to Forum</Text>
-        </CustomButton>
+        <AquaButton onPress={goToForum}>
+          <AquaButtonText>Press Here To Continue to Forum</AquaButtonText>
+        </AquaButton>
       </ForumDetails>
     </Container>
   );
@@ -50,9 +51,10 @@ const Container = styled.View`
   align-items: center;
   width: ${width - 18}px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 15px;
   border-color: blue;
   border-width: 1px;
+  overflow: hidden;
   margin: 5px;
 `;
 
@@ -84,14 +86,4 @@ const Logo = styled.Image`
 const Title = styled.Text`
   font-size: 24px;
   font-weight: 400;
-`;
-
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-  align-items: center;
 `;

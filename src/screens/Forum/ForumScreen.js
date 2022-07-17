@@ -11,6 +11,12 @@ import ForumHeader from "../../components/Forum/ForumHeader";
 import { isUserAdmin } from "../../services/Forum/HandleForumAdmin";
 import ProfileOverlay from "../../components/Forum/ProfileOverlay";
 import overlayContext from "./overlayContext";
+import { PaddinglessContainer } from "../../styles/GeneralStyles";
+import {
+  BannedText,
+  ForumNavigation,
+  NavigationText
+} from "../../styles/ForumStyles";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
@@ -60,14 +66,14 @@ const ForumScreen = () => {
       <overlayContext.Provider value={setPopupData}>
         {popupData && <ProfileOverlay userData={popupData} />}
 
-        <Container>
-          <CustomButton onPress={() => navigation.goBack()}>
-            <ButtonText>Go Back</ButtonText>
-          </CustomButton>
+        <PaddinglessContainer>
+          <ForumNavigation onPress={() => navigation.goBack()}>
+            <NavigationText>Go Back</NavigationText>
+          </ForumNavigation>
           {(isOwner || isAdmin) && (
-            <CustomButton onPress={handleEditForumButton}>
-              <ButtonText>Manage Forum</ButtonText>
-            </CustomButton>
+            <ForumNavigation onPress={handleEditForumButton}>
+              <NavigationText>Manage Forum</NavigationText>
+            </ForumNavigation>
           )}
           {/* <Header {...data} /> */}
           <PostList
@@ -84,48 +90,18 @@ const ForumScreen = () => {
               name="add"
               type="material"
               style={styles.add}
+              color="#222"
               size={50}
               onPress={handleAddButtonClick}
             />
           )}
-        </Container>
+        </PaddinglessContainer>
       </overlayContext.Provider>
     </>
   );
 };
 
 export default ForumScreen;
-
-const Container = styled.View`
-  flex: 1;
-  background-color: darkcyan;
-  padding: 5px;
-`;
-
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const ButtonText = styled.Text`
-  text-align: center;
-  color: blue;
-`;
-
-const BannedText = styled.Text`
-  border-radius: 10px;
-  padding: 10px;
-  background-color: navy;
-  margin: 20px;
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-`;
 
 const styles = StyleSheet.create({
   add: {

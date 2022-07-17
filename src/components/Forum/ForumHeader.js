@@ -104,30 +104,29 @@ const HeaderContainer = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: ${width - 18}px;
+  width: ${width}px;
   background-color: cyan;
-  border-radius: 10px;
-  border-color: blue;
+  border-bottom-color: blue;
   border-width: 1px;
-  margin: 5px;
+  margin-bottom: 5px;
 `;
 
 const Banner = styled.Image`
-  width: ${width - 20}px;
-  height: ${(width * 2) / 5 - 8}px;
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
+  width: ${width}px;
+  height: ${(width * 2) / 5}px;
 `;
 
 const ForumDetails = styled.View`
   width: 100%;
   padding: 10px;
+  border-top-width: 2px;
+  border-color: navy;
 `;
 
 const Logo = styled.Image`
   position: absolute;
-  height: 80px;
-  width: 80px;
+  height: 85px;
+  width: 85px;
   border-radius: 80px;
   border-width: 1px;
   border-color: white;
@@ -144,10 +143,12 @@ const Title = styled.Text`
   font-size: 18px;
   font-weight: 600;
   margin-right: auto;
+  color: navy;
 `;
 
 const Desc = styled.Text`
   font-size: 14px;
+  color: navy;
 `;
 
 const NotificationOnWrapper = styled.TouchableOpacity`
