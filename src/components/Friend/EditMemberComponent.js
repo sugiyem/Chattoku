@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Icon, ListItem } from "react-native-elements";
 import {
   cancelGroupInvitation,
@@ -12,9 +11,12 @@ import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { contactType } from "../../constants/Contact";
 import ContactBar from "./ContactBar";
 import Caution from "../Miscellaneous/Caution";
+import { itemContainerStyle } from "../../styles/ListStyles";
+import { View } from "react-native";
+import { IconText } from "../../styles/GeneralStyles";
+import styled from "styled-components/native";
 
 const EditMemberComponent = ({ item, isMember, groupInfo }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const currentID = getCurrentUID();
   const groupID = groupInfo.id;
   const itemID = item.id;
@@ -36,7 +38,7 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
       title: "Remove",
       type: "material-community",
       icon: "account-remove",
-      color: "red",
+      color: "#ED2939",
       onPress: onRemovePress
     }
   ];
@@ -46,7 +48,7 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
       title: isOtherUserAdmin ? "Demote" : "Promote",
       type: "material-community",
       icon: isOtherUserAdmin ? "account-arrow-down" : "account-arrow-up",
-      color: "blue",
+      color: isOtherUserAdmin ? "#317873" : "navy",
       onPress: onAdminUpdatePress
     });
   }
@@ -71,37 +73,44 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 
   const RenderButtons = () =>
     buttonDetails.map((detail, index) => (
-      <ListItem key={index} onPress={detail.onPress}>
+      <View key={index}>
         <Icon
           type={detail.type}
           name={detail.icon}
           size={30}
           color={detail.color}
+          onPress={detail.onPress}
         />
-        <ListItem.Content>
-          <ListItem.Title>{detail.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
+        <IconText>{detail.title}</IconText>
+      </View>
     ));
 
-  const UneditableSection = () => (
-    <ListItem bottomDivider>
-      <ContactBar type={contactType.USER} item={item} />
+  return (
+    <ListItem bottomDivider containerStyle={itemContainerStyle}>
+      <ItemContainer>
+        <InfoContainer>
+          <ContactBar type={contactType.USER} item={item} />
+        </InfoContainer>
+        <ButtonContainer>{isEditable && <RenderButtons />}</ButtonContainer>
+      </ItemContainer>
     </ListItem>
   );
-
-  const EditableSection = () => (
-    <ListItem.Accordion
-      bottomDivider
-      content={<ContactBar type={contactType.USER} item={item} />}
-      isExpanded={isExpanded}
-      onPress={() => setIsExpanded(!isExpanded)}
-    >
-      <RenderButtons />
-    </ListItem.Accordion>
-  );
-
-  return isEditable ? <EditableSection /> : <UneditableSection />;
 };
 
 export default EditMemberComponent;
+
+const ItemContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const InfoContainer = styled.View`
+  flex: 2;
+  flex-direction: row;
+`;
+
+const ButtonContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+`;

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert } from "react-native";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -95,7 +96,7 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
       </BoldText>
 
       <Button onPress={() => navigation.goBack()} testID="goBack">
-        <Text>Go Back</Text>
+        <ButtonText>Go Back</ButtonText>
       </Button>
 
       <FriendList />

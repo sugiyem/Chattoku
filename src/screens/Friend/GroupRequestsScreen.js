@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -49,7 +50,7 @@ const GroupRequestsScreen = ({ navigation }) => {
       <BoldText underline>Group Requests List</BoldText>
 
       <Button onPress={() => navigation.replace("GroupList")}>
-        <Text>Go Back</Text>
+        <ButtonText>Go Back</ButtonText>
       </Button>
 
       <GroupContactLists />

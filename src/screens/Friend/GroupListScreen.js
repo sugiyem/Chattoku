@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import {
   BoldText,
-  Button,
-  ButtonGroup,
-  ButtonText,
+  IconGroup,
+  IconText,
+  NotificationIcon,
   ScrollContainer,
-  SearchInput,
-  SeparatedButton
+  SearchInput
 } from "../../styles/GeneralStyles";
 import {
   fetchGroup,
@@ -15,7 +14,7 @@ import {
 } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
-import NotificationText from "../../components/Miscellaneous/NotificationText";
+import { Icon } from "react-native-elements";
 
 const GroupListScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -70,25 +69,40 @@ const GroupListScreen = ({ navigation }) => {
 
       <BoldText underline>Groups List</BoldText>
 
-      <Button onPress={() => navigation.replace("FriendList")}>
-        <Text>Back to friend's list</Text>
-      </Button>
-
-      <ButtonGroup>
-        <SeparatedButton onPress={() => navigation.navigate("GroupCreation")}>
-          <ButtonText size="12px" color="#000000">
-            Create Group
-          </ButtonText>
-        </SeparatedButton>
-
-        <SeparatedButton onPress={() => navigation.navigate("GroupRequests")}>
-          <NotificationText
-            text="Group Invitations"
-            isShown={isInvitationExist}
-            size={12}
+      <IconGroup>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-multiple"
+            color="navy"
+            size={30}
+            onPress={() => navigation.replace("FriendList")}
           />
-        </SeparatedButton>
-      </ButtonGroup>
+          <IconText>Friends</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-multiple-plus"
+            color="navy"
+            size={30}
+            onPress={() => navigation.navigate("GroupCreation")}
+          />
+          <IconText>Add Group</IconText>
+        </View>
+        <View>
+          <NotificationIcon isVisible={isInvitationExist}>
+            <Icon
+              type="material-community"
+              name="account-multiple-check"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("GroupRequests")}
+            />
+          </NotificationIcon>
+          <IconText>Invitation</IconText>
+        </View>
+      </IconGroup>
 
       <GroupContactLists />
     </ScrollContainer>

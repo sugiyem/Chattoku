@@ -48,7 +48,7 @@ const RenderGroupDetail = ({
   return (
     <ScrollContainer>
       <Button onPress={() => navigation.replace("GroupList")}>
-        <ButtonText color="#000000">Go Back</ButtonText>
+        <ButtonText>Go Back</ButtonText>
       </Button>
 
       <ProfileContainer>

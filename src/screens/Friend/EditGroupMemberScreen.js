@@ -5,6 +5,7 @@ import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -34,14 +35,6 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
     });
   }, []);
 
-  function isOwner(id) {
-    return id === groupInfo.owner;
-  }
-
-  function isAdmin(id) {
-    return adminIDs.includes(id);
-  }
-
   const filteredMembers = members
     .map((member) => ({
       ...member,
@@ -69,7 +62,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       <BoldText underline>Member's List</BoldText>
 
       <Button onPress={() => navigation.goBack()}>
-        <Text> Go back</Text>
+        <ButtonText> Go back</ButtonText>
       </Button>
 
       {filteredMembers.map((item, index) => (

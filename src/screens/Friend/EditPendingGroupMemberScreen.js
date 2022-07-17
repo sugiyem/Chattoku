@@ -4,6 +4,7 @@ import { fetchPendingGroupMembers } from "../../services/Friend/FetchGroup";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -37,7 +38,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
       <BoldText underline>Pending Member's List</BoldText>
 
       <Button onPress={() => navigation.goBack()}>
-        <Text> Go back</Text>
+        <ButtonText> Go back</ButtonText>
       </Button>
 
       {filteredPendingMembers.map((item, index) => (
