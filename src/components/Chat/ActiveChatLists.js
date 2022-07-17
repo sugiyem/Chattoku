@@ -7,6 +7,7 @@ import {
 } from "../../services/Chat/HandleChat";
 import ChatBar from "./ChatBar";
 import ChatButtonGroup from "./ChatButtonGroup";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 const ActiveChatLists = ({ type, item, navigation }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,15 +48,15 @@ const ActiveChatLists = ({ type, item, navigation }) => {
     {
       title: "Open Message",
       type: "material-community",
-      icon: "message-processing-outline",
-      color: "blue",
+      icon: "message-processing",
+      color: "lightblue",
       onPress: onOpenMessage
     },
     {
       title: "Remove",
       type: "material-community",
-      icon: "delete-outline",
-      color: "red",
+      icon: "chat-remove",
+      color: "#fd5c63",
       onPress: onRemoveMessage
     }
   ];
@@ -63,8 +64,10 @@ const ActiveChatLists = ({ type, item, navigation }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      containerStyle={itemContainerStyle}
       content={<ChatBar item={item} isPrivateChat={isPrivateChat} />}
       isExpanded={isExpanded}
+      noIcon
       onPress={() => setIsExpanded(!isExpanded)}
     >
       {isExpanded && <ChatButtonGroup buttonDetails={buttonDetails} />}

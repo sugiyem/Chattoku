@@ -1,16 +1,32 @@
 import styled from "styled-components/native";
+import { ScrollView } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-export const ChatContainer = styled.View`
-  flex: 1;
-  background-color: darkcyan;
-  padding: 5px;
-`;
+export const ChatContainer = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, padding: 5 }}
+    >
+      {children}
+    </LinearGradient>
+  );
+};
 
-export const ScrollChatContainer = styled.ScrollView`
-  flex: 1;
-  background-color: darkcyan;
-  padding: 5px;
-`;
+export const ScrollChatContainer = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, padding: 5 }}
+    >
+      <ScrollView>{children}</ScrollView>
+    </LinearGradient>
+  );
+};
 
 export const ChatListContainer = styled.View`
   flex: 1;

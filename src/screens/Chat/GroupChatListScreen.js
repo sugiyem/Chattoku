@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import {
   ChatListContainer,
   ScrollChatContainer
@@ -8,6 +8,9 @@ import {
   BoldText,
   ButtonGroup,
   ButtonText,
+  IconGroup,
+  IconText,
+  NotificationIcon,
   SearchInput,
   SeparatedButton
 } from "../../styles/GeneralStyles";
@@ -19,6 +22,7 @@ import {
 } from "../../services/Chat/FetchActiveChats";
 import ActiveChatLists from "../../components/Chat/ActiveChatLists";
 import NotificationText from "../../components/Miscellaneous/NotificationText";
+import { Icon } from "react-native-elements";
 
 const GroupChatListScreen = () => {
   const [search, setSearch] = useState("");
@@ -81,21 +85,31 @@ const GroupChatListScreen = () => {
         Group Chat List
       </BoldText>
 
-      <ButtonGroup>
-        <SeparatedButton
-          onPress={navigateToGroupsList}
-          testID="groupListButton"
-        >
-          <ButtonText color="#000000">Message other groups</ButtonText>
-        </SeparatedButton>
-
-        <SeparatedButton
-          onPress={navigateToPrivateChat}
-          testID="privateChatButton"
-        >
-          <NotificationText text="Private Chat List" isShown={isUnreadExists} />
-        </SeparatedButton>
-      </ButtonGroup>
+      <IconGroup>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-group"
+            color="navy"
+            size={30}
+            onPress={navigateToGroupsList}
+            testID="groupListButton"
+          />
+          <IconText>Message Other Groups</IconText>
+        </View>
+        <View>
+          <NotificationIcon isVisible={isUnreadExists}>
+            <Icon
+              type="ionicon"
+              name="md-chatbubble-ellipses"
+              color="navy"
+              size={30}
+              onPress={navigateToPrivateChat}
+            />
+          </NotificationIcon>
+          <IconText>Private Chat List</IconText>
+        </View>
+      </IconGroup>
 
       <ChatLists />
     </ScrollChatContainer>

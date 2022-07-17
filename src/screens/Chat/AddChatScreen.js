@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert, Text, View } from "react-native";
 import {
   Button,
   ButtonText,
   Container,
+  IconGroup,
+  IconText,
   RowBar,
   SearchButton,
   SeparatedSearchInput
@@ -13,6 +15,7 @@ import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
 import { userFoundType } from "../../constants/UserFound";
+import { Icon } from "react-native-elements";
 
 const AddChatScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -68,12 +71,30 @@ const AddChatScreen = ({ navigation }) => {
         </SearchButton>
       </RowBar>
 
-      <Button onPress={backToChatList} testID="chatList">
-        <Text>Back to chat list</Text>
-      </Button>
-      <Button onPress={navigateToFriendList} testID="friendList">
-        <Text>View friends</Text>
-      </Button>
+      <IconGroup>
+        <View>
+          <Icon
+            type="antdesign"
+            name="back"
+            color="navy"
+            size={30}
+            onPress={backToChatList}
+            testID="chatList"
+          />
+          <IconText>Go Back</IconText>
+        </View>
+        <View>
+          <Icon
+            type="material-community"
+            name="account-multiple"
+            color="navy"
+            size={30}
+            onPress={navigateToFriendList}
+            testID="friendList"
+          />
+          <IconText>View Friends</IconText>
+        </View>
+      </IconGroup>
 
       <UserOuterContainer>
         <RenderUserFound type={userFoundType.TO_CHAT} userData={userFound} />

@@ -106,7 +106,7 @@ const HeaderContainer = styled.View`
   flex-direction: row;
   align-items: center;
   width: ${width - 10}px;
-  background-color: cyan;
+  background-color: #00bfff;
   border-color: blue;
   border-width: 1px;
   border-radius: 10px;
