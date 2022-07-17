@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Platform, Dimensions } from "react-native";
+import { Modal, Platform, Dimensions, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import {
   pickImageFromCamera,
@@ -12,10 +12,10 @@ import { createForum, editForum } from "../../services/Forum/HandleForum";
 import { imageType } from "../../constants/Image";
 import { renderType } from "../../constants/Forum";
 import {
-  AquaButton,
-  AquaButtonText,
   DarkButton,
   DarkButtonText,
+  ForumNavigation,
+  NavigationText,
   ScrollContainer
 } from "../../styles/ForumStyles";
 
@@ -81,8 +81,7 @@ const RenderManageForumDetails = ({ manageType }) => {
   }
 
   const removeImage = () => {
-    const removedField =
-      uploadedImgType === isProfileUploaded ? "img" : "banner";
+    const removedField = isProfileUploaded ? "img" : "banner";
     setForumInfo({
       ...forumInfo,
       [removedField]: ""
@@ -120,32 +119,32 @@ const RenderManageForumDetails = ({ manageType }) => {
         </ModalContainer>
       </Modal>
 
-      <AquaButton onPress={() => navigation.goBack()}>
-        <AquaButtonText> Go Back </AquaButtonText>
-      </AquaButton>
-      <Title> Enter Forum Details </Title>
+      <ForumNavigation onPress={() => navigation.goBack()}>
+        <NavigationText> Go Back </NavigationText>
+      </ForumNavigation>
       <ImageContainer>
-        {forumInfo.banner.length > 0 ? (
-          <Banner source={{ uri: forumInfo.banner }} />
-        ) : (
-          <Banner source={require("../../assets/default-banner.png")} />
-        )}
-      </ImageContainer>
-      <DarkButton onPress={handleUploadBannerClick}>
-        <DarkButtonText> Upload Banner </DarkButtonText>
-      </DarkButton>
-      <ImageContainer>
-        {forumInfo.img.length > 0 ? (
-          <ProfilePicture source={{ uri: forumInfo.img }} />
-        ) : (
-          <ProfilePicture
-            source={require("../../assets/default-profile.png")}
+        <TouchableOpacity onPress={handleUploadBannerClick}>
+          <Banner
+            source={
+              forumInfo.banner.length > 0
+                ? { uri: forumInfo.banner }
+                : require("../../assets/default-banner.png")
+            }
           />
-        )}
+        </TouchableOpacity>
+        <ProfileContainer>
+          <ProfileWrapper onPress={handleUploadProfileClick}>
+            <ProfilePicture
+              source={
+                forumInfo.img.length > 0
+                  ? { uri: forumInfo.img }
+                  : require("../../assets/default-profile.png")
+              }
+            />
+          </ProfileWrapper>
+        </ProfileContainer>
       </ImageContainer>
-      <DarkButton onPress={handleUploadProfileClick}>
-        <DarkButtonText> Upload Image </DarkButtonText>
-      </DarkButton>
+      <Title> Enter Forum Details </Title>
       <TextInputLabel> Title </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "title")}
@@ -168,16 +167,19 @@ export default RenderManageForumDetails;
 const width = Dimensions.get("screen").width;
 
 const Title = styled.Text`
-  font-size: 22px;
+  font-size: 24px;
   padding: 5px;
   font-weight: 400;
+  text-decoration: underline;
   align-self: center;
   color: white;
 `;
 
 const Banner = styled.Image`
-  width: ${width - 20}px;
-  height: ${(width * 2) / 5 - 8}px;
+  width: ${width}px;
+  height: ${(width * 2) / 5}px;
+  border-width: 1px;
+  border-color: black;
 `;
 
 const ModalContainer = styled.View`
@@ -204,27 +206,38 @@ const ButtonText = styled.Text`
   color: white;
 `;
 
+const ProfileWrapper = styled.TouchableOpacity`
+  flex: 0;
+  border-radius: 1000px;
+`;
+
 const ProfilePicture = styled.Image`
-  margin-top: 30px;
   align-self: center;
   height: 125px;
   width: 125px;
+  top: -62.5px;
+  border-width: 1px;
+  border-color: black;
+  position: absolute;
   border-radius: 75px;
 `;
 
 const ImageContainer = styled.View`
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+const ProfileContainer = styled.View`
+  height: 60px;
+  background-color: white;
 `;
 
 const TextInputLabel = styled.Text`
   font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
   font-weight: bold;
-  text-decoration-line: underline;
   margin: 5px;
-  align-self: center;
+  margin-left: 20px;
   color: whitesmoke;
   font-size: 16px;
 `;
