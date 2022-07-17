@@ -1,12 +1,32 @@
 import styled from "styled-components/native";
 import { Platform } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-export const Container = styled.View`
-  flex: 1;
-  align-items: center;
-  padding: 5px;
-  background-color: #008b8b;
-`;
+export const Container = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, padding: 5 }}
+    >
+      {children}
+    </LinearGradient>
+  );
+};
+
+export const PaddinglessContainer = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, alignItems: "stretch" }}
+    >
+      {children}
+    </LinearGradient>
+  );
+};
 
 export const ScrollContainer = styled.ScrollView`
   flex: 1;

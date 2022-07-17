@@ -46,6 +46,7 @@ const CommentList = ({ forumId, postId, Header = () => <></> }) => {
         renderItem={renderItem}
         renderSectionHeader={Header}
         renderFooter={renderFooter}
+        style={{ alignSelf: "stretch" }}
       />
     </>
   );

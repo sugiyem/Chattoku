@@ -8,27 +8,12 @@ import {
   View,
   Alert
 } from "react-native";
-import { Card } from "react-native-elements";
 import { EditComment, AddComment } from "../../../services/Forum/HandleComment";
-import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
 import { renderType } from "../../../constants/Forum";
-
-const MainPost = ({ title, content, uid }) => {
-  const [username, setUsername] = useState("fetching username...");
-
-  //Fetch username of poster
-  useEffect(() => {
-    FetchInfoById(uid, (userData) => setUsername(userData.username));
-  }, []);
-
-  return (
-    <Card style={styles.container}>
-      <Text> User: {username}</Text>
-      <Card.Title style={styles.header}>{title}</Card.Title>
-      <Text> {content} </Text>
-    </Card>
-  );
-};
+import { PaddinglessContainer } from "../../../styles/GeneralStyles";
+import { ForumNavigation, NavigationText } from "../../../styles/ForumStyles";
+import MainPostCard from "../ForumPost/MainPostCard";
+import styled from "styled-components/native";
 
 const RenderCommentScreen = ({ renderScreenType }) => {
   const navigation = useNavigation();
@@ -45,6 +30,10 @@ const RenderCommentScreen = ({ renderScreenType }) => {
   const [comment, setComment] = useState(initialComment);
   const submitButtonText =
     renderScreenType === renderType.EDIT ? "Edit Comment" : "Post Comment";
+  const inputPlaceholder =
+    renderScreenType === renderType.EDIT
+      ? "Edit Your Comment..."
+      : "Add Comment...";
 
   function handleSubmit() {
     renderScreenType === renderType.EDIT
@@ -66,78 +55,52 @@ const RenderCommentScreen = ({ renderScreenType }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.buttonText}>Go Back</Text>
-      </TouchableOpacity>
+    <PaddinglessContainer>
+      <ForumNavigation onPress={() => navigation.goBack()}>
+        <NavigationText>Go Back</NavigationText>
+      </ForumNavigation>
 
-      <View style={styles.detailContainer}>
-        <MainPost {...postData} />
-        <TextInput
-          multiline={true}
-          style={styles.input}
-          placeholder="edit your comment..."
-          onChangeText={(t) => setComment(t)}
-          value={comment}
-        />
+      <MainPostCard {...postData} isEditing={true} />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>{submitButtonText}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <CommentInput
+        multiline={true}
+        placeholder={inputPlaceholder}
+        onChangeText={(t) => setComment(t)}
+        value={comment}
+      />
+
+      <SubmitButton onPress={handleSubmit}>
+        <SubmitText>{submitButtonText}</SubmitText>
+      </SubmitButton>
+    </PaddinglessContainer>
   );
 };
 
 export default RenderCommentScreen;
 
-const styles = StyleSheet.create({
-  header: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: 10
-  },
-  title: {
-    fontSize: 16,
-    textAlign: "center"
-  },
-  container: {
-    backgroundColor: "darkcyan",
-    flex: 1,
-    padding: 5,
-    borderColor: "black"
-  },
-  detailContainer: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "cyan",
-    padding: 20,
-    margin: 5
-  },
-  input: {
-    height: 200,
-    backgroundColor: "whitesmoke",
-    borderColor: "black",
-    borderWidth: 0.5,
-    padding: 10,
-    textAlignVertical: "top",
-    margin: 20
-  },
-  button: {
-    padding: 5,
-    margin: 5,
-    alignSelf: "stretch",
-    borderRadius: 5,
-    backgroundColor: "blue"
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 18
-  }
-});
+const CommentInput = styled.TextInput`
+  height: 300px;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  border-color: black;
+  border-width: 0.5px;
+  padding: 10px;
+  text-align-vertical: top;
+  margin: 20px;
+`;
+
+const SubmitButton = styled.TouchableOpacity`
+  padding: 10px;
+  margin: 12px;
+  align-self: stretch;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: navy;
+  background-color: #44d0fe;
+`;
+
+const SubmitText = styled.Text`
+  text-align: center;
+  color: navy;
+  font-size: 18px;
+`;

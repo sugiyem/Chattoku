@@ -2,6 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import styled from "styled-components/native";
 import { firebase } from "../../../services/Firebase/Config";
+import {
+  AquaButton,
+  AquaButtonText,
+  DarkButton,
+  DarkButtonText
+} from "../../../styles/ForumStyles";
+import { Container } from "../../../styles/GeneralStyles";
 
 const ManageForumScreen = () => {
   const navigation = useNavigation();
@@ -25,22 +32,22 @@ const ManageForumScreen = () => {
 
   return (
     <Container>
-      <BackButton onPress={navigation.goBack}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={navigation.goBack}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       <Title> Manage Forum </Title>
       <ButtonContainer>
         {isOwner && (
-          <CustomButton onPress={handleEditForumButton}>
-            <ButtonText> Edit Forum Details </ButtonText>
-          </CustomButton>
+          <DarkButton onPress={handleEditForumButton}>
+            <DarkButtonText> Edit Forum Details </DarkButtonText>
+          </DarkButton>
         )}
-        <CustomButton onPress={handleBannedUsersButton}>
-          <ButtonText> Banned Users </ButtonText>
-        </CustomButton>
-        <CustomButton onPress={handleAdminButton}>
-          <ButtonText> Admins </ButtonText>
-        </CustomButton>
+        <DarkButton onPress={handleBannedUsersButton}>
+          <DarkButtonText> Banned Users </DarkButtonText>
+        </DarkButton>
+        <DarkButton onPress={handleAdminButton}>
+          <DarkButtonText> Admins </DarkButtonText>
+        </DarkButton>
       </ButtonContainer>
     </Container>
   );
@@ -48,51 +55,13 @@ const ManageForumScreen = () => {
 
 export default ManageForumScreen;
 
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-color: darkcyan;
-`;
-
 const ButtonContainer = styled.View`
   width: 100%;
   margin-bottom: auto;
 `;
 
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: navy;
-  margin: 20px;
-`;
-
-const ButtonText = styled.Text`
-  justify-content: center;
-  align-self: center;
-  font-size: 15px;
-  font-weight: bold;
-  color: white;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
-`;
-
 const Title = styled.Text`
-  color: #bdd0e7;
+  color: whitesmoke;
   font-size: 25px;
   font-weight: bold;
   font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
