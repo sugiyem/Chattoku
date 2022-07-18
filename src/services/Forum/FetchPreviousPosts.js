@@ -25,10 +25,17 @@ export function FetchPreviousPosts(callbackSuccess, app = firebase) {
       //Make an array of promise to fecth forum data and post data
       const PromisedData = data.map(async (ids) => {
         const result = {};
+        const docDontExist = false;
+
         await forumRef
           .doc(ids.forumId)
           .get()
           .then((doc) => {
+            if (!doc.exists) {
+              docDontExist = true;
+              return;
+            }
+
             result.forumData = { ...doc.data(), id: ids.forumId };
           });
 
@@ -38,6 +45,11 @@ export function FetchPreviousPosts(callbackSuccess, app = firebase) {
           .doc(ids.postId)
           .get()
           .then((doc) => {
+            if (!doc.exists) {
+              docDontExist = true;
+              return;
+            }
+
             const data = doc.data();
             const timestamp = data.timestamp;
             const date = new Date(
@@ -59,6 +71,10 @@ export function FetchPreviousPosts(callbackSuccess, app = firebase) {
               lastEdited: editedDate
             };
           });
+
+        if (docDontExist) {
+          return;
+        }
 
         fetchedData.push(result);
       });
