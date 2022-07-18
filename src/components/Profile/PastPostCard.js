@@ -9,9 +9,28 @@ const PastPostCard = ({ forumData, postData }) => {
     navigation.navigate("Forum", { data: forumData });
   }
 
+  console.log(forumData);
+  console.log(postData);
+
+  const dateText = postData.timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
+
+  const editedText = postData.lastEdited
+    ? postData.lastEdited
+        .toDateString()
+        .split(" ")
+        .filter((_, index) => index > 0)
+        .join(" ")
+    : "";
+
   function navigateToPost() {
     navigation.navigate("Forum", { data: forumData });
-    navigation.navigate("Post", { data: postData });
+    navigation.navigate("Post", {
+      data: { ...postData, timestamp: dateText, lastEdited: editedText }
+    });
   }
 
   return (
@@ -25,9 +44,11 @@ const PastPostCard = ({ forumData, postData }) => {
           }
         />
         <ForumName> {forumData.title}</ForumName>
+        <DateText> {dateText} </DateText>
       </ForumInfo>
       <Title>{postData.title}</Title>
       <Content> {postData.content} </Content>
+      {!!editedText && <EditedText>(Last Edited: {editedText})</EditedText>}
       <ButtonContainer>
         <CustomButton onPress={navigateToPost}>
           <Text> See Full Post </Text>
@@ -71,6 +92,16 @@ const Title = styled.Text`
   font-weight: 500;
   padding: 10px;
   align-self: center;
+`;
+
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
 `;
 
 const ForumInfo = styled.View`
