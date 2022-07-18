@@ -38,6 +38,7 @@ Array [
             "width": 50,
           }
         }
+        testID="image"
         theme={
           Object {
             "colors": Object {
