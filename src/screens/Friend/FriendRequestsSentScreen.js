@@ -57,7 +57,9 @@ const FriendRequestsSentScreen = () => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="goBack">Pending Requests Sent</BoldText>
+        <BoldText underline testID="title">
+          Pending Requests Sent
+        </BoldText>
 
         <IconGroup>
           <View>

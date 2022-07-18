@@ -35,15 +35,13 @@ describe("Test Friend List UI", () => {
     fireEvent.press(getByTestId("addFriend"));
     fireEvent.press(getByTestId("groupList"));
     fireEvent.press(getByTestId("blockedList"));
-    fireEvent.press(getByTestId("requestSent"));
-    fireEvent.press(getByTestId("requestReceived"));
+    fireEvent.press(getByTestId("pendingRequest"));
     fireEvent.changeText(getByTestId("searchBar"), "Elbert CS God");
 
     expect(mockNavigate).toHaveBeenNthCalledWith(1, "AddFriend");
     expect(mockNavigate).toHaveBeenNthCalledWith(2, "GroupList");
     expect(mockNavigate).toHaveBeenNthCalledWith(3, "BlockedUserList");
-    expect(mockNavigate).toHaveBeenNthCalledWith(4, "FriendRequestsSent");
-    expect(mockNavigate).toHaveBeenNthCalledWith(5, "FriendRequestsReceived");
+    expect(mockNavigate).toHaveBeenNthCalledWith(4, "FriendRequestsReceived");
     expect(mockSetState).toHaveBeenLastCalledWith("Elbert CS God");
   });
 });
