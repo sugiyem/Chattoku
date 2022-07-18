@@ -41,21 +41,16 @@ export async function editForum(forumInfo, callbackSuccess, app = firebase) {
     .catch((error) => Alert.alert(error.message));
 }
 
-export async function getForumFollowData(
-  forumId,
-  callbackSuccess,
-  app = firebase
-) {
+export function getForumFollowData(forumId, callbackSuccess, app = firebase) {
   const currentUID = app.auth().currentUser.uid;
 
-  await app
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("followers")
     .doc(currentUID)
-    .get()
-    .then((doc) =>
+    .onSnapshot((doc) =>
       doc.exists
         ? callbackSuccess({ ...doc.data(), isFollowed: true })
         : callbackSuccess({ isFollowed: false, isNotificationOn: true })
