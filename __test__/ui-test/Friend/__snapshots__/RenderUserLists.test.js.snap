@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Chat List UI Renders Correctly 1`] = `
+exports[`Test User List UI Renders correctly 1`] = `
 Array [
   <View
     accessible={true}
@@ -317,10 +317,8 @@ Array [
           style={
             Object {
               "backgroundColor": "transparent",
-              "color": "darkslateblue",
+              "color": "#242424",
               "fontSize": 17,
-              "fontWeight": "600",
-              "textDecorationLine": "underline",
             }
           }
           testID="name"
@@ -335,27 +333,9 @@ Array [
               "fontSize": 15,
             }
           }
-          testID="listItemTitle"
+          testID="info"
         >
-          <Text
-            testID="lastMessage"
-          >
-            Hello
-          </Text>
-        </Text>
-        <Text
-          style={
-            Object {
-              "backgroundColor": "transparent",
-              "color": "#242424",
-              "fontSize": 15,
-            }
-          }
-          testID="listItemTitle"
-        >
-          <Text>
-            
-          </Text>
+          CS Noob
         </Text>
       </View>
       <View

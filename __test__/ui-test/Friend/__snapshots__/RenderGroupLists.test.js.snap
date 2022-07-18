@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Chat List UI Renders Correctly 1`] = `
+exports[`Test Group List UI Renders correctly 1`] = `
 Array [
   <View
     accessible={true}
@@ -118,7 +118,7 @@ Array [
             onLoad={[Function]}
             source={
               Object {
-                "uri": "yemima-img",
+                "uri": "weeb-img",
               }
             }
             style={
@@ -317,15 +317,13 @@ Array [
           style={
             Object {
               "backgroundColor": "transparent",
-              "color": "darkslateblue",
+              "color": "#242424",
               "fontSize": 17,
-              "fontWeight": "600",
-              "textDecorationLine": "underline",
             }
           }
           testID="name"
         >
-          Yemima
+          Weebs
         </Text>
         <Text
           style={
@@ -335,27 +333,9 @@ Array [
               "fontSize": 15,
             }
           }
-          testID="listItemTitle"
+          testID="info"
         >
-          <Text
-            testID="lastMessage"
-          >
-            Hello
-          </Text>
-        </Text>
-        <Text
-          style={
-            Object {
-              "backgroundColor": "transparent",
-              "color": "#242424",
-              "fontSize": 15,
-            }
-          }
-          testID="listItemTitle"
-        >
-          <Text>
-            
-          </Text>
+          weebs only
         </Text>
       </View>
       <View

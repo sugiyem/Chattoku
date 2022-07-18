@@ -50,9 +50,10 @@ const BlockedUserListScreen = () => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Search requests by username"
+          testID="searchBar"
         />
 
-        <BoldText underline>Blocked List</BoldText>
+        <BoldText underline testID="title">Blocked List</BoldText>
 
         <IconGroup>
           <View>
@@ -62,6 +63,7 @@ const BlockedUserListScreen = () => {
               color="navy"
               size={30}
               onPress={navigation.goBack}
+              testID="goBack"
             />
             <IconText>Go Back</IconText>
           </View>
@@ -72,6 +74,7 @@ const BlockedUserListScreen = () => {
               color="navy"
               size={30}
               onPress={() => navigation.navigate("AddBlockedUser")}
+              testID="addBlocked"
             />
             <IconText>Block User</IconText>
           </View>

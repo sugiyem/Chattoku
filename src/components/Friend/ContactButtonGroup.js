@@ -13,8 +13,9 @@ const ContactButtonGroup = ({ buttonDetails }) => {
             size={30}
             color={detail.color}
             onPress={detail.onPress}
+            testID={`icon-${id}`}
           />
-          <ActionBarText>{detail.title}</ActionBarText>
+          <ActionBarText testID={`title-${id}`}>{detail.title}</ActionBarText>
         </View>
       ))}
     </ActionBar>

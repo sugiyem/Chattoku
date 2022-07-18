@@ -67,9 +67,10 @@ const FriendListScreen = () => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Search friend by username"
+          testID="searchBar"
         />
 
-        <BoldText underline>Friends List</BoldText>
+        <BoldText underline testID="title">Friends List</BoldText>
 
         <IconGroup>
           <View>
@@ -79,6 +80,7 @@ const FriendListScreen = () => {
               color="navy"
               size={30}
               onPress={() => navigation.navigate("AddFriend")}
+              testID="addFriend"
             />
             <IconText>Add Friend</IconText>
           </View>
@@ -89,6 +91,7 @@ const FriendListScreen = () => {
               color="navy"
               size={30}
               onPress={() => navigation.navigate("GroupList")}
+              testID="groupList"
             />
             <IconText>Groups</IconText>
           </View>
@@ -99,6 +102,7 @@ const FriendListScreen = () => {
               color="navy"
               size={30}
               onPress={() => navigation.navigate("BlockedUserList")}
+              testID="blockedList"
             />
             <IconText>Blocked</IconText>
           </View>
@@ -110,6 +114,7 @@ const FriendListScreen = () => {
                 color="navy"
                 size={30}
                 onPress={() => navigation.navigate("FriendRequestsReceived")}
+                testID="pendingRequest"
               />
             </NotificationIcon>
             <IconText>Pending</IconText>
