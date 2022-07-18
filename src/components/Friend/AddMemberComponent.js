@@ -23,7 +23,7 @@ const AddMemberComponent = ({ item, onInvite, onCancel }) => {
         <Icon
           type="material-community"
           name="account-plus"
-          color="#3EB489"
+          color="#228B22"
           size={30}
           onPress={onInvite}
           testID="inviteIcon"
