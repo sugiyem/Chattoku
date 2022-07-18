@@ -74,16 +74,25 @@ const GroupChatListScreen = () => {
         value={search}
         onChangeText={setSearch}
         placeholder="Search messages"
+        testID="searchBar"
       />
 
-      <BoldText underline>Group Chat List</BoldText>
+      <BoldText underline testID="title">
+        Group Chat List
+      </BoldText>
 
       <ButtonGroup>
-        <SeparatedButton onPress={navigateToGroupsList}>
+        <SeparatedButton
+          onPress={navigateToGroupsList}
+          testID="groupListButton"
+        >
           <ButtonText color="#000000">Message other groups</ButtonText>
         </SeparatedButton>
 
-        <SeparatedButton onPress={navigateToPrivateChat}>
+        <SeparatedButton
+          onPress={navigateToPrivateChat}
+          testID="privateChatButton"
+        >
           <NotificationText text="Private Chat List" isShown={isUnreadExists} />
         </SeparatedButton>
       </ButtonGroup>

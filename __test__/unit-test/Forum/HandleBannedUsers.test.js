@@ -81,7 +81,7 @@ describe("Test forum ban system", () => {
     getBannedUsers(
       "forum-1",
       (data) => {
-        expect(data).toEqual([{ reason: "NSFW comments" }]);
+        expect(data).toEqual([{ reason: "NSFW comments", userId: "random" }]);
       },
       admin
     );

@@ -31,7 +31,13 @@ const ChatAvatar = (props) => {
         onCloseButtonPress={closeModal}
         onMessageButtonPress={openMessage}
       />
-      <Avatar rounded source={imgSource} size={40} onPress={openModal} />
+      <Avatar
+        rounded
+        source={imgSource}
+        size={40}
+        onPress={openModal}
+        testID="avatar"
+      />
     </>
   );
 };

@@ -44,11 +44,14 @@ const FriendRequestsSentScreen = () => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search requests by username"
+        testID="searchBar"
       />
 
-      <BoldText underline>Pending Requests Sent</BoldText>
+      <BoldText underline testID="title">
+        Pending Requests Sent
+      </BoldText>
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="goBack">
         <Text>Back to friend's list</Text>
       </Button>
 

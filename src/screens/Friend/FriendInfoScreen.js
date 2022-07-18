@@ -42,21 +42,21 @@ const FriendInfoScreen = ({ navigation, route }) => {
       <RenderFriendFavorites key={index} {...item} />
     ));
 
+  const imgSource =
+    friendData.img != ""
+      ? { uri: friendData.img }
+      : require("../../assets/default-profile.png");
+
   return (
     <ScrollContainer>
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="goBack">
         <ButtonText color="#000000">Go Back</ButtonText>
       </Button>
 
       <ProfileContainer>
-        {friendData.img != "" ? (
-          <RoundedImage source={{ uri: friendData.img }} />
-        ) : (
-          <RoundedImage source={require("../../assets/default-profile.png")} />
-        )}
-
-        <Name>{friendData.username}</Name>
-        <Description>{friendData.bio}</Description>
+        <RoundedImage source={imgSource} testID="profileImage" />
+        <Name testID="name">{friendData.username}</Name>
+        <Description testID="info">{friendData.bio}</Description>
       </ProfileContainer>
 
       <ListContainer>

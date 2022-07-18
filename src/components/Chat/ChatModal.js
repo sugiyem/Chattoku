@@ -32,12 +32,13 @@ const ChatModal = ({
             onPress={onCloseButtonPress}
             color="white"
             size={30}
+            testID="closeIcon"
           />
         </ModalHeader>
         <ModalContent>
-          <ProfilePicture source={imgSource} />
-          <Name>{item.username}</Name>
-          <Bio>{item.bio}</Bio>
+          <ProfilePicture testID="image" source={imgSource} />
+          <Name testID="username">{item.username}</Name>
+          <Bio testID="bio">{item.bio}</Bio>
           {!isUserDeleted && (
             <IconGroup>
               <IconContainer>
@@ -46,6 +47,7 @@ const ChatModal = ({
                   name="message-processing-outline"
                   color="aquamarine"
                   onPress={onMessageButtonPress}
+                  testID="messageIcon"
                   size={40}
                 />
                 <IconDescription color="aquamarine">Message</IconDescription>

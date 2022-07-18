@@ -11,7 +11,7 @@ const RenderFriendFavorites = ({ type, title, data }) => {
   const Title = () => (
     <ListItem.Content>
       <ListItem.Title>
-        <ListTitleText>{title}</ListTitleText>
+        <ListTitleText testID="title">{title}</ListTitleText>
       </ListItem.Title>
     </ListItem.Content>
   );
@@ -19,9 +19,17 @@ const RenderFriendFavorites = ({ type, title, data }) => {
   const FavoriteList = () =>
     data.map((item, index) => (
       <ListItem key={index} bottomDivider>
-        {isAnime && <Avatar size="medium" source={{ uri: item.image }} />}
+        {isAnime && (
+          <Avatar
+            size="medium"
+            source={{ uri: item.image }}
+            testID={`avatar-${index}`}
+          />
+        )}
         <ListItem.Content>
-          <ListItem.Title>{isAnime ? item.title : item}</ListItem.Title>
+          <ListItem.Title testID={`title-${index}`}>
+            {isAnime ? item.title : item}
+          </ListItem.Title>
         </ListItem.Content>
       </ListItem>
     ));
@@ -32,6 +40,7 @@ const RenderFriendFavorites = ({ type, title, data }) => {
       content={<Title />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}
+      testID="accordion"
     >
       {isExpanded && <FavoriteList />}
     </ListItem.Accordion>

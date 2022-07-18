@@ -8,10 +8,14 @@ import {
 } from "../../services/Friend/HandleBlockedUser";
 import Caution from "../Miscellaneous/Caution";
 
-const BlockIcon = ({ userId, isSmall = false }) => {
-  const [isBlocked, setIsBlocked] = useState(false);
+const BlockIcon = ({ userId, isSmall = false, defaultState = null }) => {
+  const [isBlocked, setIsBlocked] = useState(defaultState);
+
+  const isTest = defaultState !== null;
 
   useEffect(() => {
+    if (isTest) return;
+
     return isBlockedByCurrentUser(
       userId,
       () => setIsBlocked(true),
@@ -20,10 +24,20 @@ const BlockIcon = ({ userId, isSmall = false }) => {
   }, []);
 
   function handleBlock() {
+    if (isTest) {
+      blockUser(userId);
+      return;
+    }
+
     Caution("This user will be blocked", () => blockUser(userId));
   }
 
   function handleUnblock() {
+    if (isTest) {
+      unblockUser(userId);
+      return;
+    }
+
     Caution("This user will be unblocked", () => unblockUser(userId));
   }
 
@@ -38,8 +52,13 @@ const BlockIcon = ({ userId, isSmall = false }) => {
           size={iconSize}
           color="green"
           onPress={handleUnblock}
+          testID="unblockIcon"
         />
-        <IconDescription color="green" isSmall={isSmall}>
+        <IconDescription
+          color="green"
+          isSmall={isSmall}
+          testID="unblockDescription"
+        >
           Unblock
         </IconDescription>
       </IconContainer>
@@ -53,8 +72,13 @@ const BlockIcon = ({ userId, isSmall = false }) => {
           size={iconSize}
           color={"#c10015"}
           onPress={handleBlock}
+          testID="blockIcon"
         />
-        <IconDescription color="#c10015" isSmall={isSmall}>
+        <IconDescription
+          color="#c10015"
+          isSmall={isSmall}
+          testID="blockDescription"
+        >
           Block
         </IconDescription>
       </IconContainer>

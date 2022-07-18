@@ -17,7 +17,9 @@ const GroupMemberList = ({ title, items }) => {
   const SectionTitle = () => (
     <ListItem.Content>
       <ListItem.Title>
-        <Text style={styles.titleText}>{title}</Text>
+        <Text style={styles.titleText} testID="title">
+          {title}
+        </Text>
       </ListItem.Title>
     </ListItem.Content>
   );
@@ -28,6 +30,7 @@ const GroupMemberList = ({ title, items }) => {
       content={<SectionTitle />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}
+      testID="accordion"
     >
       {isExpanded && <RenderTabs />}
     </ListItem.Accordion>

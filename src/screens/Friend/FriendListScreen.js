@@ -60,25 +60,38 @@ const FriendListScreen = () => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search friend by username"
+        testID="searchBar"
       />
 
-      <BoldText underline>Friends List</BoldText>
+      <BoldText underline testID="title">
+        Friends List
+      </BoldText>
 
-      <Button onPress={() => navigation.navigate("AddFriend")}>
+      <Button
+        onPress={() => navigation.navigate("AddFriend")}
+        testID="addFriend"
+      >
         <Text>Add more friends</Text>
       </Button>
 
-      <Button onPress={() => navigation.navigate("GroupList")}>
+      <Button
+        onPress={() => navigation.navigate("GroupList")}
+        testID="groupList"
+      >
         <Text>View groups</Text>
       </Button>
 
-      <Button onPress={() => navigation.navigate("BlockedUserList")}>
+      <Button
+        onPress={() => navigation.navigate("BlockedUserList")}
+        testID="blockedList"
+      >
         <Text>View blocked users</Text>
       </Button>
 
       <ButtonGroup>
         <SeparatedButton
           onPress={() => navigation.navigate("FriendRequestsSent")}
+          testID="requestSent"
         >
           <ButtonText size="12px" color="#000000">
             Outgoing Requests
@@ -87,6 +100,7 @@ const FriendListScreen = () => {
 
         <SeparatedButton
           onPress={() => navigation.navigate("FriendRequestsReceived")}
+          testID="requestReceived"
         >
           <NotificationText
             text="Incoming Requests"

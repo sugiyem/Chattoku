@@ -44,23 +44,23 @@ const GroupAdminButtons = ({ type, groupInfo, navigation }) => {
   return (
     <>
       <EditButtonGroup>
-        <EditButton onPress={goToEditGroupPage}>
+        <EditButton onPress={goToEditGroupPage} testID="editGroup">
           <EditButtonText>Edit Group Details</EditButtonText>
         </EditButton>
-        <EditButton onPress={goToAddMemberPage}>
+        <EditButton onPress={goToAddMemberPage} testID="addMember">
           <EditButtonText>Add Members</EditButtonText>
         </EditButton>
         {isOwner && (
-          <EditButton onPress={onDelete}>
+          <EditButton onPress={onDelete} testID="deleteGroup">
             <EditButtonText>Delete Group</EditButtonText>
           </EditButton>
         )}
       </EditButtonGroup>
       <EditButtonGroup>
-        <EditButton onPress={goToManageMemberPage}>
+        <EditButton onPress={goToManageMemberPage} testID="manageMember">
           <EditButtonText>Manage Member</EditButtonText>
         </EditButton>
-        <EditButton onPress={goToManageInvitationPage}>
+        <EditButton onPress={goToManageInvitationPage} testID="manageInvite">
           <EditButtonText>Manage Invitation</EditButtonText>
         </EditButton>
       </EditButtonGroup>

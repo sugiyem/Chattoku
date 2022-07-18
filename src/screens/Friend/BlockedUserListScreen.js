@@ -41,15 +41,21 @@ const BlockedUserListScreen = () => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search requests by username"
+        testID="searchBar"
       />
 
-      <BoldText underline>Blocked List</BoldText>
+      <BoldText underline testID="title">
+        Blocked List
+      </BoldText>
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="goBack">
         <Text>Back to friend's list</Text>
       </Button>
 
-      <Button onPress={() => navigation.navigate("AddBlockedUser")}>
+      <Button
+        onPress={() => navigation.navigate("AddBlockedUser")}
+        testID="addBlocked"
+      >
         <Text>Add blocked users</Text>
       </Button>
 
