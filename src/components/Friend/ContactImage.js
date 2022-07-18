@@ -14,6 +14,7 @@ const ContactImage = ({ item }) => {
       source={imageSource}
       size="medium"
       containerStyle={styles.image}
+      testID="image"
     />
   );
 };
