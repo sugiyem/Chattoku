@@ -38,10 +38,25 @@ export function FetchPreviousPosts(callbackSuccess, app = firebase) {
           .doc(ids.postId)
           .get()
           .then((doc) => {
+            const data = doc.data();
+            const timestamp = data.timestamp;
+            const date = new Date(
+              timestamp.seconds * 1000 + timestamp.nanoseconds * 0.000001
+            );
+
+            const lastEdited = data.lastEdited;
+            const editedDate = lastEdited
+              ? new Date(
+                  lastEdited.seconds * 1000 + timestamp.nanoseconds * 0.000001
+                )
+              : null;
+
             result.postData = {
-              ...doc.data(),
+              ...data,
               postId: ids.postId,
-              forumId: ids.forumId
+              forumId: ids.forumId,
+              timestamp: date,
+              lastEdited: editedDate
             };
           });
 
