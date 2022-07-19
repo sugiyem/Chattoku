@@ -68,6 +68,7 @@ const LikeBar = ({ postId, forumId }) => {
         color={thumbsUpColor}
         onPress={handleLikeButtonClick}
         style={styles.child}
+        testID="like"
       />
       <Text style={styles.child}>{likeCount}</Text>
       <Icon
@@ -76,6 +77,7 @@ const LikeBar = ({ postId, forumId }) => {
         color={thumbsDownColor}
         onPress={handleDislikeButtonClick}
         style={styles.child}
+        testID="dislike"
       />
     </View>
   );
