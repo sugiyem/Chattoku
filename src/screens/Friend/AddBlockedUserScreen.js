@@ -50,14 +50,18 @@ const AddBlockedUserScreen = ({ navigation }) => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Block user by its exact username"
+          testID="searchBar"
         />
 
-        <SearchButton onPress={() => handleClickOnSearch()}>
+        <SearchButton
+          onPress={() => handleClickOnSearch()}
+          testID="searchButton"
+        >
           <ButtonText color="#ffffff">Search</ButtonText>
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("BlockedUserList")}>
+      <Button onPress={() => navigation.replace("BlockedUserList")} testID="blockedList">
         <ButtonText>Back to blocked list</ButtonText>
       </Button>
 

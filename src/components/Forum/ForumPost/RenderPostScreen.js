@@ -18,6 +18,11 @@ import {
 } from "../../../services/Miscellaneous/HandleImage";
 import { Icon } from "react-native-elements";
 import ImageSlider from "../../Miscellaneous/ImageSlider";
+import {
+  ForumNavigation,
+  NavigationText,
+  ScrollContainer
+} from "../../../styles/ForumStyles";
 
 const initialState = {
   title: "",
@@ -128,10 +133,10 @@ const RenderPostScreen = ({ renderScreenType }) => {
   }
 
   return (
-    <Container>
-      <Button onPress={handleCancel}>
-        <ButtonText>Go Back</ButtonText>
-      </Button>
+    <ScrollContainer>
+      <ForumNavigation onPress={handleCancel}>
+        <NavigationText>Go Back</NavigationText>
+      </ForumNavigation>
       <Title>
         {title} {forumData.title}
       </Title>
@@ -176,7 +181,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
       <SubmitButton onPress={handleSubmit}>
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
-    </Container>
+    </ScrollContainer>
   );
 };
 
@@ -185,16 +190,9 @@ export default RenderPostScreen;
 const width = Dimensions.get("screen").width;
 const IMAGE_WIDTH = width - 80;
 
-const Container = styled.ScrollView`
-  display: flex;
-  background-color: darkcyan;
-  flex: 1;
-  padding: 15px;
-`;
-
 const Button = styled.TouchableOpacity`
   align-self: stretch;
-  margin: 5px;
+  margin: 5px 10px;
   padding: 5px;
   border-radius: 10px;
   background-color: blue;
@@ -208,7 +206,7 @@ const ButtonText = styled.Text`
 
 const SubmitButton = styled.TouchableOpacity`
   align-self: stretch;
-  margin: 5px;
+  margin: 10px;
   padding: 10px;
   border-radius: 20px;
   background-color: cyan;
@@ -222,18 +220,18 @@ const SubmitText = styled.Text`
 
 const DeleteButton = styled.TouchableOpacity`
   align-self: stretch;
-  margin: 5px;
+  margin: 5px 10px;
   padding: 5px;
   border-radius: 10px;
   background-color: #c10015;
 `;
 
 const InputContainer = styled.View`
-  margin: 10px;
+  margin: 10px 20px;
 `;
 
 const InputLabel = styled.Text`
-  color: whitesmoke;
+  color: navy;
   font-size: 18px;
   padding-bottom: 3px;
 `;
@@ -243,6 +241,8 @@ const Title = styled.Text`
   text-align: center;
   margin: 10px;
   text-decoration-line: underline;
+  color: navy;
+  font-weight: 300;
 `;
 
 const TitleInput = styled.TextInput`
@@ -250,6 +250,7 @@ const TitleInput = styled.TextInput`
   padding: 10px;
   border-width: 0.5px;
   background-color: whitesmoke;
+  border-radius: 8px;
 `;
 
 const ContentInput = styled.TextInput`
@@ -260,4 +261,5 @@ const ContentInput = styled.TextInput`
   border-width: 0.5px;
   background-color: whitesmoke;
   text-align-vertical: top;
+  border-radius: 10px;
 `;

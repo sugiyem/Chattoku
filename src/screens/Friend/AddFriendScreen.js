@@ -49,14 +49,18 @@ const AddFriendScreen = ({ navigation }) => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Add user by its exact username"
+          testID="searchBar"
         />
 
-        <SearchButton onPress={() => handleClickOnSearch()}>
+        <SearchButton
+          onPress={() => handleClickOnSearch()}
+          testID="searchButton"
+        >
           <ButtonText color="#ffffff">Search</ButtonText>
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("FriendList")}>
+      <Button onPress={() => navigation.replace("FriendList")} testID="friendList">
         <ButtonText>Back to friend's list</ButtonText>
       </Button>
 

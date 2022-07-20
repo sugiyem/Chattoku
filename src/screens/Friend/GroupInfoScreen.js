@@ -5,9 +5,9 @@ import {
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
 import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { groupMemberType } from "../../constants/Group";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
-import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
 import Loading from "../../components/Miscellaneous/Loading";

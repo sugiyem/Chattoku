@@ -41,11 +41,12 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           value={search}
           onChangeText={setSearch}
           placeholder="Search pending member by username"
+          testID="searchBar"
         />
 
-        <BoldText underline>Pending Member's List</BoldText>
+        <BoldText underline testID="title">Pending Member's List</BoldText>
 
-        <Button onPress={() => navigation.goBack()}>
+        <Button onPress={() => navigation.goBack()} testID="goBack">
           <ButtonText> Go back</ButtonText>
         </Button>
 

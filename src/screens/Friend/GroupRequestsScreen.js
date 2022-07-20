@@ -53,11 +53,12 @@ const GroupRequestsScreen = ({ navigation }) => {
           value={search}
           onChangeText={setSearch}
           placeholder="Search group requests"
+          testID="searchBar"
         />
 
-        <BoldText underline>Group Requests List</BoldText>
+        <BoldText underline testID="title">Group Requests List</BoldText>
 
-        <Button onPress={() => navigation.replace("GroupList")}>
+        <Button onPress={() => navigation.replace("GroupList")} testID="goBack">
           <ButtonText>Go Back</ButtonText>
         </Button>
 

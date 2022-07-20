@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { Alert, Dimensions } from "react-native";
+import { Alert, Dimensions, Platform } from "react-native";
 import {
   BoldText,
   Button,
@@ -166,32 +166,28 @@ const EditSection = ({ type, currentState, navigation }) => {
           </EditButton>
         </ImageContainer>
 
-        <FormContainer>
-          <TextContainer>
-            <BoldText size="13px" underline>
-              {isEditProfile ? "Username" : "Group Name"}
-            </BoldText>
-          </TextContainer>
-          <FormInput
-            placeholder={isEditProfile ? "username" : "name"}
-            value={isEditProfile ? info.username : info.name}
-            onChangeText={(text) =>
-              handleChangeText(text, isEditProfile ? "username" : "name")
-            }
-          />
-          <TextContainer>
-            <BoldText size="13px" underline>
-              {isEditProfile ? "Bio" : "Group Description"}
-            </BoldText>
-          </TextContainer>
-          <FormInput
-            placeholder={isEditProfile ? "bio" : "description"}
-            value={isEditProfile ? info.bio : info.description}
-            onChangeText={(text) =>
-              handleChangeText(text, isEditProfile ? "bio" : "description")
-            }
-          />
-        </FormContainer>
+        <FormInputLabel>
+          {isEditProfile ? "Username" : "Group Name"}
+        </FormInputLabel>
+        <FormInput
+          placeholder={isEditProfile ? "username" : "name"}
+          value={isEditProfile ? info.username : info.name}
+          onChangeText={(text) =>
+            handleChangeText(text, isEditProfile ? "username" : "name")
+          }
+        />
+
+        <FormInputLabel>
+          {isEditProfile ? "Bio" : "Group Description"}
+        </FormInputLabel>
+        <FormInput
+          placeholder={isEditProfile ? "bio" : "description"}
+          value={isEditProfile ? info.bio : info.description}
+          onChangeText={(text) =>
+            handleChangeText(text, isEditProfile ? "bio" : "description")
+          }
+        />
+
         <EditButton onPress={handleSubmit}>
           <EditButtonText>
             {isEditProfile
@@ -230,11 +226,13 @@ const ProfileImage = styled.Image`
 `;
 
 const EditButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: #000080;
+  width: 90%;
+  margin: 5px;
   margin-top: 10px;
+  padding: 10px;
+  align-self: center;
+  border-radius: 10px;
+  background-color: #000080;
 `;
 
 const EditButtonText = styled.Text`
@@ -245,25 +243,22 @@ const EditButtonText = styled.Text`
   color: #ffffff;
 `;
 
-const FormContainer = styled.View`
-  margin-top: 30px;
-  align-items: stretch;
-  border-width: 1px;
-  border-bottom-width: 0px;
-  border-color: #000080;
-  width: ${width - 10}px;
-  height: ${width / 3}px;
-`;
-
-const TextContainer = styled.View`
-  margin-left: 10px;
-`;
-
 const FormInput = styled.TextInput`
   flex-direction: row;
-  flex: 1;
-  padding-left: 10px;
-  padding-bottom: 5px;
-  border-bottom-width: 1px;
-  border-bottom-color: #000080;
+  width: 90%;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  align-self: center;
+  font-size: 15px;
+  background-color: #f0f8ff;
+`;
+
+const FormInputLabel = styled.Text`
+  font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
+  font-weight: bold;
+  margin: 5px;
+  margin-left: 20px;
+  color: whitesmoke;
+  font-size: 16px;
 `;

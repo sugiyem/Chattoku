@@ -6,6 +6,8 @@ import RenderUserToManage from "../../../components/Forum/ForumManagement/Render
 import { firebase } from "../../../services/Firebase/Config";
 import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
 import { manageType } from "../../../constants/Forum";
+import { Container } from "../../../styles/GeneralStyles";
+import { AquaButton, AquaButtonText } from "../../../styles/ForumStyles";
 
 const AddBannedScreen = () => {
   const [username, setUsername] = useState("");
@@ -41,9 +43,9 @@ const AddBannedScreen = () => {
 
   return (
     <Container>
-      <BackButton onPress={navigation.goBack}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={navigation.goBack}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       <Title>Ban a User</Title>
       <SearchContainer>
         <StyledTextInput
@@ -68,14 +70,6 @@ const AddBannedScreen = () => {
 
 export default AddBannedScreen;
 
-const Container = styled.View`
-  display: flex;
-  background-color: darkcyan;
-  padding: 5px;
-  padding-top: 10px;
-  flex: 1;
-`;
-
 const SearchContainer = styled.View`
   display: flex;
   flex-direction: row;
@@ -91,6 +85,7 @@ const StyledTextInput = styled.TextInput`
   border-radius: 5px;
   background-color: white;
   align-self: center;
+  border-width: 0.5px;
 `;
 
 const Title = styled.Text`
@@ -98,7 +93,7 @@ const Title = styled.Text`
   padding: 5px;
   font-weight: 400;
   align-self: center;
-  color: white;
+  color: whitesmoke;
 `;
 
 const CustomButton = styled.TouchableOpacity`
@@ -115,18 +110,4 @@ const ButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: white;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
 `;

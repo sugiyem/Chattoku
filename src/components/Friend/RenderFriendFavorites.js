@@ -13,7 +13,7 @@ const RenderFriendFavorites = ({ type, title, data }) => {
   const Title = () => (
     <ListItem.Content>
       <ListItem.Title>
-        <ListTitleText>{title}</ListTitleText>
+        <ListTitleText testID="title">{title}</ListTitleText>
       </ListItem.Title>
     </ListItem.Content>
   );
@@ -25,9 +25,9 @@ const RenderFriendFavorites = ({ type, title, data }) => {
         containerStyle={styles.elementContainer}
         bottomDivider
       >
-        {isAnime && <Avatar size="medium" source={{ uri: item.image }} />}
+        {isAnime && <Avatar size="medium" source={{ uri: item.image }} testID={`avatar-${index}`}/>}
         <ListItem.Content>
-          <ListItem.Title style={{ color: "#F0F8FF" }}>
+          <ListItem.Title style={{ color: "#F0F8FF" }} testID={`title-${index}`}>
             {isAnime ? item.title : item}
           </ListItem.Title>
         </ListItem.Content>
@@ -41,6 +41,7 @@ const RenderFriendFavorites = ({ type, title, data }) => {
       isExpanded={isExpanded}
       containerStyle={itemContainerStyle}
       onPress={() => setIsExpanded(!isExpanded)}
+      testID="accordion"
     >
       {isExpanded && <FavoriteList />}
     </ListItem.Accordion>

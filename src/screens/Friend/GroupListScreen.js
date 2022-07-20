@@ -73,9 +73,10 @@ const GroupListScreen = ({ navigation }) => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Search group by name"
+          testID="searchBar"
         />
 
-        <BoldText underline>Groups List</BoldText>
+        <BoldText underline testID="title">Groups List</BoldText>
 
         <IconGroup>
           <View>
@@ -85,6 +86,7 @@ const GroupListScreen = ({ navigation }) => {
               color="navy"
               size={30}
               onPress={() => navigation.replace("FriendList")}
+              testID="friendList"
             />
             <IconText>Friends</IconText>
           </View>
@@ -95,6 +97,7 @@ const GroupListScreen = ({ navigation }) => {
               color="navy"
               size={30}
               onPress={() => navigation.navigate("GroupCreation")}
+              testID="createGroup"
             />
             <IconText>Add Group</IconText>
           </View>
@@ -106,6 +109,7 @@ const GroupListScreen = ({ navigation }) => {
                 color="navy"
                 size={30}
                 onPress={() => navigation.navigate("GroupRequests")}
+                testID="groupRequests"
               />
             </NotificationIcon>
             <IconText>Invitation</IconText>

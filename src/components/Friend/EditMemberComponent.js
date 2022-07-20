@@ -105,12 +105,12 @@ const ItemContainer = styled.View`
 `;
 
 const InfoContainer = styled.View`
-  flex: 2;
+  flex: 3;
   flex-direction: row;
 `;
 
 const ButtonContainer = styled.View`
-  flex: 1;
+  flex: 2;
   flex-direction: row;
   justify-content: space-between;
 `;

@@ -54,9 +54,12 @@ const FriendRequestsSentScreen = () => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Search requests by username"
+          testID="searchBar"
         />
 
-        <BoldText underline>Pending Requests Sent</BoldText>
+        <BoldText underline testID="title">
+          Pending Requests Sent
+        </BoldText>
 
         <IconGroup>
           <View>
@@ -66,6 +69,7 @@ const FriendRequestsSentScreen = () => {
               color="navy"
               size={30}
               onPress={navigation.goBack}
+              testID="goBack"
             />
             <IconText>Go Back</IconText>
           </View>
@@ -76,6 +80,7 @@ const FriendRequestsSentScreen = () => {
               color="navy"
               size={30}
               onPress={() => navigation.replace("FriendRequestsReceived")}
+              testID="requestsReceived"
             />
             <IconText>Request Received</IconText>
           </View>
