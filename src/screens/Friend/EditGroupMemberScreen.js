@@ -5,42 +5,48 @@ import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
 import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
   const [search, setSearch] = useState("");
+  const [isMemberLoading, setIsMemberLoading] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
   const groupInfo = route.params.groupInfo;
   const memberIDs = members.map((user) => user.id);
 
   useEffect(() => {
+    setIsMemberLoading(true);
+
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setMembers,
+      onSuccess: (data) => {
+        setMembers(data);
+        setIsMemberLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsAdminLoading(true);
+
     return fetchGroupAdminIDs({
       groupID: groupInfo.id,
-      onSuccess: setAdminIDs
+      onSuccess: (data) => {
+        setAdminIDs(data);
+        setIsAdminLoading(false);
+      }
     });
   }, []);
-
-  function isOwner(id) {
-    return id === groupInfo.owner;
-  }
-
-  function isAdmin(id) {
-    return adminIDs.includes(id);
-  }
 
   const filteredMembers = members
     .map((member) => ({
@@ -59,31 +65,31 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
     );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search member by username"
-        testID="searchBar"
-      />
-
-      <BoldText underline testID="title">
-        Member's List
-      </BoldText>
-
-      <Button onPress={() => navigation.goBack()} testID="goBack">
-        <Text> Go back</Text>
-      </Button>
-
-      {filteredMembers.map((item, index) => (
-        <EditMemberComponent
-          key={index}
-          item={item}
-          isMember={true}
-          groupInfo={groupInfo}
+    <Loading isLoading={isAdminLoading || isMemberLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search member by username"
+          testID="searchBar"
         />
-      ))}
-    </ScrollContainer>
+
+        <BoldText underline testID="title">Member's List</BoldText>
+
+        <Button onPress={() => navigation.goBack()} testID="goBack">
+          <ButtonText> Go back</ButtonText>
+        </Button>
+
+        {filteredMembers.map((item, index) => (
+          <EditMemberComponent
+            key={index}
+            item={item}
+            isMember={true}
+            groupInfo={groupInfo}
+          />
+        ))}
+      </ScrollContainer>
+    </Loading>
   );
 };
 

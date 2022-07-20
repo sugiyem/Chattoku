@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Text } from "react-native";
 import {
   Button,
@@ -60,11 +60,8 @@ const AddFriendScreen = ({ navigation }) => {
         </SearchButton>
       </RowBar>
 
-      <Button
-        onPress={() => navigation.replace("FriendList")}
-        testID="friendList"
-      >
-        <Text>Back to friend's list</Text>
+      <Button onPress={() => navigation.replace("FriendList")} testID="friendList">
+        <ButtonText>Back to friend's list</ButtonText>
       </Button>
 
       <UserOuterContainer>

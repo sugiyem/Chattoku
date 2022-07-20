@@ -4,20 +4,28 @@ import { fetchPendingGroupMembers } from "../../services/Friend/FetchGroup";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
 import EditMemberComponent from "../../components/Friend/EditMemberComponent";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const EditGroupMemberScreen = ({ navigation, route }) => {
   const [pendingMembers, setPendingMembers] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const groupInfo = route.params.groupInfo;
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchPendingGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setPendingMembers,
+      onSuccess: (data) => {
+        setPendingMembers(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -27,31 +35,31 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
   );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search pending member by username"
-        testID="searchBar"
-      />
-
-      <BoldText underline testID="title">
-        Pending Member's List
-      </BoldText>
-
-      <Button onPress={() => navigation.goBack()} testID="goBack">
-        <Text> Go back</Text>
-      </Button>
-
-      {filteredPendingMembers.map((item, index) => (
-        <EditMemberComponent
-          key={index}
-          item={item}
-          isMember={false}
-          groupInfo={groupInfo}
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search pending member by username"
+          testID="searchBar"
         />
-      ))}
-    </ScrollContainer>
+
+        <BoldText underline testID="title">Pending Member's List</BoldText>
+
+        <Button onPress={() => navigation.goBack()} testID="goBack">
+          <ButtonText> Go back</ButtonText>
+        </Button>
+
+        {filteredPendingMembers.map((item, index) => (
+          <EditMemberComponent
+            key={index}
+            item={item}
+            isMember={false}
+            groupInfo={groupInfo}
+          />
+        ))}
+      </ScrollContainer>
+    </Loading>
   );
 };
 

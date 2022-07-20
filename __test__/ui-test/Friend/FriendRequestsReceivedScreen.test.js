@@ -4,13 +4,15 @@ import { fireEvent, render } from "@testing-library/react-native";
 import FriendRequestsReceivedScreen from "../../../src/screens/Friend/FriendRequestsReceivedScreen";
 
 const mockGoBack = jest.fn();
+const mockReplace = jest.fn();
 const mockSetState = jest.fn();
 
 jest.mock("../../../src/services/Friend/FetchFriendStatus");
 jest.mock("@react-navigation/native", () => {
   return {
     useNavigation: () => ({
-      goBack: mockGoBack
+      goBack: mockGoBack,
+      replace: mockReplace
     })
   };
 });
@@ -33,9 +35,11 @@ describe("Test Friend Received Request List UI", () => {
     const { getByTestId } = render(<FriendRequestsReceivedScreen />);
 
     fireEvent.press(getByTestId("goBack"));
+    fireEvent.press(getByTestId("requestsSent"));
     fireEvent.changeText(getByTestId("searchBar"), "Elbert CS God");
 
     expect(mockGoBack).toHaveBeenCalled();
+    expect(mockReplace).toHaveBeenCalledWith("FriendRequestsSent");
     expect(mockSetState).toHaveBeenLastCalledWith("Elbert CS God");
   });
 });

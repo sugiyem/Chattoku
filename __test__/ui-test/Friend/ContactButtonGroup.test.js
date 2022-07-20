@@ -48,7 +48,7 @@ describe("Test Contact Button UI", () => {
       <ContactButtonGroup buttonDetails={mockButtons} />
     );
 
-    fireEvent.press(getByTestId("pressable-0"));
+    fireEvent.press(getByTestId("icon-0"));
 
     expect(mockFirstButtonPress).toHaveBeenCalled();
     expect(mockSecondButtonPress).not.toHaveBeenCalled();
