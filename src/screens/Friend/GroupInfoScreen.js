@@ -10,11 +10,15 @@ import { groupMemberType } from "../../constants/Group";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
 import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const GroupInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
+  const [isMemberLoading, setIsMemberLoading] = useState(false);
+  const [isPendingLoading, setIsPendingLoading] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
   const groupInfo = route.params.groupData;
   const currentID = getCurrentUID();
   const memberIDs = members.map((user) => user.id);
@@ -42,36 +46,53 @@ const GroupInfoScreen = ({ navigation, route }) => {
   console.log(detailedMembers);
 
   useEffect(() => {
+    setIsMemberLoading(true);
+
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setMembers,
+      onSuccess: (data) => {
+        setMembers(data);
+        setIsMemberLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsPendingLoading(true);
+
     return fetchPendingGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setPendingMembers,
+      onSuccess: (data) => {
+        setPendingMembers(data);
+        setIsPendingLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsAdminLoading(true);
+
     return fetchGroupAdminIDs({
       groupID: groupInfo.id,
-      onSuccess: setAdminIDs
+      onSuccess: (data) => {
+        setAdminIDs(data);
+        setIsAdminLoading(false);
+      }
     });
   }, []);
 
   return (
-    <RenderGroupDetail
-      type={renderType}
-      groupInfo={groupInfo}
-      members={detailedMembers}
-      pendingMembers={pendingMembers}
-      navigation={navigation}
-    />
+    <Loading isLoading={isAdminLoading || isMemberLoading || isPendingLoading}>
+      <RenderGroupDetail
+        type={renderType}
+        groupInfo={groupInfo}
+        members={detailedMembers}
+        pendingMembers={pendingMembers}
+        navigation={navigation}
+      />
+    </Loading>
   );
 };
 

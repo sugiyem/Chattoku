@@ -61,11 +61,8 @@ const AddBlockedUserScreen = ({ navigation }) => {
         </SearchButton>
       </RowBar>
 
-      <Button
-        onPress={() => navigation.replace("BlockedUserList")}
-        testID="blockedList"
-      >
-        <Text>Back to blocked list</Text>
+      <Button onPress={() => navigation.replace("BlockedUserList")} testID="blockedList">
+        <ButtonText>Back to blocked list</ButtonText>
       </Button>
 
       <UserOuterContainer>

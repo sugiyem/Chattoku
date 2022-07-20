@@ -115,15 +115,19 @@ exports[`Test Group Creation UI Renders correctly 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
-          "alignSelf": "stretch",
+          "alignSelf": "center",
           "backgroundColor": "#000080",
           "borderRadius": 10,
+          "marginBottom": 5,
+          "marginLeft": 5,
+          "marginRight": 5,
           "marginTop": 10,
           "opacity": 1,
-          "paddingBottom": 15,
-          "paddingLeft": 15,
-          "paddingRight": 15,
-          "paddingTop": 15,
+          "paddingBottom": 10,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 10,
+          "width": "90%",
         }
       }
     >
@@ -144,112 +148,92 @@ exports[`Test Group Creation UI Renders correctly 1`] = `
       </Text>
     </View>
   </View>
-  <View
+  <Text
     style={
       Array [
         Object {
-          "alignItems": "stretch",
-          "borderBottomWidth": 0,
-          "borderColor": "#000080",
-          "borderWidth": 1,
-          "height": 250,
-          "marginTop": 30,
-          "width": 740,
+          "color": "whitesmoke",
+          "fontFamily": "Gill Sans",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "marginBottom": 5,
+          "marginLeft": 20,
+          "marginRight": 5,
+          "marginTop": 5,
         },
       ]
     }
   >
-    <View
-      style={
-        Array [
-          Object {
-            "marginLeft": 10,
-          },
-        ]
-      }
-    >
-      <Text
-        size="13px"
-        style={
-          Array [
-            Object {
-              "fontFamily": "Gill Sans",
-              "fontSize": 13,
-              "fontWeight": "bold",
-              "textDecorationLine": "underline",
-            },
-          ]
-        }
-        underline={true}
-      >
-        Group Name
-      </Text>
-    </View>
-    <TextInput
-      onChangeText={[Function]}
-      placeholder="name"
-      style={
-        Array [
-          Object {
-            "borderBottomColor": "#000080",
-            "borderBottomWidth": 1,
-            "flexBasis": 0,
-            "flexDirection": "row",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "paddingBottom": 5,
-            "paddingLeft": 10,
-          },
-        ]
-      }
-      value=""
-    />
-    <View
-      style={
-        Array [
-          Object {
-            "marginLeft": 10,
-          },
-        ]
-      }
-    >
-      <Text
-        size="13px"
-        style={
-          Array [
-            Object {
-              "fontFamily": "Gill Sans",
-              "fontSize": 13,
-              "fontWeight": "bold",
-              "textDecorationLine": "underline",
-            },
-          ]
-        }
-        underline={true}
-      >
-        Group Description
-      </Text>
-    </View>
-    <TextInput
-      onChangeText={[Function]}
-      placeholder="description"
-      style={
-        Array [
-          Object {
-            "borderBottomColor": "#000080",
-            "borderBottomWidth": 1,
-            "flexBasis": 0,
-            "flexDirection": "row",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "paddingBottom": 5,
-            "paddingLeft": 10,
-          },
-        ]
-      }
-      value=""
-    />
-  </View>
+    Group Name
+  </Text>
+  <TextInput
+    onChangeText={[Function]}
+    placeholder="name"
+    style={
+      Array [
+        Object {
+          "alignSelf": "center",
+          "backgroundColor": "#f0f8ff",
+          "borderRadius": 10,
+          "flexDirection": "row",
+          "fontSize": 15,
+          "marginBottom": 5,
+          "marginLeft": 5,
+          "marginRight": 5,
+          "marginTop": 5,
+          "paddingBottom": 10,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 10,
+          "width": "90%",
+        },
+      ]
+    }
+    value=""
+  />
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "whitesmoke",
+          "fontFamily": "Gill Sans",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "marginBottom": 5,
+          "marginLeft": 20,
+          "marginRight": 5,
+          "marginTop": 5,
+        },
+      ]
+    }
+  >
+    Group Description
+  </Text>
+  <TextInput
+    onChangeText={[Function]}
+    placeholder="description"
+    style={
+      Array [
+        Object {
+          "alignSelf": "center",
+          "backgroundColor": "#f0f8ff",
+          "borderRadius": 10,
+          "flexDirection": "row",
+          "fontSize": 15,
+          "marginBottom": 5,
+          "marginLeft": 5,
+          "marginRight": 5,
+          "marginTop": 5,
+          "paddingBottom": 10,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 10,
+          "width": "90%",
+        },
+      ]
+    }
+    value=""
+  />
   <View
     accessible={true}
     collapsable={false}
@@ -263,15 +247,19 @@ exports[`Test Group Creation UI Renders correctly 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       Object {
-        "alignSelf": "stretch",
+        "alignSelf": "center",
         "backgroundColor": "#000080",
         "borderRadius": 10,
+        "marginBottom": 5,
+        "marginLeft": 5,
+        "marginRight": 5,
         "marginTop": 10,
         "opacity": 1,
-        "paddingBottom": 15,
-        "paddingLeft": 15,
-        "paddingRight": 15,
-        "paddingTop": 15,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
+        "width": "90%",
       }
     }
   >

@@ -17,10 +17,13 @@ Array [
       style={
         Object {
           "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomWidth": 0.5,
-          "borderColor": "#bcbbc1",
+          "backgroundColor": "#87CEFA",
+          "borderBottomWidth": 1,
+          "borderColor": "#011F5B",
+          "borderRadius": 10,
+          "borderWidth": 1,
           "flexDirection": "row",
+          "marginVertical": 5,
           "padding": 14,
         }
       }
@@ -317,7 +320,7 @@ Array [
           style={
             Object {
               "backgroundColor": "transparent",
-              "color": "#242424",
+              "color": "#1D428A",
               "fontSize": 17,
             }
           }
@@ -329,7 +332,7 @@ Array [
           style={
             Object {
               "backgroundColor": "transparent",
-              "color": "#242424",
+              "color": "#1D428A",
               "fontSize": 15,
             }
           }

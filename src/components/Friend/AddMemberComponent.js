@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { Icon, ListItem } from "react-native-elements";
 import ContactImage from "./ContactImage";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 const AddMemberComponent = ({ item, onInvite, onCancel }) => {
   const isPendingMember = item.groupRole === "Pending Member";
@@ -13,7 +14,7 @@ const AddMemberComponent = ({ item, onInvite, onCancel }) => {
         <Icon
           type="material-community"
           name="account-remove"
-          color="red"
+          color="#ED2939"
           size={30}
           onPress={onCancel}
           testID="cancelIcon"
@@ -22,7 +23,7 @@ const AddMemberComponent = ({ item, onInvite, onCancel }) => {
         <Icon
           type="material-community"
           name="account-plus"
-          color="green"
+          color="#228B22"
           size={30}
           onPress={onInvite}
           testID="inviteIcon"
@@ -32,7 +33,7 @@ const AddMemberComponent = ({ item, onInvite, onCancel }) => {
   );
 
   return (
-    <ListItem bottomDivider>
+    <ListItem containerStyle={itemContainerStyle} bottomDivider>
       <ItemContainer>
         <ContentContainer>
           <ContactImage item={item} />

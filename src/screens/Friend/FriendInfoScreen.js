@@ -50,7 +50,7 @@ const FriendInfoScreen = ({ navigation, route }) => {
   return (
     <ScrollContainer>
       <Button onPress={() => navigation.goBack()} testID="goBack">
-        <ButtonText color="#000000">Go Back</ButtonText>
+        <ButtonText>Go Back</ButtonText>
       </Button>
 
       <ProfileContainer>
