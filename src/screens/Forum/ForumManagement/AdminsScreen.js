@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import ForumAdminList from "../../../components/Forum/ForumManagement/ForumAdminList";
 import { useNavigation } from "@react-navigation/native";
-import { firebase } from "../../../services/Firebase/Config";
+import { getCurrentUID } from "../../../services/Profile/FetchUserInfo";
 import {
   AquaButton,
   AquaButtonText,
@@ -13,7 +13,7 @@ import { Container } from "../../../styles/GeneralStyles";
 const AdminsScreen = () => {
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = forumData.owner === currentUID;
 
   console.log(forumData);
@@ -24,11 +24,11 @@ const AdminsScreen = () => {
 
   return (
     <Container>
-      <AquaButton onPress={navigation.goBack}>
+      <AquaButton onPress={navigation.goBack} testID="goBack">
         <AquaButtonText> Go Back </AquaButtonText>
       </AquaButton>
       {isOwner && (
-        <DarkButton onPress={handleAddAdminPress}>
+        <DarkButton onPress={handleAddAdminPress} testID="addAdmin">
           <DarkButtonText>Add Admins</DarkButtonText>
         </DarkButton>
       )}
