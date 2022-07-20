@@ -47,7 +47,7 @@ const ForumPostScreen = () => {
     <overlayContext.Provider value={setPopupData}>
       {popupData && <ProfileOverlay userData={popupData} />}
       <PaddinglessContainer>
-        <ForumNavigation onPress={() => navigation.goBack()}>
+        <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
           <NavigationText>Go Back</NavigationText>
         </ForumNavigation>
 
@@ -56,7 +56,7 @@ const ForumPostScreen = () => {
         {data.isBanned ? (
           <BannedText> You have been banned</BannedText>
         ) : (
-          <AquaButton onPress={handleAddButtonClick}>
+          <AquaButton onPress={handleAddButtonClick} testID="addComment">
             <AquaButtonText>Add Your Comment</AquaButtonText>
           </AquaButton>
         )}

@@ -34,12 +34,15 @@ const ForumHomeScreen = () => {
 
   return (
     <Container>
-      <RoundDarkButton onPress={navigateToFollowedForumScreen}>
+      <RoundDarkButton
+        onPress={navigateToFollowedForumScreen}
+        testID="followedForum"
+      >
         <DarkButtonText> See Forums You Have Followed </DarkButtonText>
       </RoundDarkButton>
       <ForumHomeTitle>Discover forums</ForumHomeTitle>
       <ForumList data={data} />
-      <CreateForumButton onPress={handleCreateForumClick}>
+      <CreateForumButton onPress={handleCreateForumClick} testID="createForum">
         <CreateForumText> Create Your Own Forum </CreateForumText>
       </CreateForumButton>
     </Container>
