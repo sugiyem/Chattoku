@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import { Platform } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 export const Container = ({ children }) => {
@@ -28,11 +28,25 @@ export const PaddinglessContainer = ({ children }) => {
   );
 };
 
-export const ScrollContainer = styled.ScrollView`
-  flex: 1;
-  padding: 5px;
-  background-color: #008b8b;
-`;
+export const ScrollContainer = ({ children }) => {
+  return (
+    <LinearGradient
+      colors={["#87ceeb", "#4d4dff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, padding: 5 }}
+    >
+      <ScrollView
+        style={{
+          flex: 1,
+          padding: 5
+        }}
+      >
+        {children}
+      </ScrollView>
+    </LinearGradient>
+  );
+};
 
 export const Button = styled.TouchableOpacity`
   align-self: stretch;

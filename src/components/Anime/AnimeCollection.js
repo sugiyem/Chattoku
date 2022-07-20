@@ -21,6 +21,7 @@ const AnimeCollection = ({ items, favorite }) => {
           )
         }
         content={<AnimeList item={item} isFavorite={isFavorite} />}
+        style={styles.accordion}
       >
         {section.expand == item.mal_id && (
           <AnimeCard item={item} isFavorite={isFavorite} />
@@ -30,7 +31,9 @@ const AnimeCollection = ({ items, favorite }) => {
   };
 
   const renderHeader = ({ section }) => (
-    <CenteredBoldText underline>{section.title}</CenteredBoldText>
+    <CenteredBoldText underline style={styles.header}>
+      {section.title}
+    </CenteredBoldText>
   );
 
   const renderFooter = ({ section }) => (
@@ -80,11 +83,18 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "stretch",
     paddingHorizontal: 5,
-    marginBottom: 10
+    margin: 5
+  },
+  header: {
+    marginBottom: 20
   },
   footerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 5
+  },
+  accordion: {
+    borderWidth: 0.5,
+    borderColor: "black"
   }
 });

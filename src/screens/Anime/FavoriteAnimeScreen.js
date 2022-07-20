@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, Dimensions, StyleSheet } from "react-native";
 import { Avatar, Icon, ListItem } from "react-native-elements";
 import {
   Button,
@@ -8,6 +8,7 @@ import {
   ScrollContainer
 } from "../../styles/GeneralStyles";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
+import styled from "styled-components/native";
 
 const FavoriteAnimeScreen = ({ navigation }) => {
   const [anime, setAnime] = useState([]);
@@ -26,12 +27,10 @@ const FavoriteAnimeScreen = ({ navigation }) => {
   };
 
   const RenderAccordion = ({ item }) => (
-    <ListItem bottomDivider onPress={() => goToRecommendationPage(item)}>
+    <AccordionContainer onPress={() => goToRecommendationPage(item)}>
       <Icon name="search" size={30} color="green" />
-      <ListItem.Content>
-        <ListItem.Title>Get similar anime</ListItem.Title>
-      </ListItem.Content>
-    </ListItem>
+      <AccordionText>Get similar anime</AccordionText>
+    </AccordionContainer>
   );
 
   const RenderTab = ({ item }) => (
@@ -41,9 +40,7 @@ const FavoriteAnimeScreen = ({ navigation }) => {
         source={{ uri: item.image }}
         containerStyle={styles.imageContainer}
       />
-      <ListItem.Content>
-        <ListItem.Title>{item.title}</ListItem.Title>
-      </ListItem.Content>
+      <Title>{item.title}</Title>
     </>
   );
 
@@ -66,27 +63,64 @@ const FavoriteAnimeScreen = ({ navigation }) => {
         <ButtonText>Go Back</ButtonText>
       </Button>
 
-      {anime.map((item, idx) => (
-        <ListItem.Accordion
-          key={idx}
-          bottomDivider
-          content={<RenderTab item={item} />}
-          isExpanded={expand === idx}
-          onPress={() => onRightClick(idx)}
-        >
-          {expand === idx && <RenderAccordion item={item} />}
-        </ListItem.Accordion>
-      ))}
+      <MarginView>
+        {anime.map((item, idx) => (
+          <ListItem.Accordion
+            key={idx}
+            bottomDivider
+            content={<RenderTab item={item} />}
+            isExpanded={expand === idx}
+            onPress={() => onRightClick(idx)}
+            style={styles.card}
+          >
+            {expand === idx && <RenderAccordion item={item} />}
+          </ListItem.Accordion>
+        ))}
+      </MarginView>
     </ScrollContainer>
   );
 };
 
 export default FavoriteAnimeScreen;
 
+const AccordionContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 100px;
+  border-width: 1px;
+  border-color: black;
+  background-color: whitesmoke;
+`;
+
+const AccordionText = styled.Text`
+  font-size: 16px;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const MarginView = styled.View`
+  margin: 20px 5px;
+`;
+
+const Title = styled.Text`
+  flex: 1;
+  margin-left: 10px;
+  font-size: 18px;
+`;
+
+const width = Dimensions.get("screen").width;
+
 const styles = StyleSheet.create({
   imageContainer: {
     marginRight: 10,
+    width: width / 5,
     height: undefined,
     aspectRatio: 3 / 4
+  },
+  card: {
+    borderColor: "black",
+    borderWidth: 0.5
   }
 });
