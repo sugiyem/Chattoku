@@ -3,20 +3,28 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import {
   BoldText,
   Button,
+  ButtonText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
 import { fetchGroupInvitation } from "../../services/Friend/FetchGroup";
 import { groupListType } from "../../constants/Group";
 import RenderGroupLists from "../../components/Friend/RenderGroupLists";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const GroupRequestsScreen = ({ navigation }) => {
   const [groupRequests, setGroupRequests] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchGroupInvitation({
-      onSuccess: setGroupRequests,
+      onSuccess: (data) => {
+        setGroupRequests(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -39,24 +47,24 @@ const GroupRequestsScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search group requests"
-        testID="searchBar"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search group requests"
+          testID="searchBar"
+        />
 
-      <BoldText underline testID="title">
-        Group Requests List
-      </BoldText>
+        <BoldText underline testID="title">Group Requests List</BoldText>
 
-      <Button onPress={() => navigation.replace("GroupList")} testID="goBack">
-        <Text>Go Back</Text>
-      </Button>
+        <Button onPress={() => navigation.replace("GroupList")} testID="goBack">
+          <ButtonText>Go Back</ButtonText>
+        </Button>
 
-      <GroupContactLists />
-    </ScrollContainer>
+        <GroupContactLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 

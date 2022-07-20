@@ -15,7 +15,7 @@ const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
   const [isNotificationOn, setIsNotificationOn] = useState(true);
 
   useEffect(() => {
-    getForumFollowData(id, (data) => {
+    return getForumFollowData(id, (data) => {
       setIsFollowed(data.isFollowed);
       setIsNotificationOn(data.isNotificationOn);
     });

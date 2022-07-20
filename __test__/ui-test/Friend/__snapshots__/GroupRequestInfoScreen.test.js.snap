@@ -26,6 +26,7 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
     }
   }
 >
+<<<<<<< HEAD
   <RCTScrollView
     style={
       Object {
@@ -34,6 +35,9 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
       }
     }
   >
+=======
+  <RCTScrollView>
+>>>>>>> origin
     <View>
       <View
         accessible={true}
@@ -66,11 +70,18 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
         testID="backButton"
       >
         <Text
+<<<<<<< HEAD
           color="#000000"
           style={
             Array [
               Object {
                 "color": "#000000",
+=======
+          style={
+            Array [
+              Object {
+                "color": "#483d8b",
+>>>>>>> origin
                 "fontSize": 14,
                 "textAlign": "center",
               },
@@ -133,7 +144,11 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
           style={
             Array [
               Object {
+<<<<<<< HEAD
                 "color": "#7fffd4",
+=======
+                "color": "#0018a8",
+>>>>>>> origin
                 "fontSize": 15,
                 "fontWeight": "600",
                 "marginBottom": 10,
@@ -181,10 +196,20 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
             style={
               Object {
                 "alignItems": "center",
+<<<<<<< HEAD
                 "backgroundColor": "#ffffff",
                 "borderBottomWidth": 0.5,
                 "borderColor": "#bcbbc1",
                 "flexDirection": "row",
+=======
+                "backgroundColor": "#87CEFA",
+                "borderBottomWidth": 1,
+                "borderColor": "#011F5B",
+                "borderRadius": 10,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "marginVertical": 5,
+>>>>>>> origin
                 "padding": 14,
               }
             }
@@ -275,12 +300,23 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
               >
                 <Text
                   style={
+<<<<<<< HEAD
                     Object {
                       "fontFamily": "Gill Sans",
                       "fontSize": 20,
                       "fontWeight": "600",
                       "textDecorationLine": "underline",
                     }
+=======
+                    Array [
+                      Object {
+                        "fontFamily": "Gill Sans",
+                        "fontSize": 20,
+                        "fontWeight": "600",
+                        "textDecorationLine": "underline",
+                      },
+                    ]
+>>>>>>> origin
                   }
                   testID="title"
                 >
