@@ -23,7 +23,7 @@ const BlockSection = ({ isBlocked, userId }) => {
 
   if (isBlocked) {
     return (
-      <Section onPress={handleUnblock}>
+      <Section onPress={handleUnblock} testID="unblock">
         <Icon
           name="account-lock-open-outline"
           type="material-community"
@@ -35,7 +35,7 @@ const BlockSection = ({ isBlocked, userId }) => {
     );
   } else {
     return (
-      <Section onPress={handleBlock}>
+      <Section onPress={handleBlock} testID="block">
         <Icon name="block" type="material" size={40} color={"#c10015"} />
         <NegativeText> Block </NegativeText>
       </Section>
@@ -93,8 +93,9 @@ const ProfileOverlay = ({ userData }) => {
                 ? { uri: userData.img }
                 : require("../../assets/default-profile.png")
             }
+            testID="profile"
           />
-          <Username> {userData.username}</Username>
+          <Username testID="name"> {userData.username}</Username>
           {isYou && <CurrentUserText> (YOU) </CurrentUserText>}
         </UserInfo>
         {!(isYou || userData.isDeleted) && (
@@ -103,14 +104,20 @@ const ProfileOverlay = ({ userData }) => {
             <RenderFriendSection userId={userData.id} />
             <Divider />
             <Section onPress={handleMessageClick}>
-              <Icon name="message" type="material" size={40} color={"navy"} />
+              <Icon
+                name="message"
+                type="material"
+                size={40}
+                color={"navy"}
+                testID="message"
+              />
               <PositiveText> Message </PositiveText>
             </Section>
             <Divider />
             <BlockSection userId={userData.id} isBlocked={isBlocked} />
           </>
         )}
-        <CloseButton onPress={handleCloseClick}>
+        <CloseButton onPress={handleCloseClick} testID="close">
           <CloseText> Close </CloseText>
         </CloseButton>
       </Card>

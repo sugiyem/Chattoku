@@ -23,6 +23,7 @@ const ForumCard = ({ forumData }) => {
             ? { uri: banner }
             : require("../../assets/default-banner.png")
         }
+        testID="banner"
       />
       <ForumDetails>
         <Logo
@@ -31,9 +32,10 @@ const ForumCard = ({ forumData }) => {
               ? { uri: img }
               : require("../../assets/default-profile.png")
           }
+          testID="logo"
         />
-        <Title>{title}</Title>
-        <AquaButton onPress={goToForum}>
+        <Title testID="title">{title}</Title>
+        <AquaButton onPress={goToForum} testID="continueButton">
           <AquaButtonText>Press Here To Continue to Forum</AquaButtonText>
         </AquaButton>
       </ForumDetails>
