@@ -1,21 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test Group Creation UI Renders correctly 1`] = `
-<View
+<ViewManagerAdapter_ExpoLinearGradient
+  proxiedProperties={
+    Object {
+      "colors": Array [
+        4287090411,
+        4283256319,
+      ],
+      "endPoint": Array [
+        1,
+        1,
+      ],
+      "locations": undefined,
+      "startPoint": Array [
+        0,
+        0,
+      ],
+    }
+  }
   style={
-    Array [
-      Object {
-        "alignItems": "center",
-        "backgroundColor": "#008b8b",
-        "flexBasis": 0,
-        "flexGrow": 1,
-        "flexShrink": 1,
-        "paddingBottom": 5,
-        "paddingLeft": 5,
-        "paddingRight": 5,
-        "paddingTop": 5,
-      },
-    ]
+    Object {
+      "flex": 1,
+      "padding": 5,
+    }
   }
 >
   <Modal
@@ -283,5 +291,5 @@ exports[`Test Group Creation UI Renders correctly 1`] = `
       Create Group
     </Text>
   </View>
-</View>
+</ViewManagerAdapter_ExpoLinearGradient>
 `;
