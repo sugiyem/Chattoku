@@ -18,12 +18,21 @@ const FavoriteAnimeScreen = ({ navigation }) => {
     navigation.navigate("FavAnimeRecommendation", { anime: item });
   };
 
-  const onRightClick = (index) => {
-    if (expand === index) {
-      setExpand(null);
-    } else {
-      setExpand(index);
-    }
+  const RenderItems = ({ item, idx }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+      <ListItem.Accordion
+        key={idx}
+        bottomDivider
+        content={<RenderTab item={item} />}
+        isExpanded={isExpanded}
+        onPress={() => setIsExpanded(!isExpanded)}
+        style={styles.card}
+      >
+        {isExpanded && <RenderAccordion item={item} />}
+      </ListItem.Accordion>
+    );
   };
 
   const RenderAccordion = ({ item }) => (
@@ -65,16 +74,7 @@ const FavoriteAnimeScreen = ({ navigation }) => {
 
       <MarginView>
         {anime.map((item, idx) => (
-          <ListItem.Accordion
-            key={idx}
-            bottomDivider
-            content={<RenderTab item={item} />}
-            isExpanded={expand === idx}
-            onPress={() => onRightClick(idx)}
-            style={styles.card}
-          >
-            {expand === idx && <RenderAccordion item={item} />}
-          </ListItem.Accordion>
+          <RenderItems item={item} idx={idx} />
         ))}
       </MarginView>
     </ScrollContainer>
