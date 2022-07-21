@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import React from "react";
 import { chatType } from "../../constants/Chat";
 import styled from "styled-components/native";
@@ -119,9 +119,9 @@ const SectionContainer = styled.View`
 `;
 
 const RowSectionContainer = styled.View`
-  flex: 3;
+  flex: 4;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
 `;
 
 const ProfilePicture = styled.Image`
