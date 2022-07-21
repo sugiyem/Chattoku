@@ -25,9 +25,18 @@ const RenderFriendFavorites = ({ type, title, data }) => {
         containerStyle={styles.elementContainer}
         bottomDivider
       >
-        {isAnime && <Avatar size="medium" source={{ uri: item.image }} testID={`avatar-${index}`}/>}
+        {isAnime && (
+          <Avatar
+            size="medium"
+            source={{ uri: item.image }}
+            testID={`avatar-${index}`}
+          />
+        )}
         <ListItem.Content>
-          <ListItem.Title style={{ color: "#F0F8FF" }} testID={`title-${index}`}>
+          <ListItem.Title
+            style={{ color: "#F0F8FF" }}
+            testID={`title-${index}`}
+          >
             {isAnime ? item.title : item}
           </ListItem.Title>
         </ListItem.Content>
@@ -40,6 +49,7 @@ const RenderFriendFavorites = ({ type, title, data }) => {
       content={<Title />}
       isExpanded={isExpanded}
       containerStyle={itemContainerStyle}
+      underlayColor="invisible"
       onPress={() => setIsExpanded(!isExpanded)}
       testID="accordion"
     >

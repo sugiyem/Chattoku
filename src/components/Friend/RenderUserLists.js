@@ -128,6 +128,8 @@ export default RenderUserLists = ({ type, item, navigation }) => {
     <ListItem.Accordion
       bottomDivider
       containerStyle={itemContainerStyle}
+      buttonStyle={{ elevation: 0 }}
+      underlayColor="invisible"
       content={<ContactBar type={contactType.USER} item={item} />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}

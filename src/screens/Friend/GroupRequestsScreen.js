@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import {
-  BoldText,
+  CenteredBoldText,
   Button,
   ButtonText,
   ScrollContainer,
@@ -56,7 +56,9 @@ const GroupRequestsScreen = ({ navigation }) => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Group Requests List</BoldText>
+        <CenteredBoldText underline testID="title">
+          Group Requests List
+        </CenteredBoldText>
 
         <Button onPress={() => navigation.replace("GroupList")} testID="goBack">
           <ButtonText>Go Back</ButtonText>
