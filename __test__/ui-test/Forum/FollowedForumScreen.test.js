@@ -11,7 +11,7 @@ jest.mock("@react-navigation/native", () => ({
     replace: mockReplace
   })
 }));
-jest.mock("../../../src/services/Forum/FetchForumData");
+jest.mock("../../../src/services/Forum/FetchFollowedForumData");
 jest.mock("../../../src/services/Profile/FetchUserInfo");
 
 describe("Test Followed Forum Page UI", () => {
