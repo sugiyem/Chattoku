@@ -64,6 +64,7 @@ const ActiveChatLists = ({ type, item, navigation }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      underlayColor="invisible"
       containerStyle={itemContainerStyle}
       content={<ChatBar item={item} isPrivateChat={isPrivateChat} />}
       isExpanded={isExpanded}

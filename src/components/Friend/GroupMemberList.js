@@ -31,6 +31,7 @@ const GroupMemberList = ({ title, items }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      underlayColor="invisible"
       containerStyle={itemContainerStyle}
       content={<SectionTitle />}
       isExpanded={isExpanded}

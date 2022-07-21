@@ -5,7 +5,7 @@ import {
   ScrollChatContainer
 } from "../../styles/ChatStyles";
 import {
-  BoldText,
+  CenteredBoldText,
   IconGroup,
   IconText,
   NotificationIcon,
@@ -85,9 +85,9 @@ const GroupChatListScreen = () => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">
+        <CenteredBoldText underline testID="title">
           Group Chat List
-        </BoldText>
+        </CenteredBoldText>
 
         <IconGroup>
           <View>
