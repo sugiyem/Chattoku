@@ -26,7 +26,14 @@ exports[`Test Group Info Screen UI Renders correctly 1`] = `
     }
   }
 >
-  <RCTScrollView>
+  <RCTScrollView
+    style={
+      Object {
+        "flex": 1,
+        "padding": 5,
+      }
+    }
+  >
     <View>
       <View
         accessible={true}

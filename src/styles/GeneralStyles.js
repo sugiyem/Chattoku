@@ -39,7 +39,14 @@ export const ScrollContainer = ({ children }) => {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1, padding: 5 }}
     >
-      <ScrollView>{children}</ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+          padding: 5
+        }}
+      >
+        {children}
+      </ScrollView>
     </LinearGradient>
   );
 };
