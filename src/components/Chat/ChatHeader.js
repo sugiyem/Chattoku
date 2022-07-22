@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import React from "react";
 import { chatType } from "../../constants/Chat";
 import styled from "styled-components/native";
@@ -33,7 +33,12 @@ const ChatHeader = ({ type, item, navigation }) => {
   return (
     <HeaderContainer>
       <SectionContainer size="1">
-        <Icon type="ionicon" name="arrow-back" onPress={navigation.goBack} />
+        <Icon
+          type="ionicon"
+          name="arrow-back"
+          onPress={navigation.goBack}
+          testID="backIcon"
+        />
       </SectionContainer>
 
       <SectionContainer size="2">
@@ -43,12 +48,13 @@ const ChatHeader = ({ type, item, navigation }) => {
               ? { uri: imgUrl }
               : require("../../assets/default-profile.png")
           }
+          testID="profileImage"
         />
       </SectionContainer>
 
       <SectionContainer size="2">
-        <Name>{name}</Name>
-        <Info>{info}</Info>
+        <Name testID="name">{name}</Name>
+        <Info testID="info">{info}</Info>
       </SectionContainer>
 
       <RowSectionContainer>
@@ -66,6 +72,7 @@ const ChatHeader = ({ type, item, navigation }) => {
                 size={25}
                 color="navy"
                 onPress={goToGroupPage}
+                testID="groupPageIcon"
               />
               <IconDescription color="navy" isSmall={true}>
                 Group Info
@@ -99,7 +106,7 @@ const HeaderContainer = styled.View`
   flex-direction: row;
   align-items: center;
   width: ${width - 10}px;
-  background-color: cyan;
+  background-color: #00bfff;
   border-color: blue;
   border-width: 1px;
   border-radius: 10px;
@@ -112,9 +119,9 @@ const SectionContainer = styled.View`
 `;
 
 const RowSectionContainer = styled.View`
-  flex: 3;
+  flex: 4;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
 `;
 
 const ProfilePicture = styled.Image`

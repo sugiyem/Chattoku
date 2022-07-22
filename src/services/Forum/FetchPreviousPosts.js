@@ -1,8 +1,8 @@
 import { firebase } from "../Firebase/Config";
 
-export function FetchPreviousPosts(callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
-  let db = firebase.firestore();
+export function FetchPreviousPosts(callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
+  let db = app.firestore();
 
   return db
     .collection("users")
@@ -25,10 +25,17 @@ export function FetchPreviousPosts(callbackSuccess) {
       //Make an array of promise to fecth forum data and post data
       const PromisedData = data.map(async (ids) => {
         const result = {};
+        const docDontExist = false;
+
         await forumRef
           .doc(ids.forumId)
           .get()
           .then((doc) => {
+            if (!doc.exists) {
+              docDontExist = true;
+              return;
+            }
+
             result.forumData = { ...doc.data(), id: ids.forumId };
           });
 
@@ -38,12 +45,36 @@ export function FetchPreviousPosts(callbackSuccess) {
           .doc(ids.postId)
           .get()
           .then((doc) => {
+            if (!doc.exists) {
+              docDontExist = true;
+              return;
+            }
+
+            const data = doc.data();
+            const timestamp = data.timestamp;
+            const date = new Date(
+              timestamp.seconds * 1000 + timestamp.nanoseconds * 0.000001
+            );
+
+            const lastEdited = data.lastEdited;
+            const editedDate = lastEdited
+              ? new Date(
+                  lastEdited.seconds * 1000 + timestamp.nanoseconds * 0.000001
+                )
+              : null;
+
             result.postData = {
-              ...doc.data(),
+              ...data,
               postId: ids.postId,
-              forumId: ids.forumId
+              forumId: ids.forumId,
+              timestamp: date,
+              lastEdited: editedDate
             };
           });
+
+        if (docDontExist) {
+          return;
+        }
 
         fetchedData.push(result);
       });

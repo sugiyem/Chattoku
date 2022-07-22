@@ -1,6 +1,7 @@
 import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 import { registerForPushNotificationsAsync } from "../Miscellaneous/HandleNotification";
+import { MAXIMUM_BATCH_SIZE } from "../../constants/Batch";
 
 export function handleIsLoggedIn(onIsLoggedIn, app = firebase) {
   const currentUser = app.auth().currentUser;
@@ -13,6 +14,7 @@ export function handleIsLoggedIn(onIsLoggedIn, app = firebase) {
 export async function login(
   credentials,
   onSuccess,
+  onFailure,
   deviceToken = null,
   isVerified = false,
   app = firebase
@@ -21,6 +23,7 @@ export async function login(
     .auth()
     .signInWithEmailAndPassword(credentials.email, credentials.password)
     .catch((e) => {
+      onFailure();
       console.log("Incorrect Credentials");
       Alert.alert("Incorrect Email / Password");
     });
@@ -72,7 +75,12 @@ export function signOut(app = firebase) {
   app.auth().signOut();
 }
 
-export async function signUp(credentials, onSuccess, app = firebase) {
+export async function signUp(
+  credentials,
+  onSuccess,
+  onFailure,
+  app = firebase
+) {
   app
     .auth()
     .createUserWithEmailAndPassword(credentials.email, credentials.password)
@@ -105,6 +113,7 @@ export async function signUp(credentials, onSuccess, app = firebase) {
     .catch((e) => {
       console.log(e);
       Alert.alert("email is already taken");
+      onFailure();
       console.log("email already taken");
     });
 }
@@ -123,4 +132,76 @@ export async function sendForgotPasswordEmail(email, app = firebase) {
     .catch((error) => {
       Alert.alert("Email is not registered");
     });
+}
+
+export async function deleteAccount(onSuccess, onFailure, app = firebase) {
+  const userID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  let batch = db.batch();
+  const firebaseRefToBeDeleted = [];
+  const userRef = db.collection("users").doc(userID);
+  const animeSnapshot = await userRef.collection("anime").get();
+  const dislikeSnapshot = await userRef.collection("dislikes").get();
+  const likeSnapshot = await userRef.collection("likes").get();
+  const followSnapshot = await userRef.collection("follows").get();
+  const postSnapshot = await userRef.collection("posts").get();
+  const friendSnapshot = await userRef.collection("friends").get();
+  const receivedRequestSnapshot = await userRef
+    .collection("friendRequestsReceived")
+    .get();
+  const sentRequestSnapshot = await userRef
+    .collection("friendRequestsSent")
+    .get();
+  const blockedSnapshot = await userRef.collection("blockedUsers").get();
+  const groupSnapshot = await userRef.collection("groupJoined").get();
+  const groupCreatedSnapshot = await userRef.collection("groupCreated").get();
+  const groupInvitationSnapshot = await userRef
+    .collection("groupInvited")
+    .get();
+
+  animeSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  dislikeSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  likeSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  followSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  postSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  friendSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  receivedRequestSnapshot.docs.forEach((doc) =>
+    firebaseRefToBeDeleted.push(doc.ref)
+  );
+  sentRequestSnapshot.docs.forEach((doc) =>
+    firebaseRefToBeDeleted.push(doc.ref)
+  );
+  blockedSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  groupSnapshot.docs.forEach((doc) => firebaseRefToBeDeleted.push(doc.ref));
+  groupCreatedSnapshot.docs.forEach((doc) =>
+    firebaseRefToBeDeleted.push(doc.ref)
+  );
+  groupInvitationSnapshot.docs.forEach((doc) =>
+    firebaseRefToBeDeleted.push(doc.ref)
+  );
+
+  firebaseRefToBeDeleted.push(userRef);
+
+  let count = 0;
+  // Number of batch operation needed might be larger than
+  // the limit given by firebase. Need to split it into
+  // different commits
+  for (let i = 0; i < firebaseRefToBeDeleted.length; i++) {
+    batch.delete(firebaseRefToBeDeleted[i]);
+    count++;
+    if (count == MAXIMUM_BATCH_SIZE) {
+      await batch.commit().catch(onFailure);
+      // reinitialize batch & count
+      batch = db.batch();
+      count = 0;
+    }
+  }
+  // Last batch commit
+  await batch.commit().catch(onFailure);
+
+  await app
+    .auth()
+    .currentUser.delete()
+    .then(() => onSuccess())
+    .catch(onFailure);
 }

@@ -1,9 +1,9 @@
 import { firebase } from "../Firebase/Config";
 import { Alert } from "react-native";
 
-export async function createForum(forumInfo, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
-  const db = firebase.firestore();
+export async function createForum(forumInfo, callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
+  const db = app.firestore();
   const batch = db.batch();
   const newForumRef = db.collection("forums").doc();
   const forumFollowerListRef = newForumRef
@@ -25,10 +25,12 @@ export async function createForum(forumInfo, callbackSuccess) {
       callbackSuccess();
     })
     .catch((error) => Alert.alert(error.message));
+
+  return newForumRef.id;
 }
 
-export async function editForum(forumInfo, callbackSuccess) {
-  await firebase
+export async function editForum(forumInfo, callbackSuccess, app = firebase) {
+  await app
     .firestore()
     .collection("forums")
     .doc(forumInfo.id)
@@ -39,34 +41,32 @@ export async function editForum(forumInfo, callbackSuccess) {
     .catch((error) => Alert.alert(error.message));
 }
 
-export async function getForumFollowData(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
+export function getForumFollowData(forumId, callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
 
-  await firebase
+  return app
     .firestore()
     .collection("forums")
     .doc(forumId)
     .collection("followers")
     .doc(currentUID)
-    .get()
-    .then((doc) =>
+    .onSnapshot((doc) =>
       doc.exists
         ? callbackSuccess({ ...doc.data(), isFollowed: true })
         : callbackSuccess({ isFollowed: false, isNotificationOn: true })
     );
 }
 
-export async function followForum(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userFollowListRef = firebase
-    .firestore()
+export async function followForum(forumId, callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userFollowListRef = db
     .collection("users")
     .doc(currentUID)
     .collection("follows")
     .doc(forumId);
-  const forumFollowerListRef = firebase
-    .firestore()
+  const forumFollowerListRef = db
     .collection("forums")
     .doc(forumId)
     .collection("followers")
@@ -78,17 +78,16 @@ export async function followForum(forumId, callbackSuccess) {
   batch.commit().then(() => callbackSuccess());
 }
 
-export async function unfollowForum(forumId, callbackSuccess) {
-  const currentUID = firebase.auth().currentUser.uid;
-  const batch = firebase.firestore().batch();
-  const userFollowListRef = firebase
-    .firestore()
+export async function unfollowForum(forumId, callbackSuccess, app = firebase) {
+  const currentUID = app.auth().currentUser.uid;
+  const db = app.firestore();
+  const batch = db.batch();
+  const userFollowListRef = db
     .collection("users")
     .doc(currentUID)
     .collection("follows")
     .doc(forumId);
-  const forumFollowerListRef = firebase
-    .firestore()
+  const forumFollowerListRef = db
     .collection("forums")
     .doc(forumId)
     .collection("followers")
@@ -102,11 +101,12 @@ export async function unfollowForum(forumId, callbackSuccess) {
 export async function updateNotification(
   forumId,
   isNotificationOn,
-  callbackSuccess
+  callbackSuccess,
+  app = firebase
 ) {
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = app.auth().currentUser.uid;
 
-  await firebase
+  await app
     .firestore()
     .collection("forums")
     .doc(forumId)

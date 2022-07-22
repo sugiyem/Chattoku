@@ -1,13 +1,12 @@
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { Card } from "react-native-elements";
-import { BoldText, Button } from "../../styles/GeneralStyles";
+import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 import * as Linking from "expo-linking";
 import {
   addAnimeToFavorite,
   removeAnimeFromFavorite
 } from "../../services/Anime/HandleFavorite";
 import { animeDetailsToGenreString } from "../../services/Anime/AnimeAndGenreConverter";
+import styled from "styled-components/native";
 
 const AnimeCard = ({ item, isFavorite, onEdit = null, onOpenURL = null }) => {
   const cleanedItem = {
@@ -41,48 +40,101 @@ const AnimeCard = ({ item, isFavorite, onEdit = null, onOpenURL = null }) => {
   };
 
   return (
-    <Card>
-      <Card.Title style={styles.topicText} testID="title">
-        {cleanedItem.title}
-      </Card.Title>
-      <Card.Divider />
-      <Card.Image source={{ uri: cleanedItem.images }} style={styles.image} />
-      <Card.Divider />
+    <Container>
+      <HeaderContainer>
+        <Visual source={{ uri: cleanedItem.images }} />
+        <InfoContainer>
+          <Title testID="title">{cleanedItem.title}</Title>
+          <Divider />
+          <BoldText>Genres: </BoldText>
+          <Text testID="genres">{animeDetailsToGenreString(cleanedItem)}</Text>
+        </InfoContainer>
+      </HeaderContainer>
       <View>
-        <Button
+        <ActionButton
           color="#ADD8E6"
           testID="editFavorite"
           onPress={onEditFavoritePress}
         >
-          {isFavorite ? (
-            <Text>Remove this anime from favorite</Text>
-          ) : (
-            <Text> Add this anime to favorite </Text>
-          )}
-        </Button>
+          <ActionText>
+            {isFavorite
+              ? "Remove this anime from favorite"
+              : "Add this anime to favorite"}
+          </ActionText>
+        </ActionButton>
         <BoldText size="20px">Synopsis:</BoldText>
-        <Text testID="synopsis">{cleanedItem.synopsis}</Text>
-        <BoldText size="20px">Genres: </BoldText>
-        <Text testID="genres">{animeDetailsToGenreString(cleanedItem)}</Text>
-        <Button color="#ADD8E6" testID="openURL" onPress={onOpenURLPress}>
-          <Text>Click here for more information!</Text>
-        </Button>
+        <Synopsis testID="synopsis">{cleanedItem.synopsis}</Synopsis>
+        <ActionButton testID="openURL" onPress={onOpenURLPress}>
+          <ActionText>Click here for more information!</ActionText>
+        </ActionButton>
       </View>
-    </Card>
+    </Container>
   );
 };
 
 export default AnimeCard;
 
-const styles = StyleSheet.create({
-  image: {
-    width: "100%",
-    height: undefined,
-    aspectRatio: 3 / 4
-  },
-  topicText: {
-    fontWeight: "bold",
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 20
-  }
-});
+const width = Dimensions.get("screen").width;
+
+const Container = styled.View`
+  padding: 15px;
+  margin: 20px 5px;
+  background-color: white;
+  border-radius: 10px;
+`;
+
+const Title = styled.Text`
+  text-align: center;
+  font-weight: 500;
+  font-size: 18px;
+  width: 100%;
+`;
+
+const Divider = styled.View`
+  background-color: black;
+  height: 1px;
+  margin: 5px 0px;
+`;
+
+const HeaderContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const InfoContainer = styled.View`
+  flex: 1;
+  margin-left: 20px;
+  height: 100%;
+`;
+
+const BoldText = styled.Text`
+  font-weight: 500;
+  margin: 5px 0px;
+  font-size: 17px;
+`;
+
+const Synopsis = styled.Text`
+  font-size: 14px;
+`;
+
+const Visual = styled.Image`
+  width: ${(3 / 10) * width}px;
+  height: ${(4 / 10) * width}px;
+`;
+
+const ActionButton = styled.TouchableOpacity`
+  margin: 10px 0px;
+  background-color: navy;
+  border-radius: 15px;
+  border-width: 2px;
+  border-color: lightblue;
+  padding: 5px;
+`;
+
+const ActionText = styled.Text`
+  color: lightblue;
+  text-align: center;
+  font-size: 16px;
+`;

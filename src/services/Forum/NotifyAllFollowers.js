@@ -4,9 +4,10 @@ import { sendPushNotification } from "../Miscellaneous/HandleNotification";
 export default async function NotifyAllFollowers(
   forumId,
   forumName,
-  postTitle
+  postTitle,
+  app = firebase
 ) {
-  let db = firebase.firestore();
+  let db = app.firestore();
 
   await db
     .collection("forums")

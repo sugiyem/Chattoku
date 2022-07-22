@@ -16,6 +16,7 @@ const ChatModal = ({
     item.img !== ""
       ? { uri: item.img }
       : require("../../assets/default-profile.png");
+  const isUserDeleted = item.username === "Deleted-Account";
 
   return (
     <Modal
@@ -31,26 +32,30 @@ const ChatModal = ({
             onPress={onCloseButtonPress}
             color="white"
             size={30}
+            testID="closeIcon"
           />
         </ModalHeader>
         <ModalContent>
-          <ProfilePicture source={imgSource} />
-          <Name>{item.username}</Name>
-          <Bio>{item.bio}</Bio>
-          <IconGroup>
-            <IconContainer>
-              <Icon
-                type="material-community"
-                name="message-processing-outline"
-                color="aquamarine"
-                onPress={onMessageButtonPress}
-                size={40}
-              />
-              <IconDescription color="aquamarine">Message</IconDescription>
-            </IconContainer>
-            <EditFriendIcon userId={item.id} />
-            <BlockIcon userId={item.id} />
-          </IconGroup>
+          <ProfilePicture testID="image" source={imgSource} />
+          <Name testID="username">{item.username}</Name>
+          <Bio testID="bio">{item.bio}</Bio>
+          {!isUserDeleted && (
+            <IconGroup>
+              <IconContainer>
+                <Icon
+                  type="material-community"
+                  name="message-processing-outline"
+                  color="aquamarine"
+                  onPress={onMessageButtonPress}
+                  testID="messageIcon"
+                  size={40}
+                />
+                <IconDescription color="aquamarine">Message</IconDescription>
+              </IconContainer>
+              <EditFriendIcon userId={item.id} />
+              <BlockIcon userId={item.id} />
+            </IconGroup>
+          )}
         </ModalContent>
       </ModalContainer>
     </Modal>
@@ -63,9 +68,6 @@ const styles = StyleSheet.create({
   exitIcon: {
     marginLeft: 10,
     marginTop: 10
-  },
-  messageIcon: {
-    marginHorizontal: 20
   }
 });
 

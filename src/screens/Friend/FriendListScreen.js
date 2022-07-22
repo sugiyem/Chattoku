@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert, View } from "react-native";
 import {
-  BoldText,
-  Button,
-  ButtonGroup,
-  ButtonText,
+  CenteredBoldText,
+  IconGroup,
+  IconText,
+  NotificationIcon,
   ScrollContainer,
-  SearchInput,
-  SeparatedButton
+  SearchInput
 } from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -16,18 +15,25 @@ import {
 } from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
-import NotificationText from "../../components/Miscellaneous/NotificationText";
+import { Icon } from "react-native-elements";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const FriendListScreen = () => {
   const [friends, setFriends] = useState([]);
   const [search, setSearch] = useState("");
   const [isRequestExist, setIsRequestExist] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchFriend({
-      onSuccess: setFriends,
+      onSuccess: (data) => {
+        setFriends(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
@@ -55,49 +61,71 @@ const FriendListScreen = () => {
     ));
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-        placeholder="Search friend by username"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Search friend by username"
+          testID="searchBar"
+        />
 
-      <BoldText underline>Friends List</BoldText>
+        <CenteredBoldText underline testID="title">
+          Friends List
+        </CenteredBoldText>
 
-      <Button onPress={() => navigation.navigate("AddFriend")}>
-        <Text>Add more friends</Text>
-      </Button>
+        <IconGroup>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-plus"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("AddFriend")}
+              testID="addFriend"
+            />
+            <IconText>Add Friend</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-group"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("GroupList")}
+              testID="groupList"
+            />
+            <IconText>Groups</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-cancel"
+              color="navy"
+              size={30}
+              onPress={() => navigation.navigate("BlockedUserList")}
+              testID="blockedList"
+            />
+            <IconText>Blocked</IconText>
+          </View>
+          <View>
+            <NotificationIcon isVisible={isRequestExist}>
+              <Icon
+                type="material-community"
+                name="account-sync"
+                color="navy"
+                size={30}
+                onPress={() => navigation.navigate("FriendRequestsReceived")}
+                testID="pendingRequest"
+              />
+            </NotificationIcon>
+            <IconText>Pending</IconText>
+          </View>
+        </IconGroup>
 
-      <Button onPress={() => navigation.navigate("GroupList")}>
-        <Text>View groups</Text>
-      </Button>
-
-      <Button onPress={() => navigation.navigate("BlockedUserList")}>
-        <Text>View blocked users</Text>
-      </Button>
-
-      <ButtonGroup>
-        <SeparatedButton
-          onPress={() => navigation.navigate("FriendRequestsSent")}
-        >
-          <ButtonText size="12px" color="#000000">
-            Outgoing Requests
-          </ButtonText>
-        </SeparatedButton>
-
-        <SeparatedButton
-          onPress={() => navigation.navigate("FriendRequestsReceived")}
-        >
-          <NotificationText
-            text="Incoming Requests"
-            isShown={isRequestExist}
-            size={12}
-          />
-        </SeparatedButton>
-      </ButtonGroup>
-
-      <UserLists />
-    </ScrollContainer>
+        <UserLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 

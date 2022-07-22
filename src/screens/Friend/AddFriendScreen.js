@@ -1,19 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Text } from "react-native";
 import {
   Button,
   ButtonText,
   Container,
-  RoundedImage,
   RowBar,
   SearchButton,
   SeparatedSearchInput
 } from "../../styles/GeneralStyles";
-import { EditButtonText, Name } from "../../styles/InfoStyles";
-import {
-  UserInnerContainer,
-  UserOuterContainer
-} from "../../styles/ContactStyles";
+import { UserOuterContainer } from "../../styles/ContactStyles";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import GetUserWithUsername from "../../services/Friend/GetUserWithUsername";
 import RenderUserFound from "../../components/Friend/RenderUserFound";
@@ -54,15 +49,19 @@ const AddFriendScreen = ({ navigation }) => {
           value={search}
           onChangeText={(text) => setSearch(text)}
           placeholder="Add user by its exact username"
+          testID="searchBar"
         />
 
-        <SearchButton onPress={() => handleClickOnSearch()}>
+        <SearchButton
+          onPress={() => handleClickOnSearch()}
+          testID="searchButton"
+        >
           <ButtonText color="#ffffff">Search</ButtonText>
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("FriendList")}>
-        <Text>Back to friend's list</Text>
+      <Button onPress={() => navigation.replace("FriendList")} testID="friendList">
+        <ButtonText>Back to friend's list</ButtonText>
       </Button>
 
       <UserOuterContainer>

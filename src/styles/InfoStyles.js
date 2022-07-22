@@ -27,7 +27,7 @@ export const Name = styled.Text`
 export const Description = styled.Text`
   font-size: 15px;
   font-weight: 600;
-  color: #7fffd4;
+  color: #0018a8;
   text-align: center;
   margin-bottom: 10px;
 `;
@@ -43,7 +43,7 @@ export const EditButton = styled.TouchableOpacity`
   border-color: #000080;
   border-width: 2px;
   border-radius: 3px;
-  background-color: #ffffff;
+  background-color: #f0f8ff;
   padding-vertical: 8px;
   padding-horizontal: 12px;
   margin-horizontal: 5px;

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Alert, View } from "react-native";
 import {
-  BoldText,
-  Button,
+  CenteredBoldText,
+  IconGroup,
+  IconText,
   ScrollContainer,
   SearchInput
 } from "../../styles/GeneralStyles";
@@ -10,16 +11,24 @@ import { useNavigation } from "@react-navigation/native";
 import { fetchFriendRequestsReceived } from "../../services/Friend/FetchFriendStatus";
 import { friendshipType } from "../../constants/Friend";
 import RenderUserLists from "../../components/Friend/RenderUserLists";
+import { Icon } from "react-native-elements";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const FriendRequestsReceivedScreen = () => {
   const [pendingFriends, setPendingFriends] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchFriendRequestsReceived({
-      onSuccess: setPendingFriends,
+      onSuccess: (data) => {
+        setPendingFriends(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
@@ -39,21 +48,56 @@ const FriendRequestsReceivedScreen = () => {
     ));
 
   return (
-    <ScrollContainer>
-      <SearchInput
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-        placeholder="Search requests by username"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollContainer>
+        <SearchInput
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+          placeholder="Search requests by username"
+          testID="searchBar"
+        />
 
-      <BoldText underline>Pending Requests Received</BoldText>
+        <CenteredBoldText underline testID="title">
+          Pending Requests Received
+        </CenteredBoldText>
 
-      <Button onPress={() => navigation.goBack()}>
-        <Text>Back to friend's list</Text>
-      </Button>
+        <IconGroup>
+          <View>
+            <Icon
+              type="antdesign"
+              name="back"
+              color="navy"
+              size={30}
+              onPress={navigation.goBack}
+              testID="goBack"
+            />
+            <IconText>Go Back</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-sync"
+              color="#4C516D"
+              size={30}
+            />
+            <IconText>Request Received</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="account-star"
+              color="navy"
+              size={30}
+              onPress={() => navigation.replace("FriendRequestsSent")}
+              testID="requestsSent"
+            />
+            <IconText>Request Sent</IconText>
+          </View>
+        </IconGroup>
 
-      <UserLists />
-    </ScrollContainer>
+        <UserLists />
+      </ScrollContainer>
+    </Loading>
   );
 };
 

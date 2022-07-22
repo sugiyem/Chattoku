@@ -15,6 +15,7 @@ import { friendshipType } from "../../constants/Friend";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
 import Caution from "../Miscellaneous/Caution";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 export default RenderUserLists = ({ type, item, navigation }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,7 +25,7 @@ export default RenderUserLists = ({ type, item, navigation }) => {
       title: "Message",
       type: "material-community",
       icon: "message-processing-outline",
-      color: "blue",
+      color: "lightblue",
       onPress: () => {
         const data = {
           id: item.id,
@@ -46,7 +47,7 @@ export default RenderUserLists = ({ type, item, navigation }) => {
       title: "Block",
       type: "material",
       icon: "block",
-      color: "red",
+      color: "#fd5c63",
       onPress: () =>
         Caution("This user will be blocked", () => blockUser(item.id))
     }
@@ -59,14 +60,14 @@ export default RenderUserLists = ({ type, item, navigation }) => {
           title: "View details",
           type: "ionicon",
           icon: "open-outline",
-          color: "blue",
+          color: "lightblue",
           onPress: () => navigation.navigate("FriendInfo", { friendData: item })
         },
         {
           title: "Unfriend",
           type: "ionicon",
           icon: "ios-person-remove-outline",
-          color: "red",
+          color: "#fd5c63",
           onPress: () =>
             Caution("This user will be removed from your friend's list", () =>
               removeFriend(item.id)
@@ -80,7 +81,7 @@ export default RenderUserLists = ({ type, item, navigation }) => {
         title: "Cancel request",
         type: "material-community",
         icon: "account-cancel-outline",
-        color: "red",
+        color: "#fd5c63",
         onPress: () =>
           Caution("This friend request will be removed", () =>
             cancelFriendRequest(item.id)
@@ -94,14 +95,14 @@ export default RenderUserLists = ({ type, item, navigation }) => {
           title: "Accept request",
           type: "material",
           icon: "check",
-          color: "green",
+          color: "#4FFFB0",
           onPress: () => acceptFriendRequest(item.id)
         },
         {
           title: "Decline request",
           type: "material",
           icon: "close",
-          color: "red",
+          color: "#fd5c63",
           onPress: () =>
             Caution("This friend request will be declined", () =>
               declineFriendRequest(item.id)
@@ -116,7 +117,7 @@ export default RenderUserLists = ({ type, item, navigation }) => {
           title: "Unblock",
           type: "material-community",
           icon: "account-lock-open-outline",
-          color: "green",
+          color: "#4FFFB0",
           onPress: () =>
             Caution("This user will be unblocked", () => unblockUser(item.id))
         }
@@ -126,6 +127,9 @@ export default RenderUserLists = ({ type, item, navigation }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      containerStyle={itemContainerStyle}
+      buttonStyle={{ elevation: 0 }}
+      underlayColor="invisible"
       content={<ContactBar type={contactType.USER} item={item} />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}

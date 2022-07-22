@@ -3,13 +3,19 @@ import { Platform, StyleSheet, Text } from "react-native";
 import { ListItem } from "react-native-elements";
 import ContactBar from "./ContactBar";
 import { contactType } from "../../constants/Contact";
+import { itemContainerStyle } from "../../styles/ListStyles";
+import { ListTitleText } from "../../styles/InfoStyles";
 
 const GroupMemberList = ({ title, items }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const RenderTabs = () =>
     items.map((item, idx) => (
-      <ListItem key={idx} bottomDivider>
+      <ListItem
+        key={idx}
+        containerStyle={styles.elementContainer}
+        bottomDivider
+      >
         <ContactBar type={contactType.USER} item={item} />
       </ListItem>
     ));
@@ -17,7 +23,7 @@ const GroupMemberList = ({ title, items }) => {
   const SectionTitle = () => (
     <ListItem.Content>
       <ListItem.Title>
-        <Text style={styles.titleText}>{title}</Text>
+        <ListTitleText testID="title">{title}</ListTitleText>
       </ListItem.Title>
     </ListItem.Content>
   );
@@ -25,9 +31,12 @@ const GroupMemberList = ({ title, items }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      underlayColor="invisible"
+      containerStyle={itemContainerStyle}
       content={<SectionTitle />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}
+      testID="accordion"
     >
       {isExpanded && <RenderTabs />}
     </ListItem.Accordion>
@@ -37,10 +46,12 @@ const GroupMemberList = ({ title, items }) => {
 export default GroupMemberList;
 
 const styles = StyleSheet.create({
-  titleText: {
-    fontFamily: Platform.OS === "ios" ? "Gill Sans" : "serif",
-    fontSize: 20,
-    fontWeight: "600",
-    textDecorationLine: "underline"
+  elementContainer: {
+    marginVertical: 2,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#011F5B",
+    backgroundColor: "#A4DDED"
   }
 });

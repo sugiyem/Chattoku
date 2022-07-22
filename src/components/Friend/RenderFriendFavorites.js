@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import { Avatar, ListItem } from "react-native-elements";
 import { favoriteType } from "../../constants/Favorite";
-import { ListTitleText } from "../../styles/InfoStyles";
+import { ListTitleText, elementContainerStyle } from "../../styles/InfoStyles";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 const RenderFriendFavorites = ({ type, title, data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -11,17 +13,32 @@ const RenderFriendFavorites = ({ type, title, data }) => {
   const Title = () => (
     <ListItem.Content>
       <ListItem.Title>
-        <ListTitleText>{title}</ListTitleText>
+        <ListTitleText testID="title">{title}</ListTitleText>
       </ListItem.Title>
     </ListItem.Content>
   );
 
   const FavoriteList = () =>
     data.map((item, index) => (
-      <ListItem key={index} bottomDivider>
-        {isAnime && <Avatar size="medium" source={{ uri: item.image }} />}
+      <ListItem
+        key={index}
+        containerStyle={styles.elementContainer}
+        bottomDivider
+      >
+        {isAnime && (
+          <Avatar
+            size="medium"
+            source={{ uri: item.image }}
+            testID={`avatar-${index}`}
+          />
+        )}
         <ListItem.Content>
-          <ListItem.Title>{isAnime ? item.title : item}</ListItem.Title>
+          <ListItem.Title
+            style={{ color: "#F0F8FF" }}
+            testID={`title-${index}`}
+          >
+            {isAnime ? item.title : item}
+          </ListItem.Title>
         </ListItem.Content>
       </ListItem>
     ));
@@ -31,7 +48,10 @@ const RenderFriendFavorites = ({ type, title, data }) => {
       bottomDivider
       content={<Title />}
       isExpanded={isExpanded}
+      containerStyle={itemContainerStyle}
+      underlayColor="invisible"
       onPress={() => setIsExpanded(!isExpanded)}
+      testID="accordion"
     >
       {isExpanded && <FavoriteList />}
     </ListItem.Accordion>
@@ -39,3 +59,14 @@ const RenderFriendFavorites = ({ type, title, data }) => {
 };
 
 export default RenderFriendFavorites;
+
+const styles = StyleSheet.create({
+  elementContainer: {
+    marginVertical: 2,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#011F5B",
+    backgroundColor: "#0076ce"
+  }
+});

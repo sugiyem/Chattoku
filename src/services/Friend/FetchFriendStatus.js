@@ -94,9 +94,7 @@ export const fetchFriendRequestsReceived = ({
   const userID = app.auth().currentUser.uid;
   const usersRef = app.firestore().collection("users");
 
-  return app
-    .firestore()
-    .collection("users")
+  return usersRef
     .doc(userID)
     .collection("friendRequestsReceived")
     .onSnapshot(
@@ -141,16 +139,35 @@ export const checkFriendRequestsReceived = ({
   app = firebase
 }) => {
   const userID = app.auth().currentUser.uid;
+  const usersRef = app.firestore().collection("users");
 
-  return app
-    .firestore()
-    .collection("users")
+  return usersRef
     .doc(userID)
     .collection("friendRequestsReceived")
     .onSnapshot(
-      (querySnapshot) => {
+      async (querySnapshot) => {
         if (querySnapshot.size !== 0) {
-          onFound();
+          const userIDLists = [];
+          let isRequestExist = false;
+
+          querySnapshot.forEach((documentSnapshot) => {
+            userIDLists.push(documentSnapshot.id);
+          });
+
+          const promisedData = userIDLists.map(async (userID) => {
+            await usersRef
+              .doc(userID)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  isRequestExist = true;
+                }
+              });
+          });
+
+          await Promise.all(promisedData).then(() => {
+            isRequestExist ? onFound() : onNotFound();
+          });
         } else {
           onNotFound();
         }

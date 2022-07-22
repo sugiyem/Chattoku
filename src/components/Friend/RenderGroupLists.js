@@ -10,6 +10,7 @@ import { groupListType } from "../../constants/Group";
 import ContactBar from "./ContactBar";
 import ContactButtonGroup from "./ContactButtonGroup";
 import Caution from "../Miscellaneous/Caution";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 export default RenderGroupLists = ({ type, item, navigation }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,14 +24,14 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           title: "Detail",
           type: "ionicon",
           icon: "open-outline",
-          color: "blue",
+          color: "lightblue",
           onPress: () => navigation.navigate("GroupInfo", { groupData: item })
         },
         {
           title: "Message",
           type: "material-community",
           icon: "message-processing-outline",
-          color: "blue",
+          color: "lightblue",
           onPress: () => {
             const data = {
               id: item.id,
@@ -52,7 +53,7 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           title: "Leave Group",
           type: "ionicon",
           icon: "exit-outline",
-          color: "red",
+          color: "#fd5c63",
           onPress: () =>
             Caution("You will leave this group", () => leaveGroup(item.id))
         }
@@ -65,7 +66,7 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           title: "Detail",
           type: "ionicon",
           icon: "open-outline",
-          color: "blue",
+          color: "lightblue",
           onPress: () =>
             navigation.navigate("GroupRequestInfo", { groupData: item })
         },
@@ -73,14 +74,14 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
           title: "Accept Invitation",
           type: "material",
           icon: "check",
-          color: "green",
+          color: "#4FFFB0",
           onPress: () => acceptGroupInvitation(item.id)
         },
         {
           title: "Decline Invitation",
           type: "material",
           icon: "close",
-          color: "red",
+          color: "#fd5c63",
           onPress: () => declineGroupInvitation(item.id)
         }
       );
@@ -90,6 +91,8 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
   return (
     <ListItem.Accordion
       bottomDivider
+      containerStyle={itemContainerStyle}
+      underlayColor="invisible"
       content={<ContactBar type={contactType.GROUP} item={item} />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}

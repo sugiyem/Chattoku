@@ -1,39 +1,34 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Badge, ListItem } from "react-native-elements";
 import ContactImage from "../Friend/ContactImage";
 
 const ChatBar = ({ item, isPrivateChat }) => {
-  const dateString =
-    item.lastMessageTime.toDateString() +
-    ", " +
-    item.lastMessageTime.toLocaleTimeString();
+  const date = item.lastMessageTime;
+  const dateString = date
+    ? date.toDateString() + ", " + date.toLocaleTimeString()
+    : "";
 
   const NotificationBadge = () => (
-    <Badge
-      status="primary"
-      value="There are unread messages"
-      containerStyle={styles.badgeContainer}
-      textStyle={styles.text}
-    />
+    <Badge status="primary" value="!" containerStyle={styles.badgeContainer} />
   );
 
   return (
-    <>
+    <View style={styles.barContainer}>
       <ContactImage item={item} />
       <ListItem.Content>
-        <ListItem.Title style={styles.username}>
+        <ListItem.Title style={styles.username} testID="name">
           {isPrivateChat ? item.username : item.name}
         </ListItem.Title>
         <ListItem.Subtitle>
-          <Text>{item.lastMessage}</Text>
+          <Text testID="lastMessage">{item.lastMessage}</Text>
         </ListItem.Subtitle>
         <ListItem.Subtitle>
           <Text>{dateString}</Text>
         </ListItem.Subtitle>
-        {item.showNotif && <NotificationBadge />}
       </ListItem.Content>
-    </>
+      {item.showNotif && <NotificationBadge />}
+    </View>
   );
 };
 
@@ -46,9 +41,11 @@ const styles = StyleSheet.create({
     color: "darkslateblue"
   },
   badgeContainer: {
-    marginTop: 5
+    position: "absolute",
+    right: 10
   },
-  text: {
-    fontSize: 11
+  barContainer: {
+    flexDirection: "row",
+    alignItems: "center"
   }
 });

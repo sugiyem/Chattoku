@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Platform, Dimensions } from "react-native";
+import { Modal, Platform, Dimensions, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import {
   pickImageFromCamera,
@@ -11,6 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import { createForum, editForum } from "../../services/Forum/HandleForum";
 import { imageType } from "../../constants/Image";
 import { renderType } from "../../constants/Forum";
+import {
+  DarkButton,
+  DarkButtonText,
+  ForumNavigation,
+  NavigationText,
+  ScrollContainer
+} from "../../styles/ForumStyles";
 
 const initialForumInfo = {
   img: "",
@@ -74,8 +81,7 @@ const RenderManageForumDetails = ({ manageType }) => {
   }
 
   const removeImage = () => {
-    const removedField =
-      uploadedImgType === isProfileUploaded ? "img" : "banner";
+    const removedField = isProfileUploaded ? "img" : "banner";
     setForumInfo({
       ...forumInfo,
       [removedField]: ""
@@ -91,7 +97,7 @@ const RenderManageForumDetails = ({ manageType }) => {
         });
   };
   return (
-    <Container>
+    <ScrollContainer>
       <Modal
         animationType="fade"
         visible={modalVisible}
@@ -113,32 +119,32 @@ const RenderManageForumDetails = ({ manageType }) => {
         </ModalContainer>
       </Modal>
 
-      <BackButton onPress={() => navigation.goBack()}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
-      <Title> Enter Forum Details </Title>
+      <ForumNavigation onPress={() => navigation.goBack()}>
+        <NavigationText> Go Back </NavigationText>
+      </ForumNavigation>
       <ImageContainer>
-        {forumInfo.banner.length > 0 ? (
-          <Banner source={{ uri: forumInfo.banner }} />
-        ) : (
-          <Banner source={require("../../assets/default-banner.png")} />
-        )}
-      </ImageContainer>
-      <CustomButton onPress={handleUploadBannerClick}>
-        <ButtonText> Upload Banner </ButtonText>
-      </CustomButton>
-      <ImageContainer>
-        {forumInfo.img.length > 0 ? (
-          <ProfilePicture source={{ uri: forumInfo.img }} />
-        ) : (
-          <ProfilePicture
-            source={require("../../assets/default-profile.png")}
+        <TouchableOpacity onPress={handleUploadBannerClick}>
+          <Banner
+            source={
+              forumInfo.banner.length > 0
+                ? { uri: forumInfo.banner }
+                : require("../../assets/default-banner.png")
+            }
           />
-        )}
+        </TouchableOpacity>
+        <ProfileContainer>
+          <ProfileWrapper onPress={handleUploadProfileClick}>
+            <ProfilePicture
+              source={
+                forumInfo.img.length > 0
+                  ? { uri: forumInfo.img }
+                  : require("../../assets/default-profile.png")
+              }
+            />
+          </ProfileWrapper>
+        </ProfileContainer>
       </ImageContainer>
-      <CustomButton onPress={handleUploadProfileClick}>
-        <ButtonText> Upload Image </ButtonText>
-      </CustomButton>
+      <Title> Enter Forum Details </Title>
       <TextInputLabel> Title </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "title")}
@@ -149,10 +155,10 @@ const RenderManageForumDetails = ({ manageType }) => {
         onChangeText={(text) => handleChangeText(text, "desc")}
         value={forumInfo.desc}
       />
-      <CustomButton onPress={handleSubmit}>
-        <ButtonText> {submitButtonText} </ButtonText>
-      </CustomButton>
-    </Container>
+      <DarkButton onPress={handleSubmit}>
+        <DarkButtonText> {submitButtonText} </DarkButtonText>
+      </DarkButton>
+    </ScrollContainer>
   );
 };
 
@@ -161,23 +167,19 @@ export default RenderManageForumDetails;
 const width = Dimensions.get("screen").width;
 
 const Title = styled.Text`
-  font-size: 22px;
+  font-size: 24px;
   padding: 5px;
   font-weight: 400;
+  text-decoration: underline;
   align-self: center;
   color: white;
 `;
 
 const Banner = styled.Image`
-  width: ${width - 20}px;
-  height: ${(width * 2) / 5 - 8}px;
-`;
-
-const Container = styled.ScrollView`
-  display: flex;
-  background-color: darkcyan;
-  padding: 5px;
-  flex: 1;
+  width: ${width}px;
+  height: ${(width * 2) / 5}px;
+  border-width: 1px;
+  border-color: black;
 `;
 
 const ModalContainer = styled.View`
@@ -204,58 +206,50 @@ const ButtonText = styled.Text`
   color: white;
 `;
 
+const ProfileWrapper = styled.TouchableOpacity`
+  flex: 0;
+  border-radius: 1000px;
+`;
+
 const ProfilePicture = styled.Image`
-  margin-top: 30px;
   align-self: center;
   height: 125px;
   width: 125px;
+  top: -62.5px;
+  border-width: 1px;
+  border-color: black;
+  position: absolute;
   border-radius: 75px;
 `;
 
 const ImageContainer = styled.View`
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
 `;
 
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: navy;
-  margin: 20px;
+const ProfileContainer = styled.View`
+  height: 60px;
+  background-color: white;
 `;
 
 const TextInputLabel = styled.Text`
   font-family: ${Platform.OS === "ios" ? "Gill Sans" : "serif"};
   font-weight: bold;
-  text-decoration-line: underline;
   margin: 5px;
-  align-self: center;
+  margin-left: 20px;
+  color: whitesmoke;
+  font-size: 16px;
 `;
 
 const StyledTextInput = styled.TextInput`
   flex-direction: row;
   width: 90%;
   margin: 5px;
-  padding-left: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
   background-color: white;
   padding-bottom: 5px;
   align-self: center;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-  padding: 5px;
-  margin-top: 10px;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
+  font-size: 15px;
 `;

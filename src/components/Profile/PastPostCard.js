@@ -9,9 +9,28 @@ const PastPostCard = ({ forumData, postData }) => {
     navigation.navigate("Forum", { data: forumData });
   }
 
+  console.log(forumData);
+  console.log(postData);
+
+  const dateText = postData.timestamp
+    .toDateString()
+    .split(" ")
+    .filter((_, index) => index > 0)
+    .join(" ");
+
+  const editedText = postData.lastEdited
+    ? postData.lastEdited
+        .toDateString()
+        .split(" ")
+        .filter((_, index) => index > 0)
+        .join(" ")
+    : "";
+
   function navigateToPost() {
     navigation.navigate("Forum", { data: forumData });
-    navigation.navigate("Post", { data: postData });
+    navigation.navigate("Post", {
+      data: { ...postData, timestamp: dateText, lastEdited: editedText }
+    });
   }
 
   return (
@@ -25,9 +44,11 @@ const PastPostCard = ({ forumData, postData }) => {
           }
         />
         <ForumName> {forumData.title}</ForumName>
+        <DateText> {dateText} </DateText>
       </ForumInfo>
       <Title>{postData.title}</Title>
       <Content> {postData.content} </Content>
+      {!!editedText && <EditedText>(Last Edited: {editedText})</EditedText>}
       <ButtonContainer>
         <CustomButton onPress={navigateToPost}>
           <Text> See Full Post </Text>
@@ -48,11 +69,11 @@ const Profile = styled.Image`
   width: 50px;
   border-radius: 25px;
   border-width: 1px;
-  border-color: white;
+  border-color: black;
 `;
 
 const Container = styled.View`
-  background-color: white;
+  background-color: whitesmoke;
   margin: 10px;
   border-width: 1px;
   border-color: black;
@@ -63,7 +84,7 @@ const Container = styled.View`
 const ForumName = styled.Text`
   font-size: 17px;
   font-weight: 400;
-  margin-left: 5px;
+  margin-left: 10px;
 `;
 
 const Title = styled.Text`
@@ -73,13 +94,23 @@ const Title = styled.Text`
   align-self: center;
 `;
 
+const DateText = styled.Text`
+  font-size: 13px;
+  margin-left: auto;
+`;
+
+const EditedText = styled.Text`
+  font-size: 13px;
+  padding: 5px;
+`;
+
 const ForumInfo = styled.View`
   font-size: 16px;
-  padding: 5px;
+  padding: 5px 10px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  background-color: cyan;
+  background-color: turquoise;
   border-bottom-width: 1px;
   border-bottom-color: black;
 `;

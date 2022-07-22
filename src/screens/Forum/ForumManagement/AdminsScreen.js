@@ -2,6 +2,13 @@ import styled from "styled-components/native";
 import ForumAdminList from "../../../components/Forum/ForumManagement/ForumAdminList";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../../../services/Firebase/Config";
+import {
+  AquaButton,
+  AquaButtonText,
+  DarkButton,
+  DarkButtonText
+} from "../../../styles/ForumStyles";
+import { Container } from "../../../styles/GeneralStyles";
 
 const AdminsScreen = () => {
   const navigation = useNavigation();
@@ -17,13 +24,13 @@ const AdminsScreen = () => {
 
   return (
     <Container>
-      <BackButton onPress={navigation.goBack}>
-        <BackButtonText> Go Back </BackButtonText>
-      </BackButton>
+      <AquaButton onPress={navigation.goBack}>
+        <AquaButtonText> Go Back </AquaButtonText>
+      </AquaButton>
       {isOwner && (
-        <CustomButton onPress={handleAddAdminPress}>
-          <ButtonText>Add Admins</ButtonText>
-        </CustomButton>
+        <DarkButton onPress={handleAddAdminPress}>
+          <DarkButtonText>Add Admins</DarkButtonText>
+        </DarkButton>
       )}
       <Title> Forum Admins </Title>
       <ForumAdminList forumId={forumData.id} />
@@ -33,48 +40,10 @@ const AdminsScreen = () => {
 
 export default AdminsScreen;
 
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-color: darkcyan;
-`;
-
-const CustomButton = styled.TouchableOpacity`
-  align-self: stretch;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: navy;
-  margin: 20px;
-`;
-
-const ButtonText = styled.Text`
-  justify-content: center;
-  align-self: center;
-  font-size: 15px;
-  font-weight: bold;
-  color: white;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  align-self: stretch;
-  padding: 5px;
-  margin: 5px;
-  border-radius: 10px;
-  border-width: 1px;
-  background-color: aquamarine;
-`;
-
-const BackButtonText = styled.Text`
-  text-align: center;
-  color: blue;
-`;
-
 const Title = styled.Text`
   font-size: 22px;
   padding: 5px;
   font-weight: 400;
   align-self: center;
-  color: white;
+  color: whitesmoke;
 `;

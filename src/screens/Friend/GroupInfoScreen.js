@@ -1,82 +1,98 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { firebase } from "../../services/Firebase/Config";
 import {
   fetchGroupMembers,
   fetchPendingGroupMembers
 } from "../../services/Friend/FetchGroup";
 import { fetchGroupAdminIDs } from "../../services/Friend/FetchGroupAdmin";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { groupMemberType } from "../../constants/Group";
 import { groupMemberSorter } from "../../services/Friend/Sorter";
+import { getAdvancedGroupRole } from "../../services/Friend/GroupRole";
 import RenderGroupDetail from "../../components/Friend/RenderGroupDetail";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const GroupInfoScreen = ({ navigation, route }) => {
   const [members, setMembers] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
   const [adminIDs, setAdminIDs] = useState([]);
+  const [isMemberLoading, setIsMemberLoading] = useState(false);
+  const [isPendingLoading, setIsPendingLoading] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
   const groupInfo = route.params.groupData;
-  const currentID = firebase.auth().currentUser.uid;
+  const currentID = getCurrentUID();
+  const memberIDs = members.map((user) => user.id);
+  const pendingMemberIDs = pendingMembers.map((user) => user.id);
 
-  function isOwner(id) {
-    return id === groupInfo.owner;
-  }
-
-  function isAdmin(id) {
-    return adminIDs.includes(id);
-  }
-
-  const renderType = isOwner(currentID)
-    ? groupMemberType.OWNER
-    : isAdmin(currentID)
-    ? groupMemberType.ADMIN
+  const renderType = adminIDs.includes(currentID)
+    ? currentID === groupInfo.owner
+      ? groupMemberType.OWNER
+      : groupMemberType.ADMIN
     : groupMemberType.MEMBER;
 
   const detailedMembers = members
-    .map((member) => {
-      return {
-        ...member,
-        groupRole: isOwner(member.id)
-          ? "Owner"
-          : isAdmin(member.id)
-          ? "Admin"
-          : "Member"
-      };
-    })
+    .map((member) => ({
+      ...member,
+      groupRole: getAdvancedGroupRole(
+        member.id,
+        groupInfo.owner,
+        adminIDs,
+        memberIDs,
+        pendingMemberIDs
+      )
+    }))
     .sort(groupMemberSorter);
 
   console.log(detailedMembers);
 
   useEffect(() => {
+    setIsMemberLoading(true);
+
     return fetchGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setMembers,
+      onSuccess: (data) => {
+        setMembers(data);
+        setIsMemberLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsPendingLoading(true);
+
     return fetchPendingGroupMembers({
       groupID: groupInfo.id,
-      onSuccess: setPendingMembers,
+      onSuccess: (data) => {
+        setPendingMembers(data);
+        setIsPendingLoading(false);
+      },
       onFailure: (error) => Alert.alert("Error", error.message)
     });
   }, []);
 
   useEffect(() => {
+    setIsAdminLoading(true);
+
     return fetchGroupAdminIDs({
       groupID: groupInfo.id,
-      onSuccess: setAdminIDs
+      onSuccess: (data) => {
+        setAdminIDs(data);
+        setIsAdminLoading(false);
+      }
     });
   }, []);
 
   return (
-    <RenderGroupDetail
-      type={renderType}
-      groupInfo={{ ...groupInfo, admins: adminIDs }}
-      members={detailedMembers}
-      pendingMembers={pendingMembers}
-      navigation={navigation}
-    />
+    <Loading isLoading={isAdminLoading || isMemberLoading || isPendingLoading}>
+      <RenderGroupDetail
+        type={renderType}
+        groupInfo={groupInfo}
+        members={detailedMembers}
+        pendingMembers={pendingMembers}
+        navigation={navigation}
+      />
+    </Loading>
   );
 };
 

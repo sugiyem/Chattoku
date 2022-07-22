@@ -1,5 +1,5 @@
 import { SectionList, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { ListItem } from "react-native-elements";
 import { CenteredBoldText } from "../../styles/GeneralStyles";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -8,29 +8,27 @@ import AnimeCard from "./AnimeCard";
 import { ANIME_SHOWN_PER_PAGE } from "../../constants/MyAnimeList";
 
 const AnimeCollection = ({ items, favorite }) => {
-  const renderItem = ({ section, item }) => {
+  const renderItem = ({ item }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
     const isFavorite = favorite.includes(item.mal_id);
 
     return (
       <ListItem.Accordion
         bottomDivider
-        isExpanded={section.expand == item.mal_id}
-        onPress={() =>
-          section.changeExpand(
-            section.expand == item.mal_id ? null : item.mal_id
-          )
-        }
+        isExpanded={isExpanded}
+        onPress={() => setIsExpanded(!isExpanded)}
         content={<AnimeList item={item} isFavorite={isFavorite} />}
+        style={styles.accordion}
       >
-        {section.expand == item.mal_id && (
-          <AnimeCard item={item} isFavorite={isFavorite} />
-        )}
+        {isExpanded && <AnimeCard item={item} isFavorite={isFavorite} />}
       </ListItem.Accordion>
     );
   };
 
   const renderHeader = ({ section }) => (
-    <CenteredBoldText underline>{section.title}</CenteredBoldText>
+    <CenteredBoldText underline style={styles.header}>
+      {section.title}
+    </CenteredBoldText>
   );
 
   const renderFooter = ({ section }) => (
@@ -80,11 +78,18 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "stretch",
     paddingHorizontal: 5,
-    marginBottom: 10
+    margin: 5
+  },
+  header: {
+    marginBottom: 20
   },
   footerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 5
+  },
+  accordion: {
+    borderWidth: 0.5,
+    borderColor: "black"
   }
 });

@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
 import { Icon, ListItem } from "react-native-elements";
-import { firebase } from "../../services/Firebase/Config";
 import {
   cancelGroupInvitation,
   removeUserFromGroup
@@ -10,15 +7,22 @@ import {
   demoteAdminToMember,
   promoteMemberToAdmin
 } from "../../services/Friend/HandleGroupAdmin";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import { contactType } from "../../constants/Contact";
 import ContactBar from "./ContactBar";
 import Caution from "../Miscellaneous/Caution";
+import { itemContainerStyle } from "../../styles/ListStyles";
+import { View } from "react-native";
+import { IconText } from "../../styles/GeneralStyles";
+import styled from "styled-components/native";
 
 const EditMemberComponent = ({ item, isMember, groupInfo }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const currentID = firebase.auth().currentUser.uid;
+  const currentID = getCurrentUID();
   const groupID = groupInfo.id;
   const itemID = item.id;
+
+  const isOtherUserOwner = item.groupRole === "Owner";
+  const isOtherUserAdmin = item.groupRole === "Admin";
 
   const alertTitle = isMember
     ? "This user will be removed from the group"
@@ -26,24 +30,25 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 
   const isCurrentUserOwner = currentID === groupInfo.owner;
   const isEditable =
-    !isMember || (!item.isOwner && (isCurrentUserOwner || !item.isAdmin));
+    !isMember ||
+    (!isOtherUserOwner && (isCurrentUserOwner || !isOtherUserAdmin));
 
   const buttonDetails = [
     {
       title: "Remove",
       type: "material-community",
       icon: "account-remove",
-      color: "red",
+      color: "#ED2939",
       onPress: onRemovePress
     }
   ];
 
   if (isCurrentUserOwner && isMember) {
     buttonDetails.push({
-      title: item.isAdmin ? "Demote" : "Promote",
+      title: isOtherUserAdmin ? "Demote" : "Promote",
       type: "material-community",
-      icon: item.isAdmin ? "account-arrow-down" : "account-arrow-up",
-      color: "blue",
+      icon: isOtherUserAdmin ? "account-arrow-down" : "account-arrow-up",
+      color: isOtherUserAdmin ? "#317873" : "navy",
       onPress: onAdminUpdatePress
     });
   }
@@ -59,7 +64,7 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
   }
 
   async function onAdminUpdatePress() {
-    if (item.isAdmin) {
+    if (isOtherUserAdmin) {
       await demoteAdminToMember(groupID, itemID);
     } else {
       await promoteMemberToAdmin(groupID, itemID);
@@ -68,44 +73,44 @@ const EditMemberComponent = ({ item, isMember, groupInfo }) => {
 
   const RenderButtons = () =>
     buttonDetails.map((detail, index) => (
-      <ListItem key={index} onPress={detail.onPress}>
+      <View key={index}>
         <Icon
           type={detail.type}
           name={detail.icon}
           size={30}
           color={detail.color}
+          onPress={detail.onPress}
         />
-        <ListItem.Content>
-          <ListItem.Title>{detail.title}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
+        <IconText>{detail.title}</IconText>
+      </View>
     ));
 
-  const UneditableSection = () => (
-    <ListItem bottomDivider>
-      <ContactBar type={contactType.USER} item={item} />
+  return (
+    <ListItem bottomDivider containerStyle={itemContainerStyle}>
+      <ItemContainer>
+        <InfoContainer>
+          <ContactBar type={contactType.USER} item={item} />
+        </InfoContainer>
+        <ButtonContainer>{isEditable && <RenderButtons />}</ButtonContainer>
+      </ItemContainer>
     </ListItem>
   );
-
-  const EditableSection = () => (
-    <ListItem.Accordion
-      bottomDivider
-      content={<ContactBar type={contactType.USER} item={item} />}
-      isExpanded={isExpanded}
-      onPress={() => setIsExpanded(!isExpanded)}
-    >
-      <RenderButtons />
-    </ListItem.Accordion>
-  );
-
-  return isEditable ? <EditableSection /> : <UneditableSection />;
 };
 
 export default EditMemberComponent;
 
-const styles = StyleSheet.create({
-  removeButton: {
-    minHeight: "100%",
-    backgroundColor: "red"
-  }
-});
+const ItemContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const InfoContainer = styled.View`
+  flex: 3;
+  flex-direction: row;
+`;
+
+const ButtonContainer = styled.View`
+  flex: 2;
+  flex-direction: row;
+  justify-content: space-between;
+`;
