@@ -70,15 +70,9 @@ const FriendListScreen = () => {
           testID="searchBar"
         />
 
-<<<<<<< HEAD
-        <BoldText underline testID="title">
-          Friends List
-        </BoldText>
-=======
         <CenteredBoldText underline testID="title">
           Friends List
         </CenteredBoldText>
->>>>>>> origin
 
         <IconGroup>
           <View>

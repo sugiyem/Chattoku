@@ -12,6 +12,7 @@ import styled from "styled-components/native";
 import Loading from "../../components/Miscellaneous/Loading";
 import Caution from "../../components/Miscellaneous/Caution";
 import { ScrollContainer } from "../../styles/GeneralStyles";
+import { itemContainerStyle } from "../../styles/ListStyles";
 
 const initialState = {
   username: "",
@@ -154,6 +155,8 @@ const ProfileHomeScreen = () => {
           {datas.map((item, index) => (
             <ListItem.Accordion
               bottomDivider
+              underlayColor="invisible"
+              containerStyle={itemContainerStyle}
               key={index}
               content={
                 <ListItem.Content>
