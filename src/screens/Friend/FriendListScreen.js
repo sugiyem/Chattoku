@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import {
-  BoldText,
+  CenteredBoldText,
   IconGroup,
   IconText,
   NotificationIcon,
@@ -70,9 +70,15 @@ const FriendListScreen = () => {
           testID="searchBar"
         />
 
+<<<<<<< HEAD
         <BoldText underline testID="title">
           Friends List
         </BoldText>
+=======
+        <CenteredBoldText underline testID="title">
+          Friends List
+        </CenteredBoldText>
+>>>>>>> origin
 
         <IconGroup>
           <View>

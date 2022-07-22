@@ -14,6 +14,7 @@ export function handleIsLoggedIn(onIsLoggedIn, app = firebase) {
 export async function login(
   credentials,
   onSuccess,
+  onFailure,
   deviceToken = null,
   isVerified = false,
   app = firebase
@@ -22,6 +23,7 @@ export async function login(
     .auth()
     .signInWithEmailAndPassword(credentials.email, credentials.password)
     .catch((e) => {
+      onFailure();
       console.log("Incorrect Credentials");
       Alert.alert("Incorrect Email / Password");
     });
@@ -73,7 +75,12 @@ export function signOut(app = firebase) {
   app.auth().signOut();
 }
 
-export async function signUp(credentials, onSuccess, app = firebase) {
+export async function signUp(
+  credentials,
+  onSuccess,
+  onFailure,
+  app = firebase
+) {
   app
     .auth()
     .createUserWithEmailAndPassword(credentials.email, credentials.password)
@@ -106,6 +113,7 @@ export async function signUp(credentials, onSuccess, app = firebase) {
     .catch((e) => {
       console.log(e);
       Alert.alert("email is already taken");
+      onFailure();
       console.log("email already taken");
     });
 }

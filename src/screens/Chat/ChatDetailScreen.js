@@ -13,6 +13,7 @@ import FetchUserInfo, {
 import ChatSections from "../../components/Chat/ChatSections";
 import ChatHeader from "../../components/Chat/ChatHeader";
 import { useIsFocused } from "@react-navigation/native";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const initialState = {
   username: "",
@@ -31,13 +32,22 @@ const ChatDetailScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
+  const [isInfoLoading, setIsInfoLoading] = useState(false);
+  const [isMessageLoading, setIsMessageLoading] = useState(false);
+  const [isBlockedLoading, setIsBlockedLoading] = useState(false);
+  const [isBlockingLoading, setIsBlockingLoading] = useState(false);
   //otherUserID is used to optimize firebase use
   const [otherUserID, setOtherUserID] = useState("");
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    setIsInfoLoading(true);
+
     return FetchUserInfo({
-      onSuccesfulFetch: setUserInfo,
+      onSuccesfulFetch: (data) => {
+        setUserInfo(data);
+        setIsInfoLoading(false);
+      },
       onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
@@ -48,48 +58,77 @@ const ChatDetailScreen = ({ navigation, route }) => {
 
     console.log("triggered");
     setOtherUserID(recipientID);
+    setIsMessageLoading(true);
 
     return fetchPrivateChatMessages({
       recipientID: recipientID,
-      onSuccesfulFetch: setMessages,
+      onSuccesfulFetch: (data) => {
+        setMessages(data);
+        setIsMessageLoading(false);
+      },
       onFailure: (error) => Alert.alert(error.message)
     });
   }, [isFocused]);
 
   useEffect(() => {
+    setIsBlockingLoading(true);
+
     return isBlockedByCurrentUser(
       recipientID,
-      () => setIsBlocking(true),
-      () => setIsBlocking(false)
+      () => {
+        setIsBlocking(true);
+        setIsBlockingLoading(false);
+      },
+      () => {
+        setIsBlocking(false);
+        setIsBlockingLoading(false);
+      }
     );
   }, []);
 
   useEffect(() => {
+    setIsBlockedLoading(true);
+
     return isCurrentUserBlocked(
       recipientID,
-      () => setIsBlocked(true),
-      () => setIsBlocked(false)
+      () => {
+        setIsBlocked(true);
+        setIsBlockedLoading(false);
+      },
+      () => {
+        setIsBlocked(false);
+        setIsBlockedLoading(false);
+      }
     );
   }, []);
 
   return (
-    <ChatContainer>
-      <ChatHeader
-        type={chatType.PRIVATE_CHAT}
-        item={recipientData}
-        navigation={navigation}
-      />
+    <Loading
+      isLoading={
+        isInfoLoading ||
+        isMessageLoading ||
+        isBlockedLoading ||
+        isBlockingLoading
+      }
+    >
+      <ChatContainer>
+        <ChatHeader
+          type={chatType.PRIVATE_CHAT}
+          item={recipientData}
+          navigation={navigation}
+        />
 
-      <ChatSections
-        type={chatType.PRIVATE_CHAT}
-        userData={{ ...userInfo, id: userID }}
-        receiverID={recipientID}
-        messages={messages}
-        updateMessages={setMessages}
-        isBlocking={isBlocking}
-        isBlocked={isBlocked}
-      />
-    </ChatContainer>
+        <ChatSections
+          type={chatType.PRIVATE_CHAT}
+          userData={{ ...userInfo, id: userID }}
+          receiverID={recipientID}
+          messages={messages}
+          updateMessages={setMessages}
+          isBlocking={isBlocking}
+          isBlocked={isBlocked}
+        />
+      </ChatContainer>
+    </Loading>
   );
 };
 

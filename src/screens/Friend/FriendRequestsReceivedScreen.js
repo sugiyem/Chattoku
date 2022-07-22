@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import {
-  BoldText,
+  CenteredBoldText,
   IconGroup,
   IconText,
   ScrollContainer,
@@ -57,7 +57,9 @@ const FriendRequestsReceivedScreen = () => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Pending Requests Received</BoldText>
+        <CenteredBoldText underline testID="title">
+          Pending Requests Received
+        </CenteredBoldText>
 
         <IconGroup>
           <View>
