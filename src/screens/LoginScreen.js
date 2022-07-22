@@ -1,4 +1,3 @@
-import { Text } from "react-native";
 import { useState, useEffect } from "react";
 import {
   AppLogo,
@@ -11,7 +10,7 @@ import {
   AuthTitle,
   GradientBackground
 } from "../styles/AuthStyles";
-import { Button, ButtonText, RoundedImage } from "../styles/GeneralStyles";
+
 import {
   login,
   handleIsLoggedIn
@@ -21,7 +20,7 @@ import {
   redirectToSignupScreen
 } from "../services/Authentication/AuthNavigation";
 import AnimatedInput from "../components/Miscellaneous/AnimatedInput";
-import { LinearGradient } from "expo-linear-gradient";
+import Loading from "../components/Miscellaneous/Loading";
 
 const initialState = {
   email: "",
@@ -30,6 +29,7 @@ const initialState = {
 
 const LoginScreen = ({ navigation }) => {
   const [credentials, setCredentials] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleChangeText(text, name) {
     setCredentials({
@@ -39,7 +39,12 @@ const LoginScreen = ({ navigation }) => {
   }
 
   async function handleSubmit() {
-    await login(credentials, () => navigation.replace("Dashboard"));
+    setIsLoading(true);
+    await login(
+      credentials,
+      () => navigation.replace("Dashboard"),
+      () => setIsLoading(false)
+    );
   }
 
   useEffect(() => {
@@ -52,43 +57,45 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <GradientBackground>
-      <AuthContainer>
-        <AppLogo source={require("../assets/logo.png")} />
-        <AuthSystemContainer>
-          <AuthTitle> Log In </AuthTitle>
-          <AnimatedInput
-            value={credentials.email}
-            placeholder="Email"
-            onChangeText={(text) => handleChangeText(text, "email")}
-          />
-          <AnimatedInput
-            placeholder="Password"
-            secureTextEntry={true}
-            value={credentials.password}
-            onChangeText={(text) => handleChangeText(text, "password")}
-          />
+      <Loading isLoading={isLoading}>
+        <AuthContainer>
+          <AppLogo source={require("../assets/logo.png")} />
+          <AuthSystemContainer>
+            <AuthTitle> Log In </AuthTitle>
+            <AnimatedInput
+              value={credentials.email}
+              placeholder="Email"
+              onChangeText={(text) => handleChangeText(text, "email")}
+            />
+            <AnimatedInput
+              placeholder="Password"
+              secureTextEntry={true}
+              value={credentials.password}
+              onChangeText={(text) => handleChangeText(text, "password")}
+            />
 
-          <AuthPrimaryButton onPress={handleSubmit}>
-            <AuthPrimaryText>Log In</AuthPrimaryText>
-          </AuthPrimaryButton>
-          <AuthSecondaryButton
-            color="#0000ff"
-            onPress={() => redirectToSignupScreen(navigation)}
-          >
-            <AuthSecondaryText>
-              Don't Have an Account? Sign Up Here
-            </AuthSecondaryText>
-          </AuthSecondaryButton>
-          <AuthSecondaryButton
-            color="#0000ff"
-            onPress={() => redirectToForgotPasswordScreen(navigation)}
-          >
-            <AuthSecondaryText color="#ffffff">
-              Forgot Your Password? Click Here
-            </AuthSecondaryText>
-          </AuthSecondaryButton>
-        </AuthSystemContainer>
-      </AuthContainer>
+            <AuthPrimaryButton onPress={handleSubmit}>
+              <AuthPrimaryText>Log In</AuthPrimaryText>
+            </AuthPrimaryButton>
+            <AuthSecondaryButton
+              color="#0000ff"
+              onPress={() => redirectToSignupScreen(navigation)}
+            >
+              <AuthSecondaryText>
+                Don't Have an Account? Sign Up Here
+              </AuthSecondaryText>
+            </AuthSecondaryButton>
+            <AuthSecondaryButton
+              color="#0000ff"
+              onPress={() => redirectToForgotPasswordScreen(navigation)}
+            >
+              <AuthSecondaryText color="#ffffff">
+                Forgot Your Password? Click Here
+              </AuthSecondaryText>
+            </AuthSecondaryButton>
+          </AuthSystemContainer>
+        </AuthContainer>
+      </Loading>
     </GradientBackground>
   );
 };

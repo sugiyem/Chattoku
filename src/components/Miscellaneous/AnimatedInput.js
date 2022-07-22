@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated, View, TextInput, Text, StyleSheet } from "react-native";
 
 const AnimatedInput = ({
@@ -50,11 +50,13 @@ const AnimatedInput = ({
     useNativeDriver: true
   });
 
+  if (value) {
+    handleFocus();
+  }
+
   function handleFocus() {
-    const animations = [focusColor];
-    if (!value) {
-      animations.push(focusAnimation);
-    }
+    const animations = [focusAnimation, focusColor];
+
     Animated.parallel(animations).start();
   }
 

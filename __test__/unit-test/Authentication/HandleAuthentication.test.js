@@ -28,6 +28,7 @@ describe("Test Authentication Handling", () => {
     await login(
       { email: "chattoku@chattoku.com", password: "chattokucp2106" },
       () => {},
+      () => {},
       "team-w",
       true,
       admin
@@ -52,6 +53,7 @@ describe("Test Authentication Handling", () => {
         email: "chattoku@chattoku.com",
         password: "chattokucp2106"
       },
+      () => {},
       () => {},
       admin
     );
