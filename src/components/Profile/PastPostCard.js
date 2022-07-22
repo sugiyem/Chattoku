@@ -69,11 +69,11 @@ const Profile = styled.Image`
   width: 50px;
   border-radius: 25px;
   border-width: 1px;
-  border-color: white;
+  border-color: black;
 `;
 
 const Container = styled.View`
-  background-color: white;
+  background-color: whitesmoke;
   margin: 10px;
   border-width: 1px;
   border-color: black;
@@ -84,7 +84,7 @@ const Container = styled.View`
 const ForumName = styled.Text`
   font-size: 17px;
   font-weight: 400;
-  margin-left: 5px;
+  margin-left: 10px;
 `;
 
 const Title = styled.Text`
@@ -106,11 +106,11 @@ const EditedText = styled.Text`
 
 const ForumInfo = styled.View`
   font-size: 16px;
-  padding: 5px;
+  padding: 5px 10px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  background-color: cyan;
+  background-color: turquoise;
   border-bottom-width: 1px;
   border-bottom-color: black;
 `;

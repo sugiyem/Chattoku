@@ -70,7 +70,9 @@ const FriendListScreen = () => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Friends List</BoldText>
+        <BoldText underline testID="title">
+          Friends List
+        </BoldText>
 
         <IconGroup>
           <View>

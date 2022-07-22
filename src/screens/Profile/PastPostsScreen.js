@@ -3,6 +3,7 @@ import PastPostList from "../../components/Profile/PastPostList";
 import { FetchPreviousPosts } from "../../services/Forum/FetchPreviousPosts";
 import styled from "styled-components/native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { Container } from "../../styles/GeneralStyles";
 
 const PastPostsScreen = () => {
   const [postData, setPostsData] = useState([]);
@@ -35,18 +36,12 @@ const PastPostsScreen = () => {
 
 export default PastPostsScreen;
 
-const Container = styled.View`
-  padding: 5px;
-  flex: 1;
-  background-color: darkcyan;
-`;
-
 const Title = styled.Text`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 300;
   padding: 10px;
   align-self: center;
-  color: white;
+  color: whitesmoke;
   text-decoration-line: underline;
 `;
 

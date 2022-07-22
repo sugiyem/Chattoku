@@ -11,6 +11,7 @@ import RenderFavorites from "../../components/Profile/RenderFavorites";
 import styled from "styled-components/native";
 import Loading from "../../components/Miscellaneous/Loading";
 import Caution from "../../components/Miscellaneous/Caution";
+import { ScrollContainer } from "../../styles/GeneralStyles";
 
 const initialState = {
   username: "",
@@ -111,7 +112,7 @@ const ProfileHomeScreen = () => {
 
   return (
     <Loading isLoading={isLoading}>
-      <Container contentContainerStyle={{ alignItems: "center" }}>
+      <ScrollContainer>
         <ContentContainer>
           {userInfo.img.length > 0 ? (
             <ProfilePicture source={{ uri: userInfo.img }} />
@@ -129,7 +130,7 @@ const ProfileHomeScreen = () => {
                 navigation.navigate("PastPosts");
               }}
             >
-              <ButtonText> See Recent Posts </ButtonText>
+              <ButtonText> Recent Posts </ButtonText>
             </Button>
             <Button
               onPress={() => {
@@ -143,9 +144,9 @@ const ProfileHomeScreen = () => {
             <Button onPress={logOut}>
               <ButtonText>Logout</ButtonText>
             </Button>
-            <Button onPress={onDelete}>
-              <ButtonText>Delete Account</ButtonText>
-            </Button>
+            <DangerButton onPress={onDelete}>
+              <DangerText>Delete Account</DangerText>
+            </DangerButton>
           </ButtonGroup>
         </ContentContainer>
 
@@ -168,18 +169,12 @@ const ProfileHomeScreen = () => {
             </ListItem.Accordion>
           ))}
         </FavoriteStuffContainer>
-      </Container>
+      </ScrollContainer>
     </Loading>
   );
 };
 
 export default ProfileHomeScreen;
-
-const Container = styled.ScrollView`
-  background-color: darkcyan;
-  padding: 5px;
-  flex: 1;
-`;
 
 const ContentContainer = styled.View`
   align-items: center;
@@ -225,17 +220,39 @@ const ButtonGroup = styled.View`
 `;
 
 const Button = styled.TouchableOpacity`
+  flex: 1;
   border-color: navy;
-  border-width: 2px;
-  border-radius: 3px;
-  background-color: white;
+  border-width: 1px;
+  border-radius: 5px;
+  background-color: #44d0fe;
+  padding-vertical: 8px;
+  padding-horizontal: 12px;
+  margin-horizontal: 5px;
+`;
+
+const DangerButton = styled.TouchableOpacity`
+  flex: 1;
+  border-color: whitesmoke;
+  border-width: 1px;
+  border-radius: 5px;
+  background-color: #c10015;
   padding-vertical: 8px;
   padding-horizontal: 12px;
   margin-horizontal: 5px;
 `;
 
 const ButtonText = styled.Text`
-  color: #2e64e5;
+  color: navy;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+`;
+
+const DangerText = styled.Text`
+  color: whitesmoke;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
 `;
 
 const Title = styled.Text`
