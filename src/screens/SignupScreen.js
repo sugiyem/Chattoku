@@ -71,7 +71,13 @@ const SignupScreen = ({ navigation }) => {
       Alert.alert("password must at least be 6 characters long");
       setIsLoading(false);
     } else {
-      await signUp(credentials, () => redirectToLoginScreen(navigation));
+      await signUp(
+        credentials,
+        () => redirectToLoginScreen(navigation),
+        () => {
+          setIsLoading(false);
+        }
+      );
     }
   }
 

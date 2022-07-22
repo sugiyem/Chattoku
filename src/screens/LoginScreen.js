@@ -40,8 +40,11 @@ const LoginScreen = ({ navigation }) => {
 
   async function handleSubmit() {
     setIsLoading(true);
-    await login(credentials, () => navigation.replace("Dashboard"));
-    setIsLoading(false);
+    await login(
+      credentials,
+      () => navigation.replace("Dashboard"),
+      () => setIsLoading(false)
+    );
   }
 
   useEffect(() => {
