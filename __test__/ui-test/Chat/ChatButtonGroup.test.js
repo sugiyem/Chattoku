@@ -36,7 +36,7 @@ describe("Test Chat List Buttons UI", () => {
       <ChatButtonGroup buttonDetails={mockButtonDetails} />
     );
 
-    fireEvent.press(getByTestId("button-0"));
+    fireEvent.press(getByTestId("icon-0"));
 
     expect(onMockPress).toHaveBeenCalled();
   });

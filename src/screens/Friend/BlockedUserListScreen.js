@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import {
-  BoldText,
+  CenteredBoldText,
   IconGroup,
   IconText,
   ScrollContainer,
@@ -53,7 +53,9 @@ const BlockedUserListScreen = () => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Blocked List</BoldText>
+        <CenteredBoldText underline testID="title">
+          Blocked List
+        </CenteredBoldText>
 
         <IconGroup>
           <View>

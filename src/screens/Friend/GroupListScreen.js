@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import {
-  BoldText,
+  CenteredBoldText,
   IconGroup,
   IconText,
   NotificationIcon,
@@ -76,7 +76,9 @@ const GroupListScreen = ({ navigation }) => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Groups List</BoldText>
+        <CenteredBoldText underline testID="title">
+          Groups List
+        </CenteredBoldText>
 
         <IconGroup>
           <View>

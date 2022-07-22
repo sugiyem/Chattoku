@@ -92,6 +92,7 @@ export default RenderGroupLists = ({ type, item, navigation }) => {
     <ListItem.Accordion
       bottomDivider
       containerStyle={itemContainerStyle}
+      underlayColor="invisible"
       content={<ContactBar type={contactType.GROUP} item={item} />}
       isExpanded={isExpanded}
       onPress={() => setIsExpanded(!isExpanded)}

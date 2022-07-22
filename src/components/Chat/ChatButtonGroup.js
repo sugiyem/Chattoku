@@ -1,26 +1,26 @@
 import React from "react";
-import { Icon, ListItem } from "react-native-elements";
+import { Icon } from "react-native-elements";
+import { ActionBar, ActionBarText } from "../../styles/ListStyles";
+import { View } from "react-native";
 
 const ChatButtonGroup = ({ buttonDetails }) => {
-  return buttonDetails.map((data, id) => (
-    <ListItem
-      key={id}
-      bottomDivider
-      onPress={data.onPress}
-      testID={`button-${id}`}
-    >
-      <Icon
-        type={data.type}
-        name={data.icon}
-        size={30}
-        color={data.color}
-        testID={`icon-${id}`}
-      />
-      <ListItem.Content>
-        <ListItem.Title testID={`title-${id}`}>{data.title}</ListItem.Title>
-      </ListItem.Content>
-    </ListItem>
-  ));
+  return (
+    <ActionBar>
+      {buttonDetails.map((detail, id) => (
+        <View key={id}>
+          <Icon
+            type={detail.type}
+            name={detail.icon}
+            size={30}
+            color={detail.color}
+            onPress={detail.onPress}
+            testID={`icon-${id}`}
+          />
+          <ActionBarText testID={`title-${id}`}>{detail.title}</ActionBarText>
+        </View>
+      ))}
+    </ActionBar>
+  );
 };
 
 export default ChatButtonGroup;

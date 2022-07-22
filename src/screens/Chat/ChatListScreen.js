@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import {
   ChatListContainer,
   ScrollChatContainer
 } from "../../styles/ChatStyles";
 import {
-  BoldText,
-  ButtonGroup,
-  ButtonText,
-  SearchInput,
-  SeparatedButton
+  CenteredBoldText,
+  IconGroup,
+  IconText,
+  NotificationIcon,
+  SearchInput
 } from "../../styles/GeneralStyles";
 import { useNavigation } from "@react-navigation/native";
 import { chatType } from "../../constants/Chat";
@@ -18,12 +18,14 @@ import {
   checkUnreadGroupMessages
 } from "../../services/Chat/FetchActiveChats";
 import ActiveChatLists from "../../components/Chat/ActiveChatLists";
-import NotificationText from "../../components/Miscellaneous/NotificationText";
+import Loading from "../../components/Miscellaneous/Loading";
+import { Icon } from "react-native-elements";
 
 const ChatListScreen = () => {
   const [search, setSearch] = useState("");
   const [activeChats, setActiveChats] = useState([]);
   const [isUnreadExists, setIsUnreadExists] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   function navigateToAddChat() {
@@ -35,8 +37,13 @@ const ChatListScreen = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
+
     return fetchActivePrivateChats({
-      onSuccess: setActiveChats,
+      onSuccess: (data) => {
+        setActiveChats(data);
+        setIsLoading(false);
+      },
       onFailure: (error) => Alert.alert(error.message)
     });
   }, []);
@@ -69,30 +76,49 @@ const ChatListScreen = () => {
   };
 
   return (
-    <ScrollChatContainer>
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search messages"
-        testID="searchBar"
-      />
+    <Loading isLoading={isLoading}>
+      <ScrollChatContainer>
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search messages"
+          testID="searchBar"
+        />
 
-      <BoldText underline testID="title">
-        Private Chat List
-      </BoldText>
+        <CenteredBoldText underline testID="title">
+          Private Chat List
+        </CenteredBoldText>
 
-      <ButtonGroup>
-        <SeparatedButton onPress={navigateToAddChat} testID="addChatButton">
-          <ButtonText color="#000000">Message other users</ButtonText>
-        </SeparatedButton>
+        <IconGroup>
+          <View>
+            <Icon
+              type="material-community"
+              name="chat-plus"
+              color="navy"
+              size={30}
+              onPress={navigateToAddChat}
+              testID="addChatButton"
+            />
+            <IconText>New Message</IconText>
+          </View>
+          <View>
+            <NotificationIcon isVisible={isUnreadExists}>
+              <Icon
+                type="ionicon"
+                name="md-chatbubbles"
+                color="navy"
+                size={30}
+                onPress={navigateToGroupChat}
+                testID="groupChatButton"
+              />
+            </NotificationIcon>
+            <IconText>Group Chat List</IconText>
+          </View>
+        </IconGroup>
 
-        <SeparatedButton onPress={navigateToGroupChat} testID="groupChatButton">
-          <NotificationText text="Group Chat List" isShown={isUnreadExists} />
-        </SeparatedButton>
-      </ButtonGroup>
-
-      <ChatLists />
-    </ScrollChatContainer>
+        <ChatLists />
+      </ScrollChatContainer>
+    </Loading>
   );
 };
 
