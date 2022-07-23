@@ -12,7 +12,6 @@ import styled from "styled-components/native";
 
 const FavoriteAnimeScreen = ({ navigation }) => {
   const [anime, setAnime] = useState([]);
-  const [expand, setExpand] = useState(null);
 
   const goToRecommendationPage = (item) => {
     navigation.navigate("FavAnimeRecommendation", { anime: item });
@@ -30,13 +29,18 @@ const FavoriteAnimeScreen = ({ navigation }) => {
         onPress={() => setIsExpanded(!isExpanded)}
         style={styles.card}
       >
-        {isExpanded && <RenderAccordion item={item} />}
+        {isExpanded && (
+          <RenderAccordion item={item} testID={item.id.toString()} />
+        )}
       </ListItem.Accordion>
     );
   };
 
-  const RenderAccordion = ({ item }) => (
-    <AccordionContainer onPress={() => goToRecommendationPage(item)}>
+  const RenderAccordion = ({ item, testID }) => (
+    <AccordionContainer
+      onPress={() => goToRecommendationPage(item)}
+      testID={testID}
+    >
       <Icon name="search" size={30} color="green" />
       <AccordionText>Get similar anime</AccordionText>
     </AccordionContainer>
@@ -68,13 +72,13 @@ const FavoriteAnimeScreen = ({ navigation }) => {
     <ScrollContainer>
       <CenteredBoldText size="20px">Favorite Anime List</CenteredBoldText>
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="backButton">
         <ButtonText>Go Back</ButtonText>
       </Button>
 
       <MarginView>
         {anime.map((item, idx) => (
-          <RenderItems item={item} idx={idx} />
+          <RenderItems key={item.id.toString()} item={item} idx={idx} />
         ))}
       </MarginView>
     </ScrollContainer>

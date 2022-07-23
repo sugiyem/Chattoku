@@ -25,7 +25,7 @@ const RenderRecommendation = ({
   navigation
 }) => {
   const [recommendations, setRecommendations] = useState([]);
-  const [recommendationCount, setRecommendationCount] = useState(null);
+  const [recommendationCount, setRecommendationCount] = useState(undefined);
   const [animeData, setAnimeData] = useState(null);
   const [favoriteAnimeID, setFavoriteAnimeID] = useState([]);
   const [isRecommendationFound, setIsRecommendationFound] = useState(false);
@@ -80,7 +80,7 @@ const RenderRecommendation = ({
   }, [recommendations]);
 
   useEffect(() => {
-    if (recommendationCount === null) {
+    if (recommendationCount === undefined) {
       setAnimeData(null);
       return;
     }
@@ -111,18 +111,18 @@ const RenderRecommendation = ({
           : "Anime which has similar theme to your favorite genres"}
       </CenteredBoldText>
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="backButton">
         <ButtonText>Go Back</ButtonText>
       </Button>
 
       <View style={styles.buttonGroup}>
         {recommendationCount > 0 && (
-          <SeparatedButton onPress={decreaseCount}>
+          <SeparatedButton onPress={decreaseCount} testID="decreaseButton">
             <ButtonText size="12px">Previous recommendation</ButtonText>
           </SeparatedButton>
         )}
         {recommendationCount < recommendations.length - 1 && (
-          <SeparatedButton onPress={increaseCount}>
+          <SeparatedButton onPress={increaseCount} testID="increaseButton">
             <ButtonText size="12px">Next recommendation</ButtonText>
           </SeparatedButton>
         )}
