@@ -12,6 +12,16 @@ export default {
     version: "1.0.0",
     assetBundlePatterns: ["**/*"],
     orientation: "portrait",
+    ios: {
+      bundleIdentifier: "com.WOrbital.Chattoku",
+      buildNumber: "1.0.0"
+    },
+    android: {
+      package: "com.WOrbital.Chattoku",
+      googleServicesFile: "./google-services.json",
+      useNextNotificationsApi: true,
+      versionCode: 1
+    },
     extra: {
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
