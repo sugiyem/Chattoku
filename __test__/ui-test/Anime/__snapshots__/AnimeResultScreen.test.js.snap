@@ -1,0 +1,241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test AnimeHomeScreen UI renders correctly 1`] = `
+<ViewManagerAdapter_ExpoLinearGradient
+  proxiedProperties={
+    Object {
+      "colors": Array [
+        4287090411,
+        4283256319,
+      ],
+      "endPoint": Array [
+        1,
+        1,
+      ],
+      "locations": undefined,
+      "startPoint": Array [
+        0,
+        0,
+      ],
+    }
+  }
+  style={
+    Object {
+      "flex": 1,
+      "padding": 5,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <TextInput
+      onChangeText={[MockFunction]}
+      placeholder="Search anime by original title"
+      style={
+        Array [
+          Object {
+            "backgroundColor": "#ffffff",
+            "borderColor": "#000000",
+            "borderRadius": 10,
+            "borderWidth": 1,
+            "color": "#000000",
+            "flexBasis": 0,
+            "flexGrow": 3,
+            "flexShrink": 1,
+            "marginBottom": 5,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 5,
+            "paddingBottom": 2,
+            "paddingLeft": 2,
+            "paddingRight": 2,
+            "paddingTop": 2,
+          },
+        ]
+      }
+      testID="searchInput"
+      value="test"
+    />
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "backgroundColor": "#483d8b",
+          "borderRadius": 10,
+          "flexBasis": 0,
+          "flexGrow": 1,
+          "flexShrink": 1,
+          "marginBottom": 5,
+          "marginLeft": 5,
+          "marginRight": 5,
+          "marginTop": 5,
+          "opacity": 1,
+          "paddingBottom": 5,
+          "paddingLeft": 5,
+          "paddingRight": 5,
+          "paddingTop": 5,
+        }
+      }
+      testID="searchButton"
+    >
+      <Text
+        color="#ffffff"
+        style={
+          Array [
+            Object {
+              "color": "#ffffff",
+              "fontSize": 14,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Search
+      </Text>
+    </View>
+  </View>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "backgroundColor": "#7FFFD4",
+        "borderRadius": 10,
+        "borderWidth": 1,
+        "marginBottom": 5,
+        "marginLeft": 5,
+        "marginRight": 5,
+        "marginTop": 5,
+        "opacity": 1,
+        "paddingBottom": 5,
+        "paddingLeft": 5,
+        "paddingRight": 5,
+        "paddingTop": 5,
+      }
+    }
+    testID="backButton"
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#483d8b",
+            "fontSize": 14,
+            "textAlign": "center",
+          },
+        ]
+      }
+    >
+      Go back
+    </Text>
+  </View>
+  <RCTScrollView
+    data={
+      Array [
+        Object {
+          "changeExpand": [MockFunction],
+          "changePage": [MockFunction],
+          "data": Array [],
+          "expand": null,
+          "page": 1,
+          "title": "Search Result",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={60}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={true}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={
+      Array [
+        0,
+      ]
+    }
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "margin": 5,
+        "paddingHorizontal": 5,
+      }
+    }
+    windowSize={30}
+  >
+    <View>
+      <View
+        onLayout={[Function]}
+        style={null}
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "fontFamily": "Gill Sans",
+                "fontSize": 30,
+                "fontWeight": "bold",
+                "textAlign": "center",
+                "textDecorationLine": "underline",
+              },
+              Object {
+                "marginBottom": 20,
+              },
+            ]
+          }
+          underline={true}
+        >
+          Search Result
+        </Text>
+      </View>
+      <View
+        onLayout={[Function]}
+        style={null}
+      >
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingHorizontal": 5,
+            }
+          }
+        >
+          <View />
+          <View />
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</ViewManagerAdapter_ExpoLinearGradient>
+`;
