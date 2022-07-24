@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  Alert
-} from "react-native";
+import { Alert } from "react-native";
 import { EditComment, AddComment } from "../../../services/Forum/HandleComment";
 import { renderType } from "../../../constants/Forum";
 import { PaddinglessContainer } from "../../../styles/GeneralStyles";
-import { ForumNavigation, NavigationText } from "../../../styles/ForumStyles";
+import {
+  ForumNavigation,
+  NavigationText,
+  ScrollContainer
+} from "../../../styles/ForumStyles";
 import MainPostCard from "../ForumPost/MainPostCard";
 import styled from "styled-components/native";
 
@@ -55,7 +52,7 @@ const RenderCommentScreen = ({ renderScreenType }) => {
   }
 
   return (
-    <PaddinglessContainer>
+    <ScrollContainer>
       <ForumNavigation onPress={() => navigation.goBack()}>
         <NavigationText>Go Back</NavigationText>
       </ForumNavigation>
@@ -72,7 +69,7 @@ const RenderCommentScreen = ({ renderScreenType }) => {
       <SubmitButton onPress={handleSubmit}>
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
-    </PaddinglessContainer>
+    </ScrollContainer>
   );
 };
 
