@@ -30,7 +30,7 @@ const BlockedUserListScreen = () => {
   }, []);
 
   const filteredBlockedUsers = blockedUsers.filter((data) =>
-    data.username.toLowerCase().startsWith(search.toLowerCase())
+    data.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const UserLists = () =>
@@ -49,7 +49,7 @@ const BlockedUserListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={(text) => setSearch(text)}
-          placeholder="Search requests by username"
+          placeholder="Search blocked users by username"
           testID="searchBar"
         />
 

@@ -57,7 +57,7 @@ const GroupChatListScreen = () => {
   }, []);
 
   const filteredChats = activeChats.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const ChatLists = () => {
@@ -81,7 +81,7 @@ const GroupChatListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search messages"
+          placeholder="Search Groups"
           testID="searchBar"
         />
 

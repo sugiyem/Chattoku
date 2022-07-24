@@ -30,7 +30,7 @@ const GroupRequestsScreen = ({ navigation }) => {
   }, []);
 
   const filteredRequests = groupRequests.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const GroupContactLists = () => (

@@ -47,7 +47,7 @@ const FriendListScreen = () => {
   });
 
   const filteredFriends = friends.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const UserLists = () =>

@@ -88,7 +88,7 @@ const AddGroupMemberScreen = ({ navigation, route }) => {
     }))
     .sort(reversedGroupMemberSorter)
     .filter((friend) =>
-      friend.username.toLowerCase().startsWith(search.toLowerCase())
+      friend.username.toLowerCase().includes(search.toLowerCase())
     );
 
   const FriendList = () =>

@@ -50,7 +50,7 @@ const GroupListScreen = ({ navigation }) => {
   }, []);
 
   const filteredGroups = groups.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const GroupContactLists = () => (

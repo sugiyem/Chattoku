@@ -14,7 +14,7 @@ const PostList = ({
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   const filteredPost = posts.filter((post) =>
-    post.title.toLowerCase().startsWith(search.toLowerCase())
+    post.title.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {

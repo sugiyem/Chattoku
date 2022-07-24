@@ -60,7 +60,10 @@ const AddFriendScreen = ({ navigation }) => {
         </SearchButton>
       </RowBar>
 
-      <Button onPress={() => navigation.replace("FriendList")} testID="friendList">
+      <Button
+        onPress={() => navigation.replace("FriendList")}
+        testID="friendList"
+      >
         <ButtonText>Back to friend's list</ButtonText>
       </Button>
 

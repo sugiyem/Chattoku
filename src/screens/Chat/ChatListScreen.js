@@ -57,7 +57,7 @@ const ChatListScreen = () => {
   }, []);
 
   const filteredChats = activeChats.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const ChatLists = () => {
@@ -81,7 +81,7 @@ const ChatListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search messages"
+          placeholder="Search Users"
           testID="searchBar"
         />
 
