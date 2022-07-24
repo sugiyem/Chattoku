@@ -1,10 +1,12 @@
 import { Icon } from "react-native-elements";
 import { Alert, Text } from "react-native";
-import { firebase } from "../../../services/Firebase/Config";
 import { useContext, useEffect, useState } from "react";
 import { DeleteComment } from "../../../services/Forum/HandleComment";
 import { useNavigation } from "@react-navigation/native";
-import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import {
+  FetchInfoById,
+  getCurrentUID
+} from "../../../services/Profile/FetchUserInfo";
 import Warning from "../Warning";
 import styled from "styled-components/native";
 import overlayContext from "../../../screens/Forum/overlayContext";
@@ -24,7 +26,7 @@ const CommentCard = ({
   lastEdited,
   isAuthorized
 }) => {
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const [userData, setUserData] = useState(initialUserData);
   const navigation = useNavigation();
   const setOverlayData = useContext(overlayContext);
@@ -88,7 +90,7 @@ const CommentCard = ({
 
   return (
     <Container>
-      <UserInfo onPress={() => setOverlayData(userData)}>
+      <UserInfo onPress={() => setOverlayData(userData)} testID="userInfo">
         <Profile
           source={
             userData.img !== ""
@@ -100,19 +102,19 @@ const CommentCard = ({
         <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
-      <Content> {content} </Content>
+      <Content testID="content"> {content} </Content>
       {!!lastEdited && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         {((!isBanned && currentUID === uid) ||
           isOwner ||
           (isAuthorized && !isOwnersPost)) && (
-          <Action onPress={handleDelete}>
+          <Action onPress={handleDelete} testID="deleteButton">
             <Icon name="delete" type="material" color="red" />
             <DeleteText> Delete </DeleteText>
           </Action>
         )}
         {!isBanned && currentUID === uid && (
-          <Action onPress={handleEditPress}>
+          <Action onPress={handleEditPress} testID="editButton">
             <Icon name="edit" type="material" />
             <Text> Edit </Text>
           </Action>

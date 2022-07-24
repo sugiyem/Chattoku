@@ -13,9 +13,10 @@ const OwnerCard = ({ userData }) => {
               ? { uri: userData.img }
               : require("../../../assets/default-profile.png")
           }
+          testID="image"
         />
         <InfoContainer>
-          <Username> {userData.username} </Username>
+          <Username testID="name"> {userData.username} </Username>
         </InfoContainer>
       </Card>
     </>

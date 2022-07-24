@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import styled from "styled-components/native";
-import { firebase } from "../../../services/Firebase/Config";
+import { getCurrentUID } from "../../../services/Profile/FetchUserInfo";
 import {
   AquaButton,
   AquaButtonText,
@@ -13,7 +13,7 @@ import { Container } from "../../../styles/GeneralStyles";
 const ManageForumScreen = () => {
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = forumData.owner === currentUID;
 
   console.log(isOwner);
@@ -32,20 +32,20 @@ const ManageForumScreen = () => {
 
   return (
     <Container>
-      <AquaButton onPress={navigation.goBack}>
+      <AquaButton onPress={navigation.goBack} testID="goBack">
         <AquaButtonText> Go Back </AquaButtonText>
       </AquaButton>
       <Title> Manage Forum </Title>
       <ButtonContainer>
         {isOwner && (
-          <DarkButton onPress={handleEditForumButton}>
+          <DarkButton onPress={handleEditForumButton} testID="editForum">
             <DarkButtonText> Edit Forum Details </DarkButtonText>
           </DarkButton>
         )}
-        <DarkButton onPress={handleBannedUsersButton}>
+        <DarkButton onPress={handleBannedUsersButton} testID="bannedUsers">
           <DarkButtonText> Banned Users </DarkButtonText>
         </DarkButton>
-        <DarkButton onPress={handleAdminButton}>
+        <DarkButton onPress={handleAdminButton} testID="admins">
           <DarkButtonText> Admins </DarkButtonText>
         </DarkButton>
       </ButtonContainer>

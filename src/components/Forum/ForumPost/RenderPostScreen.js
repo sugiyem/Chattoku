@@ -1,22 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { useRef, useState, useEffect } from "react";
-import {
-  Image,
-  Alert,
-  StyleSheet,
-  Dimensions,
-  BackHandler
-} from "react-native";
+import { Alert, Dimensions, BackHandler } from "react-native";
 import { editPost, addPost } from "../../../services/Forum/HandleForumPost";
 import { renderType } from "../../../constants/Forum";
 import styled from "styled-components/native";
 import {
   pickImageFromLibrary,
   removeAllImageFromCloud,
-  removeImageFromCloudStorage,
   uploadImage
 } from "../../../services/Miscellaneous/HandleImage";
-import { Icon } from "react-native-elements";
 import ImageSlider from "../../Miscellaneous/ImageSlider";
 import {
   ForumNavigation,
@@ -134,7 +126,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
 
   return (
     <ScrollContainer>
-      <ForumNavigation onPress={handleCancel}>
+      <ForumNavigation onPress={handleCancel} testID="goBack">
         <NavigationText>Go Back</NavigationText>
       </ForumNavigation>
       <Title>
@@ -146,6 +138,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
           placeholder="title"
           onChangeText={(t) => handleChange(t, "title")}
           value={post.title}
+          testID="titleInput"
         />
       </InputContainer>
       <InputContainer>
@@ -155,6 +148,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
           placeholder="content"
           onChangeText={(t) => handleChange(t, "content")}
           value={post.content}
+          testID="contentInput"
         />
       </InputContainer>
 
@@ -167,18 +161,20 @@ const RenderPostScreen = ({ renderScreenType }) => {
             state={[imageIndex, setImageIndex]}
           />
           <Button>
-            <ButtonText onPress={handleAddImage}>Add Another Image</ButtonText>
+            <ButtonText onPress={handleAddImage} testID="addOtherImage">
+              Add Another Image
+            </ButtonText>
           </Button>
-          <DeleteButton onPress={handleDeleteImage}>
+          <DeleteButton onPress={handleDeleteImage} testID="removeImage">
             <ButtonText> Delete Current Image </ButtonText>
           </DeleteButton>
         </>
       ) : (
-        <Button onPress={handleAddImage}>
+        <Button onPress={handleAddImage} testID="addFirstImage">
           <ButtonText>Add an Image </ButtonText>
         </Button>
       )}
-      <SubmitButton onPress={handleSubmit}>
+      <SubmitButton onPress={handleSubmit} testID="submit">
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
     </ScrollContainer>

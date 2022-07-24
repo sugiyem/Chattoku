@@ -24,9 +24,10 @@ const RenderUserToBan = ({ username, img, id, isAuthorized }) => {
               ? { uri: img }
               : require("../../../assets/default-profile.png")
           }
+          testID="image"
         />
         <InfoContainer>
-          <Username>{username}</Username>
+          <Username testID="name">{username}</Username>
         </InfoContainer>
       </Card>
 
@@ -35,8 +36,9 @@ const RenderUserToBan = ({ username, img, id, isAuthorized }) => {
         multiline={true}
         value={banDetail}
         onChangeText={setBanDetail}
+        testID="banInput"
       />
-      <CustomButton onPress={handleConfirmBanButton}>
+      <CustomButton onPress={handleConfirmBanButton} testID="banButton">
         <ButtonText> Ban </ButtonText>
       </CustomButton>
     </>

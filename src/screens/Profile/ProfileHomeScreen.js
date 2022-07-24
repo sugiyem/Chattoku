@@ -63,8 +63,8 @@ const ProfileHomeScreen = () => {
 
   async function logOut() {
     try {
+      await signOut();
       navigation.replace("Login");
-      signOut();
     } catch (error) {
       Alert.alert(error.message);
     }

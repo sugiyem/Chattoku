@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import {
+  FetchInfoById,
+  getCurrentUID
+} from "../../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { Icon } from "react-native-elements";
 import { Alert, Dimensions, StyleSheet, Text } from "react-native";
@@ -8,7 +11,6 @@ import { useNavigation } from "@react-navigation/native";
 import Warning from "../Warning";
 import ManageAdminCard from "./ManageAdminCard";
 import { renderType } from "../../../constants/Forum";
-import { firebase } from "../../../services/Firebase/Config";
 
 const initialUserData = {
   bio: "",
@@ -21,7 +23,7 @@ const ForumAdminCard = ({ userId, authorities }) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = forumData.owner === currentUID;
   const forumId = forumData.id;
 
@@ -94,6 +96,7 @@ const ForumAdminCard = ({ userId, authorities }) => {
             onPress={() => {
               setIsEditing(true);
             }}
+            testID="edit"
           />
           <Icon
             name="delete"
@@ -102,6 +105,7 @@ const ForumAdminCard = ({ userId, authorities }) => {
             size={35}
             iconStyle={styles.icon}
             onPress={handleDelete}
+            testID="delete"
           />
         </>
       )}

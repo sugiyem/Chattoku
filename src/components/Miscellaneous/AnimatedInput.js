@@ -51,7 +51,7 @@ const AnimatedInput = ({
   });
 
   if (value) {
-    handleFocus();
+    focusAnimation.start();
   }
 
   function handleFocus() {

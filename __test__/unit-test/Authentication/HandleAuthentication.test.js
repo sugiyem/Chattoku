@@ -72,9 +72,14 @@ describe("Test Authentication Handling", () => {
     });
   });
 
-  test("Can sign out", () => {
-    signOut(admin);
+  test("Can sign out", async (done) => {
+    try {
+      await signOut(admin);
 
-    expect(mockSignOut).toHaveBeenCalled();
+      expect(mockSignOut).toHaveBeenCalled();
+      done();
+    } catch (e) {
+      done.fail(e);
+    }
   });
 });
