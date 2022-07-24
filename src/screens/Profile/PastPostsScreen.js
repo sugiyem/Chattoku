@@ -25,10 +25,10 @@ const PastPostsScreen = () => {
 
   return (
     <Container>
-      <Button onPress={handleBackButtonClick}>
+      <Button onPress={handleBackButtonClick} testID="goBack">
         <ButtonText> Go Back</ButtonText>
       </Button>
-      <Title> Your Previous Posts </Title>
+      <Title testID="title"> Your Previous Posts </Title>
       <PastPostList postsData={postData} Header={() => <></>} />
     </Container>
   );

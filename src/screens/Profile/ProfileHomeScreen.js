@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { firebase } from "../../services/Firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
-import { deleteAccount } from "../../services/Authentication/HandleAuthentication";
+import {
+  deleteAccount,
+  signOut
+} from "../../services/Authentication/HandleAuthentication";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
@@ -62,7 +64,7 @@ const ProfileHomeScreen = () => {
   async function logOut() {
     try {
       navigation.replace("Login");
-      firebase.auth().signOut();
+      signOut();
     } catch (error) {
       Alert.alert(error.message);
     }
@@ -130,6 +132,7 @@ const ProfileHomeScreen = () => {
               onPress={() => {
                 navigation.navigate("PastPosts");
               }}
+              testID="pastPosts"
             >
               <ButtonText> Recent Posts </ButtonText>
             </Button>
@@ -137,15 +140,16 @@ const ProfileHomeScreen = () => {
               onPress={() => {
                 navigation.navigate("EditProfile", { userInfo: userInfo });
               }}
+              testID="editProfile"
             >
               <ButtonText>Edit Profile</ButtonText>
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button onPress={logOut}>
+            <Button onPress={logOut} testID="logOut">
               <ButtonText>Logout</ButtonText>
             </Button>
-            <DangerButton onPress={onDelete}>
+            <DangerButton onPress={onDelete} testID="delete">
               <DangerText>Delete Account</DangerText>
             </DangerButton>
           </ButtonGroup>
