@@ -42,7 +42,13 @@ const FollowedForumScreen = () => {
         <DarkButtonText> Discover New Forums </DarkButtonText>
       </RoundDarkButton>
       <ForumHomeTitle>Followed Forums</ForumHomeTitle>
-      <ForumList data={data} />
+      {data.length === 0 ? (
+        <NoDataContainer>
+          <NoDataText> You are currently not following any forum</NoDataText>
+        </NoDataContainer>
+      ) : (
+        <ForumList data={data} />
+      )}
       <CreateForumButton onPress={handleCreateForumClick} testID="createForum">
         <CreateForumText> Create Your Own Forum</CreateForumText>
       </CreateForumButton>
@@ -51,3 +57,21 @@ const FollowedForumScreen = () => {
 };
 
 export default FollowedForumScreen;
+
+const NoDataContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const NoDataText = styled.Text`
+  text-align: center;
+  color: #1f1f1f;
+  background-color: #eee;
+  font-size: 24px;
+  margin: 10px;
+  padding: 10px;
+  border-color: #1f1f1f;
+  border-width: 1px;
+  border-radius: 10px;
+`;
