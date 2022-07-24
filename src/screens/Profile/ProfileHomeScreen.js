@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { firebase } from "../../services/Firebase/Config";
 import { favoriteType } from "../../constants/Favorite";
-import { deleteAccount } from "../../services/Authentication/HandleAuthentication";
+import {
+  deleteAccount,
+  signOut
+} from "../../services/Authentication/HandleAuthentication";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import RenderFavorites from "../../components/Profile/RenderFavorites";
@@ -61,8 +63,8 @@ const ProfileHomeScreen = () => {
 
   async function logOut() {
     try {
+      await signOut();
       navigation.replace("Login");
-      firebase.auth().signOut();
     } catch (error) {
       Alert.alert(error.message);
     }
