@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import PostList from "../../components/Forum/ForumPost/PostList";
-import { firebase } from "../../services/Firebase/Config";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 import { createContext, useEffect, useState } from "react";
 import { isUserBanned } from "../../services/Forum/HandleBannedUsers";
@@ -25,7 +25,7 @@ const ForumScreen = () => {
   const [popupData, setPopupData] = useState(null);
   const navigation = useNavigation();
   const data = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = data.owner === currentUID;
 
   console.log(popupData);
@@ -67,11 +67,11 @@ const ForumScreen = () => {
         {popupData && <ProfileOverlay userData={popupData} />}
 
         <PaddinglessContainer>
-          <ForumNavigation onPress={() => navigation.goBack()}>
+          <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
             <NavigationText>Go Back</NavigationText>
           </ForumNavigation>
           {(isOwner || isAdmin) && (
-            <ForumNavigation onPress={handleEditForumButton}>
+            <ForumNavigation onPress={handleEditForumButton} testID="editForum">
               <NavigationText>Manage Forum</NavigationText>
             </ForumNavigation>
           )}
@@ -93,6 +93,7 @@ const ForumScreen = () => {
               color="#222"
               size={50}
               onPress={handleAddButtonClick}
+              testID="addPost"
             />
           )}
         </PaddinglessContainer>

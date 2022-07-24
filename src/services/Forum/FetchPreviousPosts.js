@@ -25,7 +25,7 @@ export function FetchPreviousPosts(callbackSuccess, app = firebase) {
       //Make an array of promise to fecth forum data and post data
       const PromisedData = data.map(async (ids) => {
         const result = {};
-        const docDontExist = false;
+        let docDontExist = false;
 
         await forumRef
           .doc(ids.forumId)

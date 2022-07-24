@@ -1,11 +1,13 @@
 import { Icon } from "react-native-elements";
 import { Alert, Text } from "react-native";
-import { firebase } from "../../../services/Firebase/Config";
 import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { deletePost } from "../../../services/Forum/HandleForumPost";
 import LikeBar from "./LikeBar";
-import { FetchInfoById } from "../../../services/Profile/FetchUserInfo";
+import {
+  FetchInfoById,
+  getCurrentUID
+} from "../../../services/Profile/FetchUserInfo";
 import Warning from "../Warning";
 import styled from "styled-components/native";
 import overlayContext from "../../../screens/Forum/overlayContext";
@@ -18,7 +20,7 @@ const initialUserData = {
 const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(initialUserData);
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const forumData = navigation.getState().routes[1].params.data;
   const setOverlayData = useContext(overlayContext);
   const isOwnersPost = forumData.owner === postData.uid;
@@ -101,7 +103,7 @@ const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
 
   return (
     <Container>
-      <UserInfo onPress={() => setOverlayData(userData)}>
+      <UserInfo onPress={() => setOverlayData(userData)} testID="userInfo">
         <Profile
           source={
             userData.img !== ""
@@ -113,24 +115,24 @@ const PostCard = ({ postData, forumId, isOwner, isBanned, isAuthorized }) => {
         <DateText> {dateText} </DateText>
       </UserInfo>
       <Divider />
-      <Title>{postData.title}</Title>
-      <Content> {postData.content} </Content>
+      <Title testID="title">{postData.title}</Title>
+      <Content testID="content"> {postData.content} </Content>
       {!!editedText && <EditedText> (Last Edited: {editedText})</EditedText>}
       <ActionBar>
         <LikeBar {...likeBarState} />
         <Action onPress={handleCommentPress}>
-          <Icon name="comment" type="material" color="blue" />
+          <Icon name="comment" type="material" color="blue" testID="comment" />
         </Action>
         {((!isBanned && currentUID === postData.uid) ||
           isOwner ||
           (isAuthorized && !isOwnersPost)) && (
           <Action onPress={handleDelete}>
-            <Icon name="delete" type="material" color="red" />
+            <Icon name="delete" type="material" color="red" testID="delete" />
           </Action>
         )}
         {!isBanned && currentUID === postData.uid && (
           <Action onPress={handleEditPress}>
-            <Icon name="edit" type="material" />
+            <Icon name="edit" type="material" testID="edit" />
           </Action>
         )}
       </ActionBar>

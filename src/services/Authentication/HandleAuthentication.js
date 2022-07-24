@@ -2,6 +2,7 @@ import { Alert } from "react-native";
 import { firebase } from "../Firebase/Config";
 import { registerForPushNotificationsAsync } from "../Miscellaneous/HandleNotification";
 import { MAXIMUM_BATCH_SIZE } from "../../constants/Batch";
+import { getCurrentUID } from "../Profile/FetchUserInfo";
 
 export function handleIsLoggedIn(onIsLoggedIn, app = firebase) {
   const currentUser = app.auth().currentUser;
@@ -71,7 +72,15 @@ export async function login(
   }
 }
 
-export function signOut(app = firebase) {
+export async function signOut(app = firebase) {
+  const currentUID = getCurrentUID(app);
+
+  await app
+    .firestore()
+    .collection("users")
+    .doc(currentUID)
+    .set({ notificationToken: null }, { merge: true });
+
   app.auth().signOut();
 }
 

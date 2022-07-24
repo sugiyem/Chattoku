@@ -104,26 +104,29 @@ const RenderManageForumDetails = ({ manageType }) => {
         presentationStyle="pageSheet"
       >
         <ModalContainer>
-          <ModalButton onPress={handlePickCameraImage}>
+          <ModalButton onPress={handlePickCameraImage} testID="pickFromCamera">
             <ButtonText>Take Photo</ButtonText>
           </ModalButton>
-          <ModalButton onPress={handlePickLibraryImage}>
+          <ModalButton
+            onPress={handlePickLibraryImage}
+            testID="pickFromLibrary"
+          >
             <ButtonText>Choose From Library</ButtonText>
           </ModalButton>
-          <ModalButton onPress={removeImage}>
+          <ModalButton onPress={removeImage} testID="removeImage">
             <ButtonText>Remove Image</ButtonText>
           </ModalButton>
-          <ModalButton onPress={() => setModalVisible(false)}>
+          <ModalButton onPress={() => setModalVisible(false)} testID="cancel">
             <ButtonText>Cancel</ButtonText>
           </ModalButton>
         </ModalContainer>
       </Modal>
 
-      <ForumNavigation onPress={() => navigation.goBack()}>
+      <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
         <NavigationText> Go Back </NavigationText>
       </ForumNavigation>
       <ImageContainer>
-        <TouchableOpacity onPress={handleUploadBannerClick}>
+        <TouchableOpacity onPress={handleUploadBannerClick} testID="banner">
           <Banner
             source={
               forumInfo.banner.length > 0
@@ -133,7 +136,7 @@ const RenderManageForumDetails = ({ manageType }) => {
           />
         </TouchableOpacity>
         <ProfileContainer>
-          <ProfileWrapper onPress={handleUploadProfileClick}>
+          <ProfileWrapper onPress={handleUploadProfileClick} testID="profile">
             <ProfilePicture
               source={
                 forumInfo.img.length > 0
@@ -149,13 +152,15 @@ const RenderManageForumDetails = ({ manageType }) => {
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "title")}
         value={forumInfo.title}
+        testID="titleInput"
       />
       <TextInputLabel> Description </TextInputLabel>
       <StyledTextInput
         onChangeText={(text) => handleChangeText(text, "desc")}
         value={forumInfo.desc}
+        testID="descInput"
       />
-      <DarkButton onPress={handleSubmit}>
+      <DarkButton onPress={handleSubmit} testID="submit">
         <DarkButtonText> {submitButtonText} </DarkButtonText>
       </DarkButton>
     </ScrollContainer>

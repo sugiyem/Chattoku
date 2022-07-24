@@ -1,5 +1,6 @@
 import { firebase } from "../../services/Firebase/Config";
 import { sendPushNotification } from "../Miscellaneous/HandleNotification";
+import { getCurrentUID } from "../Profile/FetchUserInfo";
 
 export default async function NotifyAllFollowers(
   forumId,
@@ -7,6 +8,7 @@ export default async function NotifyAllFollowers(
   postTitle,
   app = firebase
 ) {
+  let currentUID = getCurrentUID(app);
   let db = app.firestore();
 
   await db
@@ -15,13 +17,15 @@ export default async function NotifyAllFollowers(
     .collection("followers")
     .get()
     .then(async (querySnapshot) => {
-      console.log("This Part Is Reached");
       const data = [];
 
       //First get the userId
       querySnapshot.forEach((doc) => {
         //Skip users with notification turned off
         if (!doc.data().isNotificationOn) return;
+
+        //Skip the one who made the post
+        if (doc.id === currentUID) return;
 
         data.push(doc.id);
       });

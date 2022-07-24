@@ -20,5 +20,10 @@ export default FetchRecommendations = async ({
     .then((data) => {
       onSuccess(data);
     })
-    .catch((error) => Alert.alert("Error", error.message));
+    .catch((error) => {
+      if (error.message === "canceled") {
+        return;
+      }
+      Alert.alert("Error", error.message);
+    });
 };

@@ -42,7 +42,7 @@ const MainPostCard = ({
 
   return (
     <HeaderContainer>
-      <UserInfo onPress={() => setOverlayData(userData)}>
+      <UserInfo onPress={() => setOverlayData(userData)} testID="userInfo">
         <Profile
           source={
             userData.img !== ""
@@ -55,7 +55,7 @@ const MainPostCard = ({
       </UserInfo>
       <Divider />
       <Title>{title}</Title>
-      <Content> {content} </Content>
+      <Content testID="content"> {content} </Content>
       {img.length > 0 && <ImageSlider img={img} />}
       {!!lastEdited && <EditedText> (Last Edited: {lastEdited})</EditedText>}
       {!isEditing && <LikeBar forumId={forumId} postId={postId} />}

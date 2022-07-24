@@ -31,7 +31,7 @@ const AddAdminScreen = () => {
 
   return (
     <Container>
-      <AquaButton onPress={navigation.goBack}>
+      <AquaButton onPress={navigation.goBack} testID="goBack">
         <AquaButtonText> Go Back </AquaButtonText>
       </AquaButton>
       <Title>Add Forum Admin</Title>
@@ -40,8 +40,9 @@ const AddAdminScreen = () => {
           placeholder="Search By Exact Username"
           onChangeText={handleChangeText}
           value={username}
+          testID="searchBar"
         />
-        <CustomButton onPress={onSearchPress}>
+        <CustomButton onPress={onSearchPress} testID="searchButton">
           <ButtonText> Search </ButtonText>
         </CustomButton>
       </SearchContainer>

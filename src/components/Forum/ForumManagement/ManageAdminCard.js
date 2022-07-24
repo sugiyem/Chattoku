@@ -35,7 +35,7 @@ const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
 
     return (
       <BulletContainer key={power}>
-        <Selector onPress={onChange} isChosen={isSelected} />
+        <Selector onPress={onChange} isChosen={isSelected} testID={power} />
         <BulletText> {power} </BulletText>
       </BulletContainer>
     );
@@ -76,12 +76,13 @@ const ManageAdminCard = ({ userData, type, authorities, onSuccessfulEdit }) => {
               ? { uri: userData.img }
               : require("../../../assets/default-profile.png")
           }
+          testID="image"
         />
-        <Username> {userData.username} </Username>
+        <Username testID="name"> {userData.username} </Username>
       </UserDetails>
       <BulletText> Choose Authorization: </BulletText>
       {AuthoritiesSelection}
-      <CustomButton onPress={handleSubmit}>
+      <CustomButton onPress={handleSubmit} testID="submitButton">
         <ButtonText>
           {type === renderType.CREATE
             ? "Add User As Admin"

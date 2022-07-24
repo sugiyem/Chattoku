@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import BannedUsersList from "../../../components/Forum/ForumManagement/BannedUsersList";
-import { firebase } from "../../../services/Firebase/Config";
+import { getCurrentUID } from "../../../services/Profile/FetchUserInfo";
 import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
 import {
   AquaButton,
@@ -16,7 +16,7 @@ const BannedUsersScreen = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = forumData.owner === currentUID;
 
   useEffect(() => {
@@ -33,11 +33,11 @@ const BannedUsersScreen = () => {
 
   return (
     <Container>
-      <AquaButton onPress={navigation.goBack}>
+      <AquaButton onPress={navigation.goBack} testID="goBack">
         <AquaButtonText> Go Back </AquaButtonText>
       </AquaButton>
       {(isOwner || isAuthorized) && (
-        <DarkButton onPress={handleAddBannedUsers}>
+        <DarkButton onPress={handleAddBannedUsers} testID="addBanned">
           <DarkButtonText>Add Banned Users</DarkButtonText>
         </DarkButton>
       )}
