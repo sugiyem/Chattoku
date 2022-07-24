@@ -23,8 +23,8 @@ export default FetchUserInfo = ({
     );
 };
 
-export function getCurrentUID() {
-  return firebase.auth().currentUser.uid;
+export function getCurrentUID(app = firebase) {
+  return app.auth().currentUser.uid;
 }
 
 export function FetchAllUserInfos(onSuccess, app = firebase) {

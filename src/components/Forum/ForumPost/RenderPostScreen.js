@@ -1,22 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { useRef, useState, useEffect } from "react";
-import {
-  Image,
-  Alert,
-  StyleSheet,
-  Dimensions,
-  BackHandler
-} from "react-native";
+import { Alert, Dimensions, BackHandler } from "react-native";
 import { editPost, addPost } from "../../../services/Forum/HandleForumPost";
 import { renderType } from "../../../constants/Forum";
 import styled from "styled-components/native";
 import {
   pickImageFromLibrary,
   removeAllImageFromCloud,
-  removeImageFromCloudStorage,
   uploadImage
 } from "../../../services/Miscellaneous/HandleImage";
-import { Icon } from "react-native-elements";
 import ImageSlider from "../../Miscellaneous/ImageSlider";
 import {
   ForumNavigation,

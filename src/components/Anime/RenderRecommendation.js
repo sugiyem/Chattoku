@@ -47,6 +47,9 @@ const RenderRecommendation = ({
         setFavoriteAnimeID(data.map((item) => item.id));
       },
       onFailure: (error) => {
+        if (error.message === "canceled") {
+          return;
+        }
         Alert.alert("Error", error.message);
       }
     });
