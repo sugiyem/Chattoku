@@ -73,7 +73,7 @@ export async function login(
 }
 
 export async function signOut(app = firebase) {
-  const currentUID = getCurrentUID();
+  const currentUID = getCurrentUID(app);
 
   await app
     .firestore()

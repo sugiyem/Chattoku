@@ -8,7 +8,7 @@ export default async function NotifyAllFollowers(
   postTitle,
   app = firebase
 ) {
-  let currentUID = getCurrentUID();
+  let currentUID = getCurrentUID(app);
   let db = app.firestore();
 
   await db
