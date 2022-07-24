@@ -83,7 +83,13 @@ const RenderFriendSection = ({ userId }) => {
   if (status === friendshipType.FRIEND) {
     return (
       <Section onPress={handleRemove}>
-        <Icon name="person-remove" type="material" size={40} color="#c10015" />
+        <Icon
+          name="person-remove"
+          type="material"
+          size={40}
+          color="#c10015"
+          testID="unfriend"
+        />
         <NegativeText> Remove Friend</NegativeText>
       </Section>
     );
@@ -91,12 +97,24 @@ const RenderFriendSection = ({ userId }) => {
     return (
       <>
         <Section onPress={() => acceptFriendRequest(userId)}>
-          <Icon name="check" type="material" size={40} color="navy" />
+          <Icon
+            name="check"
+            type="material"
+            size={40}
+            color="navy"
+            testID="accept"
+          />
           <PositiveText> Accept Friend Request</PositiveText>
         </Section>
         <Divider />
         <Section onPress={handleDeny}>
-          <Icon name="close" type="material" size={40} color="#c10015" />
+          <Icon
+            name="close"
+            type="material"
+            size={40}
+            color="#c10015"
+            testID="decline"
+          />
           <NegativeText> Deny Friend Request </NegativeText>
         </Section>
       </>
@@ -104,14 +122,26 @@ const RenderFriendSection = ({ userId }) => {
   } else if (status === friendshipType.WAITING_RESPONSE) {
     return (
       <Section onPress={() => cancelFriendRequest(userId)}>
-        <Icon name="close" type="material" size={40} color="#c10015" />
+        <Icon
+          name="close"
+          type="material"
+          size={40}
+          color="#c10015"
+          testID="cancel"
+        />
         <NegativeText> Cancel Friend Request</NegativeText>
       </Section>
     );
   } else {
     return (
       <Section onPress={() => addFriend(userId)}>
-        <Icon name="person-add" type="material" size={40} color={"navy"} />
+        <Icon
+          name="person-add"
+          type="material"
+          size={40}
+          color={"navy"}
+          testID="addFriend"
+        />
         <PositiveText> Add Friend </PositiveText>
       </Section>
     );

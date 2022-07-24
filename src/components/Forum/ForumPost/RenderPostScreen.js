@@ -126,7 +126,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
 
   return (
     <ScrollContainer>
-      <ForumNavigation onPress={handleCancel}>
+      <ForumNavigation onPress={handleCancel} testID="goBack">
         <NavigationText>Go Back</NavigationText>
       </ForumNavigation>
       <Title>
@@ -138,6 +138,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
           placeholder="title"
           onChangeText={(t) => handleChange(t, "title")}
           value={post.title}
+          testID="titleInput"
         />
       </InputContainer>
       <InputContainer>
@@ -147,6 +148,7 @@ const RenderPostScreen = ({ renderScreenType }) => {
           placeholder="content"
           onChangeText={(t) => handleChange(t, "content")}
           value={post.content}
+          testID="contentInput"
         />
       </InputContainer>
 
@@ -159,18 +161,20 @@ const RenderPostScreen = ({ renderScreenType }) => {
             state={[imageIndex, setImageIndex]}
           />
           <Button>
-            <ButtonText onPress={handleAddImage}>Add Another Image</ButtonText>
+            <ButtonText onPress={handleAddImage} testID="addOtherImage">
+              Add Another Image
+            </ButtonText>
           </Button>
-          <DeleteButton onPress={handleDeleteImage}>
+          <DeleteButton onPress={handleDeleteImage} testID="removeImage">
             <ButtonText> Delete Current Image </ButtonText>
           </DeleteButton>
         </>
       ) : (
-        <Button onPress={handleAddImage}>
+        <Button onPress={handleAddImage} testID="addFirstImage">
           <ButtonText>Add an Image </ButtonText>
         </Button>
       )}
-      <SubmitButton onPress={handleSubmit}>
+      <SubmitButton onPress={handleSubmit} testID="submit">
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
     </ScrollContainer>

@@ -45,11 +45,14 @@ const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
 
   const RenderNotificationButton = () => {
     return isNotificationOn ? (
-      <NotificationOnWrapper onPress={handleNotificationClick}>
+      <NotificationOnWrapper onPress={handleNotificationClick} testID="turnOn">
         <Icon type="material" name="notifications-active" color="blue" />
       </NotificationOnWrapper>
     ) : (
-      <NotificationOffWrapper onPress={handleNotificationClick}>
+      <NotificationOffWrapper
+        onPress={handleNotificationClick}
+        testID="turnOff"
+      >
         <Icon type="material" name="notifications-off" color="gray" />
       </NotificationOffWrapper>
     );
@@ -63,7 +66,7 @@ const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
     ) : (
       <>
         {isFollowed && <RenderNotificationButton />}
-        <FollowButton onPress={handleButtonClick}>
+        <FollowButton onPress={handleButtonClick} testID="followButton">
           <ButtonText> {isFollowed ? "Unfollow" : "Follow"} </ButtonText>
         </FollowButton>
       </>
@@ -77,19 +80,21 @@ const ForumHeader = ({ id, img, title, banner, desc, isOwner }) => {
             ? { uri: banner }
             : require("../../assets/default-banner.png")
         }
+        testID="banner"
       />
       <ForumDetails>
         <TitleContainer>
-          <Title>{title}</Title>
+          <Title testID="title">{title}</Title>
           <RenderButton />
         </TitleContainer>
-        <Desc> {desc} </Desc>
+        <Desc testID="desc"> {desc} </Desc>
         <Logo
           source={
             img !== ""
               ? { uri: img }
               : require("../../assets/default-profile.png")
           }
+          testID="logo"
         />
       </ForumDetails>
     </HeaderContainer>

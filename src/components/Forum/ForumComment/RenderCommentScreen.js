@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
 import { EditComment, AddComment } from "../../../services/Forum/HandleComment";
 import { renderType } from "../../../constants/Forum";
-import { PaddinglessContainer } from "../../../styles/GeneralStyles";
 import {
   ForumNavigation,
   NavigationText,
@@ -53,7 +52,7 @@ const RenderCommentScreen = ({ renderScreenType }) => {
 
   return (
     <ScrollContainer>
-      <ForumNavigation onPress={() => navigation.goBack()}>
+      <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
         <NavigationText>Go Back</NavigationText>
       </ForumNavigation>
 
@@ -64,9 +63,10 @@ const RenderCommentScreen = ({ renderScreenType }) => {
         placeholder={inputPlaceholder}
         onChangeText={(t) => setComment(t)}
         value={comment}
+        testID="input"
       />
 
-      <SubmitButton onPress={handleSubmit}>
+      <SubmitButton onPress={handleSubmit} testID="submit">
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
     </ScrollContainer>

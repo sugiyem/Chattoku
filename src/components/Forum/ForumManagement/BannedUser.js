@@ -39,7 +39,7 @@ const BannedUser = ({ userId, reason, isAuthorized }) => {
       />
       <InfoContainer>
         <Username> {userData.username} </Username>
-        <Text> {reason}</Text>
+        <Text testID="reason"> {reason}</Text>
       </InfoContainer>
       {isAuthorized && (
         <Icon
@@ -48,6 +48,7 @@ const BannedUser = ({ userId, reason, isAuthorized }) => {
           color="red"
           size={40}
           onPress={handleDelete}
+          testID="delete"
         />
       )}
     </Card>
