@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Modal, Platform, Dimensions, TouchableOpacity } from "react-native";
+import {
+  Modal,
+  Platform,
+  Dimensions,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 import styled from "styled-components/native";
 import {
   pickImageFromCamera,
@@ -90,6 +96,11 @@ const RenderManageForumDetails = ({ manageType }) => {
   };
 
   const handleSubmit = () => {
+    if (!forumInfo.title) {
+      Alert.alert("Invalid Field", "Forum Title Can Not Be Empty");
+      return;
+    }
+
     manageType === renderType.CREATE
       ? createForum(forumInfo, () => navigation.navigate("ForumHome"))
       : editForum(forumInfo, () => {

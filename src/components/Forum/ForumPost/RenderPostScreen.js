@@ -67,6 +67,16 @@ const RenderPostScreen = ({ renderScreenType }) => {
   }
 
   function handleSubmit() {
+    if (!post.title) {
+      Alert.alert("Invalid Field", "Title Can Not Be Empty");
+      return;
+    }
+
+    if (!post.content) {
+      Alert.alert("Invalid Field", "Content Can Not Be Empty");
+      return;
+    }
+
     const unusedImg = allImg.filter((img) => !post.img.includes(img));
 
     const onSuccess = () => {

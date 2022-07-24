@@ -32,6 +32,11 @@ const RenderCommentScreen = ({ renderScreenType }) => {
       : "Add Comment...";
 
   function handleSubmit() {
+    if (!comment) {
+      Alert.alert("Invalid Comment", "Comment Can Not Be Empty");
+      return;
+    }
+
     renderScreenType === renderType.EDIT
       ? EditComment(
           commentData.forumId,
