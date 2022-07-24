@@ -57,7 +57,6 @@ exports[`Test Profile Home Screen UI Renders correctly 1`] = `
               },
             ]
           }
-          testID="image"
         />
         <Text
           style={
@@ -70,7 +69,6 @@ exports[`Test Profile Home Screen UI Renders correctly 1`] = `
               },
             ]
           }
-          testID="name"
         >
           
         </Text>
@@ -86,7 +84,6 @@ exports[`Test Profile Home Screen UI Renders correctly 1`] = `
               },
             ]
           }
-          testID="bio"
         >
           
         </Text>
