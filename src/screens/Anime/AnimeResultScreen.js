@@ -67,7 +67,7 @@ const AnimeResultScreen = ({ navigation, route }) => {
           navigation={navigation}
         />
 
-        <Button onPress={() => navigation.goBack()}>
+        <Button onPress={() => navigation.goBack()} testID="backButton">
           <ButtonText>Go back</ButtonText>
         </Button>
 

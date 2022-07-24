@@ -111,6 +111,7 @@ const AnimeHomeScreen = () => {
         <Button
           onPress={() => navigation.navigate("Recommendation")}
           color="#00ffff"
+          testID="recommendationButton"
         >
           <ButtonText>Find Recommendations</ButtonText>
         </Button>

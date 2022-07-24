@@ -27,12 +27,15 @@ const RecommendationScreen = ({ navigation }) => {
 
   const RenderPage = () => (
     <Container>
-      <BackButton onPress={() => navigation.goBack()}>
+      <BackButton onPress={() => navigation.goBack()} testID="backButton">
         <ButtonText>Go Back</ButtonText>
       </BackButton>
 
       <ButtonContainer>
-        <Options onPress={() => navigation.navigate("FavoriteAnime")}>
+        <Options
+          onPress={() => navigation.navigate("FavoriteAnime")}
+          testID="animeButton"
+        >
           <OptionText>Check recommendation from your favorite anime</OptionText>
         </Options>
 
@@ -42,6 +45,7 @@ const RecommendationScreen = ({ navigation }) => {
               genres: genres
             })
           }
+          testID="genreButton"
         >
           <OptionText>Check recommendation from your favorite genre</OptionText>
         </Options>

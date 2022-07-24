@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test RecommendationScreen UI Renders Correctly 1`] = `
+<ViewManagerAdapter_ExpoLinearGradient
+  proxiedProperties={
+    Object {
+      "colors": Array [
+        4287090411,
+        4283256319,
+      ],
+      "endPoint": Array [
+        1,
+        1,
+      ],
+      "locations": undefined,
+      "startPoint": Array [
+        0,
+        0,
+      ],
+    }
+  }
+  style={
+    Object {
+      "flex": 1,
+      "padding": 5,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "backgroundColor": "cyan",
+        "borderRadius": 10,
+        "borderWidth": 1,
+        "justifyContent": "flex-start",
+        "marginBottom": 5,
+        "marginLeft": 5,
+        "marginRight": 5,
+        "marginTop": 5,
+        "opacity": 1,
+        "paddingBottom": 5,
+        "paddingLeft": 5,
+        "paddingRight": 5,
+        "paddingTop": 5,
+      }
+    }
+    testID="backButton"
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#483d8b",
+            "fontSize": 14,
+            "textAlign": "center",
+          },
+        ]
+      }
+    >
+      Go Back
+    </Text>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "flexBasis": 0,
+          "flexGrow": 1,
+          "flexShrink": 1,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "backgroundColor": "#44d0fe",
+          "borderColor": "navy",
+          "borderRadius": 20,
+          "borderWidth": 2,
+          "marginBottom": 15,
+          "marginLeft": 15,
+          "marginRight": 15,
+          "marginTop": 15,
+          "opacity": 1,
+          "paddingBottom": 20,
+          "paddingLeft": 20,
+          "paddingRight": 20,
+          "paddingTop": 20,
+        }
+      }
+      testID="animeButton"
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "navy",
+              "fontSize": 22,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Check recommendation from your favorite anime
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "backgroundColor": "#44d0fe",
+          "borderColor": "navy",
+          "borderRadius": 20,
+          "borderWidth": 2,
+          "marginBottom": 15,
+          "marginLeft": 15,
+          "marginRight": 15,
+          "marginTop": 15,
+          "opacity": 1,
+          "paddingBottom": 20,
+          "paddingLeft": 20,
+          "paddingRight": 20,
+          "paddingTop": 20,
+        }
+      }
+      testID="genreButton"
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "navy",
+              "fontSize": 22,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Check recommendation from your favorite genre
+      </Text>
+    </View>
+  </View>
+</ViewManagerAdapter_ExpoLinearGradient>
+`;
