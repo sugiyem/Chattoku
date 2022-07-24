@@ -56,7 +56,7 @@ const RenderCommentScreen = ({ renderScreenType }) => {
 
   return (
     <PaddinglessContainer>
-      <ForumNavigation onPress={() => navigation.goBack()}>
+      <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
         <NavigationText>Go Back</NavigationText>
       </ForumNavigation>
 
@@ -67,9 +67,10 @@ const RenderCommentScreen = ({ renderScreenType }) => {
         placeholder={inputPlaceholder}
         onChangeText={(t) => setComment(t)}
         value={comment}
+        testID="input"
       />
 
-      <SubmitButton onPress={handleSubmit}>
+      <SubmitButton onPress={handleSubmit} testID="submit">
         <SubmitText>{submitButtonText}</SubmitText>
       </SubmitButton>
     </PaddinglessContainer>

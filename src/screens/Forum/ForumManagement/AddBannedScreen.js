@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import GetUserWithUsername from "../../../services/Friend/GetUserWithUsername";
 import RenderUserToManage from "../../../components/Forum/ForumManagement/RenderUserToManage";
-import { firebase } from "../../../services/Firebase/Config";
+import { getCurrentUID } from "../../../services/Profile/FetchUserInfo";
 import { isAuthorizedToBanUsers } from "../../../services/Forum/HandleForumAdmin";
 import { manageType } from "../../../constants/Forum";
 import { Container } from "../../../styles/GeneralStyles";
@@ -16,7 +16,7 @@ const AddBannedScreen = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
   const forumData = navigation.getState().routes[1].params.data;
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
   const isOwner = forumData.owner === currentUID;
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const AddBannedScreen = () => {
 
   return (
     <Container>
-      <AquaButton onPress={navigation.goBack}>
+      <AquaButton onPress={navigation.goBack} testID="goBack">
         <AquaButtonText> Go Back </AquaButtonText>
       </AquaButton>
       <Title>Ban a User</Title>
@@ -52,8 +52,9 @@ const AddBannedScreen = () => {
           placeholder="Search By Exact Username"
           onChangeText={handleChangeText}
           value={username}
+          testID="searchBar"
         />
-        <CustomButton onPress={onSearchPress}>
+        <CustomButton onPress={onSearchPress} testID="searchButton">
           <ButtonText> Search </ButtonText>
         </CustomButton>
       </SearchContainer>

@@ -13,13 +13,14 @@ import {
   DarkButtonText,
   ForumHomeTitle
 } from "../../styles/ForumStyles";
+import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
 
 const initialData = [];
 
 const FollowedForumScreen = () => {
   const [data, setData] = useState(initialData);
   const navigation = useNavigation();
-  const currentUID = firebase.auth().currentUser.uid;
+  const currentUID = getCurrentUID();
 
   console.log(data);
 
@@ -37,12 +38,12 @@ const FollowedForumScreen = () => {
 
   return (
     <Container>
-      <RoundDarkButton onPress={handleDiscoverForumClick}>
+      <RoundDarkButton onPress={handleDiscoverForumClick} testID="homeForum">
         <DarkButtonText> Discover New Forums </DarkButtonText>
       </RoundDarkButton>
       <ForumHomeTitle>Followed Forums</ForumHomeTitle>
       <ForumList data={data} />
-      <CreateForumButton onPress={handleCreateForumClick}>
+      <CreateForumButton onPress={handleCreateForumClick} testID="createForum">
         <CreateForumText> Create Your Own Forum</CreateForumText>
       </CreateForumButton>
     </Container>
