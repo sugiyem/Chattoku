@@ -26,7 +26,7 @@ describe("Test Profile Home Screen UI", () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it("All interactable components are working as expected", () => {
+  it("All interactable components are working as expected", async () => {
     const { getByTestId } = render(<ProfileHomeScreen />);
 
     // Edit button is working
@@ -41,7 +41,7 @@ describe("Test Profile Home Screen UI", () => {
     expect(mockNavigate).toHaveBeenLastCalledWith("PastPosts");
 
     // Logout button is working
-    fireEvent.press(getByTestId("logOut"));
+    await fireEvent.press(getByTestId("logOut"));
     expect(mockReplace).toHaveBeenCalledWith("Login");
     expect(signOut).toHaveBeenCalled();
 
