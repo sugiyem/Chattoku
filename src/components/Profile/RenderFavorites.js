@@ -28,7 +28,7 @@ const RenderFavorites = ({ type, items, navigation = null }) => {
           }
         }}
       >
-        <ButtonText>
+        <ButtonText testID="addButton">
           {isGenre
             ? "Add more genres to favorite"
             : "Add more anime to favorite"}
@@ -39,9 +39,9 @@ const RenderFavorites = ({ type, items, navigation = null }) => {
         <Card key={i}>
           {!isGenre && <Visual source={{ uri: item.image }} />}
           <ListItem.Content>
-            <Title>{isGenre ? item : item.title}</Title>
+            <Title testID={`title-${i}`}>{isGenre ? item : item.title}</Title>
           </ListItem.Content>
-          <DeleteIcon onPress={() => handleDelete(item)}>
+          <DeleteIcon onPress={() => handleDelete(item)} testID={`delete-${i}`}>
             <Icon name="delete" type="material" size={30} color="#c10015" />
           </DeleteIcon>
         </Card>

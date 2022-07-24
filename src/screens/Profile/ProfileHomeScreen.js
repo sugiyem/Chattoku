@@ -132,6 +132,7 @@ const ProfileHomeScreen = () => {
               onPress={() => {
                 navigation.navigate("PastPosts");
               }}
+              testID="pastPosts"
             >
               <ButtonText> Recent Posts </ButtonText>
             </Button>
@@ -139,15 +140,16 @@ const ProfileHomeScreen = () => {
               onPress={() => {
                 navigation.navigate("EditProfile", { userInfo: userInfo });
               }}
+              testID="editProfile"
             >
               <ButtonText>Edit Profile</ButtonText>
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button onPress={logOut}>
+            <Button onPress={logOut} testID="logOut">
               <ButtonText>Logout</ButtonText>
             </Button>
-            <DangerButton onPress={onDelete}>
+            <DangerButton onPress={onDelete} testID="delete">
               <DangerText>Delete Account</DangerText>
             </DangerButton>
           </ButtonGroup>

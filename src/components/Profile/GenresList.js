@@ -34,6 +34,7 @@ const GenresList = ({ genres, favorites }) => {
               onPress={() => {
                 handleFavoriteClick(genre, isFavorite);
               }}
+              testID={`edit-${genre}`}
             >
               <Icon name={iconName} size={40} color={iconColor} />
             </StarIcon>

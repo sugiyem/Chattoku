@@ -4,6 +4,7 @@ import { CheckBox } from "react-native-elements";
 import { GENRES } from "../../constants/MyAnimeList";
 import GenresList from "../../components/Profile/GenresList";
 import { ScrollContainer } from "../../styles/GeneralStyles";
+import FetchUserInfo from "../../services/Profile/FetchUserInfo";
 import styled from "styled-components/native";
 
 const EditGenreScreen = ({ navigation }) => {
@@ -29,6 +30,7 @@ const EditGenreScreen = ({ navigation }) => {
         value={search}
         onChangeText={(text) => setSearch(text)}
         placeholder="search"
+        testID="searchBar"
       />
 
       <CheckBox
@@ -38,6 +40,7 @@ const EditGenreScreen = ({ navigation }) => {
           setIncludeFav(!includeFav);
         }}
         containerStyle={styles.checkbox}
+        testID="favoriteCheckBox"
       />
 
       <CheckBox
@@ -47,9 +50,10 @@ const EditGenreScreen = ({ navigation }) => {
           setIncludeNonFav(!includeNonFav);
         }}
         containerStyle={styles.checkbox}
+        testID="nonFavoriteCheckBox"
       />
 
-      <Button onPress={() => navigation.goBack()}>
+      <Button onPress={() => navigation.goBack()} testID="goBack">
         <ButtonText>Go back</ButtonText>
       </Button>
 
