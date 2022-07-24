@@ -21,6 +21,7 @@ import {
 } from "../services/Authentication/AuthNavigation";
 import AnimatedInput from "../components/Miscellaneous/AnimatedInput";
 import Loading from "../components/Miscellaneous/Loading";
+import { firebase } from "../services/Firebase/Config";
 
 const initialState = {
   email: "",
@@ -42,13 +43,16 @@ const LoginScreen = ({ navigation }) => {
     setIsLoading(true);
     await login(
       credentials,
-      () => navigation.replace("Dashboard"),
+      () => {},
       () => setIsLoading(false)
     );
   }
 
   useEffect(() => {
-    handleIsLoggedIn(() => {
+    return firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        return;
+      }
       navigation.replace("Dashboard");
     });
   });
