@@ -42,18 +42,19 @@ const PastPostCard = ({ forumData, postData }) => {
               ? { uri: forumData.img }
               : require("../../assets/default-profile.png")
           }
+          testID="forumImg"
         />
-        <ForumName> {forumData.title}</ForumName>
-        <DateText> {dateText} </DateText>
+        <ForumName testID="forumName"> {forumData.title}</ForumName>
+        <DateText testID="postDate"> {dateText} </DateText>
       </ForumInfo>
-      <Title>{postData.title}</Title>
-      <Content> {postData.content} </Content>
+      <Title testID="postTitle">{postData.title}</Title>
+      <Content testID="postContent"> {postData.content} </Content>
       {!!editedText && <EditedText>(Last Edited: {editedText})</EditedText>}
       <ButtonContainer>
-        <CustomButton onPress={navigateToPost}>
+        <CustomButton onPress={navigateToPost} testID="goToPost">
           <Text> See Full Post </Text>
         </CustomButton>
-        <CustomButton onPress={navigateToForum}>
+        <CustomButton onPress={navigateToForum} testID="goToForum">
           <Text>Go To Forum</Text>
         </CustomButton>
       </ButtonContainer>
