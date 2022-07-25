@@ -152,6 +152,122 @@ exports[`Test AnimeHomeScreen UI renders correctly 1`] = `
       Find Recommendations
     </Text>
   </View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "flexDirection": "row",
+          "justifyContent": "space-evenly",
+          "width": 730,
+        },
+      ]
+    }
+  >
+    <View>
+      <View
+        style={
+          Object {
+            "overflow": "hidden",
+          }
+        }
+      >
+        <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          testID="airingIcon"
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text />
+          </View>
+        </View>
+      </View>
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#002244",
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Airing Anime
+      </Text>
+    </View>
+    <View>
+      <View
+        style={
+          Object {
+            "overflow": "hidden",
+          }
+        }
+      >
+        <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          testID="topIcon"
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text />
+          </View>
+        </View>
+      </View>
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#002244",
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Top Anime
+      </Text>
+    </View>
+  </View>
   <RCTScrollView
     data={
       Array [
@@ -162,14 +278,6 @@ exports[`Test AnimeHomeScreen UI renders correctly 1`] = `
           "expand": null,
           "page": 1,
           "title": "Airing Anime",
-        },
-        Object {
-          "changeExpand": [MockFunction],
-          "changePage": [MockFunction],
-          "data": Array [],
-          "expand": null,
-          "page": 1,
-          "title": "Top Anime",
         },
       ]
     }
@@ -190,7 +298,6 @@ exports[`Test AnimeHomeScreen UI renders correctly 1`] = `
     stickyHeaderIndices={
       Array [
         0,
-        2,
       ]
     }
     style={
@@ -225,47 +332,6 @@ exports[`Test AnimeHomeScreen UI renders correctly 1`] = `
           underline={true}
         >
           Airing Anime
-        </Text>
-      </View>
-      <View
-        onLayout={[Function]}
-        style={null}
-      >
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "paddingHorizontal": 5,
-            }
-          }
-        >
-          <View />
-          <View />
-        </View>
-      </View>
-      <View
-        onLayout={[Function]}
-        style={null}
-      >
-        <Text
-          style={
-            Array [
-              Object {
-                "fontFamily": "Gill Sans",
-                "fontSize": 30,
-                "fontWeight": "bold",
-                "textAlign": "center",
-                "textDecorationLine": "underline",
-              },
-              Object {
-                "marginBottom": 20,
-              },
-            ]
-          }
-          underline={true}
-        >
-          Top Anime
         </Text>
       </View>
       <View

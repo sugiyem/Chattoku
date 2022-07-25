@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/core";
 import { Button, ButtonText, Container } from "../../styles/GeneralStyles";
-
+import { Icon } from "react-native-elements";
+import { IconGroup, IconText } from "../../styles/GeneralStyles";
 import AnimeCollection from "../../components/Anime/AnimeCollection";
 import AnimeFetch from "../../services/Anime/AnimeFetch";
 import AnimeSearchBar from "../../components/Anime/AnimeSearchBar";
 import FetchFavoriteAnime from "../../services/Anime/FetchFavoriteAnime";
 import Loading from "../../components/Miscellaneous/Loading";
 import { fetchType } from "../../constants/MyAnimeList";
+import { View } from "react-native";
 
 const AnimeHomeScreen = () => {
   const [search, setSearch] = useState("");
@@ -20,10 +22,11 @@ const AnimeHomeScreen = () => {
   const [favoriteList, setFavoriteList] = useState([]);
   const [isAiringLoaded, setIsAiringLoaded] = useState(false);
   const [isTopLoaded, setIsTopLoaded] = useState(false);
+  const [animeType, setAnimeType] = useState(fetchType.AIRING);
 
   const navigation = useNavigation();
 
-  const animeCollectionItems = [
+  const airingAnimeItems = [
     {
       title: "Airing Anime",
       data: airingAnimeData,
@@ -31,7 +34,10 @@ const AnimeHomeScreen = () => {
       changeExpand: setAiringExpanded,
       page: airingPage,
       changePage: setAiringPage
-    },
+    }
+  ];
+
+  const topAnimeItems = [
     {
       title: "Top Anime",
       data: topAnimeData,
@@ -98,6 +104,17 @@ const AnimeHomeScreen = () => {
   }, [topPage]);
 
   const isPageLoading = !(isAiringLoaded && isTopLoaded);
+  const isAiringAnimeShown = animeType === fetchType.AIRING;
+  const airingIconColor = isAiringAnimeShown ? "#4C516D" : "navy";
+  const topIconColor = isAiringAnimeShown ? "navy" : "#4C516D";
+
+  function onAiringIconPress() {
+    setAnimeType(fetchType.AIRING);
+  }
+
+  function onTopIconPress() {
+    setAnimeType(fetchType.TOP);
+  }
 
   return (
     <Loading isLoading={isPageLoading}>
@@ -116,7 +133,35 @@ const AnimeHomeScreen = () => {
           <ButtonText>Find Recommendations</ButtonText>
         </Button>
 
-        <AnimeCollection items={animeCollectionItems} favorite={favoriteList} />
+        <IconGroup>
+          <View>
+            <Icon
+              type="material"
+              name="live-tv"
+              size={30}
+              color={airingIconColor}
+              onPress={onAiringIconPress}
+              testID="airingIcon"
+            />
+            <IconText>Airing Anime</IconText>
+          </View>
+          <View>
+            <Icon
+              type="material-community"
+              name="medal"
+              size={30}
+              color={topIconColor}
+              onPress={onTopIconPress}
+              testID="topIcon"
+            />
+            <IconText>Top Anime</IconText>
+          </View>
+        </IconGroup>
+
+        <AnimeCollection
+          items={isAiringAnimeShown ? airingAnimeItems : topAnimeItems}
+          favorite={favoriteList}
+        />
       </Container>
     </Loading>
   );
