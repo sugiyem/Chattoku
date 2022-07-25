@@ -61,7 +61,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
     }))
     .sort(groupMemberSorter)
     .filter((member) =>
-      member.username.toLowerCase().startsWith(search.toLowerCase())
+      member.username.toLowerCase().includes(search.toLowerCase())
     );
 
   return (
@@ -74,7 +74,9 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Member's List</BoldText>
+        <BoldText underline testID="title">
+          Member's List
+        </BoldText>
 
         <Button onPress={() => navigation.goBack()} testID="goBack">
           <ButtonText> Go back</ButtonText>

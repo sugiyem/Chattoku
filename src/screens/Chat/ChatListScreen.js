@@ -57,15 +57,15 @@ const ChatListScreen = () => {
   }, []);
 
   const filteredChats = activeChats.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const ChatLists = () => {
     return (
       <ChatListContainer>
-        {filteredChats.map((item, index) => (
+        {filteredChats.map((item) => (
           <ActiveChatLists
-            key={index}
+            key={item.id}
             type={chatType.PRIVATE_CHAT}
             item={item}
             navigation={navigation}
@@ -81,7 +81,7 @@ const ChatListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search messages"
+          placeholder="Search Users"
           testID="searchBar"
         />
 

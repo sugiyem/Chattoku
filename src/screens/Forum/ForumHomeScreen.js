@@ -12,16 +12,25 @@ import {
   DarkButtonText,
   ForumHomeTitle
 } from "../../styles/ForumStyles";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const initialData = [];
 
 const ForumHomeScreen = () => {
   const [data, setData] = useState(initialData);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
     // console.log("useEffect triggered");
-    return FetchForumData(setData, (e) => Alert.alert(e));
+    setIsLoading(true);
+    return FetchForumData(
+      (forumData) => {
+        setData(forumData);
+        setIsLoading(false);
+      },
+      (e) => Alert.alert(e)
+    );
   }, []);
 
   function handleCreateForumClick() {
@@ -33,19 +42,24 @@ const ForumHomeScreen = () => {
   }
 
   return (
-    <Container>
-      <RoundDarkButton
-        onPress={navigateToFollowedForumScreen}
-        testID="followedForum"
-      >
-        <DarkButtonText> See Forums You Have Followed </DarkButtonText>
-      </RoundDarkButton>
-      <ForumHomeTitle>Discover forums</ForumHomeTitle>
-      <ForumList data={data} />
-      <CreateForumButton onPress={handleCreateForumClick} testID="createForum">
-        <CreateForumText> Create Your Own Forum </CreateForumText>
-      </CreateForumButton>
-    </Container>
+    <Loading isLoading={isLoading}>
+      <Container>
+        <RoundDarkButton
+          onPress={navigateToFollowedForumScreen}
+          testID="followedForum"
+        >
+          <DarkButtonText> See Forums You Have Followed </DarkButtonText>
+        </RoundDarkButton>
+        <ForumHomeTitle>Discover forums</ForumHomeTitle>
+        <ForumList data={data} />
+        <CreateForumButton
+          onPress={handleCreateForumClick}
+          testID="createForum"
+        >
+          <CreateForumText> Create Your Own Forum </CreateForumText>
+        </CreateForumButton>
+      </Container>
+    </Loading>
   );
 };
 

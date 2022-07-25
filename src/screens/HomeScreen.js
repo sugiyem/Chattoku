@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 const HomeScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="ForumHome"
+      initialRouteName="FollowedForums"
       screenOptions={{ headerShown: false }}
     >
       {/* For displaying forums */}

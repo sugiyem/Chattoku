@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Dimensions, Platform, StyleSheet, Text } from "react-native";
 import styled from "styled-components/native";
+import { FUN_FACTS } from "../../assets/funfacts";
 
 const Circle = ({ delay }) => {
   const oscilate = useRef(new Animated.Value(1)).current;
@@ -78,15 +79,24 @@ const FlickeringText = () => {
   );
 };
 
+function getRandomIndex() {
+  return Math.floor(Math.random() * FUN_FACTS.length);
+}
+
 const LoaderAnimation = () => {
+  const [index, setIndex] = useState(getRandomIndex());
+  const fact = FUN_FACTS[index];
+
   return (
-    <Container>
+    <Container onPress={() => setIndex(getRandomIndex())}>
       <FlickeringText />
       <CirclesContainer>
         <Circle delay={0} />
         <Circle delay={400} />
         <Circle delay={800} />
       </CirclesContainer>
+      <FunFactTitle>{fact.animeName}</FunFactTitle>
+      <FunFact>{fact.fact}</FunFact>
     </Container>
   );
 };
@@ -95,11 +105,25 @@ export default LoaderAnimation;
 
 const width = Dimensions.get("screen").width;
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   width: ${width}px;
   flex: 1;
   align-items: center;
   justify-content: center;
+`;
+
+const FunFactTitle = styled.Text`
+  font-size: 20px;
+  color: #eee;
+  text-align: center;
+  padding: 0px 10px;
+`;
+
+const FunFact = styled.Text`
+  font-size: 16px;
+  color: #eee;
+  text-align: center;
+  padding: 0px 10px;
 `;
 
 const CirclesContainer = styled.View`

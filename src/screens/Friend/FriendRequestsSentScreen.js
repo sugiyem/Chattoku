@@ -34,13 +34,13 @@ const FriendRequestsSentScreen = () => {
   }, []);
 
   const filteredRequests = pendingFriends.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const UserLists = () =>
-    filteredRequests.map((item, index) => (
+    filteredRequests.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         type={friendshipType.WAITING_RESPONSE}
         item={item}
         navigation={navigation}

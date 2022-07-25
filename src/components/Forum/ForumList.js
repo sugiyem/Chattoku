@@ -14,7 +14,7 @@ const ForumList = ({ data }) => {
   const [search, setSearch] = useState("");
 
   const filteredData = data.filter((forum) =>
-    forum.title.toLowerCase().startsWith(search.toLowerCase())
+    forum.title.toLowerCase().includes(search.toLowerCase())
   );
 
   // console.log(data);

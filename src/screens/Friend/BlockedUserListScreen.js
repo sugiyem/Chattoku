@@ -30,13 +30,13 @@ const BlockedUserListScreen = () => {
   }, []);
 
   const filteredBlockedUsers = blockedUsers.filter((data) =>
-    data.username.toLowerCase().startsWith(search.toLowerCase())
+    data.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const UserLists = () =>
-    filteredBlockedUsers.map((item, index) => (
+    filteredBlockedUsers.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         type={friendshipType.BLOCKED}
         item={item}
         navigation={navigation}
@@ -49,7 +49,7 @@ const BlockedUserListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={(text) => setSearch(text)}
-          placeholder="Search requests by username"
+          placeholder="Search blocked users by username"
           testID="searchBar"
         />
 

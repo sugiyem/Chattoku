@@ -31,7 +31,7 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
   }, []);
 
   const filteredPendingMembers = pendingMembers.filter((pendingMember) =>
-    pendingMember.username.toLowerCase().startsWith(search.toLowerCase())
+    pendingMember.username.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -44,7 +44,9 @@ const EditGroupMemberScreen = ({ navigation, route }) => {
           testID="searchBar"
         />
 
-        <BoldText underline testID="title">Pending Member's List</BoldText>
+        <BoldText underline testID="title">
+          Pending Member's List
+        </BoldText>
 
         <Button onPress={() => navigation.goBack()} testID="goBack">
           <ButtonText> Go back</ButtonText>

@@ -30,14 +30,14 @@ const GroupRequestsScreen = ({ navigation }) => {
   }, []);
 
   const filteredRequests = groupRequests.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const GroupContactLists = () => (
     <View style={styles.listContainer}>
-      {filteredRequests.map((item, index) => (
+      {filteredRequests.map((item) => (
         <RenderGroupLists
-          key={index}
+          key={item.id}
           type={groupListType.GROUP_INVITATION}
           item={item}
           navigation={navigation}

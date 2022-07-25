@@ -50,14 +50,14 @@ const GroupListScreen = ({ navigation }) => {
   }, []);
 
   const filteredGroups = groups.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const GroupContactLists = () => (
     <View style={styles.listContainer}>
-      {filteredGroups.map((item, index) => (
+      {filteredGroups.map((item) => (
         <RenderGroupLists
-          key={index}
+          key={item.id}
           type={groupListType.GROUP}
           item={item}
           navigation={navigation}

@@ -5,6 +5,10 @@ import CommentList from "../../../src/components/Forum/ForumComment/CommentList"
 jest.mock("../../../src/services/Forum/FetchComment");
 jest.mock("../../../src/services/Forum/HandleForumAdmin");
 jest.mock("../../../src/services/Profile/FetchUserInfo");
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useState: (initial) => [initial, jest.fn()]
+}));
 
 describe("Test Comment List UI", () => {
   it("Renders correctly", () => {

@@ -61,7 +61,7 @@ const EditGenreScreen = ({ navigation }) => {
       <View>
         <GenresList
           genres={GENRES.filter((value) =>
-            value.toLowerCase().startsWith(search.toLowerCase())
+            value.toLowerCase().includes(search.toLowerCase())
           ).filter((value) =>
             favorites.includes(value) ? includeFav : includeNonFav
           )}

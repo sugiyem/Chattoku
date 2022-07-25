@@ -47,13 +47,13 @@ const FriendListScreen = () => {
   });
 
   const filteredFriends = friends.filter((item) =>
-    item.username.toLowerCase().startsWith(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const UserLists = () =>
-    filteredFriends.map((item, index) => (
+    filteredFriends.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         item={item}
         type={friendshipType.FRIEND}
         navigation={navigation}

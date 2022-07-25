@@ -57,15 +57,15 @@ const GroupChatListScreen = () => {
   }, []);
 
   const filteredChats = activeChats.filter((item) =>
-    item.name.toLowerCase().startsWith(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const ChatLists = () => {
     return (
       <ChatListContainer>
-        {filteredChats.map((item, index) => (
+        {filteredChats.map((item) => (
           <ActiveChatLists
-            key={index}
+            key={item.id}
             type={chatType.GROUP_CHAT}
             item={item}
             navigation={navigation}
@@ -81,7 +81,7 @@ const GroupChatListScreen = () => {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search messages"
+          placeholder="Search Groups"
           testID="searchBar"
         />
 
