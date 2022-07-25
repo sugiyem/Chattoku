@@ -13,6 +13,7 @@ import { mockFirebase } from "firestore-jest-mock";
 import { fakeFirebase } from "../../Helper";
 
 mockFirebase(fakeFirebase);
+jest.mock("../../../src/services/Chat/HandleSystemMessage");
 
 describe("Test group system", () => {
   const {
