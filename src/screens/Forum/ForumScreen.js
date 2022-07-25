@@ -17,12 +17,16 @@ import {
   ForumNavigation,
   NavigationText
 } from "../../styles/ForumStyles";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const ForumScreen = () => {
   const [isBanned, setIsBanned] = useState(false);
   const [posts, setPosts] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [popupData, setPopupData] = useState(null);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
+  const [isBannedLoading, setIsBannedLoading] = useState(false);
+  const [isPostLoading, setIsPostLoading] = useState(false);
   const navigation = useNavigation();
   const data = navigation.getState().routes[1].params.data;
   const currentUID = getCurrentUID();
@@ -31,7 +35,11 @@ const ForumScreen = () => {
   console.log(popupData);
 
   useEffect(() => {
-    return isUserAdmin(data.id, currentUID, (data) => setIsAdmin(data.isFound));
+    setIsAdminLoading(true);
+    return isUserAdmin(data.id, currentUID, (data) => {
+      setIsAdmin(data.isFound);
+      setIsAdminLoading(false);
+    });
   }, []);
 
   function handleAddButtonClick() {
@@ -44,61 +52,73 @@ const ForumScreen = () => {
 
   //Check for ban
   useEffect(() => {
-    return isUserBanned(data.id, currentUID, (result) =>
-      setIsBanned(result.isFound)
-    );
+    setIsBannedLoading(true);
+    return isUserBanned(data.id, currentUID, (result) => {
+      setIsBanned(result.isFound);
+      setIsBannedLoading(false);
+    });
   }, []);
 
   //retrieve posts
   useEffect(() => {
+    setIsPostLoading(true);
     return FetchPost(
       data.id,
       (data) => {
         data.sort((x, y) => (x.timestamp < y.timestamp ? 1 : -1));
         setPosts(data);
+        setIsPostLoading(false);
       },
       (error) => Alert.alert(error)
     );
   }, []);
 
   return (
-    <>
-      <overlayContext.Provider value={setPopupData}>
-        {popupData && <ProfileOverlay userData={popupData} />}
+    <Loading isLoading={isAdminLoading || isBannedLoading || isPostLoading}>
+      <>
+        <overlayContext.Provider value={setPopupData}>
+          {popupData && <ProfileOverlay userData={popupData} />}
 
-        <PaddinglessContainer>
-          <ForumNavigation onPress={() => navigation.goBack()} testID="goBack">
-            <NavigationText>Go Back</NavigationText>
-          </ForumNavigation>
-          {(isOwner || isAdmin) && (
-            <ForumNavigation onPress={handleEditForumButton} testID="editForum">
-              <NavigationText>Manage Forum</NavigationText>
+          <PaddinglessContainer>
+            <ForumNavigation
+              onPress={() => navigation.goBack()}
+              testID="goBack"
+            >
+              <NavigationText>Go Back</NavigationText>
             </ForumNavigation>
-          )}
-          {/* <Header {...data} /> */}
-          <PostList
-            forumId={data.id}
-            isOwner={isOwner}
-            isBanned={isBanned}
-            Header={() => <ForumHeader {...data} isOwner={isOwner} />}
-            posts={posts}
-          />
-          {isBanned ? (
-            <BannedText>You have been banned</BannedText>
-          ) : (
-            <Icon
-              name="add"
-              type="material"
-              style={styles.add}
-              color="#222"
-              size={50}
-              onPress={handleAddButtonClick}
-              testID="addPost"
+            {(isOwner || isAdmin) && (
+              <ForumNavigation
+                onPress={handleEditForumButton}
+                testID="editForum"
+              >
+                <NavigationText>Manage Forum</NavigationText>
+              </ForumNavigation>
+            )}
+            {/* <Header {...data} /> */}
+            <PostList
+              forumId={data.id}
+              isOwner={isOwner}
+              isBanned={isBanned}
+              Header={() => <ForumHeader {...data} isOwner={isOwner} />}
+              posts={posts}
             />
-          )}
-        </PaddinglessContainer>
-      </overlayContext.Provider>
-    </>
+            {isBanned ? (
+              <BannedText>You have been banned</BannedText>
+            ) : (
+              <Icon
+                name="add"
+                type="material"
+                style={styles.add}
+                color="#222"
+                size={50}
+                onPress={handleAddButtonClick}
+                testID="addPost"
+              />
+            )}
+          </PaddinglessContainer>
+        </overlayContext.Provider>
+      </>
+    </Loading>
   );
 };
 

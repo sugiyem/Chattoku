@@ -14,18 +14,24 @@ import {
   ForumHomeTitle
 } from "../../styles/ForumStyles";
 import { getCurrentUID } from "../../services/Profile/FetchUserInfo";
+import Loading from "../../components/Miscellaneous/Loading";
 
 const initialData = [];
 
 const FollowedForumScreen = () => {
   const [data, setData] = useState(initialData);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const currentUID = getCurrentUID();
 
   console.log(data);
 
   useEffect(() => {
-    return FetchFollowedForumsData(currentUID, setData);
+    setIsLoading(true);
+    return FetchFollowedForumsData(currentUID, (forumData) => {
+      setData(forumData);
+      setIsLoading(false);
+    });
   }, []);
 
   function handleCreateForumClick() {
@@ -37,22 +43,27 @@ const FollowedForumScreen = () => {
   }
 
   return (
-    <Container>
-      <RoundDarkButton onPress={handleDiscoverForumClick} testID="homeForum">
-        <DarkButtonText> Discover New Forums </DarkButtonText>
-      </RoundDarkButton>
-      <ForumHomeTitle>Followed Forums</ForumHomeTitle>
-      {data.length === 0 ? (
-        <NoDataContainer>
-          <NoDataText> You are currently not following any forum</NoDataText>
-        </NoDataContainer>
-      ) : (
-        <ForumList data={data} />
-      )}
-      <CreateForumButton onPress={handleCreateForumClick} testID="createForum">
-        <CreateForumText> Create Your Own Forum</CreateForumText>
-      </CreateForumButton>
-    </Container>
+    <Loading isLoading={isLoading}>
+      <Container>
+        <RoundDarkButton onPress={handleDiscoverForumClick} testID="homeForum">
+          <DarkButtonText> Discover New Forums </DarkButtonText>
+        </RoundDarkButton>
+        <ForumHomeTitle>Followed Forums</ForumHomeTitle>
+        {data.length === 0 ? (
+          <NoDataContainer>
+            <NoDataText> You are currently not following any forum</NoDataText>
+          </NoDataContainer>
+        ) : (
+          <ForumList data={data} />
+        )}
+        <CreateForumButton
+          onPress={handleCreateForumClick}
+          testID="createForum"
+        >
+          <CreateForumText> Create Your Own Forum</CreateForumText>
+        </CreateForumButton>
+      </Container>
+    </Loading>
   );
 };
 
