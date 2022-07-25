@@ -8,6 +8,10 @@ jest.mock("../../../src/services/Friend/FriendshipStatus");
 jest.mock("../../../src/services/Friend/HandleGroup");
 jest.mock("../../../src/services/Chat/FetchChatMessages");
 jest.mock("../../../src/services/Profile/FetchUserInfo");
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useState: (initial) => [initial, jest.fn()]
+}));
 
 const mockNavigation = {
   goBack: jest.fn(),

@@ -13,6 +13,10 @@ jest.mock("@react-navigation/native", () => ({
 }));
 jest.mock("../../../src/services/Forum/FetchFollowedForumData");
 jest.mock("../../../src/services/Profile/FetchUserInfo");
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useState: (initial) => [initial, jest.fn()]
+}));
 
 describe("Test Followed Forum Page UI", () => {
   it("All interactable components are working as expected", () => {

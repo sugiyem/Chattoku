@@ -33,6 +33,10 @@ jest.mock("../../../src/services/Profile/FetchUserInfo");
 jest.mock("../../../src/services/Friend/HandleBlockedUser");
 jest.mock("../../../src/services/Friend/FetchFriendStatus");
 jest.mock("../../../src/services/Friend/FriendshipStatus");
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useState: (initial) => [initial, jest.fn()]
+}));
 
 describe("Test Forum Screen UI", () => {
   it("All interactable components are working as expected", () => {

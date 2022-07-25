@@ -11,6 +11,10 @@ jest.mock("../../../src/services/Profile/FetchUserInfo");
 jest.mock("@react-navigation/native", () => ({
   useIsFocused: jest.fn()
 }));
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useState: (initial) => [initial, jest.fn()]
+}));
 
 const mockNavigation = {
   goBack: jest.fn(),
