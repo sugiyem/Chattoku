@@ -38,9 +38,9 @@ const FriendRequestsSentScreen = () => {
   );
 
   const UserLists = () =>
-    filteredRequests.map((item, index) => (
+    filteredRequests.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         type={friendshipType.WAITING_RESPONSE}
         item={item}
         navigation={navigation}

@@ -35,9 +35,9 @@ const GroupRequestsScreen = ({ navigation }) => {
 
   const GroupContactLists = () => (
     <View style={styles.listContainer}>
-      {filteredRequests.map((item, index) => (
+      {filteredRequests.map((item) => (
         <RenderGroupLists
-          key={index}
+          key={item.id}
           type={groupListType.GROUP_INVITATION}
           item={item}
           navigation={navigation}

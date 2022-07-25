@@ -51,9 +51,9 @@ const FriendListScreen = () => {
   );
 
   const UserLists = () =>
-    filteredFriends.map((item, index) => (
+    filteredFriends.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         item={item}
         type={friendshipType.FRIEND}
         navigation={navigation}

@@ -34,9 +34,9 @@ const BlockedUserListScreen = () => {
   );
 
   const UserLists = () =>
-    filteredBlockedUsers.map((item, index) => (
+    filteredBlockedUsers.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         type={friendshipType.BLOCKED}
         item={item}
         navigation={navigation}

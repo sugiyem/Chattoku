@@ -38,9 +38,9 @@ const FriendRequestsReceivedScreen = () => {
   );
 
   const UserLists = () =>
-    filteredRequests.map((item, index) => (
+    filteredRequests.map((item) => (
       <RenderUserLists
-        key={index}
+        key={item.id}
         type={friendshipType.RECEIVING_REQUEST}
         item={item}
         navigation={navigation}

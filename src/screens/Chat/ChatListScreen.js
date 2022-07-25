@@ -63,9 +63,9 @@ const ChatListScreen = () => {
   const ChatLists = () => {
     return (
       <ChatListContainer>
-        {filteredChats.map((item, index) => (
+        {filteredChats.map((item) => (
           <ActiveChatLists
-            key={index}
+            key={item.id}
             type={chatType.PRIVATE_CHAT}
             item={item}
             navigation={navigation}
